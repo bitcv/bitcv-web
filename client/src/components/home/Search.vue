@@ -38,6 +38,7 @@ export default {
     width: 728px;
     height: 45px;
     display: flex;
+    margin-top: 16px;
     .input-box {
       width: 613px;
       height: 45px;
@@ -54,8 +55,14 @@ export default {
         display: block;
         border: none;
         outline: none;
-        margin-left: 14px;
+        margin-left: 10px;
         height: 20px;
+        width: calc(100% - 56px);
+      }
+      input::-webkit-input-placeholder {
+        font-size: 14px;
+        color: #9B9B9B;
+        padding: 4px;
       }
     }
     .btn {

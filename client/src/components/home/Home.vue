@@ -2,6 +2,8 @@
   <div class="home">
     <div class="main-panel">
       <search></search>
+      <proj-show-panel></proj-show-panel>
+      <proj-list-panel></proj-list-panel>
     </div>
     <div class="aside-panel">
       <top-list></top-list>
@@ -12,6 +14,8 @@
 <script>
 import Search from '@/components/home/Search'
 import TopList from '@/components/home/TopList'
+import ProjShowPanel from '@/components/home/ProjShowPanel'
+import ProjListPanel from '@/components/home/ProjListPanel'
 
 export default {
   data () {
@@ -19,7 +23,9 @@ export default {
   }, 
   components: {
     Search,
-    TopList
+    TopList,
+    ProjShowPanel,
+    ProjListPanel
   }
 }
 </script>
@@ -32,6 +38,9 @@ export default {
   .main-panel {
     width: 826px;
     min-width: 500px;
+    div {
+      margin-bottom: 24px;
+    }
   }
   .aside-panel {
     flex-shrink: 0;
