@@ -9,7 +9,7 @@
         <th></th>
         <th>融资状态</th>
       </tr>
-      <tr class="info-row" v-for="item in 10":key="item">
+      <tr class="info-row" v-for="item in 10" :key="item">
         <td>
           <div class="logo-box">
             <img src="/static/img/logo.png" alt="">

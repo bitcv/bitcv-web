@@ -1,19 +1,27 @@
 <template>
   <div class="header">
     <div class="content">
-      <div class="logo">
-        <img src="/static/img/logo.png" alt="">
-      </div>
+      <router-link to="/">
+        <div class="logo">
+          <img src="/static/img/logo.png" alt="">
+        </div>
+      </router-link>
       <div class="nav">
         <ul>
-          <li class="active"><span class="nav-text">首页</span></li>
-          <li><span class="nav-text">发现</span></li>
-          <li><span class="nav-text">资讯</span></li>
+          <li v-for="(menu, index) in menuList" :key="index" :class="{ active : menuIndex === index }">
+            <router-link :to="menu.url">
+              <span class="nav-text" @click="menuSwitch(index)">{{ menu.text }}</span>
+            </router-link>
+          </li>
         </ul>
       </div>
       <div class="btn-box">
-        <div class="signin btn"><span class="btn-text">登录</span></div>
-        <div class="signup btn"><span class="btn-text">注册</span></div>
+        <router-link to="signin">
+          <div class="signin btn"><span class="btn-text">登录</span></div>
+        </router-link>
+        <router-link to="signup">
+          <div class="signup btn"><span class="btn-text">注册</span></div>
+        </router-link>
       </div>
     </div>
   </div>
@@ -23,7 +31,17 @@
 export default {
   data () {
     return {
-
+      menuIndex: 0,
+      menuList: [
+        {url: '/', text: '首页'},
+        {url: 'projList', text: '发现'},
+        {url: '/', text: '资讯'}
+      ]
+    }
+  },
+  methods: {
+    menuSwitch (index) {
+      this.menuIndex = index
     }
   }
 }

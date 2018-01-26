@@ -2,16 +2,37 @@
   <div class="search">
     <div class="input-box">
       <img src="/static/img/search-2x.png" alt="">
-      <input type="text" placeholder="代币名称、符号、项目名称">
+      <input v-model="keyword" type="text" placeholder="代币名称、符号、项目名称">
     </div>
-    <div class="btn"><span>搜索机构</span></div>
+    <div class="btn" @click="searchProject"><span>搜索机构</span></div>
   </div>
 </template>
 
 <script>
 export default {
   data () {
-    return {}
+    return {
+      keyword: ''
+    }
+  },
+  methods: {
+    searchProject () {
+      if (this.keyword === '') {
+        return
+      }
+      this.$http.request('/api/searchProject', {
+        keyword: this.keyword
+      }).then(function (res) {
+        var resData = res.data
+        if (resData.errcode === 0) {
+          console.log('success')
+        } else {
+          alert(resData.errmsg)
+        }
+      }).cache(function (err) {
+        console.log(err)
+      })
+    }
   }
 }
 </script>
@@ -56,6 +77,7 @@ export default {
     border-radius: 0 23px 23px 0;
     background-color: #4A4A4A;
     text-align: center;
+    cursor: pointer;
     span {
       color: #FFCF81;
       font-size: 18px;

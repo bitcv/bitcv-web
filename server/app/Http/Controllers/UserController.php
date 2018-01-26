@@ -31,6 +31,12 @@ class UserController extends Controller
             'passwd' => md5($passwd)
         ]);
 
+        // 发送验证邮件
+        //$curTime = time();
+        //$sig = md5('kingco' . $userId . $curTime . 'ucai');
+        //$verifyUrl = "http://www.kingco.com/api/verifySignup?userId=$userId&timestamp=$curTime&sig=$sig";
+        //$result = mail($account, 'test', 'test email');
+
         return $this->output(['userId' => $userId]);
     }
 

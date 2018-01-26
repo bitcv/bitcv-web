@@ -22,13 +22,45 @@ import NewsPanel from '@/components/home/NewsPanel'
 export default {
   data () {
     return {}
-  }, 
+  },
   components: {
     SearchPanel,
     TopList,
     ProjShowPanel,
     ProjListPanel,
     NewsPanel
+  },
+  beforeCreate: function () {
+    console.log(this)
+    alert('beforeCrete')
+  },
+  created: function () {
+    console.log(this)
+    alert('created')
+  },
+  beforeMount: function () {
+    console.log(this)
+    alert('beforeMount')
+  },
+  mounted: function () {
+    console.log(this)
+    alert('mounted')
+  },
+  beforeUpdate: function () {
+    console.log(this)
+    alert('beforeUpdate')
+  },
+  updated: function () {
+    console.log(this)
+    alert('updated')
+  },
+  beforeDestroy: function () {
+    console.log(this)
+    alert('beforeDestroy')
+  },
+  destoried: function () {
+    console.log(this)
+    alert('destoried')
   }
 }
 </script>
