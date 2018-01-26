@@ -38,10 +38,5 @@ export default {
     justify-content: center;
     align-content: space-around;
   }
-  div.main-container:nth-child(4n + 1) {
-    background-color: red;
-    border-left: 1px solid #FFCF81;
-    border-right: 1px solid #FFCF81;
-  }
 }
 </style>

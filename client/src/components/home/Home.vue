@@ -1,31 +1,34 @@
 <template>
   <div class="home">
     <div class="main-panel">
-      <search></search>
+      <search-panel></search-panel>
       <proj-show-panel></proj-show-panel>
       <proj-list-panel></proj-list-panel>
     </div>
     <div class="aside-panel">
       <top-list></top-list>
+      <news-panel></news-panel>
     </div>
   </div>
 </template>
 
 <script>
-import Search from '@/components/home/Search'
+import SearchPanel from '@/components/home/SearchPanel'
 import TopList from '@/components/home/TopList'
 import ProjShowPanel from '@/components/home/ProjShowPanel'
 import ProjListPanel from '@/components/home/ProjListPanel'
+import NewsPanel from '@/components/home/NewsPanel'
 
 export default {
   data () {
     return {}
   }, 
   components: {
-    Search,
+    SearchPanel,
     TopList,
     ProjShowPanel,
-    ProjListPanel
+    ProjListPanel,
+    NewsPanel
   }
 }
 </script>
@@ -46,6 +49,9 @@ export default {
     flex-shrink: 0;
     width: 350px;
     margin-left: 24px;
+    div {
+      margin-bottom: 24px;
+    }
   }
 }
 </style>
