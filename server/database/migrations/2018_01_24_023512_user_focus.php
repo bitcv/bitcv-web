@@ -17,6 +17,7 @@ class UserFocus extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id')->default(0);
             $table->unsignedInteger('proj_id')->default(0);
+            $table->unsignedTinyInteger('status')->default(0);
             $table->timestamps();
         });
     }

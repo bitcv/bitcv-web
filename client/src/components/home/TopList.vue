@@ -2,17 +2,9 @@
   <div class="top-list">
     <h3 class="panel-title">明星项目</h3>
     <div class="info-container">
-      <div class="info-area index1">
-        <span>至各基金</span>
-        <span>$0.004</span>
-      </div>
-      <div class="info-area index2">
-        <span>至各基金</span>
-        <span>$0.004</span>
-      </div>
-      <div class="info-area index3">
-        <span>至各基金</span>
-        <span>$0.004</span>
+      <div class="info-area" v-for="project in projList" :key="project.id">
+        <span>{{ project.tokenName }}</span>
+        <span>{{ project.tokenPrice }}</span>
       </div>
     </div>
   </div>
@@ -21,7 +13,21 @@
 <script>
 export default {
   data () {
-    return {}
+    return {
+      projList: []
+    }
+  },
+  mounted () {
+    var that = this
+    this.$http.post('/api/getProjList', {
+      pageno: 1,
+      perpage: 3
+    }).then(function (res) {
+      var resData = res.data
+      if (resData.errcode === 0) {
+        that.projList = resData.data.projList
+      }
+    })
   }
 }
 </script>

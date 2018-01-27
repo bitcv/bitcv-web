@@ -2,22 +2,22 @@
   <div class="proj-item-box">
     <div class="column index1">
       <div class="image-box">
-        <img src="/static/img/logo.png" alt="">
+        <img :src="projData.logoUrl" alt="">
+      </div>
+      <div class="info-box">
+        <span class="title">{{ projData.nameCn }}</span>
+        <span class="content">{{ projData.nameEn }}</span>
       </div>
     </div>
-    <div class="column index2">
-      <span class="title">光链传媒</span>
-      <span class="content">企业服务>其它服务</span>
-    </div>
-    <div class="column index3">
+    <div class="column flex index2">
       <span class="title">代币名称</span>
-      <span class="content">STO</span>
+      <span class="content">{{ projData.tokenSymbol }}</span>
     </div>
-    <div class="column index4">
+    <div class="column flex index3">
       <span class="title">当前代币价格</span>
-      <span class="content">$0.09</span>
+      <span class="content">{{ projData.tokenPrice }}</span>
     </div>
-    <div class="column index5">
+    <div class="column flex index4">
       <span class="title">融资状态</span>
       <span class="content">未透露</span>
     </div>
@@ -26,6 +26,9 @@
 
 <script>
 export default {
+  props: {
+    projData: Object
+  },
   data () {
     return {}
   }
@@ -41,15 +44,16 @@ export default {
   align-items: center;
   padding: 10px 0;
   box-sizing: border-box;
-  .column {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    font-size: 14px;
-    line-height: 20px;
-    color: #9B9B9B;
+  font-size: 14px;
+  line-height: 20px;
+  color: #9B9B9B;
+  .column.index1 {
+    width: 30%;
+    box-sizing: border-box;
+    padding-left: 10px;
+    font-size: 0;
     .image-box {
+      display: inline-block;
       width: 60px;
       height: 60px;
       img {
@@ -57,20 +61,41 @@ export default {
         height: 60px;
       }
     }
-    &.index2>.title {
-      color: #000;
+    .info-box {
+      font-size: 14px;
+      display:inline-flex;
+      flex-direction: column;
+      justify-content: space-between;
+      vertical-align: top;
+      height: 60px;
+      width: calc(100% - 65px);
+      margin-left: 5px;
+      .title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: no-wrap;
+        color: #000;
+      }
     }
-    &.index3>.content {
+  }
+  .column.flex {
+    width: 20%;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    &.index2>.content {
       font-size: 16px;
       line-height: 22px;
       color: #F5A623;
     }
-    &.index4>.content {
+    &.index3>.content {
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 79px;
       height: 24px;
+      padding: 0 5px;
       background-color: #4A4A4A;
       color: #FFCF81;
       border-radius: 2px;

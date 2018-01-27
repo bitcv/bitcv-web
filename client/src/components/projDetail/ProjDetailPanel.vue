@@ -11,18 +11,18 @@
       <div class="info-area">
         <h3 class="panel-title">项目简介</h3>
         <div>
-          <img src="/static/img/logo.png" alt="">
+          <img :src="projDetail.bannerUrl" alt="">
         </div>
         <div class="abstract">
-          <span>帝高阳之苗裔兮，朕皇考曰伯庸，摄提贞于孟陬兮，惟庚寅吾以降；皇览揆余初度兮，肇锡余以嘉名：名余曰正则兮，字余曰灵均。纷吾既有此内美兮，又重之以修能。 扈江离与辟芷兮，纫秋兰以为佩。 汨余若将不及兮，恐年岁之不吾与。 朝搴阰之木兰兮，夕揽洲之宿莽。 日月忽其不淹兮，春与秋其代序。</span>
+          <span>{{ projDetail.abstract }}</span>
         </div>
       </div>
       <div class="team-area">
         <el-carousel :interval="5000" arrow="always" height="378px">
-          <el-carousel-item class="member" v-for="item in 4" :key="item">
-            <img class="avatar" src="/static/img/logo.png" alt="">
-            <span class="name">Allan</span>
-            <span class="intro">帝高阳之苗裔兮，朕皇考曰伯庸，摄提贞于孟陬兮，惟庚寅吾以降；皇览揆余初度兮，肇锡余以嘉名：名余曰正则兮，字余曰灵均。纷吾既有此内美兮，又重之以修能。 扈江离与辟芷兮，纫秋兰以为佩。 汨余若将不及兮，恐年岁之不吾与。 朝搴阰之木兰兮，夕揽洲之宿莽。 日月忽其不淹兮，春与秋其代序。</span>
+          <el-carousel-item class="member" v-for="(member, index) in projDetail.memberList" :key="index">
+            <img class="avatar" :src="member.photoUrl" alt="">
+            <span class="name">{{ member.name }}</span>
+            <span class="intro">{{ member.intro }}</span>
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -32,17 +32,19 @@
       <div class="partner-area">
         <h3 class="panel-title center-title">合作伙伴</h3>
         <div class="logo-box">
-          <img v-for="item in 6" :key="item" src="/static/img/logo.png" alt="">
+          <a :href="partner.webUrl" target="_blank" v-for="(partner, index) in projDetail.partnerList" :key="index">
+            <img :src="partner.logoUrl" alt="">
+          </a>
         </div>
       </div>
       <div class="media-area">
         <h3 class="center-title panel-title">媒体报道</h3>
         <div class="item-box">
-          <div v-for="item in 3" :key="item" class="item">
+          <div v-for="(media, index) in projDetail.mediaList" :key="index" class="item">
             <div class="image-area">
-              <img class="log" src="/static/img/logo.png" alt="">
+              <img class="log" :src="media.imageUrl" alt="">
             </div>
-            <span class="content">媒体对这个项目的评价非常不错。</span>
+            <span class="content">{{ media.title }}</span>
           </div>
         </div>
       </div>
@@ -52,8 +54,12 @@
 
 <script>
 export default {
+  props: {
+    projDetail: Object
+  },
   data () {
-    return {}
+    return {
+    }
   }
 }
 </script>
@@ -134,11 +140,12 @@ export default {
     padding: 40px 0;
     .logo-box {
       margin-top: 39px;
+      box-sizing: border-box;
+      padding: 0 20px;
       width: 100%;
       display: flex;
-      justify-content: space-between;
-      align-content: space-between;
-      align-items: center;
+      justify-content: space-around;
+      align-content: space-around;
       flex-wrap: wrap;
       img {
         width: 170px;
@@ -177,7 +184,9 @@ export default {
         }
         .content {
           display: block;
+          box-sizing: border-box;
           width: 100%;
+          padding: 0 5px;
           font-size: 12px;
           line-height: 18px;
           color: #9B9B9B;

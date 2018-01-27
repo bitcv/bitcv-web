@@ -5,8 +5,7 @@
       <proj-table-panel></proj-table-panel>
     </div>
     <div class="aside-panel">
-      <top-list-panel></top-list-panel>
-      <top-list-panel></top-list-panel>
+      <top-list-panel v-for="item in topList" :key="item.type" :list-data="item"></top-list-panel>
     </div>
   </div>
 </template>
@@ -18,7 +17,12 @@ import ProjTablePanel from '@/components/projList/ProjTablePanel'
 
 export default {
   data () {
-    return {}
+    return {
+      topList: [
+        { title: '关注TOP10', type: 'focus' },
+        { title: '浏览TOP10', type: 'view' }
+      ]
+    }
   },
   components: {
     ProjSearchPanel,

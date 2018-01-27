@@ -1,33 +1,38 @@
 <template>
   <div class="proj-info">
     <div class="info-box">
-      <img src="/static/img/logo.png" alt="">
+      <img :src="projDetail.logoUrl" alt="">
       <div class="text-box">
         <div class="top-row">
-          <span class="name-cn">FLY PLAY大数据</span>
-          <span class="name-en">(FLY PLAY Big data)</span>
+          <span class="name-cn">{{ projDetail.nameCn }}</span>
+          <span class="name-en">({{ projDetail.nameEn }})</span>
         </div>
         <div class="bottom-row">
           <span class="text-title">代币名称：</span>
-          <span class="text">squ</span>
+          <span class="text">{{ projDetail.tokenName }}</span>
           <span class="text-title">代币符号：</span>
-          <span class="text">squ</span>
+          <span class="text">{{ projDetail.tokenSymbol }}</span>
         </div>
       </div>
     </div>
     <div class="tag-box">
       <span class="title">标签</span>
-      <span class="tag" v-for="item in 4" :key="item">电子商务</span>
+      <span class="tag" v-for="(tag, index) in projDetail.tagList" :key="index">{{ tag }}</span>
     </div>
     <div class="social-box">
       <span class="title">友情链接：</span>
-      <img src="/static/img/logo.png" alt="" v-for="item in 4" :key="item">
+      <a :href="partner.webUrl" v-for="(partner, index) in projDetail.partnerList" :key="index" target="_blank">
+        <img :src="partner.logoUrl" alt="">
+      </a>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    projDetail: Object
+  },
   data () {
     return {}
   }
@@ -98,7 +103,7 @@ export default {
     img {
       width: 26px;
       height: 26px;
-      margin: 0 20px;
+      margin: 0 5px;
     }
   }
 }

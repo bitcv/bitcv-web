@@ -11,5 +11,6 @@ Route::any('focusProject', 'UserController@focusProject');
 Route::any('viewProject', 'UserController@viewProject');
 
 Route::any('getProjList', 'ProjectController@getProjList');
+Route::any('getProjTopList', 'ProjectController@getProjTopList');
 Route::any('getProjDetail', 'ProjectController@getProjDetail');
 Route::any('addProject', 'ProjectController@addProject');

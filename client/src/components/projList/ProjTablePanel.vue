@@ -1,6 +1,6 @@
 <template>
   <div class="proj-table-panel">
-    <h3 class="panel-title">共23352项</h3>
+    <h3 class="panel-title">共{{ projData.dataCount }}项</h3>
     <table class='info-table'>
       <tr class="info-header">
         <th>公司名称</th>
@@ -9,18 +9,18 @@
         <th></th>
         <th>融资状态</th>
       </tr>
-      <tr class="info-row" v-for="item in 10" :key="item">
+      <tr class="info-row" @click="projNav(project.id)" v-for="project in projData.projList" :key="project.id">
         <td>
           <div class="logo-box">
-            <img src="/static/img/logo.png" alt="">
+            <img :src="project.logoUrl" alt="">
           </div>
           <div class="info-box">
-            <span class="name">光线传媒</span>
-            <span class="intro">一个过亿的项目</span>
+            <span class="name">{{ project.nameCn }}</span>
+            <span class="intro">{{ project.nameEn }}</span>
           </div>
         </td>
-        <td><span>BTC</span></td>
-        <td><div><span>$0.009</span></div></td>
+        <td><span>{{ project.tokenSymbol }}</span></td>
+        <td><div><span>{{ project.tokenPrice }}</span></div></td>
         <td><img src="/static/img/心@2x.png" alt=""></td>
         <td><span>已融资</span></td>
       </tr>
@@ -31,7 +31,41 @@
 <script>
 export default {
   data () {
-    return {}
+    return {
+      projData: function () {
+        return {}
+      }
+    }
+  },
+  created () {
+    this.$root.eventHub.$on('updateProjList', this.updateProjList)
+  },
+  beforeDestroy () {
+    this.$root.eventHub.$off('updateProjList', this.updateProjList)
+  },
+  mounted () {
+    var that = this
+    var keyword = this.$route.query.keyword
+    this.$http.post('/api/getProjList', {
+      keyword: keyword,
+      pageno: 1,
+      perpage: 10
+    }).then(function (res) {
+      var resData = res.data
+      if (resData.errcode === 0) {
+        that.updateProjList(resData.data)
+      } else {
+        alert(resData.errmsg)
+      }
+    })
+  },
+  methods: {
+    updateProjList: function (projData) {
+      this.projData = projData
+    },
+    projNav: function (projId) {
+      this.$router.push('projDetail/' + projId)
+    }
   }
 }
 </script>
@@ -53,6 +87,7 @@ export default {
       }
     }
     .info-row {
+      cursor: pointer;
       border-top: 0.5px solid #E4E4E4;
       td {
         padding: 20px 0 22px;
@@ -72,6 +107,7 @@ export default {
           }
           .info-box {
             display: inline-block;
+            width: 150px;
             font-size: 14px;
             position: relative;
             height: 60px;

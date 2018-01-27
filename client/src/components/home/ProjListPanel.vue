@@ -1,10 +1,7 @@
 <template>
   <div class="proj-list-panel">
     <h3 class="panel-title">项目直通车</h3>
-    <proj-item-box></proj-item-box>
-    <proj-item-box></proj-item-box>
-    <proj-item-box></proj-item-box>
-    <proj-item-box></proj-item-box>
+    <proj-item-box v-for="project in projList" :key="project.id" :projData="project"></proj-item-box>
     <div class="bottom-btn">更多优秀项目</div>
   </div>
 </template>
@@ -14,7 +11,23 @@ import ProjItemBox from '@/components/home/ProjItemBox'
 
 export default {
   data () {
-    return {}
+    return {
+      dataCount: 0,
+      projList: []
+    }
+  },
+  mounted () {
+    var that = this
+    this.$http.post('/api/getProjList', {
+      pageno: 1,
+      perpage: 10
+    }).then(function (res) {
+      var resData = res.data
+      if (resData.errcode === 0) {
+        that.dataCount = resData.data.dataCount
+        that.projList = resData.data.projList
+      }
+    })
   },
   components: {
     ProjItemBox

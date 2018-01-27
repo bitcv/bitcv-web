@@ -18,6 +18,9 @@ class Project extends Migration
             $table->string('name_cn', 200)->default('');
             $table->string('name_en', 200)->default('');
             $table->string('name_short', 100)->default('');
+            $table->string('logo_url', 300)->default('');
+            $table->string('banner_url', 300)->default('');
+            $table->string('title', 100)->default('');
             $table->string('abstract', 1000)->default('');
             $table->string('white_paper_url', 300)->default('');
             $table->string('web_url', 300)->default('');
@@ -28,8 +31,14 @@ class Project extends Migration
             $table->string('total_amount', 32)->default('');
             $table->unsignedTinyInteger('status')->default(0);
             $table->unsignedInteger('admin_id')->default(0);
+            $table->unsignedInteger('region')->default(0);
+            $table->unsignedTinyInteger('bussiness_type')->default(0);
+            $table->unsignedTinyInteger('phrase')->default(0);
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
+            $table->string('company_tel', 30)->default('');
+            $table->string('company_email', 50)->default('');
+            $table->string('company_addr', 100)->default('');
             $table->timestamps();
         });
     }

@@ -1,12 +1,13 @@
 <template>
   <div class="proj-search-panel">
-    <search></search>
+    <search :filter-result="filterResult"></search>
     <div class="sort-container">
-      <div class="sort-row" v-for="item in 4" :key="item">
-        <span class="title">地区</span>
-        <span class="tag cur">不限</span>
-        <span class="tag">国内</span>
-        <span class="tag">国外</span>
+      <div class="sort-row" v-for="rule in filterRuleList" :key="rule.type">
+        <span class="title">{{ rule.text }}</span>
+        <span class="tag"
+          :class="{ cur: rule.curOption === option.value }"
+          @click="rule.curOption = option.value"
+          v-for="option in rule.optionList" :key="option.value">{{ option.text }}</span>
       </div>
     </div>
     <div class="btn-box">
@@ -21,7 +22,56 @@ import Search from '@/components/home/Search'
 
 export default {
   data () {
-    return {}
+    return {
+      filterRuleList: [
+        {
+          type: 1,
+          text: '地区',
+          curOption: 0,
+          optionList: [
+            { text: '不限', value: 0 },
+            { text: '国内', value: 1 },
+            { text: '国外', value: 2 }
+          ]
+        },
+        {
+          type: 2,
+          text: '行业',
+          curOption: 0,
+          optionList: [
+            { text: '不限', value: 0 },
+            { text: '人工智能', value: 1 },
+            { text: '房产服务', value: 2 },
+            { text: '教育', value: 3 },
+            { text: '金融', value: 4 },
+            { text: '硬件', value: 5 },
+            { text: '医疗健康', value: 6 },
+            { text: '文化娱乐', value: 7 }
+          ]
+        },
+        {
+          type: 3,
+          text: '阶段',
+          curOption: 0,
+          optionList: [
+            { text: '不限', value: 0 },
+            { text: '初创期', value: 1 },
+            { text: '成长发展期', value: 2 },
+            { text: '上市公司', value: 3 },
+            { text: '成熟期', value: 4 }
+          ]
+        }
+      ]
+    }
+  },
+  computed: {
+    filterResult: function () {
+      return {
+        region: this.filterRuleList[0].curOption,
+        bussinessType: this.filterRuleList[1].curOption,
+        phrase: this.filterRuleList[2].curOption
+      }
+    }
   },
   components: {
     Search
@@ -62,7 +112,8 @@ export default {
         line-height: 24px;
         color: #9B9B9B;
         border-radius: 2px;
-        margin: 0 10px;
+        margin: 0 5px;
+        cursor: pointer;
         &.cur {
           color: #FFCF81;
           background-color: #4A4A4A;

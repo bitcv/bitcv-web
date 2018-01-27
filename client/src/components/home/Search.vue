@@ -10,27 +10,54 @@
 
 <script>
 export default {
+  props: {
+    filterResult: {
+      type: Object,
+      default: function () {
+        return {
+          region: 0,
+          bussinessType: 0,
+          phrase: 0
+        }
+      }
+    }
+  },
   data () {
     return {
       keyword: ''
     }
   },
+  mounted () {
+    if (this.$route.query.keyword) {
+      this.keyword = this.$route.query.keyword
+    }
+  },
+  watch: {
+    filterResult: function () {
+      this.searchProject()
+    }
+  },
   methods: {
     searchProject () {
-      if (this.keyword === '') {
-        return
+      if (this.$route.path !== '/projList') {
+        return this.$router.push('/projList?keyword=' + this.keyword)
       }
-      this.$http.request('/api/searchProject', {
-        keyword: this.keyword
+      var that = this
+      this.$http.post('/api/getProjList', {
+        keyword: this.keyword,
+        region: this.filterResult.region,
+        bussinessType: this.filterResult.bussinessType,
+        phrase: this.filterResult.phrase,
+        pageno: 1,
+        perpage: 10
       }).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
-          console.log('success')
+          console.log(resData)
+          that.$root.eventHub.$emit('updateProjList', resData.data)
         } else {
           alert(resData.errmsg)
         }
-      }).cache(function (err) {
-        console.log(err)
       })
     }
   }

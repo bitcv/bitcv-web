@@ -2,12 +2,7 @@
   <div class="proj-show-panel">
     <h3 class="panel-title">发现新公司</h3>
     <div class="main-container">
-      <proj-intro></proj-intro>
-      <proj-intro></proj-intro>
-      <proj-intro></proj-intro>
-      <proj-intro></proj-intro>
-      <proj-intro></proj-intro>
-      <proj-intro></proj-intro>
+      <proj-intro v-for="project in projList" :key="project.id" :proj-data="project"></proj-intro>
     </div>
   </div>
 </template>
@@ -17,10 +12,27 @@ import ProjIntro from '@/components/home/ProjIntro'
 
 export default {
   data () {
-    return {}
+    return {
+      projList: []
+    }
   },
   components: {
     ProjIntro
+  },
+  mounted: function () {
+    var that = this
+    this.$http.post('/api/getProjList', {
+      pageno: 2,
+      perpage: 6
+    }).then(function (res) {
+      var resData = res.data
+      if (resData.errcode === 0) {
+        console.log(resData)
+        that.projList = resData.data.projList
+      } else {
+        alert(resData.errmsg)
+      }
+    })
   }
 }
 </script>

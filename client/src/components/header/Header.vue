@@ -39,6 +39,24 @@ export default {
       ]
     }
   },
+  mounted () {
+    if (this.$route.path === '/') {
+      this.menuIndex = 0
+    }
+    if (this.$route.path === '/projList') {
+      this.menuIndex = 1
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      if (this.$route.path === '/') {
+        this.menuIndex = 0
+      }
+      if (this.$route.path === '/projList') {
+        this.menuIndex = 1
+      }
+    }
+  },
   methods: {
     menuSwitch (index) {
       this.menuIndex = index
@@ -61,7 +79,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     .logo {
-      width: 72px;
+      width: 161px;
       height: 30px;
       img {
         width: 100%;

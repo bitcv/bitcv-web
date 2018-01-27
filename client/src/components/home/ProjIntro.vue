@@ -2,11 +2,11 @@
   <div class="proj-intro">
     <div class="info-box">
       <div class="image-box">
-        <img src="/static/img/logo.png" alt="">
+        <img :src="projData.logoUrl" alt="">
       </div>
       <div class="content-box">
         <div class="title-box">
-          <span class="name">夸克财富</span>
+          <span class="name">{{ projData.tokenSymbol }}</span>
           <span class="text">天使轮</span>
         </div>
         <div class="icon-text">
@@ -20,13 +20,16 @@
       </div>
     </div>
     <div class="text-box">
-      <span class="intro">夸克金融是一家第三方管理平台，致个人消费者,小型企业业主等提供财富咨询服务</span>
+      <span class="intro">{{ projData.title }}</span>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    projData: Object
+  },
   data () {
     return {}
   }

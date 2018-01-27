@@ -15,9 +15,9 @@ class User extends Migration
     {
         Schema::create('user', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('account', 32)->default('');
+            $table->string('account', 100)->default('');
             $table->string('avatar_url', 300)->default('');
-            $table->string('nickname', 32)->default('');
+            $table->string('nickname', 100)->default('');
             $table->string('passwd', 32)->default('');
             $table->timestamps();
         });

@@ -1,33 +1,33 @@
 <template>
   <div class="proj-detail">
     <div class="main-panel">
-      <proj-info-panel></proj-info-panel>
-      <proj-detail-panel></proj-detail-panel>
+      <proj-info-panel :proj-detail="projDetail"></proj-info-panel>
+      <proj-detail-panel :proj-detail="projDetail"></proj-detail-panel>
     </div>
     <div class="aside-panel">
       <div class="record-panel">
         <div class="num-box">
-          <div class="view"><span>398</span></div>
-          <div class="focus"><span>2</span></div>
+          <div class="view"><span>{{ projDetail.viewTimes }}</span></div>
+          <div class="focus"><span>{{ projDetail.focusNum }}</span></div>
         </div>
       </div>
       <div class="btn-panel">
         <h3 class="center-title panel-title">认领该公司</h3>
-        <img src="/static/img/logo.png" alt="">
+        <img src="/static/img/头像扫描@2x.png" alt="">
       </div>
       <div class="contact-panel">
         <h3 class="center-title panel-title">公司联系信息</h3>
         <div class="info-row">
-          <img src="/static/img/logo.png" alt="">
-          <span class="text">18392357025</span>
+          <img src="/static/img/tel@2x.png" alt="">
+          <span class="text">{{ projDetail.companyTel }}</span>
         </div>
         <div class="info-row">
-          <img src="/static/img/logo.png" alt="">
-          <span class="text">3252352@ucai.com</span>
+          <img src="/static/img/email@2x.png" alt="">
+          <span class="text">{{ projDetail.companyEmail }}</span>
         </div>
         <div class="info-row">
-          <img src="/static/img/logo.png" alt="">
-          <span class="text">北京中关村</span>
+          <img src="/static/img/addr@2x.png" alt="">
+          <span class="text">{{ projDetail.companyAddr }}</span>
         </div>
       </div>
     </div>
@@ -40,7 +40,43 @@ import ProjDetailPanel from '@/components/projDetail/ProjDetailPanel'
 
 export default {
   data () {
-    return {}
+    return {
+      projDetail: {
+        nameCn: '',
+        nameEn: '',
+        logoUrl: '',
+        tokenName: '',
+        tokenSymbol: '',
+        tagList: [],
+        partnerList: [],
+        whitePaperUrl: '',
+        abstract: '',
+        memberList: [],
+        mediaList: [],
+        bannerUrl: '',
+        companyTel: '',
+        companyAddr: '',
+        companyEmail: '',
+        viewTimes: 0,
+        focusNum: 0
+      }
+    }
+  },
+  mounted () {
+    var projId = this.$route.params.id
+    console.log('projId:' + projId)
+    var that = this
+    this.$http.post('/api/getProjDetail', {
+      projId: projId
+    }).then(function (res) {
+      var resData = res.data
+      if (resData.errcode === 0) {
+        that.projDetail = resData.data
+        console.log(that.projDetail)
+      } else {
+        alert(resData.errmsg)
+      }
+    })
   },
   components: {
     ProjInfoPanel,
@@ -119,6 +155,7 @@ export default {
         .text {
           font-size: 18px;
           color: #4A4A4A;
+          line-height: 25px;
         }
       }
     }

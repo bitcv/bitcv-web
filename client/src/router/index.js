@@ -19,7 +19,7 @@ export default new Router({
       component: ProjList
     },
     {
-      path: '/projDetail',
+      path: '/projDetail/:id',
       component: ProjDetail
     },
     {
