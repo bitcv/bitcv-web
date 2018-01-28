@@ -4,10 +4,12 @@
     <div class="sort-container">
       <div class="sort-row" v-for="rule in filterRuleList" :key="rule.type">
         <span class="title">{{ rule.text }}</span>
-        <span class="tag"
-          :class="{ cur: rule.curOption === option.value }"
-          @click="rule.curOption = option.value"
-          v-for="option in rule.optionList" :key="option.value">{{ option.text }}</span>
+        <div class="tag-wrapper">
+           <span class="tag"
+             :class="{ cur: rule.curOption === option.value }"
+             @click="rule.curOption = option.value"
+             v-for="option in rule.optionList" :key="option.value">{{ option.text }}</span>
+        </div>
       </div>
     </div>
     <div class="btn-box">
@@ -89,6 +91,7 @@ export default {
   flex-direction: column;
   align-items: center;
   .search {
+    width: 100%;
     margin: 0 19px;
   }
   .sort-container {
@@ -96,27 +99,36 @@ export default {
     margin-top: 40px;
     border-bottom: 0.5px solid #979797;
     .sort-row {
+      display: flex;
       width: 100%;
       font-size: 0;
       margin-bottom: 23px;
+      span {
+        margin: 5px;
+      }
       .title {
+        flex-shrink: 0;
         font-size: 16px;
         line-height: 22px;
         color: #8D8D8D;
         margin-right: 20px;
       }
-      .tag {
-        padding: 0 12px;
-        background-color: #EAEAEA;
-        font-size: 16px;
-        line-height: 24px;
-        color: #9B9B9B;
-        border-radius: 2px;
-        margin: 0 5px;
-        cursor: pointer;
-        &.cur {
-          color: #FFCF81;
-          background-color: #4A4A4A;
+      .tag-wrapper {
+        overflow: hidden;
+        .tag {
+          float: left;
+          display: inline-block;
+          padding: 0 12px;
+          background-color: #EAEAEA;
+          font-size: 16px;
+          line-height: 24px;
+          color: #9B9B9B;
+          border-radius: 2px;
+          cursor: pointer;
+          &.cur {
+            color: #FFCF81;
+            background-color: #4A4A4A;
+          }
         }
       }
     }

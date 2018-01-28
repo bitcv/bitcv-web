@@ -2,7 +2,7 @@
   <div class="search">
     <div class="input-box">
       <img src="/static/img/search-2x.png" alt="">
-      <input v-model="keyword" type="text" placeholder="代币名称、符号、项目名称">
+      <input v-model="keyword" @keyup.enter="searchProject" type="text" placeholder="代币名称、符号、项目名称">
     </div>
     <div class="btn" @click="searchProject"><span>搜索机构</span></div>
   </div>
@@ -66,14 +66,15 @@ export default {
 
 <style lang="scss" scoped>
 .search {
-  width: 728px;
+  margin-top: 16px;
   height: 45px;
   display: flex;
-  margin-top: 16px;
   .input-box {
-    width: 613px;
-    height: 45px;
-    border: 0.5px solid #E4E4E4;
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    height: 100%;
+    border: 1px solid #E4E4E4;
+    border-right: none;
     border-radius: 23px 0 0 23px;
     display: flex;
     align-items: center;
@@ -99,8 +100,9 @@ export default {
     }
   }
   .btn {
+    flex: 0 0 auto;
     width: 115px;
-    height: 45px;
+    height: 100%;
     border-radius: 0 23px 23px 0;
     background-color: #4A4A4A;
     text-align: center;

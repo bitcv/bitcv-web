@@ -10,6 +10,16 @@
           <div class="view"><span>{{ projDetail.viewTimes }}</span></div>
           <div class="focus"><span>{{ projDetail.focusNum }}</span></div>
         </div>
+        <div class="icon-box">
+          <div class="view">
+            <img src="/static/img/view@2x.png" alt="">
+            <span>浏览</span>
+          </div>
+          <div class="focus">
+            <img src="/static/img/心@2x.png" alt="">
+            <span>关注</span>
+          </div>
+        </div>
       </div>
       <div class="btn-panel">
         <h3 class="center-title panel-title">认领该公司</h3>
@@ -88,10 +98,11 @@ export default {
 <style lang="scss" scoped>
 .proj-detail {
   width: 1200px;
+  max-width: 100%;
   display: flex;
   justify-content: space-between;
   .main-panel {
-    width: 826px;
+    flex: 1 1 auto;
     min-width: 500px;
     div {
       margin-bottom: 24px;
@@ -133,6 +144,19 @@ export default {
 
         }
       }
+      .icon-box {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        font-size: 14px;
+        line-height: 20px;
+        color: #9B9B9B;
+        img {
+          width: 14px;
+          height: 11px;
+        }
+      }
     }
     .btn-panel {
       text-align: center;
@@ -148,14 +172,19 @@ export default {
       }
       .info-row {
         margin: 0 0 17px;
+        font-size: 0;
+        vertical-align: top;
         img {
           width: 17px;
           height: 17px;
         }
         .text {
-          font-size: 18px;
+          margin-left: 16px;
+          font-size: 14px;
           color: #4A4A4A;
-          line-height: 25px;
+          line-height: 17px;
+          position: relative;
+          bottom: 3px;
         }
       }
     }

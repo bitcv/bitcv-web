@@ -21,7 +21,7 @@
         </td>
         <td><span>{{ project.tokenSymbol }}</span></td>
         <td><div><span>{{ project.tokenPrice }}</span></div></td>
-        <td><img src="/static/img/心@2x.png" alt=""></td>
+        <td><img src="/static/img/心@2x.png" alt="" @click.stop.prevent="focus(project.id)"></td>
         <td><span>已融资</span></td>
       </tr>
     </table>
@@ -65,6 +65,9 @@ export default {
     },
     projNav: function (projId) {
       this.$router.push('projDetail/' + projId)
+    },
+    focus: function (id) {
+      alert(id)
     }
   }
 }
@@ -84,46 +87,51 @@ export default {
     .info-header {
       th {
         padding: 20px 0;
+        &:nth-child(1) {
+          width: 40%;
+          padding-left: 80px;
+          text-align: left;
+        }
       }
     }
     .info-row {
       cursor: pointer;
-      border-top: 0.5px solid #E4E4E4;
+      border-top: 1px solid #E4E4E4;
       td {
-        padding: 20px 0 22px;
+        padding: 10px 0;
         height: 60px;
-        box-sizing: border-box;
         vertical-align: middle;
         &:nth-child(1) {
-          font-size: 0;
+          display: flex;
           .logo-box {
-            display: inline-block;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 20px;
             width: 60px;
             height: 60px;
             img {
-              width: 60px;
-              height: 60px;
+              max-width: 100%;
+              max-height: 100%;
             }
           }
           .info-box {
-            display: inline-block;
-            width: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             font-size: 14px;
-            position: relative;
-            height: 60px;
-            vertical-align: top;
             text-align: left;
             margin-left: 10px;
             .name {
               color: #000;
+              word-break:break-all
             }
             .intro {
               display: block;
               font-size: 12px;
               line-height: 17px;
               color: #9B9B9B;
-              position: relative;
-              top: 30px;
             }
           }
         }

@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
         factory(Model\User::class, 1000)->create();
         factory(Model\UserFocus::class, 1000)->create();
         factory(Model\Token::class, 1000)->create();
-        factory(Model\Project::class, 1000)->create();
+        factory(Model\Project::class, 200)->create();
         factory(Model\ProjTag::class, 1000)->create();
         factory(Model\ProjAdvantage::class, 1000)->create();
         factory(Model\ProjMember::class, 1000)->create();

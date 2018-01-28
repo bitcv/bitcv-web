@@ -2,7 +2,9 @@
   <div class="proj-show-panel">
     <h3 class="panel-title">发现新公司</h3>
     <div class="main-container">
-      <proj-intro v-for="project in projList" :key="project.id" :proj-data="project"></proj-intro>
+      <router-link :to="{ path: 'projDetail/' + project.id}" v-for="project in projList" :key="project.id">
+        <proj-intro :proj-data="project"></proj-intro>
+      </router-link>
     </div>
   </div>
 </template>
@@ -42,12 +44,10 @@ export default {
   padding: 20px;
   background-color: #FFF;
   .main-container {
-    margin: 0 -20px;
-    width: 826px;
-    height: 324px;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
     align-content: space-around;
   }
 }

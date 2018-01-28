@@ -36,13 +36,17 @@ export default {
 <style lang="scss" scoped>
 .home {
   width: 1200px;
+  max-width: 100%;
   display: flex;
   justify-content: space-between;
   .main-panel {
-    width: 826px;
+    flex: 1 1 auto;
     min-width: 500px;
-    div {
-      margin-bottom: 24px;
+    &>div {
+      margin-top: 24px;
+      &:nth-child(1) {
+        margin-top: 0;
+      }
     }
   }
   .aside-panel {
@@ -51,6 +55,11 @@ export default {
     margin-left: 24px;
     div {
       margin-bottom: 24px;
+    }
+  }
+  @media screen and (max-width: 850px) {
+    .aside-panel {
+      display: none;
     }
   }
 }

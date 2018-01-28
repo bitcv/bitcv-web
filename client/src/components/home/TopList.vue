@@ -2,10 +2,10 @@
   <div class="top-list">
     <h3 class="panel-title">明星项目</h3>
     <div class="info-container">
-      <div class="info-area" v-for="project in projList" :key="project.id">
-        <span>{{ project.tokenName }}</span>
-        <span>{{ project.tokenPrice }}</span>
-      </div>
+      <router-link :to="{ path: 'projDetail/' + project.id}" v-for="project in projList" :key="project.id" class="info-area">
+          <span>{{ project.tokenName }}</span>
+          <span>{{ project.tokenPrice }}</span>
+      </router-link>
     </div>
   </div>
 </template>

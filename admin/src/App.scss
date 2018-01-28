@@ -15,8 +15,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
 	margin: 0;
@@ -27,12 +27,11 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
+article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 body {
-  background-color: #F2F2F2;
 	line-height: 1;
 }
 ol, ul {
@@ -50,22 +49,30 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-//=============================================
-input {
-  outline: none;
+
+h1.page-title {
+    font-size: 30px;
+    color: #303133;
+    line-height: 80px;
 }
-button {
-  outline: none;
+h3.box-title {
+    font-size: 25px;
+    color: #303133;
+    line-height: 50px;
 }
-* {
-  font-family: PingFangSC-Regular;
+h4.para-title {
+    font-size: 18px;
+    color: #606266;
+    line-height: 25px;
+    padding-bottom: 10px;
 }
-h3.panel-title {
-  font-size: 20px;
-  line-height: 28px;
-  color: #4A4A4A;
+p {
+    font-size: 14px;
+    color: #606266;
+    line-height: 18px;
+    margin: 5px 0;
 }
-h3.center-title {
-  width: 100%;
-  text-align: center;
+.el-input.is-disabled .el-input__inner {
+    cursor: text;
+    color: #606266;
 }

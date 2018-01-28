@@ -3,11 +3,11 @@
     <h3 class="panel-title">{{ listData.title }}</h3>
     <ul class="list-container">
       <li class="list-item" v-for="(project, index) in projList" :key="project.projId">
-        <a :href="'#/projDetail/' + project.projId">
+        <router-link :to="{ path: 'projDetail/' + project.projId}">
           <span class="index">{{ index + 1 }}</span>
           <span class="title">{{ project.nameCn }}</span>
           <span class="count">{{ project.count }}</span>
-        </a>
+        </router-link>
       </li>
     </ul>
   </div>

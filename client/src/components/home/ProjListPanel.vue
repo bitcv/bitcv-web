@@ -1,7 +1,11 @@
 <template>
   <div class="proj-list-panel">
     <h3 class="panel-title">项目直通车</h3>
-    <proj-item-box v-for="project in projList" :key="project.id" :projData="project"></proj-item-box>
+    <div class="proj-item-wrapper">
+      <router-link :to="{ path: 'projDetail/' + project.id}" v-for="project in projList" :key="project.id">
+        <proj-item-box  :projData="project"></proj-item-box>
+      </router-link>
+    </div>
     <div class="bottom-btn">更多优秀项目</div>
   </div>
 </template>
@@ -37,19 +41,24 @@ export default {
 
 <style lang="scss" scoped>
 .proj-list-panel {
-  padding: 20px;
   background-color: #FFF;
   width: 100%;
   box-sizing: border-box;
   position: relative;
+  .panel-title {
+    padding: 20px;
+  }
+  .proj-item-wrapper {
+    padding: 0 50px;
+  }
   .bottom-btn {
-    width: 826px;
+    width: 100%;
     height: 54px;
     line-height: 54px;
     text-align: center;
     background-color: #D8D8D8;
     color: #FFF;
-    margin: 0 -20px -20px;
+    cursor: pointer;
   }
 }
 </style>

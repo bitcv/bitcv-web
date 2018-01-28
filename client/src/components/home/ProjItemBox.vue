@@ -38,43 +38,44 @@ export default {
 <style lang="scss" scoped>
 .proj-item-box {
   width: 100%;
-  height: 120px;
+  height: 100px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  padding: 20px 0;
   box-sizing: border-box;
   font-size: 14px;
   line-height: 20px;
   color: #9B9B9B;
   .column.index1 {
-    width: 30%;
+    display: flex;
+    justify-content: start;
+    width: 40%;
     box-sizing: border-box;
-    padding-left: 10px;
-    font-size: 0;
+    overflow: hidden;
     .image-box {
-      display: inline-block;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 60px;
       height: 60px;
       img {
-        width: 60px;
-        height: 60px;
+        max-width: 100%;
+        max-height: 100%;
       }
     }
     .info-box {
+      flex: 1 1 auto;
       font-size: 14px;
-      display:inline-flex;
+      display: flex;
       flex-direction: column;
       justify-content: space-between;
-      vertical-align: top;
       height: 60px;
-      width: calc(100% - 65px);
       margin-left: 5px;
       .title {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: no-wrap;
         color: #000;
+        font-weight: bold;
       }
     }
   }

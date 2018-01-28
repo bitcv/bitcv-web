@@ -24,7 +24,7 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Models\UserFocus::class, function (Faker\Generator $faker) {
     return [
         'user_id' => $faker->numberBetween($min = 1, $max = 1000),
-        'proj_id' => $faker->numberBetween($min = 1, $max = 1000),
+        'proj_id' => $faker->numberBetween($min = 1, $max = 200),
         'status' => $faker->numberBetween($min = 0, $max = 1),
     ];
 });
@@ -33,7 +33,7 @@ $factory->define(App\Models\Token::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->word,
         'symbol' => strtoupper($faker->randomLetter . $faker->randomLetter . $faker->randomLetter),
-        'price' => $faker->randomFloat(6, 0, 10000)
+        'price' => $faker->randomFloat(6, 0, 100)
     ];
 });
 
@@ -48,7 +48,7 @@ $factory->define(App\Models\Project::class, function (Faker\Generator $faker) {
         'abstract' => $faker->realText(500, 2),
         'white_paper_url' => $faker->imageUrl(200, 200),
         'web_url' => $faker->url,
-        'view_times' => $faker->numberBetween(0, 10000),
+        'view_times' => $faker->numberBetween(0, 1000),
         'token_id' => $faker->unique()->numberBetween(0, 1000),
         'node_amount' => $faker->numberBetween(100, 2000),
         'total_amount' => $faker->numberBetween(0, 5000),
@@ -68,14 +68,14 @@ $factory->define(App\Models\Project::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\ProjTag::class, function (Faker\Generator $faker) {
     return [
-        'proj_id' => $faker->numberBetween($min = 1, $max = 100),
+        'proj_id' => $faker->numberBetween($min = 1, $max = 200),
         'tag' => $faker->word
     ];
 });
 
 $factory->define(App\Models\ProjAdvantage::class, function (Faker\Generator $faker) {
     return [
-        'proj_id' => $faker->numberBetween($min = 1, $max = 100),
+        'proj_id' => $faker->numberBetween($min = 1, $max = 200),
         'title' => $faker->realText(50),
         'detail' => $faker->realText(500)
     ];
@@ -83,7 +83,7 @@ $factory->define(App\Models\ProjAdvantage::class, function (Faker\Generator $fak
 
 $factory->define(App\Models\ProjMember::class, function (Faker\Generator $faker) {
     return [
-        'proj_id' => $faker->numberBetween($min = 1, $max = 100),
+        'proj_id' => $faker->numberBetween($min = 1, $max = 200),
         'photo_url' => $faker->imageUrl(200, 200),
         'name' => $faker-> name,
         'position' => $faker->word,
@@ -93,7 +93,7 @@ $factory->define(App\Models\ProjMember::class, function (Faker\Generator $faker)
 
 $factory->define(App\Models\ProjEvent::class, function (Faker\Generator $faker) {
     return [
-        'proj_id' => $faker->numberBetween($min = 1, $max = 100),
+        'proj_id' => $faker->numberBetween($min = 1, $max = 200),
         'occur_time' => $faker->dateTimeBetween('-10 years', 'now'),
         'title' => $faker->realText(50),
         'detail' => $faker->realText(500)
@@ -102,7 +102,7 @@ $factory->define(App\Models\ProjEvent::class, function (Faker\Generator $faker) 
 
 $factory->define(App\Models\ProjPartner::class, function (faker\Generator $faker) {
     return [
-        'proj_id' => $faker->numberBetween($min = 1, $max = 100),
+        'proj_id' => $faker->numberBetween($min = 1, $max = 200),
         'name' => $faker->name,
         'logo_url' => $faker->imageUrl(200, 200),
         'web_url' => $faker->url,
@@ -111,8 +111,8 @@ $factory->define(App\Models\ProjPartner::class, function (faker\Generator $faker
 
 $factory->define(App\Models\ProjMedia::class, function (Faker\Generator $faker) {
     return [
-        'proj_id' => $faker->numberBetween($min = 1, $max = 100),
-        'media_id' => $faker->numberBetween($min = 1, $max = 100),
+        'proj_id' => $faker->numberBetween($min = 1, $max = 200),
+        'media_id' => $faker->numberBetween($min = 1, $max = 1000),
         'image_url' => $faker->imageurl(200, 200),
         'title' => $faker->realText(50),
         'detail' => $faker->realText(500)
@@ -121,8 +121,8 @@ $factory->define(App\Models\ProjMedia::class, function (Faker\Generator $faker) 
 
 $factory->define(App\Models\ProjSocial::class, function (Faker\Generator $faker) {
     return [
-        'proj_id' => $faker->numberBetween($min = 1, $max = 100),
-        'social_id' => $faker->numberBetween($min = 1, $max = 100),
+        'proj_id' => $faker->numberBetween($min = 1, $max = 200),
+        'social_id' => $faker->numberBetween($min = 1, $max = 1000),
         'url' => $faker->url
     ];
 });
