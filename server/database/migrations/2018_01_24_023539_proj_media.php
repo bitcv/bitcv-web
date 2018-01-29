@@ -17,6 +17,7 @@ class ProjMedia extends Migration
             $table->increments('id');
             $table->unsignedInteger('proj_id')->default(0);
             $table->unsignedInteger('media_id')->default(0);
+            $table->string('media_url', 300)->default('');
             $table->string('image_url', 300)->default('');
             $table->string('title', 300)->default('');
             $table->string('detail', 1000)->default('');

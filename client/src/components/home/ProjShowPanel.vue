@@ -29,7 +29,6 @@ export default {
     }).then(function (res) {
       var resData = res.data
       if (resData.errcode === 0) {
-        console.log(resData)
         that.projList = resData.data.projList
       } else {
         alert(resData.errmsg)

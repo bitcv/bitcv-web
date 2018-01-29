@@ -48,6 +48,20 @@ class ProjectController extends Controller
         $projList = $projModel->select('project.id', 'title', 'name_cn', 'name_en', 'logo_url', 'bussiness_type', 'phrase', 'region', 'token.name as tokenName', 'token.symbol as tokenSymbol', 'token.price as tokenPrice')
             ->offset($offset)->limit($perpage)->get()->toArray();
 
+        // 获取用户关注状态
+        $userId = isset($_COOKIE['userId']) ? $_COOKIE['userId'] : null;
+        if (!$userId) {
+            foreach ($projList as &$project) {
+                $project['focusStatus'] = 0;
+            }
+        } else {
+            foreach ($projList as &$project) {
+                $projId = $project['id'];
+                $focusStatus = Model\UserFocus::where([['user_id', $userId], ['proj_id', $projId]])->value('status');
+                $project['focusStatus'] = (int)$focusStatus;
+            }
+        }
+
         return $this->output(['dataCount' => $dataCount, 'projList' => $projList]);
     }
 
@@ -94,7 +108,7 @@ class ProjectController extends Controller
 
         // 获取项目基本信息
         $projData = Model\Project::where('id', $projId)
-            ->select('name_cn', 'name_en', 'name_short', 'logo_url', 'banner_url', 'abstract', 'white_paper_url', 'web_url', 'view_times', 'token_id', 'node_amount', 'total_amount', 'plan_amount', 'start_time', 'end_time', 'status', 'admin_id', 'company_tel', 'company_addr', 'company_email')
+            ->select('id', 'name_cn', 'name_en', 'name_short', 'logo_url', 'banner_url', 'abstract', 'white_paper_url', 'web_url', 'view_times', 'token_id', 'node_amount', 'total_amount', 'plan_amount', 'start_time', 'end_time', 'status', 'admin_id', 'company_tel', 'company_addr', 'company_email')
             ->first();
         if ($projData === null) {
             return $this->error(301);
@@ -102,7 +116,16 @@ class ProjectController extends Controller
         $projData->toArray();
 
         // 获取项目关注数目
-        $projData['focusNum'] = Model\UserFocus::where('proj_id', $projId)->count();
+        $projData['focusNum'] = Model\UserFocus::where([['proj_id', $projId], ['status', 1]])->count();
+
+        // 获取项目关注状态
+        $userId = isset($_COOKIE['userId']) ? $_COOKIE['userId'] : null;
+        if (!$userId) {
+            $projData['focusStatus'] = 0;
+        } else {
+            $focusStatus = Model\UserFocus::where([['user_id', $userId], ['proj_id', $projId]])->value('status');
+            $projData['focusStatus'] = (int)$focusStatus;
+        }
 
         // 获取token信息
         $tokenId = $projData['token_id'];

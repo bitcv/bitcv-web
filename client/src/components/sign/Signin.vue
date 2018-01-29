@@ -51,7 +51,11 @@ export default {
       }).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
+          localStorage.setItem('userId', resData.data.userId)
+          localStorage.setItem('account', resData.data.account)
+          localStorage.setItem('avatarUrl', resData.data.avatarUrl)
           that.$router.push('/')
+          that.$router.go(0)
         } else {
           alert(resData.errmsg)
         }

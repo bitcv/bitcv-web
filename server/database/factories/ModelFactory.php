@@ -113,6 +113,7 @@ $factory->define(App\Models\ProjMedia::class, function (Faker\Generator $faker) 
     return [
         'proj_id' => $faker->numberBetween($min = 1, $max = 200),
         'media_id' => $faker->numberBetween($min = 1, $max = 1000),
+        'media_url' => $faker->imageurl(200, 200),
         'image_url' => $faker->imageurl(200, 200),
         'title' => $faker->realText(50),
         'detail' => $faker->realText(500)

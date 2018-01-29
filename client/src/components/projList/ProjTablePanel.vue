@@ -9,7 +9,7 @@
         <th></th>
         <th>融资状态</th>
       </tr>
-      <tr class="info-row" @click="projNav(project.id)" v-for="project in projData.projList" :key="project.id">
+      <tr class="info-row" @click="projNav(project.id)" v-for="(project, index) in projData.projList" :key="project.id">
         <td>
           <div class="logo-box">
             <img :src="project.logoUrl" alt="">
@@ -21,7 +21,7 @@
         </td>
         <td><span>{{ project.tokenSymbol }}</span></td>
         <td><div><span>{{ project.tokenPrice }}</span></div></td>
-        <td><img src="/static/img/心@2x.png" alt="" @click.stop.prevent="focus(project.id)"></td>
+        <td><img :src="project.focusStatus === 1 ? focusUrl : unfocusUrl" alt="" @click.stop.prevent="focus(project.id, index)"></td>
         <td><span>已融资</span></td>
       </tr>
     </table>
@@ -34,7 +34,9 @@ export default {
     return {
       projData: function () {
         return {}
-      }
+      },
+      focusUrl: '/static/img/focus@2x.png',
+      unfocusUrl: '/static/img/unfocus@2x.png'
     }
   },
   created () {
@@ -66,8 +68,20 @@ export default {
     projNav: function (projId) {
       this.$router.push('projDetail/' + projId)
     },
-    focus: function (id) {
-      alert(id)
+    focus: function (projId, index) {
+      var userId = localStorage.getItem('userId')
+      if (!userId) {
+        return alert('请登录')
+      }
+      var that = this
+      this.$http.post('/api/toggleFocus', {
+        projId: projId
+      }).then(function (res) {
+        var resData = res.data
+        if (resData.errcode === 0) {
+          that.projData.projList[index].focusStatus = resData.data.status
+        }
+      })
     }
   }
 }

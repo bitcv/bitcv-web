@@ -6,7 +6,7 @@
         <proj-item-box  :projData="project"></proj-item-box>
       </router-link>
     </div>
-    <div class="bottom-btn">更多优秀项目</div>
+    <!--<div class="bottom-btn">更多优秀项目</div>-->
   </div>
 </template>
 

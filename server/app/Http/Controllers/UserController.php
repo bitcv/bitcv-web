@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models as Model;
+use Illuminate\Support\Facades\Cookie;
 
 class UserController extends Controller
 {
@@ -53,12 +54,34 @@ class UserController extends Controller
         extract($params);
 
         $md5Passwd = md5($passwd);
-        $userId = Model\User::where([['account', $account], ['passwd', $md5Passwd]])->value('id');
-        if (!$userId) {
+        $userData = Model\User::where([['account', $account], ['passwd', $md5Passwd]])->first();
+        if (!$userData) {
             return $this->error(202);
         }
+        $timestamp = time();
+        $userSig = md5($userData->id . 'test' . $timestamp);
+        $expireTime = time() + 3600 * 24;
 
-        return $this->output(['userId' => $userId]);
+        setcookie('userId', $userData->id, $expireTime);
+        setcookie('timestamp', $timestamp, $expireTime);
+        setcookie('userSig', $userSig, $expireTime);
+
+        return $this->output([
+            'userId' => $userData->id,
+            'account' => $userData->account,
+            'avatarUrl' => $userData->avatar_url
+        ]);
+    }
+
+    public function signout (Request $request) {
+
+        $expireTime = time() - 3600;
+        setcookie('userId', '', $expireTime);
+        setcookie('account', '', $expireTime);
+        setcookie('avatarUrl', '', $expireTime);
+        setcookie('userSig', '', $expireTime);
+
+        return $this->output();
     }
 
     public function getUserInfo (Request $request) {
@@ -80,11 +103,10 @@ class UserController extends Controller
         return $this->output($userData);
     }
 
-    public function focusProject (Request $request) {
+    public function toggleFocus (Request $request) {
 
         // 获取请求参数
         $params = $this->validation($request, [
-            'userId' => 'required|numeric',
             'projId' => 'required|numeric',
         ]);
         if ($params === false) {
@@ -92,22 +114,24 @@ class UserController extends Controller
         }
         extract($params);
 
+        $userId = $_COOKIE['userId'];
         // 检验是否重复关注
-        $isExist = Model\UserFocus::where([['user_id', $userId], ['proj_id', $projId]])->count();
-        if ($isExist) {
-            return $this->error(204);
+        $userFocusData = Model\UserFocus::where([['user_id', $userId], ['proj_id', $projId]])->first();
+        if ($userFocusData) {
+            $status = $userFocusData->status ? 0 : 1;
+            $flag = Model\UserFocus::where([['user_id', $userId], ['proj_id', $projId]])->update(['status' => $status]);
+        } else {
+            $status = 1;
+            Model\UserFocus::insert(['user_id' => $userId, 'proj_id' => $projId, 'status' => $status]);
         }
 
-        Model\UserFocus::insert(['user_id' => $userId, 'proj_id' => $projId]);
-
-        return $this->output();
+        return $this->output(['status' => $status]);
     }
 
     public function viewProject (Request $request) {
 
         // 获取请求参数
         $params = $this->validation($request, [
-            'userId' => 'required|numeric',
             'projId' => 'required|numeric',
         ]);
         if ($params === false) {

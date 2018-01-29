@@ -39,7 +39,7 @@ export default {
       }).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
-          that.$router.push('login')
+          that.$router.push('/signin')
         } else {
           alert(resData.errmsg)
         }

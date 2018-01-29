@@ -68,11 +68,13 @@ export default {
         companyAddr: '',
         companyEmail: '',
         viewTimes: 0,
-        focusNum: 0
+        focusNum: 0,
+        focusStatus: 0
       }
     }
   },
   mounted () {
+    // 获取项目信息
     var projId = this.$route.params.id
     console.log('projId:' + projId)
     var that = this
@@ -86,6 +88,10 @@ export default {
       } else {
         alert(resData.errmsg)
       }
+    })
+    // 项目浏览数+1
+    this.$http.post('/api/viewProject', {
+      projId: projId
     })
   },
   components: {
@@ -187,6 +193,11 @@ export default {
           bottom: 3px;
         }
       }
+    }
+  }
+  @media screen and (max-width: 850px) {
+    .aside-panel {
+      display: none;
     }
   }
 }

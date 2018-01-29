@@ -15,6 +15,14 @@
         </div>
       </div>
     </div>
+    <div class="btn-box">
+        <a :href="projDetail.whitePaperUrl" target="_blank">
+        <div class="white-paper">项目白皮书</div>
+        </a>
+        <div :class="{ focused: projDetail.focusStatus }" @click="toggleFocus()">
+          {{ projDetail.focusStatus ? '取消收藏' : '收藏项目' }}
+        </div>
+    </div>
     <div class="tag-box">
       <span class="title">标签</span>
       <span class="tag" v-for="(tag, index) in projDetail.tagList" :key="index">{{ tag }}</span>
@@ -35,6 +43,23 @@ export default {
   },
   data () {
     return {}
+  },
+  methods: {
+    toggleFocus: function () {
+      var userId = localStorage.getItem('userId')
+      if (!userId) {
+        return alert('请登录')
+      }
+      var that = this
+      this.$http.post('/api/toggleFocus', {
+        projId: this.projDetail.id
+      }).then(function (res) {
+        var resData = res.data
+        if (resData.errcode === 0) {
+          that.projDetail.focusStatus = resData.data.status
+        }
+      })
+    }
   }
 }
 </script>
@@ -45,6 +70,29 @@ export default {
   width: 100%;
   padding: 54px 41px 0 22px;
   background-color: #FFF;
+  position: relative;
+  .btn-box {
+    position: absolute;
+    top: 50px;
+    right: 41px;
+    div {
+      width: 111px;
+      height: 28px;
+      margin-bottom: 24px;
+      line-height: 28px;
+      text-align: center;
+      font-size: 14px;
+      color: #FFCF81;
+      background-color: #000;
+      border-radius: 2px;
+      border: 1px solid #000;
+      cursor: pointer;
+    }
+    div.focused {
+      background-color: #FFF;
+      color: #9B9B9B;
+    }
+  }
   .info-box {
     img {
       width: 80px;

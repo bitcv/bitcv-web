@@ -36,7 +36,7 @@
         </div>
       </div>
       <div class="team-area" id="Team">
-        <el-carousel :interval="5000" arrow="always" height="378px">
+        <el-carousel :interval="5000" arrow="always" height="390px">
           <el-carousel-item class="member" v-for="(member, index) in projDetail.memberList" :key="index">
             <img class="avatar" :src="member.photoUrl" alt="">
             <span class="name">{{ member.name }}</span>
@@ -59,12 +59,12 @@
       <div class="media-area" id="Media">
         <h3 class="center-title panel-title">媒体报道</h3>
         <div class="item-box">
-          <div v-for="(media, index) in projDetail.mediaList" :key="index" class="item">
-            <div class="image-area">
-              <img class="log" :src="media.imageUrl" alt="">
-            </div>
-            <span class="content">{{ media.title }}</span>
-          </div>
+          <a class="item" :href="media.mediaUrl" target="_blank" v-for="(media, index) in projDetail.mediaList" :key="index">
+              <div class="image-area">
+                <img class="log" :src="media.imageUrl" alt="">
+              </div>
+              <span class="content">{{ media.title }}</span>
+          </a>
         </div>
       </div>
     </div>
@@ -156,6 +156,12 @@ export default {
         line-height: 28px;
         color: #000;
         text-align: left;
+        overflow:hidden;
+        text-overflow:ellipsis; 
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 5;
+        overflow: hidden;
       }
     }
   }
@@ -207,6 +213,18 @@ export default {
         border-top: 9px solid #5AA6FF;
         box-shadow: 0 0 9px #C0C0C0;
         margin: 0 5px;
+        &:nth-child(1) {
+          border-color: #3A323D;
+        }
+        &:nth-child(2) {
+          border-color: #5AA6FF;
+        }
+        &:nth-child(3) {
+          border-color: #FFE651;
+        }
+        &:nth-child(4) {
+          border-color: #FF6262;
+        }
         .image-area {
           width: 100%;
           height: 115px;

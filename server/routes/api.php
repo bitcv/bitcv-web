@@ -2,13 +2,15 @@
 
 use Illuminate\Http\Request;
 
+//Route::group(['middleware' => 'checkLogin'], function () {
+    Route::any('updateUserInfo', 'UserController@updateUserInfo');
+    Route::any('toggleFocus', 'UserController@toggleFocus');
+    Route::any('viewProject', 'UserController@viewProject');
+//});
 Route::any('signup', 'UserController@signup');
 Route::any('signin', 'UserController@signin');
 Route::any('signout', 'UserController@signout');
 Route::any('getUserInfo', 'UserController@getUserInfo');
-Route::any('updateUserInfo', 'UserController@updateUserInfo');
-Route::any('focusProject', 'UserController@focusProject');
-Route::any('viewProject', 'UserController@viewProject');
 
 Route::any('getProjList', 'ProjectController@getProjList');
 Route::any('getProjTopList', 'ProjectController@getProjTopList');
