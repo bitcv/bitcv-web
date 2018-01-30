@@ -10,44 +10,21 @@
       </el-steps>
     </div>
     <div class="form-container">
-      <basic v-show="curIndex === 1"></basic>
-      <event v-show="curIndex === 1"></event>
-      <team v-show="curIndex === 1"></team>
-      <partner v-show="curIndex === 1"></partner>
-      <media v-show="curIndex === 1"></media>
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import Basic from '@/components/projList/addProject/Basic'
-import Event from '@/components/projList/addProject/Event'
-import Team from '@/components/projList/addProject/Team'
-import Partner from '@/components/projList/addProject/Partner'
-import Media from '@/components/projList/addProject/Media'
-
 export default {
-  data () {
+  data() {
     return {
-      curIndex: 1,
-      projData: {
-        nameCn: '',
-        nameEn: '',
-        webUrl: '',
-        logo: '',
-        abstract: '',
-        tagList: [],
-        startTime: '',
-        endTime: '',
-        eventList: [],
-        teamList: [],
-        partnerList: [],
-        mediaList: []
-      }
+      curIndex: 1
     }
   },
   watch: {
     $route (cur) {
+      console.log(cur)
       switch (cur.path) {
         case '/addProject/basic':
           this.curIndex = 0
