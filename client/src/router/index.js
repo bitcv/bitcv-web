@@ -9,7 +9,6 @@ import Signup from '@/components/sign/Signup'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
   scrollBehavior (to, from, savedPosition) {
     if (to.hash) {
       return {

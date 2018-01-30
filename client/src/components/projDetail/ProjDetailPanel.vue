@@ -5,24 +5,24 @@
         <router-link to="#Info">项目信息</router-link>
       </span>
       <span :class="{active: activeIndex === 2}" @click="activeIndex=2">
-         <router-link to="#Team">
-           团队信息
-         </router-link>
+        <router-link to="#Team">
+          团队信息
+        </router-link>
       </span>
       <span :class="{active: activeIndex === 3}" @click="activeIndex=3">
-         <router-link to="#Event">
-           项目发展
-         </router-link>
+        <router-link to="#Event">
+          项目发展
+        </router-link>
       </span>
       <span :class="{active: activeIndex === 4}" @click="activeIndex=4">
-         <router-link to="#Partner">
-           合作伙伴
-         </router-link>
+        <router-link to="#Partner">
+          合作伙伴
+        </router-link>
       </span>
       <span :class="{active: activeIndex === 5}" @click="activeIndex=5">
-         <router-link to="#Media">
-           媒体报道
-         </router-link>
+        <router-link to="#Media">
+          媒体报道
+        </router-link>
       </span>
     </div>
     <div class="content">
@@ -60,10 +60,10 @@
         <h3 class="center-title panel-title">媒体报道</h3>
         <div class="item-box">
           <a class="item" :href="media.mediaUrl" target="_blank" v-for="(media, index) in projDetail.mediaList" :key="index">
-              <div class="image-area">
-                <img class="log" :src="media.imageUrl" alt="">
-              </div>
-              <span class="content">{{ media.title }}</span>
+            <div class="image-area">
+              <img class="log" :src="media.imageUrl" alt="">
+            </div>
+            <span class="content">{{ media.title }}</span>
           </a>
         </div>
       </div>
@@ -157,7 +157,7 @@ export default {
         color: #000;
         text-align: left;
         overflow:hidden;
-        text-overflow:ellipsis; 
+        text-overflow:ellipsis;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 5;

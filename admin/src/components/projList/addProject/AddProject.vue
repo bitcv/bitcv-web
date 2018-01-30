@@ -1,0 +1,38 @@
+<template>
+  <div class="add-project">
+    <div class="step-container">
+    <el-steps :active="1" align-center finish-status="success">
+      <el-step title="基本信息"></el-step>
+      <el-step title="发展历程"></el-step>
+      <el-step title="团队成员"></el-step>
+      <el-step title="合作伙伴"></el-step>
+      <el-step title="媒体报道"></el-step>
+    </el-steps>
+    </div>
+    <div class="form-container">
+      <router-view></router-view>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.add-project {
+  .step-container {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 20px;
+  }
+  .form-container {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px 80px;
+  }
+}
+</style>

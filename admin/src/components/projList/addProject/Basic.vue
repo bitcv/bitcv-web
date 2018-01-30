@@ -1,19 +1,14 @@
 <template>
-  <div class="add-project">
-    <el-steps :active="1" align-center finish-status="success">
-      <el-step title="基本信息"></el-step>
-      <el-step title="优势和发展历程"></el-step>
-      <el-step title="代币信息"></el-step>
-      <el-step title="成员信息"></el-step>
-      <el-step title="合作伙伴"></el-step>
-      <el-step title="媒体报道"></el-step>
-    </el-steps>
+  <div class="basic">
     <div class="form-container">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" label-position="left" class="demo-ruleForm">
         <el-form-item class="inline" label="项目中文名" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
         <el-form-item class="inline" label="项目英文名" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="项目主页" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
         <el-form-item label="项目头像" prop="name">
@@ -67,7 +62,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       boolTest: false,
       options: [{
@@ -126,7 +121,7 @@ export default {
           { required: true, message: '请填写活动形式', trigger: 'blur' }
         ]
       }
-    };
+    }
   },
   methods: {
     handleAvatarSuccess(res, file) {
@@ -153,7 +148,6 @@ export default {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
-
     handleInputConfirm() {
       let inputValue = this.inputValue;
       if (inputValue) {
@@ -167,17 +161,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.add-project {
-  .form-container {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 10px 50px;
-    form {
-      width: 600px;
-      margin: 0 auto;
-    }
-  }
-}
 .avatar-uploader {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
