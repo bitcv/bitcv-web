@@ -1,10 +1,18 @@
 <template>
   <div class="event">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+    <el-form label-width="120px">
       <div class="event-box">
-        <el-item>
+        <el-item label="标题">
+          <el-input></el-input>
+        </el-item>
+        <el-item label="事件描述">
+          <el-input></el-input>
         </el-item>
       </div>
+      <el-item>
+        <el-button type="primary"></el-button>
+        <el-button>取消</el-button>
+      </el-item>
     </el-form>
   </div>
 </template>

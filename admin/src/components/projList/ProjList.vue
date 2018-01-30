@@ -2,7 +2,7 @@
     <div class="proj-list">
         <h1 class="page-title">项目列表</h1>
         <div class="content-container">
-            <router-link to="/addProject">
+            <router-link to="/addProject/basic">
               <el-button type="primary" icon="el-icon-plus">新建项目</el-button>
             </router-link>
             <el-table :data="tableData5" style="width: 100%">

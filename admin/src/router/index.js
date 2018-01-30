@@ -22,7 +22,7 @@ export default new Router({
       component: AddProject,
       children: [
         {
-          path: '',
+          path: 'basic',
           component: Basic
         },
         {

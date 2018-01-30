@@ -11,6 +11,9 @@
         <el-form-item label="项目主页" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
+        <el-form-item>
+          <el-input type="file"></el-input>
+        </el-form-item>
         <el-form-item label="项目头像" prop="name">
           <el-upload class="avatar-uploader" :auto-upload="boolTest" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-change="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
