@@ -16,7 +16,7 @@
             <span>浏览</span>
           </div>
           <div class="focus">
-            <img src="/static/img/心@2x.png" alt="">
+            <img src="/static/img/unfocus@2x.png" alt="">
             <span>关注</span>
           </div>
         </div>

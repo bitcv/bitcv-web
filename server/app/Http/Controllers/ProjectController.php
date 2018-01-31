@@ -204,6 +204,7 @@ class ProjectController extends Controller
             return $this->error(100);
         }
         extract($params);
+        $webUrl = strpos($webUrl, 'http') === 0 ? $webUrl : 'http://' . $webUrl;
 
         // 解析参数
         $tagList = json_decode($tagList, true);
@@ -223,14 +224,6 @@ class ProjectController extends Controller
             'price' => 0,
         ]);
         $tokenId = $tokenData->id;
-        //if (!$tokenData) {
-            //$tokenId = Model\Token::create([
-                //'name' => $tokenName,
-                //'symbol' => $tokenSymbol,
-            //]);
-        //} else {
-            //$tokenId = $tokenData['id'];
-        //}
 
         // 创建项目
         $projModel = Model\Project::firstOrCreate([
@@ -274,19 +267,23 @@ class ProjectController extends Controller
         }
         // 添加项目合作伙伴
         foreach ($partnerList as $partner) {
+            $webUrl = $partner['webUrl'];
+            $webUrl = strpos($webUrl, 'http') === 0 ? $webUrl : 'http://' . $webUrl;
             Model\ProjPartner::create([
                 'proj_id' => $projId,
                 'name' => $partner['name'],
                 'logo_url' => $partner['logoUrl'],
-                'web_url' => $partner['webUrl'],
+                'web_url' => $webUrl,
             ]);
         }
 
         // 添加项目媒体报道
         foreach ($mediaList as $media) {
+            $webUrl = $media['webUrl'];
+            $webUrl = strpos($webUrl, 'http') === 0 ? $webUrl : 'http://' . $webUrl;
             Model\ProjMedia::create([
                 'proj_id' => $projId,
-                'media_url' => $media['webUrl'],
+                'media_url' => $webUrl,
                 'image_url' => $media['photoUrl'],
                 'title' => $media['title'],
             ]);

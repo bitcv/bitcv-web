@@ -2,11 +2,8 @@
   <div class="footer">
     <div class="content">
       <div class="icon-box">
-        <a href="" target="_blank">
-          <img src="/static/img/webchat-2x.png" alt="">
-        </a>
-        <a href="https://weibo.com/bitcv" target="_blank">
-          <img src="/static/img/blog-2x.png" alt="">
+        <a :href="social.url" target="_blank" v-for="(social, index) in socialList" :key="index">
+          <img :src="social.logoUrl" @mouseover="social.logoUrl = social.hoverUrl" @mouseout="social.logoUrl = social.unhoverUrl" alt="">
         </a>
       </div>
       <div class="name">
@@ -26,7 +23,34 @@
 <script>
 export default {
   data () {
-    return {}
+    return {
+      socialList: [{
+        url: 'https://weibo.com/bitcv',
+        logoUrl: '/static/logo/blog.png',
+        unhoverUrl: '/static/logo/blog.png',
+        hoverUrl: '/static/logo/blog-hover.png'
+      }, {
+        url: 'https://www.facebook.com/groups/1301707606641533/',
+        logoUrl: '/static/logo/facebook.png',
+        unhoverUrl: '/static/logo/facebook.png',
+        hoverUrl: '/static/logo/facebook-hover.png'
+      }, {
+        url: 'https://github.com/bitcv',
+        logoUrl: '/static/logo/github.png',
+        unhoverUrl: '/static/logo/github.png',
+        hoverUrl: '/static/logo/github-hover.png'
+      }, {
+        url: 'https://t.me/bcvtoken',
+        logoUrl: '/static/logo/telegram.png',
+        unhoverUrl: '/static/logo/telegram.png',
+        hoverUrl: '/static/logo/telegram-hover.png'
+      }, {
+        url: 'https://twitter.com/BCVofficial',
+        logoUrl: '/static/logo/twitter.png',
+        unhoverUrl: '/static/logo/twitter.png',
+        hoverUrl: '/static/logo/twitter-hover.png'
+      }]
+    }
   }
 }
 </script>
@@ -51,8 +75,8 @@ export default {
       top: 24px;
       color: #D8D8D8;
       img {
-        width: 51px;
-        height: 51px;
+        width: 28px;
+        height: 28px;
         margin-left: 20px;
       }
     }

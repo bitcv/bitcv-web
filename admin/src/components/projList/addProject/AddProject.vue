@@ -61,7 +61,7 @@ export default {
         paramObj.partnerList = JSON.stringify(paramObj.partnerList)
         paramObj.mediaList = JSON.stringify(paramObj.mediaList)
         var that = this
-        this.$http.post('api/addProject', paramObj).then(function (res) {
+        this.$http.post('/api/addProject', paramObj).then(function (res) {
           var resData = res.data
           console.log(resData)
           if (resData.errcode === 0) {

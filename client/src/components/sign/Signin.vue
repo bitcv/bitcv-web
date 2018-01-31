@@ -21,11 +21,6 @@
     </template>
     <div class="qrcode-area" v-else>
       <img src="/static/img/logo.png" alt="">
-      <!--<div class="qrcode-box">-->
-        <!--<iframe style="zoom: 50%;" src="https://open.weixin.qq.com/connect/qrconnect?appid=wxbdc5610cc59c1631&redirect_uri=https%3A%2F%2Fpassport.yhd.com%2Fwechat%2Fcallback.do&response_type=code&scope=snsapi_login&state=33c448bac99dbe862656e48c8f2524cb#wechat_redirect" frameborder="0">-->
- <!--[>scrolling="no"<]-->
-        <!--</iframe>-->
-      <!--</div>-->
       <span>打开<em>微信</em>扫一扫</span>
     </div>
   </div>

@@ -85,6 +85,7 @@ export default {
     signout () {
       var that = this
       this.$http.post('/api/signout', {}).then(function (res) {
+        console.log('signout')
         var resData = res.data
         if (resData.errcode === 0) {
           localStorage.removeItem('userId')
