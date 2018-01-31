@@ -182,11 +182,11 @@ export default {
         background-color: #282828;
         margin: 0 42px 0 16px;
         width: 100px;
-        height: 40px;
+        height: 35px;
         border-radius: 4px;
         .btn-text {
-          font-size: 20px;
-          line-height: 40px;
+          font-size: 16px;
+          line-height: 35px;
           display: block;
           width: 100%;
           height: 100%;

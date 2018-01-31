@@ -16,3 +16,6 @@ Route::any('getProjList', 'ProjectController@getProjList');
 Route::any('getProjTopList', 'ProjectController@getProjTopList');
 Route::any('getProjDetail', 'ProjectController@getProjDetail');
 Route::any('addProject', 'ProjectController@addProject');
+
+// 上传图片
+Route::any('uploadFile', 'FileController@uploadFile');

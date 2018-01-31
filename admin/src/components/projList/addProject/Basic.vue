@@ -3,74 +3,97 @@
     <div class="form-container">
       <el-form label-position="left" label-width="100px">
         <el-form-item label="项目中文名">
-          <el-input></el-input>
+          <el-input v-model="projData.nameCn" placeholder="请输入项目中文名" required></el-input>
         </el-form-item>
         <el-form-item label="项目英文名">
-          <el-input></el-input>
+          <el-input v-model="projData.nameEn" placeholder="请输入项目英文名" required></el-input>
         </el-form-item>
         <el-form-item label="项目主页">
-          <el-input>
-            <template slot="prepend">http://</template>
+          <el-input v-model="projData.webUrl">
+            <template slot="prepend" placeholder="请输入项目官网地址">http://</template>
           </el-input>
         </el-form-item>
         <el-form-item label="项目logo">
-          <el-upload class="upload-box" action="" :auto-upload="false" :on-change="onChange" :show-file-list="false">
+          <el-upload class="upload-box" name="logo" action="/api/uploadFile" :on-success="onLogoSuccess" :show-file-list="false">
             <i class="el-icon-plus"></i>
-            <img :src="imageUrl" alt="">
+            <img :src="projData.logoUrl" alt="">
           </el-upload>
-          <input type="file" @change="onChange2">
         </el-form-item>
         <el-form-item label="项目头图">
-          <el-upload class="upload-box" action="" :auto-upload="false" :on-change="onChange" :show-file-list="false">
+          <el-upload class="upload-box" name="picture" action="/api/uploadFile" :on-success="onBannerSuccess" :show-file-list="false">
             <i class="el-icon-plus"></i>
-            <img :src="imageUrl" alt="">
+            <img :src="projData.bannerUrl" alt="">
           </el-upload>
         </el-form-item>
         <el-form-item label="一句话描述">
-          <el-input></el-input>
+          <el-input v-model="projData.desc" placeholder="请输入项目的一句话概括"></el-input>
         </el-form-item>
         <el-form-item class="tag-item" label="项目标签">
-          <el-tag class="tag-text" :key="tag" v-for="(tag, index) in tagList" closable :disable-transitions="false" @close="removeTag(index)"> {{tag}} </el-tag>
+          <el-tag class="tag-text" :key="index" v-for="(tag, index) in projData.tagList" closable :disable-transitions="false" @close="removeTag(index)"> {{tag}} </el-tag>
           <el-input v-if="tagInputVisible" class="tag-input" ref="tagInput" v-model="inputTag" size="small" @keyup.enter.native="addTag" @blur="addTag" >
           </el-input>
-          <el-button v-else class="tag-btn" size="small" @click="showTagInput">+ 添加标签</el-button>
+            <el-button v-else class="tag-btn" size="small" @click="showTagInput">+ 添加标签</el-button>
         </el-form-item>
         <el-form-item label="项目简介">
-          <el-input type="textarea"></el-input>
+          <el-input type="textarea" v-model="projData.abstract" placeholder="请输入项目简介"></el-input>
         </el-form-item>
-        <el-form-item label="融资时间">
-          <el-date-picker type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+        <el-form-item label="项目白皮书">
+          <el-upload class="upload-box" name="whitePaper" action="/api/uploadFile" :on-success="onWhitePaperSuccess" :show-file-list="false">
+            <i class="el-icon-plus"></i>
+            <img :src="projData.whitePaperUrl" alt="">
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="融资开始时间">
+          <el-date-picker v-model="projData.startTime" type="datetime" default-value="2017-01-01T00:00:00" placeholder="请选择融资开始日期">
           </el-date-picker>
+        </el-form-item>
+        <el-form-item label="融资结束时间">
+          <el-date-picker v-model="projData.endTime" type="datetime" default-value="2017-01-01T00:00:00" placeholder="请选择融资结束日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="代币名称">
+          <el-input v-model="projData.tokenName" placeholder="请输入代币名称"></el-input>
+        </el-form-item>
+        <el-form-item label="代币符号">
+          <el-input v-model="projData.tokenSymbol" placeholder="请输入代币符号"></el-input>
         </el-form-item>
       </el-form>
     </div>
     <div class="footer-btn-area">
-      <router-link to="event">
-        <el-button type="primary">下一步</el-button>
-      </router-link>
+      <el-button type="primary" @click="nextStep">下一步</el-button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    projData: Object
+  },
   data () {
     return {
-      imageUrl: '',
       inputTag: '',
       tagList: [],
       tagInputVisible: false
     }
   },
   methods: {
-    onChange (data) {
-      console.log('onChange')
-      console.log(file)
-      var file = data.raw
-      var param = new FormData()
-      param.append('file',file,file.name);
+    onLogoSuccess (res) {
+      if (res.errcode === 0) {
+        this.projData.logoUrl = res.data.url
+      }
     },
-    showTagInput() {
+    onBannerSuccess (res) {
+      if (res.errcode === 0) {
+        this.projData.bannerUrl = res.data.url
+      }
+    },
+    onWhitePaperSuccess (res) {
+      if (res.errcode === 0) {
+        this.projData.whitePaperUrl = res.data.url
+      }
+    },
+    showTagInput () {
       this.tagInputVisible = true
       this.$nextTick(_ => {
         this.$refs.tagInput.$refs.input.focus()
@@ -78,13 +101,19 @@ export default {
     },
     addTag () {
       if (this.inputTag) {
-        this.tagList.push(this.inputTag)
+        this.projData.tagList.push(this.inputTag)
       }
       this.tagInputVisible = false
       this.inputTag = ''
     },
     removeTag (index) {
       this.tagList.splice(index, 1)
+    },
+    nextStep () {
+      this.$emit('updateData', {
+        index: 1,
+        projData: this.projData
+      })
     }
   }
 }
@@ -100,27 +129,6 @@ export default {
     .tag-input {
       width: 90px;
     }
-  }
-}
-.upload-box {
-  position: relative;
-  width: 100px;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  border: 1px solid #4A4A4A;
-  border-radius: 5px;
-  box-sizing: border-box;
-  img {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
   }
 }
 </style>

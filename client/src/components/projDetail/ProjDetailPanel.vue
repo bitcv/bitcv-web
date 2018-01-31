@@ -44,7 +44,7 @@
           </el-carousel-item>
         </el-carousel>
       </div>
-      <div class="event-area" id="Event">
+      <div class="event-area" id="Event" v-show="false">
         <h3 class="panel-title">项目发展</h3>
         <proj-time-line></proj-time-line>
       </div>

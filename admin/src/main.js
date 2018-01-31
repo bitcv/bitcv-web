@@ -11,7 +11,7 @@ require('es6-promise').polyfill()
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
-Vue.use(ElementUI);
+Vue.use(ElementUI)
 
 /* eslint-disable no-new */
 new Vue({

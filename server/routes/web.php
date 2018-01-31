@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('index');
 });
+Route::get('/admin/654321', function () {
+    return view('admin');
+});

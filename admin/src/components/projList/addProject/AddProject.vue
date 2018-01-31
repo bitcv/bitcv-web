@@ -10,11 +10,11 @@
       </el-steps>
     </div>
     <div class="form-container">
-      <basic v-show="curIndex === 1"></basic>
-      <event v-show="curIndex === 1"></event>
-      <team v-show="curIndex === 1"></team>
-      <partner v-show="curIndex === 1"></partner>
-      <media v-show="curIndex === 1"></media>
+      <basic v-show="curIndex === 0" :proj-data="projData" @updateData="updateData" @updateIndex="updateIndex"></basic>
+      <event v-show="curIndex === 1" :proj-data="projData" @updateData="updateData" @updateIndex="updateIndex"></event>
+      <team v-show="curIndex === 2" :proj-data="projData" @updateData="updateData" @updateIndex="updateIndex"></team>
+      <partner v-show="curIndex === 3" :proj-data="projData" @updateData="updateData" @updateIndex="updateIndex"></partner>
+      <media v-show="curIndex === 4" :proj-data="projData" @updateData="updateData" @updateIndex="updateIndex"></media>
     </div>
   </div>
 </template>
@@ -29,16 +29,20 @@ import Media from '@/components/projList/addProject/Media'
 export default {
   data () {
     return {
-      curIndex: 1,
+      curIndex: 0,
       projData: {
         nameCn: '',
         nameEn: '',
         webUrl: '',
-        logo: '',
+        logoUrl: '',
+        bannerUrl: '',
         abstract: '',
-        tagList: [],
+        whitePaperUrl: '',
         startTime: '',
         endTime: '',
+        tokenName: '',
+        tokenSymbol: '',
+        tagList: [],
         eventList: [],
         teamList: [],
         partnerList: [],
@@ -46,26 +50,43 @@ export default {
       }
     }
   },
-  watch: {
-    $route (cur) {
-      switch (cur.path) {
-        case '/addProject/basic':
-          this.curIndex = 0
-          break
-        case '/addProject/event':
-          this.curIndex = 1
-          break
-        case '/addProject/team':
-          this.curIndex = 2
-          break
-        case '/addProject/partner':
-          this.curIndex = 3
-          break
-        case '/addProject/media':
-          this.curIndex = 4
-          break
+  methods: {
+    updateData (data) {
+      this.projData = data.projData
+      if (data.index === 5) {
+        var paramObj = JSON.parse(JSON.stringify(this.projData))
+        paramObj.tagList = JSON.stringify(paramObj.tagList)
+        paramObj.eventList = JSON.stringify(paramObj.eventList)
+        paramObj.teamList = JSON.stringify(paramObj.teamList)
+        paramObj.partnerList = JSON.stringify(paramObj.partnerList)
+        paramObj.mediaList = JSON.stringify(paramObj.mediaList)
+        var that = this
+        this.$http.post('api/addProject', paramObj).then(function (res) {
+          var resData = res.data
+          console.log(resData)
+          if (resData.errcode === 0) {
+            alert('创建成功，即将跳转至项目列表页')
+            that.$router.push('/')
+          } else {
+            alert(resData.errmsg)
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
+      } else {
+        this.curIndex = data.index
       }
+    },
+    updateIndex (index) {
+      this.curIndex = index
     }
+  },
+  components: {
+    Basic,
+    Event,
+    Team,
+    Partner,
+    Media
   }
 }
 </script>

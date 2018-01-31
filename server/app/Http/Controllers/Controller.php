@@ -20,6 +20,7 @@ class Controller extends BaseController
         // 通用错误码
         '100' => ['errcode' => 100, 'errmsg' => '参数错误'],
         '101' => ['errcode' => 101, 'errmsg' => '未知错误'],
+        '110' => ['errcode' => 110, 'errmsg' => '文件名称错误'],
         // 用户错误码
         '201' => ['errcode' => 201, 'errmsg' => '用户名已注册'],
         '202' => ['errcode' => 202, 'errmsg' => '用户名或密码错误'],

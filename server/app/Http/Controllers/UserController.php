@@ -27,10 +27,11 @@ class UserController extends Controller
         }
 
         // 创建用户
-        $userId = Model\User::insertGetId([
+        $userModel = Model\User::create([
             'account' => $account,
             'passwd' => md5($passwd)
         ]);
+        $userId = $userModel->id;
 
         // 发送验证邮件
         //$curTime = time();
@@ -122,7 +123,7 @@ class UserController extends Controller
             $flag = Model\UserFocus::where([['user_id', $userId], ['proj_id', $projId]])->update(['status' => $status]);
         } else {
             $status = 1;
-            Model\UserFocus::insert(['user_id' => $userId, 'proj_id' => $projId, 'status' => $status]);
+            Model\UserFocus::create(['user_id' => $userId, 'proj_id' => $projId, 'status' => $status]);
         }
 
         return $this->output(['status' => $status]);

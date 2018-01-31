@@ -45,8 +45,8 @@ class ProjectController extends Controller
 
         $offset = $perpage * ($pageno - 1);
         $dataCount = $projModel->count();
-        $projList = $projModel->select('project.id', 'title', 'name_cn', 'name_en', 'logo_url', 'bussiness_type', 'phrase', 'region', 'token.name as tokenName', 'token.symbol as tokenSymbol', 'token.price as tokenPrice')
-            ->offset($offset)->limit($perpage)->get()->toArray();
+        $projList = $projModel->select('project.id', 'title', 'name_cn', 'name_en', 'logo_url', 'bussiness_type', 'phrase', 'region', 'token.name as tokenName', 'token.symbol as tokenSymbol', 'token.price as tokenPrice', 'project.created_at')
+            ->offset($offset)->limit($perpage)->orderBy('created_at', 'desc')->get()->toArray();
 
         // 获取用户关注状态
         $userId = isset($_COOKIE['userId']) ? $_COOKIE['userId'] : null;
@@ -183,11 +183,115 @@ class ProjectController extends Controller
 
         // 获取请求参数
         $params = $this->validation($request, [
-            'projId' => 'required|numeric',
+            'nameCn' => 'required|string',
+            'nameEn' => 'required|string',
+            'logoUrl' => 'required|string',
+            'webUrl' => 'required|string',
+            'bannerUrl' => 'required|string',
+            'whitePaperUrl' => 'required|string',
+            'abstract' => 'required|string',
+            'tokenName' => 'required|string',
+            'tokenSymbol' => 'required|string',
+            'startTime' => 'required|string',
+            'endTime' => 'required|string',
+            'tagList' => 'required|string',
+            'eventList' => 'required|string',
+            'teamList' => 'required|string',
+            'partnerList' => 'required|string',
+            'mediaList' => 'required|string',
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
+
+        // 解析参数
+        $tagList = json_decode($tagList, true);
+        $eventList = json_decode($eventList, true);
+        $teamList = json_decode($teamList, true);
+        $partnerList = json_decode($partnerList, true);
+        $mediaList = json_decode($mediaList, true);
+        if (!($tagList && $eventList && $teamList && $partnerList && $mediaList)) {
+            return $this->error(100);
+        }
+
+        // 添加项目token
+        $tokenData = Model\Token::where('symbol', $tokenSymbol)->first();
+        $tokenData = Model\Token::firstOrCreate([
+            'name' => $tokenName,
+            'symbol' => $tokenSymbol,
+            'price' => 0,
+        ]);
+        $tokenId = $tokenData->id;
+        //if (!$tokenData) {
+            //$tokenId = Model\Token::create([
+                //'name' => $tokenName,
+                //'symbol' => $tokenSymbol,
+            //]);
+        //} else {
+            //$tokenId = $tokenData['id'];
+        //}
+
+        // 创建项目
+        $projModel = Model\Project::firstOrCreate([
+            'name_cn' => $nameCn,
+            'name_en' => $nameEn,
+            'logo_url' => $logoUrl,
+            'web_url' => $webUrl,
+            'token_id' => $tokenId,
+            'banner_url' => $bannerUrl,
+            'white_paper_url' => $whitePaperUrl,
+            'abstract' => $abstract,
+            'start_time' => date('Y-m-d H-i-s', strtotime($startTime)),
+            'end_time' => date('Y-m-d H-i-s', strtotime($endTime)),
+        ]);
+        $projId = $projModel->id;
+
+        // 添加项目标签
+        foreach ($tagList as $tag) {
+            Model\ProjTag::create(['proj_id' => $projId], ['tag' => $tag]);
+        }
+
+        // 添加项目成员
+        foreach ($teamList as $team) {
+            Model\ProjMember::create([
+                'proj_id' => $projId,
+                'name' => $team['name'],
+                'position' => $team['position'],
+                'photo_url' => $team['photoUrl'],
+                'intro' => $team['intro'],
+            ]);
+        }
+
+        // 添加项目发展事件
+        foreach ($eventList as $event) {
+            Model\ProjEvent::create([
+                'proj_id' => $projId,
+                'occur_time' => date('Y-m-d H-i-s', strtotime($event['time'])),
+                'title' => $event['title'],
+                'detail' => $event['detail'],
+            ]);
+        }
+        // 添加项目合作伙伴
+        foreach ($partnerList as $partner) {
+            Model\ProjPartner::create([
+                'proj_id' => $projId,
+                'name' => $partner['name'],
+                'logo_url' => $partner['logoUrl'],
+                'web_url' => $partner['webUrl'],
+            ]);
+        }
+
+        // 添加项目媒体报道
+        foreach ($mediaList as $media) {
+            Model\ProjMedia::create([
+                'proj_id' => $projId,
+                'media_url' => $media['webUrl'],
+                'image_url' => $media['photoUrl'],
+                'title' => $media['title'],
+            ]);
+        }
+
+        return $this->output(['projId' => $projId]);
     }
 }

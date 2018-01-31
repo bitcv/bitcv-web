@@ -1,6 +1,6 @@
 <template>
   <div class="top-list">
-    <h3 class="panel-title">明星项目</h3>
+    <h3 class="panel-title">推荐项目</h3>
     <div class="info-container">
       <router-link :to="{ path: 'projDetail/' + project.id}" v-for="project in projList" :key="project.id" class="info-area">
           <span>{{ project.tokenName }}</span>

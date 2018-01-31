@@ -3,9 +3,11 @@
     <div class="header-btn-area">
       <el-button type="primary" icon="el-icon-plus" @click="showDialog = true">添加</el-button>
     </div>
-    <el-table :data="teamList">
+    <el-table :data="projData.teamList">
       <el-table-column label="照片">
-        <template slot-scope="scope">{{ scope.row.photoUrl }}</template>
+        <template slot-scope="scope">
+          <img class="table-image" :src="scope.row.photoUrl" alt="">
+        </template>
       </el-table-column>
       <el-table-column label="姓名">
         <template slot-scope="scope">{{ scope.row.name }}</template>
@@ -23,7 +25,10 @@
           <el-input v-model="inputName"></el-input>
         </el-form-item>
         <el-form-item label="照片">
-          <el-input type="file" @change="inputPhoto"></el-input>
+          <el-upload class="upload-box" name="picture" action="/api/uploadFile" :on-success="onPhotoSuccess" :show-file-list="false">
+            <i class="el-icon-plus"></i>
+            <img :src="inputPhotoUrl" alt="">
+          </el-upload>
         </el-form-item>
         <el-form-item label="职位">
           <el-input v-model="inputPosition"></el-input>
@@ -38,40 +43,54 @@
       </div>
     </el-dialog>
     <div class="footer-btn-area">
-      <router-link to="event">
-        <el-button>上一步</el-button>
-      </router-link>
-      <router-link to="partner" type="primary">
-        <el-button type="primary">下一步</el-button>
-      </router-link>
+      <el-button @click="lastStep">上一步</el-button>
+      <el-button type="primary" @click="nextStep">下一步</el-button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    projData: Object
+  },
   data () {
     return {
       showDialog: false,
       inputName: '',
       inputPhotoUrl: '',
       inputPosition: '',
-      inputIntro: '',
-      teamList: []
+      inputIntro: ''
     }
   },
   methods: {
     addMember () {
-      this.teamList.push({
+      this.projData.teamList.push({
         name: this.inputName,
         photoUrl: this.inputPhotoUrl,
         position: this.inputPosition,
         intro: this.inputIntro
       })
+      this.inputName = ''
+      this.inputPhoto = ''
+      this.inputPhotoUrl = ''
+      this.inputPosition = ''
+      this.inputIntro = ''
       this.showDialog = false
     },
-    inputPhoto (event) {
-      this.inputPhotoUrl = event
+    onPhotoSuccess (res) {
+      if (res.errcode === 0) {
+        this.inputPhotoUrl = res.data.url
+      }
+    },
+    lastStep () {
+      this.$emit('updateIndex', 1)
+    },
+    nextStep () {
+      this.$emit('updateData', {
+        index: 3,
+        projData: this.projData
+      })
     }
   }
 }

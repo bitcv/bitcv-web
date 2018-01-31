@@ -2,14 +2,18 @@
   <div class="footer">
     <div class="content">
       <div class="icon-box">
-        <img src="/static/img/webchat-2x.png" alt="">
-        <img src="/static/img/blog-2x.png" alt="">
+        <a href="" target="_blank">
+          <img src="/static/img/webchat-2x.png" alt="">
+        </a>
+        <a href="https://weibo.com/bitcv" target="_blank">
+          <img src="/static/img/blog-2x.png" alt="">
+        </a>
       </div>
       <div class="name">
         <span class="name">LIANBI</span>
       </div>
       <div class="addr">
-        <span>联系地址：北京石景山实兴大街苹果园街道朗诚大厦二楼</span>
+        <span></span>
       </div>
       <div class="right">
         <span>@storiqa.2018 保留所有权利</span>
@@ -34,7 +38,7 @@ export default {
   background-color: #FFF;
   .content {
     width: 1200px;
-    height: 222px;
+    height: 150px;
     position: relative;
     display: flex;
     flex-direction: column;
