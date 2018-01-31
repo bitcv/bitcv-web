@@ -228,7 +228,7 @@ class ProjectController extends Controller
 
         // 获取项目基本信息
         $projData = Model\Project::where('id', $id)
-            ->select('name_cn', 'name_en','image', 'name_short', 'abstract', 'white_paper_url', 'web_url', 'view_times', 'token_id', 'node_amount', 'total_amount', 'plan_amount', 'start_time', 'end_time', 'status', 'admin_id')
+            ->select('name_cn', 'name_en', 'name_short', 'abstract', 'white_paper_url', 'web_url', 'view_times', 'token_id', 'node_amount', 'total_amount', 'plan_amount', 'start_time', 'end_time', 'status', 'admin_id')
             ->first();
 
         $projData->toArray();
