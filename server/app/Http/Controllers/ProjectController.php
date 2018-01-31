@@ -292,6 +292,27 @@ class ProjectController extends Controller
         return $this->output(['projId' => $projId]);
     }
 
+    public function getProjFilterList (Request $request) {
+        $regionRuleList = array(
+            array('label' => '不限', 'value' => 0),
+            array('label' => '国内', 'value' => 1),
+            array('label' => '国外', 'value' => 2),
+        );
+        金融、数字货币、娱乐、供应链管理、法律服务、医疗、能源服务、公益、物联网、农业、社交
+        $bussinessRuleList = array(
+            array('label' => '不限', 'value' => 0),
+            array('label' => '金融', 'value' => 1),
+            array('label' => '数字货币', 'value' => 2),
+            array('label' => '娱乐', 'value' => 3),
+            array('label' => '供应链管理', 'value' => 4),
+            array('label' => '法律服务', 'value' => 5),
+            array('label' => '医疗', 'value' => 6),
+            array('label' => '能源服务', 'value' => 1),
+            array('label' => '公益', 'value' => 1),
+            array('label' => '物联网', 'value' => 1),
+        );
+    }
+
     public function index(){
         $projectList = Model\Project::where('id',1)->get()->toArray();
         return Model\Project::all(); //bad
