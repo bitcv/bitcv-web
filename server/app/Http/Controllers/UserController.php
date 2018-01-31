@@ -5,9 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models as Model;
 use Illuminate\Support\Facades\Cookie;
+use App\Utils\Service;
 
 class UserController extends Controller
 {
+
+    //获取验证码
+    public function vcode($mobile) {
+        $ret = Service::getVcode('reg', $mobile);
+        if ($ret['err'] > 0) {
+            $this->error(100);
+        }
+        Service::sms($mobile, '【BitCV】您的验证码为'.$ret['data']);
+        return $this->output();
+    }
+
     public function signup (Request $request) {
 
         // 获取请求参数
