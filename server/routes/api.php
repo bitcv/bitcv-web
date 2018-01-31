@@ -18,10 +18,10 @@ Route::any('getProjDetail', 'ProjectController@getProjDetail');
 Route::any('addProject', 'ProjectController@addProject');
 
 
-Route::group(['prefix' => '/api/v1'], function () {
-    Route::resource('project', 'ProjectController');
+//Route::group(['prefix' => '/api/v1'], function () {
+    Route::get('getProject/{proiId}', 'ProjectController@show');
     Route::get('getplist/{p?}{chid?}','ProjectController@getPList');
-});
+//});
 
 
 

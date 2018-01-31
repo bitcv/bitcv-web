@@ -218,8 +218,13 @@ class ProjectController extends Controller
         return response()->json($projList);
     }
 
-    public function show($projId)
+    public function show(Request $request)
     {
+
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        extract($params);
 
         // 获取项目基本信息
         $projData = Model\Project::where('id', $projId)
