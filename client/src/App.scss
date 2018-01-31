@@ -15,8 +15,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
 	margin: 0;
@@ -27,7 +27,7 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
@@ -51,6 +51,21 @@ table {
 	border-spacing: 0;
 }
 //=============================================
+input {
+  outline: none;
+}
+button {
+  outline: none;
+}
 * {
-  font-family:PingFangSC-Regular;
+  font-family: PingFangSC-Regular;
+}
+h3.panel-title {
+  font-size: 20px;
+  line-height: 28px;
+  color: #4A4A4A;
+}
+h3.center-title {
+  width: 100%;
+  text-align: center;
 }

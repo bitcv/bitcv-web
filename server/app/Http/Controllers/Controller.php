@@ -75,7 +75,7 @@ class Controller extends BaseController
         }
         $result = $this->arrayKeyToCamel($data);
         $rtnArr = self::ERROR[0];
-        $rtnArr['data'] = $data;
+        $rtnArr['data'] = $result;
         return json_encode($rtnArr, JSON_UNESCAPED_UNICODE);
     }
 

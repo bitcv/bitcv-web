@@ -1,19 +1,32 @@
 <template>
   <div class="header">
     <div class="content">
-      <div class="logo">
-        <img src="/static/img/logo.png" alt="">
-      </div>
+      <router-link to="/">
+        <div class="logo">
+          <img src="/static/img/logo.png" alt="">
+        </div>
+      </router-link>
       <div class="nav">
         <ul>
-          <li class="active"><span class="nav-text">首页</span></li>
-          <li><span class="nav-text">发现</span></li>
-          <li><span class="nav-text">资讯</span></li>
+          <li v-for="(menu, index) in menuList" :key="index" :class="{ active : menuIndex === index }">
+            <router-link :to="menu.url">
+              <span class="nav-text" @click="menuSwitch(index)">{{ menu.text }}</span>
+            </router-link>
+          </li>
         </ul>
       </div>
-      <div class="btn-box">
-        <div class="signin btn"><span class="btn-text">登录</span></div>
-        <div class="signup btn"><span class="btn-text">注册</span></div>
+      <div class="info-box" v-if="isOnline">
+        <img :src="avatarUrl" alt="">
+        <span class="nickname">{{ account }}</span>
+        <div class="signout btn" @click="signout"><span class="btn-text">退出登录</span></div>
+      </div>
+      <div class="btn-box" v-else>
+        <router-link to="/signin">
+          <div class="signin btn"><span class="btn-text">登录</span></div>
+        </router-link>
+        <router-link to="/signup">
+          <div class="signup btn"><span class="btn-text">注册</span></div>
+        </router-link>
       </div>
     </div>
   </div>
@@ -23,7 +36,63 @@
 export default {
   data () {
     return {
+      isOnline: false,
+      avatarUrl: '/static/img/avatar.png',
+      account: 'junderking@163.com',
+      menuIndex: 0,
+      menuList: [
+        {url: '/', text: '首页'},
+        {url: '/projList', text: '发现'},
+        {url: '/', text: '资讯'}
+      ]
+    }
+  },
+  mounted () {
+    if (this.$route.path === '/') {
+      this.menuIndex = 0
+    }
+    if (this.$route.path === '/projList') {
+      this.menuIndex = 1
+    }
 
+    // getCookie
+    var userId = localStorage.getItem('userId')
+    if (userId) {
+      this.isOnline = true
+      this.account = localStorage.getItem('account')
+      var avatarUrl = localStorage.getItem('avatarUrl')
+      if (avatarUrl) {
+        this.avatarUrl = avatarUrl
+      }
+    }
+    console.log('account')
+    console.log(this.account)
+  },
+  watch: {
+    '$route' (to, from) {
+      if (this.$route.path === '/') {
+        this.menuIndex = 0
+      }
+      if (this.$route.path === '/projList') {
+        this.menuIndex = 1
+      }
+    }
+  },
+  methods: {
+    menuSwitch (index) {
+      this.menuIndex = index
+    },
+    signout () {
+      var that = this
+      this.$http.post('/api/signout', {}).then(function (res) {
+        var resData = res.data
+        if (resData.errcode === 0) {
+          localStorage.removeItem('userId')
+          localStorage.removeItem('account')
+          localStorage.removeItem('avatarUrl')
+          that.$router.go(0)
+        }
+      })
     }
   }
 }
@@ -43,7 +112,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     .logo {
-      width: 72px;
+      width: 161px;
       height: 30px;
       img {
         width: 100%;
@@ -98,6 +167,32 @@ export default {
       .signin {
         border: 0.5px solid #CECECE;
         color: #8D8D8D;
+      }
+    }
+    .info-box {
+      display: flex;
+      align-items: center;
+      .nickname {
+        padding-left: 8px;
+        font-size: 14px;
+        color: #4A4A4A;
+      }
+      .signout {
+        cursor: pointer;
+        background-color: #282828;
+        margin: 0 42px 0 16px;
+        width: 100px;
+        height: 40px;
+        border-radius: 4px;
+        .btn-text {
+          font-size: 20px;
+          line-height: 40px;
+          display: block;
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          color: #FFCF81;
+        }
       }
     }
   }
