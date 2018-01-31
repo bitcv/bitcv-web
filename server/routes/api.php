@@ -17,11 +17,10 @@ Route::any('getProjTopList', 'ProjectController@getProjTopList');
 Route::any('getProjDetail', 'ProjectController@getProjDetail');
 Route::any('addProject', 'ProjectController@addProject');
 
+//min program api
+Route::get('getproject/{id?}', 'ProjectController@getProInfo');
+Route::get('getplist/{p?}{chid?}','ProjectController@getPList');
 
-//Route::group(['prefix' => '/api/v1'], function () {
-    Route::get('getProject/{proiId}', 'ProjectController@show');
-    Route::get('getplist/{p?}{chid?}','ProjectController@getPList');
-//});
 
 
 

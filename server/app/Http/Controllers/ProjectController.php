@@ -218,52 +218,52 @@ class ProjectController extends Controller
         return response()->json($projList);
     }
 
-    public function show(Request $request)
+    public function getProInfo(Request $request)
     {
 
         $params = $this->validation($request, [
-            'projId' => 'required|numeric',
+            'id' => 'required|numeric',
         ]);
         extract($params);
 
         // 获取项目基本信息
-        $projData = Model\Project::where('id', $projId)
+        $projData = Model\Project::where('id', $id)
             ->select('name_cn', 'name_en','image', 'name_short', 'abstract', 'white_paper_url', 'web_url', 'view_times', 'token_id', 'node_amount', 'total_amount', 'plan_amount', 'start_time', 'end_time', 'status', 'admin_id')
             ->first();
 
         $projData->toArray();
 
         // 获取项目优势
-        $projAdvList = Model\ProjAdvantage::where('proj_id', $projId)
+        $projAdvList = Model\ProjAdvantage::where('proj_id', $id)
             ->select('title', 'detail')
             ->get()->toArray();
         $projData['advangateList'] = $projAdvList;
 
         // 获取项目成员信息
-        $projMemberList = Model\ProjMember::where('proj_id', $projId)
+        $projMemberList = Model\ProjMember::where('proj_id', $id)
             ->select('photo_url', 'name', 'position', 'intro')
             ->get()->toArray();
         $projData['memberList'] = $projMemberList;
 
         // 获取项目事件
-        $projEventList = Model\ProjEvent::where('proj_id', $projId)
+        $projEventList = Model\ProjEvent::where('proj_id', $id)
             ->select('occur_time', 'title', 'detail')
             ->get()->toArray();
         $projData['eventList'] = $projEventList;
 
         // 获取合作伙伴信息
-        $projPartnerList = Model\ProjPartner::where('proj_id', $projId)
-            ->select('name', 'photo_url')
+        $projPartnerList = Model\ProjPartner::where('proj_id', $id)
+            ->select('name')
             ->get()->toArray();
         $projData['partnerList'] = $projPartnerList;
 
         // 获取媒体报道信息
-        $projMediaList = Model\ProjMedia::where('proj_id', $projId)
+        $projMediaList = Model\ProjMedia::where('proj_id', $id)
             ->get()->toArray();
         $projData['mediaList'] = $projMediaList;
 
         // 获取社交链接信息
-        $projSocialList = Model\ProjSocial::where('proj_id', $projId)
+        $projSocialList = Model\ProjSocial::where('proj_id', $id)
             ->get()->toArray();
         $projData['socialList'] = $projSocialList;
 
