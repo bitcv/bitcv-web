@@ -10,7 +10,7 @@ class ProjectController extends Controller
 {
     public function getProjList (Request $request) {
 
-        // 获取请求参数
+        //获取请求参数
         $params = $this->validation($request, [
             'keyword' => 'string|nullable',
             'region' => 'numeric',
@@ -293,5 +293,84 @@ class ProjectController extends Controller
         }
 
         return $this->output(['projId' => $projId]);
+    }
+
+    public function index(){
+        $projectList = Model\Project::where('id',1)->get()->toArray();
+        return Model\Project::all(); //bad
+    }
+
+    public function getPList(Request $request){
+
+        $params = $this->validation($request, [
+            'p' => 'required|numeric',
+            'chid' => 'string|nullable',
+        ]);
+
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $offset = 6 * ($p - 1);
+        if($chid){
+            $projList = Model\Project::join('proj_tag','project.id','=','proj_tag.proj_id')->where('tag','like',"%$chid%")
+                ->offset($offset)->limit(6)->get()->toArray();
+        }else{
+            $projList = Model\Project::offset($offset)->limit(6)->get()->toArray();
+        }
+
+        return response()->json($projList);
+    }
+
+    public function getProInfo(Request $request)
+    {
+
+        $params = $this->validation($request, [
+            'id' => 'required|numeric',
+        ]);
+        extract($params);
+
+        // 获取项目基本信息
+        $projData = Model\Project::where('id', $id)
+            ->select('name_cn','logo_url', 'name_en', 'name_short', 'abstract', 'white_paper_url', 'web_url', 'view_times', 'token_id', 'node_amount', 'total_amount', 'plan_amount', 'start_time', 'end_time', 'status', 'admin_id')
+            ->first();
+
+        $projData->toArray();
+
+        // 获取项目优势
+        $projAdvList = Model\ProjAdvantage::where('proj_id', $id)
+            ->select('title', 'detail')
+            ->get()->toArray();
+        $projData['advangateList'] = $projAdvList;
+
+        // 获取项目成员信息
+        $projMemberList = Model\ProjMember::where('proj_id', $id)
+            ->select('photo_url', 'name', 'position', 'intro')
+            ->get()->toArray();
+        $projData['memberList'] = $projMemberList;
+
+        // 获取项目事件
+        $projEventList = Model\ProjEvent::where('proj_id', $id)
+            ->select('occur_time', 'title', 'detail')
+            ->get()->toArray();
+        $projData['eventList'] = $projEventList;
+
+        // 获取合作伙伴信息
+        $projPartnerList = Model\ProjPartner::where('proj_id', $id)
+            ->select('name')
+            ->get()->toArray();
+        $projData['partnerList'] = $projPartnerList;
+
+        // 获取媒体报道信息
+        $projMediaList = Model\ProjMedia::where('proj_id', $id)
+            ->get()->toArray();
+        $projData['mediaList'] = $projMediaList;
+
+        // 获取社交链接信息
+        $projSocialList = Model\ProjSocial::where('proj_id', $id)
+            ->get()->toArray();
+        $projData['socialList'] = $projSocialList;
+
+        return response()->json($projData);
     }
 }

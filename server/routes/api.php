@@ -17,5 +17,37 @@ Route::any('getProjTopList', 'ProjectController@getProjTopList');
 Route::any('getProjDetail', 'ProjectController@getProjDetail');
 Route::any('addProject', 'ProjectController@addProject');
 
-// 上传图片
 Route::any('uploadFile', 'FileController@uploadFile');
+
+//min program api
+Route::get('getproject/{id?}', 'ProjectController@getProInfo');
+Route::get('getplist/{p?}{chid?}','ProjectController@getPList');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> df0537a32cc9a30f457482071af7031a835acd54
