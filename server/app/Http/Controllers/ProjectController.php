@@ -193,9 +193,6 @@ class ProjectController extends Controller
 
     public function index(){
         $projectList = Model\Project::where('id',1)->get()->toArray();
-        //$projectList = DB::table('project')->join('')
-        //return $this->output($projectList);
-        //return response()->json($projectList);
         return Model\Project::all(); //bad
     }
 
@@ -212,13 +209,11 @@ class ProjectController extends Controller
         extract($params);
         $offset = 6 * ($p - 1);
         if($chid){
-            //$projList = Model\ProjTag::where('tag','like',"%$chid%");
             $projList = Model\Project::join('proj_tag','project.id','=','proj_tag.proj_id')->where('tag','like',"%$chid%")
                 ->offset($offset)->limit(6)->get()->toArray();
         }else{
             $projList = Model\Project::offset($offset)->limit(6)->get()->toArray();
         }
-
 
         return response()->json($projList);
     }
@@ -267,8 +262,6 @@ class ProjectController extends Controller
             ->get()->toArray();
         $projData['socialList'] = $projSocialList;
 
-        $lesson = Model\Project::findOrFail($projId);
-        //return $lesson;
         return response()->json($projData);
     }
 }
