@@ -22,32 +22,3 @@ Route::any('uploadFile', 'FileController@uploadFile');
 //min program api
 Route::get('getproject/{id?}', 'ProjectController@getProInfo');
 Route::get('getplist/{p?}{chid?}','ProjectController@getPList');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> df0537a32cc9a30f457482071af7031a835acd54
