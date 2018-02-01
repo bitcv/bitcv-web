@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <v-header></v-header>
+    <v-header v-if="$route.path!=='/share'"></v-header>
     <div class="main-container">
       <router-view/>
     </div>
-    <v-footer></v-footer>
+    <v-footer v-if="$route.path!=='/share'"></v-footer>
   </div>
 </template>
 
