@@ -70,6 +70,9 @@
         <el-form-item label="代币符号">
           <el-input v-model="formData.tokenSymbol" placeholder="请输入代币符号"></el-input>
         </el-form-item>
+        <el-form-item label="代币价格">
+          <el-input v-model="formData.tokenPrice" placeholder="请输入代币价格"></el-input>
+        </el-form-item>
         <el-form-item label="公司邮箱">
           <el-input v-model="formData.companyEmail" placeholder="请输入公司邮箱"></el-input>
         </el-form-item>
@@ -111,33 +114,30 @@ export default {
         fundEndTime: '',
         fundStage: '',
         companyEmail: '',
-        companyAddr: ''
+        companyAddr: '',
+        tokenName: '',
+        tokenSymbol: '',
+        tokenPrice: ''
       }
     }
   },
   mounted () {
-    var that = this
     this.formData.projId = this.$route.params.id
-    console.log('mounted')
-    console.log(this.formData.projId)
-    this.$http.get('/api/getProjTagList').then(function (res) {
+    this.$http.get('/api/getProjTagList').then((res) => {
       if (res.data.errcode === 0) {
-        var resData = res.data.data
-        that.selectList = resData
+        this.selectList = res.data.data
       }
     })
     this.updateData()
   },
   methods: {
     updateData: function () {
-      var that = this
       this.$http.post('/api/getProjBasicInfo', {
         projId: this.formData.projId
-      }).then(function (res) {
+      }).then((res) => {
         if (res.data.errcode === 0) {
-          console.log(res.data.data)
-          that.formData = res.data.data
-          that.formData.projId = res.data.data.id
+          this.formData = res.data.data
+          this.formData.projId = res.data.data.id
         }
       })
     },
@@ -173,11 +173,9 @@ export default {
       this.tagList.splice(index, 1)
     },
     submit () {
-      var that = this
-      this.$http.post('/api/updProjBasicInfo', this.formData).then(function (res) {
+      this.$http.post('/api/updProjBasicInfo', this.formData).then((res) => {
         if (res.data.errcode === 0) {
-          console.log('success')
-          that.$alert('修改成功!', '提示')
+          this.$message({ type: 'success', message: '修改成功!' })
         }
       })
     }

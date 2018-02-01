@@ -15,6 +15,12 @@
       <el-table-column label="主页url">
         <template slot-scope="scope">{{ scope.row.homeUrl }}</template>
       </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button size="mini" @click="showEdit(scope.$index)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="showDel(scope.row.id)">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-dialog title="合作伙伴信息" :visible.sync="showDialog" center>
       <el-form label-width="80px">
@@ -35,7 +41,7 @@
       </el-form>
       <div slot="footer">
         <el-button @click="showDialog = false">取消</el-button>
-        <el-button type="primary" @click="addPartner">确定</el-button>
+        <el-button type="primary" @click="submit">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -52,18 +58,97 @@ export default {
       partnerList: []
     }
   },
+  mounted () {
+    this.updateData()
+  },
   methods: {
-    addPartner () {
-      this.showDialog = false
-      this.inputName = ''
-      this.inputLogoUrl = ''
-      this.inputHomeUrl = ''
-      this.$alert('成功添加合作伙伴!', '提示')
+    updateData () {
+      this.$http.post('/api/getProjPartnerList', {
+        projId: this.$route.params.id
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.partnerList = res.data.data.dataList
+        }
+      })
     },
     onLogoSuccess (res) {
       if (res.errcode === 0) {
         this.inputLogoUrl = res.data.url
       }
+    },
+    showEdit (index) {
+      var partnerInfo = this.partnerList[index]
+      this.partnerId = partnerInfo.id
+      this.inputName = partnerInfo.name
+      this.inputLogoUrl = partnerInfo.logoUrl
+      this.inputHomeUrl = partnerInfo.homeUrl
+      this.showDialog = true
+    },
+    showDel (partnerId) {
+      this.$confirm('删除后无法恢复, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.delPartner(partnerId)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    submit () {
+      if (this.partnerId) {
+        this.updPartner()
+      } else {
+        this.addPartner()
+      }
+    },
+    addPartner () {
+      this.$http.post('/api/addProjPartner', {
+        projId: this.$route.params.id,
+        name: this.inputName,
+        logoUrl: this.inputLogoUrl,
+        homeUrl: this.inputHomeUrl
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$message({ type: 'success', message: '添加成功!' })
+          this.inputName = ''
+          this.inputLogoUrl = ''
+          this.inputHomeUrl = ''
+          this.showDialog = false
+          this.updateData()
+        }
+      })
+    },
+    updPartner () {
+      this.$http.post('/api/updProjPartner', {
+        partnerId: this.partnerId,
+        name: this.inputName,
+        logoUrl: this.inputLogoUrl,
+        homeUrl: this.inputHomeUrl
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$message({ type: 'success', message: '更新成功!' })
+          this.inputName = ''
+          this.inputLogoUrl = ''
+          this.inputHomeUrl = ''
+          this.showDialog = false
+          this.partnerId = ''
+          this.updateData()
+        }
+      })
+    },
+    delPartner (partnerId) {
+      this.$http.post('/api/delProjPartner', {
+        partnerId: partnerId
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$message({ type: 'success', message: '删除成功!' })
+          this.updateData()
+        }
+      })
     }
   }
 }

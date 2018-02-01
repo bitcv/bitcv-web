@@ -18,6 +18,8 @@ Route::any('getProjTopList', 'ProjectController@getProjTopList');
 Route::any('getProjDetail', 'ProjectController@getProjDetail');
 Route::any('addProject', 'ProjectController@addProject');
 Route::any('getProjTagList', 'ProjectController@getProjTagList');
+Route::any('getMediaList', 'ProjectController@getMediaList');
+Route::any('getSocialList', 'ProjectController@getSocialList');
 Route::any('getProjBasicInfo', 'ProjectController@getProjBasicInfo');
 Route::any('updProjBasicInfo', 'ProjectController@updProjBasicInfo');
 Route::any('delProject', 'ProjectController@delProject');

@@ -69,14 +69,18 @@ export default {
   },
   methods: {
     updateData () {
-      var that = this
       this.$http.post('/api/getProjAdvisorList', {
         projId: this.$route.params.id
-      }).then(function (res) {
+      }).then((res) => {
         if (res.data.errcode === 0) {
-          that.advisorList = res.data.data.dataList
+          this.advisorList = res.data.data.dataList
         }
       })
+    },
+    onPhotoSuccess (res) {
+      if (res.errcode === 0) {
+        this.inputPhotoUrl = res.data.url
+      }
     },
     showEdit (index) {
       var advisorInfo = this.advisorList[index]
@@ -87,6 +91,20 @@ export default {
       this.inputIntro = advisorInfo.intro
       this.showDialog = true
     },
+    showDel (advisorId) {
+      this.$confirm('删除后无法恢复, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.delAdvisor(advisorId)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
     submit () {
       if (this.advisorId) {
         this.updAdvisor()
@@ -95,62 +113,53 @@ export default {
       }
     },
     addAdvisor () {
-      var that = this
-      console.log('addAdvisor')
       this.$http.post('/api/addProjAdvisor', {
         projId: this.$route.params.id,
         name: this.inputName,
         photoUrl: this.inputPhotoUrl,
         company: this.inputCompany,
         intro: this.inputIntro
-      }).then(function (res) {
+      }).then((res) => {
         if (res.data.errcode === 0) {
-          that.$alert('成功添加顾问!', '提示')
-          that.inputName = ''
-          that.inputPhotoUrl = ''
-          that.inputCompany = ''
-          that.inputIntro = ''
-          that.showDialog = false
-          that.updateData()
+          this.$message({ type: 'success', message: '添加成功!' })
+          this.inputName = ''
+          this.inputPhotoUrl = ''
+          this.inputCompany = ''
+          this.inputIntro = ''
+          this.showDialog = false
+          this.updateData()
         }
       })
     },
     updAdvisor () {
-      var that = this
       this.$http.post('/api/updProjAdvisor', {
-        advisorId:  this.advisorId,
+        advisorId: this.advisorId,
         name: this.inputName,
         photoUrl: this.inputPhotoUrl,
         company: this.inputCompany,
         intro: this.inputIntro
-      }).then(function (res) {
+      }).then((res) => {
         if (res.data.errcode === 0) {
-          that.$alert('成功更新顾问信息!', '提示')
-          that.inputName = ''
-          that.inputPhotoUrl = ''
-          that.inputCompany = ''
-          that.inputIntro = ''
-          that.showDialog = false
-          that.advisorId = ''
-          that.updateData()
+          this.$message({ type: 'success', message: '更新成功!' })
+          this.inputName = ''
+          this.inputPhotoUrl = ''
+          this.inputCompany = ''
+          this.inputIntro = ''
+          this.showDialog = false
+          this.advisorId = ''
+          this.updateData()
         }
       })
     },
     delAdvisor (advisorId) {
-      var that = this
       this.$http.post('/api/delProjAdvisor', {
-        'advisorId': advisorId
-      }).then(function (res) {
+        advisorId: advisorId
+      }).then((res) => {
         if (res.data.errcode === 0) {
-          that.$alert('成功删除顾问!', '提示')
-          that.updateData()
+          this.$message({ type: 'success', message: '删除成功!' })
+          this.updateData()
         }
       })
-    },
-    onPhotoSuccess (res) {
-      if (res.errcode === 0) {
-        this.inputPhotoUrl = res.data.url
-      }
     }
   }
 }

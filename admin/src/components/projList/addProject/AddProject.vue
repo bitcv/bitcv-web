@@ -79,13 +79,12 @@ export default {
     }
   },
   mounted () {
-    var that = this
-    this.$http.get('/api/getProjTagList').then(function (res) {
+    this.$http.get('/api/getProjTagList').then((res) => {
       if (res.data.errcode === 0) {
         var resData = res.data.data
-        that.selectList = resData
+        this.selectList = resData
         for (let field in resData) {
-          that.$set(that.selectResult, field, '')
+          this.$set(this.selectResult, field, '')
         }
       }
     })
@@ -102,11 +101,10 @@ export default {
       }
     },
     submit () {
-      var that = this
-      this.$http.post('/api/addProject', this.formData).then(function (res) {
+      this.$http.post('/api/addProject', this.formData).then((res) => {
         if (res.data.errcode === 0) {
-          that.$alert('修改成功!', '提示')
-          that.$router.push('/')
+          this.$message({ type: 'success', message: '创建成功!' })
+          this.$router.push('/')
         }
       })
     }

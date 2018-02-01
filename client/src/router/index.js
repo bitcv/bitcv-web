@@ -5,6 +5,7 @@ import ProjList from '@/components/projList/ProjList'
 import ProjDetail from '@/components/projDetail/ProjDetail'
 import Signin from '@/components/sign/Signin'
 import Signup from '@/components/sign/Signup'
+import Share from '@/components/share/Share'
 
 Vue.use(Router)
 
@@ -36,6 +37,10 @@ export default new Router({
     {
       path: '/signup',
       component: Signup
+    },
+    {
+      path: '/share',
+      component: Share
     }
   ]
 })

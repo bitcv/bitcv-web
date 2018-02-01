@@ -20,8 +20,8 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button disabled size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button size="mini" @click="showEdit(scope.$index)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="showDel(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -45,7 +45,7 @@
       </el-form>
       <div slot="footer">
         <el-button @click="showDialog = false">取消</el-button>
-        <el-button type="primary" @click="addMember">确定</el-button>
+        <el-button type="primary" @click="submit">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -63,17 +63,106 @@ export default {
       inputPhotoUrl: '',
       inputPosition: '',
       inputIntro: '',
-      memberList: []
+      memberList: [],
+      memberId: ''
     }
   },
+  mounted () {
+    this.updateData()
+  },
   methods: {
-    addMember () {
-      this.$alert('成功添加项目成员!', '提示')
+    updateData () {
+      this.$http.post('/api/getProjMemberList', {
+        projId: this.$route.params.id
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.memberList = res.data.data.dataList
+        }
+      })
     },
     onPhotoSuccess (res) {
       if (res.errcode === 0) {
         this.inputPhotoUrl = res.data.url
       }
+    },
+    showEdit (index) {
+      var memberInfo = this.memberList[index]
+      this.memberId = memberInfo.id
+      this.inputName = memberInfo.name
+      this.inputPhotoUrl = memberInfo.photoUrl
+      this.inputPosition = memberInfo.position
+      this.inputIntro = memberInfo.intro
+      this.showDialog = true
+    },
+    showDel (memberId) {
+      this.$confirm('删除后无法恢复, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.delMember(memberId)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    submit () {
+      if (this.memberId) {
+        this.updMember()
+      } else {
+        this.addMember()
+      }
+    },
+    addMember () {
+      this.$http.post('/api/addProjMember', {
+        projId: this.$route.params.id,
+        name: this.inputName,
+        photoUrl: this.inputPhotoUrl,
+        position: this.inputPosition,
+        intro: this.inputIntro
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$message({ type: 'success', message: '添加成功!' })
+          this.inputName = ''
+          this.inputPhotoUrl = ''
+          this.inputPosition = ''
+          this.inputIntro = ''
+          this.showDialog = false
+          this.updateData()
+        }
+      })
+    },
+    updMember () {
+      this.$http.post('/api/updProjMember', {
+        memberId: this.memberId,
+        name: this.inputName,
+        photoUrl: this.inputPhotoUrl,
+        position: this.inputPosition,
+        intro: this.inputIntro
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$message({ type: 'success', message: '更新成功!' })
+          this.inputName = ''
+          this.inputPhotoUrl = ''
+          this.inputPosition = ''
+          this.inputIntro = ''
+          this.showDialog = false
+          this.memberId = ''
+          this.updateData()
+        }
+      })
+    },
+    delMember (memberId) {
+      this.$http.post('/api/delProjMember', {
+        memberId: memberId
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$message({ type: 'success', message: '删除成功!' })
+          this.updateData()
+        }
+      })
     }
   }
 }
