@@ -41,13 +41,13 @@ export default {
   },
   methods: {
     updateData () {
-      this.$http.post('/api/getProjList', {
+      this.$http.post('/api/getProjBasicList', {
         pageno: 1,
-        perpage: 10
+        perpage: 30
       }).then((res) => {
         var resData = res.data
         if (resData.errcode === 0) {
-          this.projList = resData.data.projList
+          this.projList = resData.data.dataList
         }
       })
     },

@@ -24,12 +24,11 @@ class ProjectController extends Controller
         }
         extract($params);
 
-        $projModel = Model\Project::select();
+        $projModel = Model\Project::join('token', 'project.token_id', '=', 'token.id');
         if ($keyword) {
             $projModel = $projModel
                 ->where('name_cn', 'like', "%$keyword%")
                 ->orWhere('name_en', 'like', "%$keyword%")
-                ->orWhere('name_short', 'like', "%$keyword%")
                 ->orWhere('token.name', 'like', "%$keyword%")
                 ->orWhere('token.symbol', 'like', "%$keyword%");
         }
@@ -45,7 +44,8 @@ class ProjectController extends Controller
 
         $offset = $perpage * ($pageno - 1);
         $dataCount = $projModel->count();
-        $projList = $projModel->offset($offset)->limit($perpage)->orderBy('created_at', 'desc')->get()->toArray();
+        $projList = $projModel->select('project.id', 'name_cn', 'name_en', 'short_desc', 'logo_url', 'status', 'found_date', 'buz_type', 'fund_stage', 'token.name as tokenName', 'token.symbol as tokenSymbol', 'token.price as tokenPrice')
+            ->offset($offset)->limit($perpage)->orderBy('project.created_at', 'desc')->get()->toArray();
 
         // 获取用户关注状态
         $userId = isset($_COOKIE['userId']) ? $_COOKIE['userId'] : null;
@@ -63,6 +63,27 @@ class ProjectController extends Controller
 
         return $this->output(['dataCount' => $dataCount, 'projList' => $projList]);
     }
+    
+    public function getProjBasicList (Request $request) {
+        //获取请求参数
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\Project::offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = Model\Project::count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+    }
 
     public function getProjTopList (Request $request) {
 
@@ -78,7 +99,7 @@ class ProjectController extends Controller
 
         if ($type === 'view') {
             $projList = Model\Project::orderBy('view_times', 'desc')
-                ->select('id as proj_id', 'name_cn', 'name_short', 'view_times as count')->limit($count)
+                ->select('id as proj_id', 'name_cn', 'view_times as count')->limit($count)
                 ->get()->toArray();
             return $this->output($projList);
         }
@@ -107,7 +128,7 @@ class ProjectController extends Controller
 
         // 获取项目基本信息
         $projData = Model\Project::where('id', $projId)
-            ->select('id', 'name_cn', 'name_en', 'name_short', 'logo_url', 'banner_url', 'abstract', 'white_paper_url', 'web_url', 'view_times', 'token_id', 'node_amount', 'total_amount', 'plan_amount', 'start_time', 'end_time', 'status', 'admin_id', 'company_tel', 'company_addr', 'company_email')
+            ->select('id', 'name_cn', 'name_en', 'logo_url', 'banner_url', 'abstract', 'white_paper_url', 'home_url', 'view_times', 'token_id', 'node_amount', 'cur_amount', 'plan_amount', 'fund_start_time', 'fund_end_time', 'status', 'admin_id', 'company_addr', 'company_email')
             ->first();
         if ($projData === null) {
             return $this->error(301);
@@ -161,17 +182,21 @@ class ProjectController extends Controller
 
         // 获取合作伙伴信息
         $projPartnerList = Model\ProjPartner::where('proj_id', $projId)
-            ->select('name', 'logo_url', 'web_url')
+            ->select('name', 'logo_url', 'home_url')
             ->get()->toArray();
         $projData['partnerList'] = $projPartnerList;
 
         // 获取媒体报道信息
-        $projMediaList = Model\ProjMedia::where('proj_id', $projId)->limit(4)
-            ->get()->toArray();
-        $projData['mediaList'] = $projMediaList;
+        $projReportList = Model\ProjReport::join('media', 'proj_report.media_id', '=', 'media.id')
+            ->where('proj_id', $projId)
+            ->select('name', 'logo_url', 'link_url', 'title')
+            ->limit(4)->get()->toArray();
+        $projData['reportList'] = $projReportList;
 
         // 获取社交链接信息
-        $projSocialList = Model\ProjSocial::where('proj_id', $projId)
+        $projSocialList = Model\ProjSocial::join('social', 'proj_social.social_id', '=', 'social.id')
+            ->where('proj_id', $projId)
+            ->select('name', 'logo_url', 'link_url')
             ->get()->toArray();
         $projData['socialList'] = $projSocialList;
 

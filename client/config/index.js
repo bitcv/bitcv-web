@@ -16,6 +16,12 @@ module.exports = {
         pathRewrite: {
           '^/api': ''
         }
+      },
+      '/storage': {
+        target: 'http://www.kingco.com/storage',
+        pathRewrite: {
+          '^/storage': ''
+        }
       }
     },
 

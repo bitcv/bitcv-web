@@ -51,7 +51,7 @@
       <div class="partner-area" id="Partner">
         <h3 class="panel-title center-title">合作伙伴</h3>
         <div class="logo-box">
-          <a :href="partner.webUrl" target="_blank" v-for="(partner, index) in projDetail.partnerList" :key="index" class="img-container">
+          <a :href="partner.homeUrl" target="_blank" v-for="(partner, index) in projDetail.partnerList" :key="index" class="img-container">
             <img :src="partner.logoUrl" alt="">
           </a>
         </div>
@@ -59,11 +59,11 @@
       <div class="media-area" id="Media">
         <h3 class="center-title panel-title">媒体报道</h3>
         <div class="item-box">
-          <a class="item" :href="media.mediaUrl" target="_blank" v-for="(media, index) in projDetail.mediaList" :key="index">
+          <a class="item" :href="report.linkUrl" target="_blank" v-for="(report, index) in projDetail.reportList" :key="index">
             <div class="image-area">
-              <img class="log" :src="media.imageUrl" alt="">
+              <img class="log" :src="report.logoUrl" alt="">
             </div>
-            <span class="content">{{ media.title }}</span>
+            <span class="content">{{ report.title }}</span>
           </a>
         </div>
       </div>

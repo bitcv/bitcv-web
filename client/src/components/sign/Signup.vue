@@ -3,7 +3,7 @@
     <h3 class="panel-title center-title">欢迎注册链币网</h3>
       <span class="prompt">lianbi会员可直接使用会员名登录</span>
       <form>
-        <input v-model="email" type="text" placeholder="手机号">
+        <input v-model="mobile" type="text" placeholder="手机号">
         <input v-model="passwd" type="password" placeholder="密码">
         <input v-model="confirm" type="password" placeholder="再次输入密码">
         <button @click.prevent="signup">注册</button>
@@ -15,16 +15,16 @@
 export default {
   data () {
     return {
-      email: '',
+      mobile: '',
       passwd: '',
       confirm: ''
     }
   },
   methods: {
     signup () {
-      var emailReg = new RegExp(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)
-      if (!emailReg.test(this.email)) {
-        return alert('请填写正确邮箱地址')
+      var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
+      if (!mobileReg.test(this.mobile)) {
+        return alert('请填写正确手机号')
       }
       if (this.passwd.length < 6) {
         return alert('密码长度至少需要6位')
@@ -34,7 +34,7 @@ export default {
       }
       var that = this
       this.$http.post('/api/signup', {
-        account: this.email,
+        mobile: this.mobile,
         passwd: this.passwd
       }).then(function (res) {
         var resData = res.data

@@ -24,7 +24,7 @@ class UserController extends Controller
 
         // 获取请求参数
         $params = $this->validation($request, [
-            'account' => 'required|string',
+            'mobile' => 'required|numeric',
             'passwd' => 'required|string',
         ]);
         if ($params === false) {
@@ -33,14 +33,14 @@ class UserController extends Controller
         extract($params);
 
         // 验证是否重复注册
-        $isExist = Model\User::where('account', $account)->count();
+        $isExist = Model\User::where('mobile', $mobile)->count();
         if ($isExist) {
             return $this->error(201);
         }
 
         // 创建用户
         $userModel = Model\User::create([
-            'account' => $account,
+            'mobile' => $mobile,
             'passwd' => md5($passwd)
         ]);
         $userId = $userModel->id;
@@ -58,7 +58,7 @@ class UserController extends Controller
 
         // 获取请求参数
         $params = $this->validation($request, [
-            'account' => 'required|string',
+            'mobile' => 'required|numeric',
             'passwd' => 'required|string',
         ]);
         if ($params === false) {
@@ -67,7 +67,7 @@ class UserController extends Controller
         extract($params);
 
         $md5Passwd = md5($passwd);
-        $userData = Model\User::where([['account', $account], ['passwd', $md5Passwd]])->first();
+        $userData = Model\User::where([['mobile', $mobile], ['passwd', $md5Passwd]])->first();
         if (!$userData) {
             return $this->error(202);
         }
@@ -81,7 +81,7 @@ class UserController extends Controller
 
         return $this->output([
             'userId' => $userData->id,
-            'account' => $userData->account,
+            'mobile' => $userData->mobile,
             'avatarUrl' => $userData->avatar_url
         ]);
     }

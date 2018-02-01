@@ -51,6 +51,7 @@ import ProjDetailPanel from '@/components/projDetail/ProjDetailPanel'
 export default {
   data () {
     return {
+      showShare: false,
       projDetail: {
         nameCn: '',
         nameEn: '',

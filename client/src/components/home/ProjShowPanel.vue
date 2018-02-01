@@ -24,7 +24,7 @@ export default {
   mounted: function () {
     var that = this
     this.$http.post('/api/getProjList', {
-      pageno: 2,
+      pageno: 1,
       perpage: 6
     }).then(function (res) {
       var resData = res.data
