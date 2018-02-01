@@ -3,7 +3,7 @@
     <h3 class="panel-title center-title">欢迎注册链币网</h3>
       <span class="prompt">lianbi会员可直接使用会员名登录</span>
       <form>
-        <input v-model="email" type="text" placeholder="邮箱">
+        <input v-model="email" type="text" placeholder="手机号">
         <input v-model="passwd" type="password" placeholder="密码">
         <input v-model="confirm" type="password" placeholder="再次输入密码">
         <button @click.prevent="signup">注册</button>

@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import ProjList from '@/components/projList/ProjList.vue'
-import AddProject from '@/components/projList/addProject/AddProject.vue'
+import ProjList from '@/components/projList/ProjList'
+import AddProject from '@/components/projList/addProject/AddProject'
+import EditProject from '@/components/projList/editProject/EditProject'
 
 Vue.use(Router)
 
@@ -15,6 +16,10 @@ export default new Router({
     {
       path: '/addProject',
       component: AddProject
+    },
+    {
+      path: '/editProject/:id',
+      component: EditProject
     }
   ]
 })

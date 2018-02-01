@@ -7,24 +7,20 @@
         </router-link>
       </div>
       <el-table :data="projList">
-        <el-table-column label="项目ID" prop="id" width="80px">
-        </el-table-column>
+        <el-table-column label="项目ID" prop="id" width="80px"></el-table-column>
         <el-table-column label="项目logo" width="100px">
           <template slot-scope="scope">
             <img class="table-image" :src="scope.row.logoUrl" alt="">
           </template>
         </el-table-column>
-        <el-table-column label="项目名称" prop="nameCn">
-        </el-table-column>
-        <el-table-column label="货币名称" prop="tokenName" width="150px">
-        </el-table-column>
-        <el-table-column label="货币符号" prop="tokenSymbol" width="120px">
-        </el-table-column>
+        <el-table-column label="项目名称" prop="nameCn"></el-table-column>
         <el-table-column label="创建时间" prop="createdAt">
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button disabled size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <router-link :to="'/editProject/' + scope.row.id">
+              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            </router-link>
             <el-button disabled size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -37,13 +33,7 @@
 export default {
   data () {
     return {
-      projList: [{
-        id: 123,
-        logoUrl: 'testLogo',
-        name: 'demo',
-        tokenName: '比特币',
-        tokenSymbol: 'BTC'
-      }]
+      projList: []
     }
   },
   mounted () {

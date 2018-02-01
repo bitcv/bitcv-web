@@ -11,16 +11,7 @@
 <script>
 export default {
   props: {
-    filterResult: {
-      type: Object,
-      default: function () {
-        return {
-          region: 0,
-          bussinessType: 0,
-          phrase: 0
-        }
-      }
-    }
+    selectResult: Object
   },
   data () {
     return {
@@ -33,8 +24,11 @@ export default {
     }
   },
   watch: {
-    filterResult: function () {
-      this.searchProject()
+    selectResult: {
+      handler () {
+        this.searchProject()
+      },
+      deep: true
     }
   },
   methods: {
@@ -43,17 +37,13 @@ export default {
         return this.$router.push('/projList?keyword=' + this.keyword)
       }
       var that = this
-      this.$http.post('/api/getProjList', {
-        keyword: this.keyword,
-        region: this.filterResult.region,
-        bussinessType: this.filterResult.bussinessType,
-        phrase: this.filterResult.phrase,
-        pageno: 1,
-        perpage: 10
-      }).then(function (res) {
+      var params = JSON.parse(JSON.stringify(this.selectResult))
+      params.keyword = this.keyword
+      params.pageno = 1
+      params.perpage = 10
+      this.$http.post('/api/getProjList', params).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
-          console.log(resData)
           that.$root.eventHub.$emit('updateProjList', resData.data)
         } else {
           alert(resData.errmsg)
