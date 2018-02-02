@@ -1,7 +1,7 @@
 <template>
     <div class="protocol">
         <h3 class="panel-title center-title">链币用户协议</h3>
-        <span class = "content">一、责任声明</span>
+        <span class = "content"></span>
     </div>
 </template>
 
@@ -13,16 +13,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.protocol {
-  width: 900px;
-  .panel-title {
-    width: 180px;
-    height: 42px;
-    font-size: 30px;
-    font-family: PingFangSC-Semibold;
-    color: rgba(74,74,74,1);
-    line-height: 42px;
-  }
+.panel-title {
+  width: 180px;
+  height: 900px;
+  font-size: 20px;
+  text-align: center;
+  font-family: PingFangSC-Semibold;
+  color: rgba(74,74,74,1);
+  line-height: 42px;
+}
 .content {
   /* width: 900px; */
   display: inline-block;
@@ -32,5 +31,4 @@ export default {
   color: rgba(74,74,74,1);
   line-height: 28px;
   }
-}
 </style>
