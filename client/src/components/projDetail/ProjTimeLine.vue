@@ -1,13 +1,13 @@
 <template>
   <div class="timeline">
     <div class="line-wrapper">
-      <div class="event-item" v-for="(eventItem, index) in eventList" :key="index">
+      <div class="event-item" v-for="(eventItem, index) in projEvent" :key="index">
         <div class="event-time-container">
-          <div class="event-time">{{eventItem.eventTime}}</div>
+          <div class="event-time">{{eventItem.eventKey}}</div>
         </div>
         <div v-for="(eventNode, subIndex) in eventItem.eventNode" :key="subIndex" class="event-node">
-          <div class="event-title">{{eventNode.title}}</div>
-          <div class="event-info" v-html="eventNode.info"></div>
+          <div class="event-title">{{eventNode.time}}</div>
+          <div class="event-info"><span>{{ eventNode.title }}</span></div>
         </div>
       </div>
     </div>
@@ -15,6 +15,9 @@
 </template>
 <script>
 export default {
+  props: {
+    projEvent: Array
+  },
   data () {
     return {
       eventList: [
@@ -75,7 +78,7 @@ export default {
           position: relative;
           margin: 0 24px;
           border-radius: 2px;
-          width: 88px;
+          width: 120px;
           height: 24px;
           text-align: center;
           line-height: 24px;
