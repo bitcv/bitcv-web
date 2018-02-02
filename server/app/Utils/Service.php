@@ -38,7 +38,7 @@ class Service {
             return array('err' => 1, 'msg' => 'no vcode');
         }
 //for test 上线删除
-if ($vcode == '424242') {
+if ($vcode == env('SMS_TEST_VCODE')) {
     return array('err' => 0);
 }
         if (0 != strcasecmp($vcode, Redis::get("{$type}_{$id}"))) {
@@ -49,7 +49,7 @@ if ($vcode == '424242') {
 
     public static function sms($mobile, $msg) {
         $ip = Request::getClientIp();
-        $key = "saas_vcode_{$ip}";
+        $key = "lianbi_vcode_{$ip}";
         $num = Redis::get($key);
         if ($num > 10) { //每ip每分钟只能发10条
             return array('err' => 1, 'msg' => 'too many sms');
