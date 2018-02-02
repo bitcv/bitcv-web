@@ -108,7 +108,7 @@ class ProjectController extends Controller
 
         // 获取项目基本信息
         $projData = Model\Project::where('id', $projId)
-            ->select('id', 'name_cn', 'name_en', 'name_short', 'logo_url', 'banner_url', 'abstract', 'white_paper_url', 'web_url', 'view_times', 'token_id', 'node_amount', 'total_amount', 'plan_amount', 'start_time', 'end_time', 'status', 'admin_id', 'company_tel', 'company_addr', 'company_email')
+            ->select('id', 'name_cn', 'name_en', 'name_short', 'logo_url', 'banner_url', 'abstract', 'white_paper_url', 'web_url', 'view_times', 'token_id', 'node_amount', 'cur_amount', 'plan_amount', 'start_time', 'end_time', 'status', 'admin_id', 'company_tel', 'company_addr', 'company_email')
             ->first();
         if ($projData === null) {
             return $this->error(301);
@@ -331,7 +331,9 @@ class ProjectController extends Controller
         extract($params);
         $offset = 6 * ($p - 1);
         if($chid){
-            $projList = Model\Project::join('proj_tag','project.id','=','proj_tag.proj_id')->where('tag','like',"%$chid%")
+//            $projList = Model\Project::join('proj_tag','project.id','=','proj_tag.proj_id')->where('tag','like',"%$chid%")
+//                ->offset($offset)->limit(6)->get()->toArray();
+            $projList = Model\Project::where('buz_type',$chid)
                 ->offset($offset)->limit(6)->get()->toArray();
         }else{
             $projList = Model\Project::offset($offset)->limit(6)->get()->toArray();
@@ -350,7 +352,7 @@ class ProjectController extends Controller
 
         // 获取项目基本信息
         $projData = Model\Project::where('id', $id)
-            ->select('name_cn','logo_url', 'name_en', 'name_short', 'abstract', 'white_paper_url', 'web_url', 'view_times', 'token_id', 'node_amount', 'total_amount', 'plan_amount', 'start_time', 'end_time', 'status', 'admin_id')
+            ->select('name_cn','logo_url', 'name_en', 'short_desc', 'abstract', 'white_paper_url', 'home_url', 'view_times', 'token_id', 'node_amount', 'cur_amount', 'plan_amount', 'start_time', 'end_time', 'status', 'admin_id')
             ->first();
 
         $projData->toArray();

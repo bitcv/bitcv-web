@@ -185,4 +185,15 @@ class UserController extends Controller
 
         return $this->output();
     }
+
+    public function getVcode(Request $request){
+        $params = $this->validation($request,[
+            'account' => 'required|string',
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        self::vcode($account);
+    }
 }
