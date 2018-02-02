@@ -71,6 +71,7 @@ export default {
       .event-item {
         width: 100%;
         font-size: 14px;
+        margin-bottom: 20px;
         .event-time-container {
           display: flex;
         }
@@ -112,7 +113,7 @@ export default {
           &:before {
             content: '';
             position: absolute;
-            top: 0;
+            top: 3px;
             width: 7px;
             height: 7px;
             background-color: #4A4A4A;
