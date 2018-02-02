@@ -1,5 +1,8 @@
 <template>
   <div class="proj-info">
+    <div v-if="showShare" class="share-container" @click="showShare = false">
+      <share :proj-detail="projDetail"></share>
+    </div>
     <div class="info-box">
       <img :src="projDetail.logoUrl" alt="">
       <div class="text-box">
@@ -29,20 +32,28 @@
     </div>
     <div class="social-box">
       <span class="title">友情链接：</span>
-      <a :href="partner.webUrl" v-for="(partner, index) in projDetail.partnerList" :key="index" target="_blank">
-        <img :src="partner.logoUrl" alt="">
+      <a :href="social.linkUrl" v-for="(social, index) in projDetail.socialList" :key="index" target="_blank">
+        <img :src="social.logoUrl" alt="">
       </a>
+    </div>
+    <div class="share-box" @click="showShare = true">
+      <span class="title">项目分享</span>
+      <img src="/static/logo/share.png" alt="">
     </div>
   </div>
 </template>
 
 <script>
+import Share from '@/components/share/Share'
+
 export default {
   props: {
     projDetail: Object
   },
   data () {
-    return {}
+    return {
+      showShare: false
+    }
   },
   methods: {
     toggleFocus: function () {
@@ -60,6 +71,9 @@ export default {
         }
       })
     }
+  },
+  components: {
+    Share
   }
 }
 </script>
@@ -153,6 +167,35 @@ export default {
       height: 26px;
       margin: 0 5px;
     }
+  }
+  .share-box {
+    height: 46px;
+    display: flex;
+    position: absolute;
+    right: 40px;
+    bottom: 0;
+    align-items: center;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000;
+    cursor: pointer;
+    img {
+      width: 23px;
+      height: 23px;
+      margin: 0 5px;
+    }
+  }
+  .share-container {
+    width: 400px;
+    position: fixed;
+    background-color: #FFF;
+    z-index: 10;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    border: 1px solid #888;
+    margin: auto;
   }
 }
 </style>

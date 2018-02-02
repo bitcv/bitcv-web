@@ -3,16 +3,18 @@
     <h3 class="panel-title center-title">欢迎注册链币网</h3>
       <span class="prompt">lianbi会员可直接使用会员名登录</span>
       <form>
-        <input v-model="email" type="text" placeholder="邮箱">
+        <input v-model="mobile" type="text" placeholder="手机号">
         <div class = smspanel>
         <input class = "sms" v-model="vcode" type="text" placeholder="短信验证码" >
         <span class = "smscode" @click="getVcode">发送短信验证码</span>
         </div>
         <input v-model="passwd" type="password" placeholder="密码">
         <input v-model="confirm" type="password" placeholder="再次输入密码">
-        <div> 
-        <el-checkbox></el-checkbox>  
-        <span class="protocl">我已阅读并同意链币注册协议</span>
+        <div>
+        <el-checkbox v-model="checked" @click="change"> </el-checkbox>
+        <router-link to="protocol">
+        <span class="protocl">我已阅读并同意<a>链币注册协议</a></span>
+        </router-link>
         </div>
         <button @click.prevent="signup">注册</button>
       </form>
@@ -23,30 +25,34 @@
 export default {
   data () {
     return {
-      email: '',
+      mobile: '',
       passwd: '',
       confirm: '',
-      vcode: ''
+      vcode: '',
+      checked: true
     }
   },
   methods: {
     signup () {
-      var emailReg = new RegExp(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)
-      if (!emailReg.test(this.email)) {
-        return alert('请填写正确邮箱地址')
-      }
+      var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
+    if (!mobileReg.test(this.mobile)) {
+      return alert('请填写正确手机号')
+    }
       if (this.passwd.length < 6) {
         return alert('密码长度至少需要6位')
       }
       if (this.passwd !== this.confirm) {
         return alert('两次输入的密码不一致')
       }
-      if (this.vcode == null) {
+      if (!this.vcode) {
         return alert('验证码不能为空')
+      }
+      if (!this.checked) {
+        return alert('您没有同意链币用户协议')
       }
       var that = this
       this.$http.post('/api/signup', {
-        account: this.email,
+        mobile: this.mobile,
         passwd: this.passwd,
         vcode: this.vcode
       }).then(function (res) {
@@ -61,12 +67,12 @@ export default {
       })
     },
     getVcode () {
-      var emailReg = new RegExp(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)
-      if (!emailReg.test(this.email)) {
-        return alert('请填写正确邮箱地址')
-      }
+      var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
+       if (!mobileReg.test(this.mobile)) {
+         return alert('请填写正确手机号')
+       }
       this.$http.post('/api/getVcode', {
-        account: this.account
+        mobile: this.mobile
       }).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
@@ -77,6 +83,9 @@ export default {
       }).catch(function (err) {
         console.log(err)
       })
+    },
+    change () {
+      this.checked = !this.checked
     }
   }
 }
@@ -143,13 +152,16 @@ export default {
       background-color: #000;
     }
     .protocl {
-      width:182px;
-      height:20px; 
-      font-size:14px;
-      font-family:PingFangSC-Regular;
-      color:rgba(155,155,155,1);
-      line-height:20px;
+      width: 182px;
+      height: 20px; 
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      color: rgba(155,155,155,1);
+      line-height: 20px;
       margin-left: 4px;
+      a {
+        color: #FFCF81;
+      }
     }
   }
   .btn-area {

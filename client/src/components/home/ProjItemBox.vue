@@ -10,16 +10,16 @@
       </div>
     </div>
     <div class="column flex index2">
-      <span class="title">代币名称</span>
-      <span class="content">{{ projData.tokenSymbol }}</span>
+      <span class="title">行业</span>
+      <span class="content">{{ buzType }}</span>
     </div>
-    <div class="column flex index3">
-      <span class="title">当前代币价格</span>
-      <span class="content">{{ projData.tokenPrice }}</span>
+    <div class="column flex index2">
+      <span class="title">代币符号</span>
+      <span class="content">{{ projData.tokenSymbol }}</span>
     </div>
     <div class="column flex index4">
       <span class="title">融资状态</span>
-      <span class="content">未透露</span>
+      <span class="content">{{ fundStage }}</span>
     </div>
   </div>
 </template>
@@ -31,6 +31,48 @@ export default {
   },
   data () {
     return {}
+  },
+  computed: {
+    fundStage () {
+      switch (this.projData.fundStage) {
+        case 0:
+          return '保密'
+        case 1:
+          return '未融资'
+        case 2:
+          return '融资中'
+        case 3:
+          return '已融资'
+      }
+    },
+    buzType () {
+      switch (this.projData.buzType) {
+        case 1:
+          return '金融'
+        case 2:
+          return '数字货币'
+        case 3:
+          return '娱乐'
+        case 4:
+          return '供应链管理'
+        case 5:
+          return '法律服务'
+        case 6:
+          return '医疗'
+        case 7:
+          return '能源服务'
+        case 8:
+          return '公益'
+        case 9:
+          return '物联网'
+        case 10:
+          return '农业'
+        case 11:
+          return '社交'
+        default:
+          return '其它'
+      }
+    }
   }
 }
 </script>
@@ -86,7 +128,7 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    &.index2>.content {
+    &.index4>.content {
       font-size: 16px;
       line-height: 22px;
       color: #F5A623;

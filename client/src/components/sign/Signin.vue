@@ -8,12 +8,14 @@
     <template v-if="curIndex === 0">
       <span class="prompt">lianbi会员可直接使用会员名登录</span>
       <form>
-        <input v-model="email" type="text" placeholder="邮箱">
+        <input v-model="mobile" type="text" placeholder="手机号">
         <input v-model="passwd" type="password" placeholder="登录密码">
         <button @click.prevent="signin">登录</button>
       </form>
       <div class="btn-area">
-        <a>忘记密码</a>
+        <router-link to="findPwd">
+          <a>忘记密码</a>
+        </router-link>
         <router-link to="signup">
           <a>注册会员</a>
         </router-link>
@@ -31,28 +33,28 @@ export default {
   data () {
     return {
       curIndex: 0,
-      email: '',
+      mobile: '',
       passwd: ''
     }
   },
   methods: {
     signin () {
-      var emailReg = new RegExp(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)
-      if (!emailReg.test(this.email)) {
-        return alert('请填写正确邮箱地址')
+      var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
+      if (!mobileReg.test(this.mobile)) {
+        return alert('请填写正确的手机号')
       }
       if (this.passwd.length < 6) {
         return alert('账号或密码错误')
       }
       var that = this
       this.$http.post('/api/signin', {
-        account: this.email,
+        mobile: this.mobile,
         passwd: this.passwd
       }).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
           localStorage.setItem('userId', resData.data.userId)
-          localStorage.setItem('account', resData.data.account)
+          localStorage.setItem('mobile', resData.data.mobile)
           localStorage.setItem('avatarUrl', resData.data.avatarUrl)
           that.$router.push('/')
           that.$router.go(0)

@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="main-panel">
-      <search-panel></search-panel>
+      <search-panel :select-result="{}"></search-panel>
       <proj-show-panel></proj-show-panel>
       <proj-list-panel></proj-list-panel>
     </div>

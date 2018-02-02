@@ -5,6 +5,10 @@ import ProjList from '@/components/projList/ProjList'
 import ProjDetail from '@/components/projDetail/ProjDetail'
 import Signin from '@/components/sign/Signin'
 import Signup from '@/components/sign/Signup'
+import Share from '@/components/share/Share'
+import Protocol from '@/components/sign/Protocol'
+import FindPwd from '@/components/sign/FindPwd'
+import ResetPwd from '@/components/sign/ResetPwd'
 
 Vue.use(Router)
 
@@ -36,6 +40,22 @@ export default new Router({
     {
       path: '/signup',
       component: Signup
+    },
+    {
+      path: '/share',
+      component: Share
+    },
+    {
+      path: '/protocol',
+      component: Protocol
+    },
+    {
+      path: '/findpwd',
+      component: FindPwd
+    },
+    {
+      path: '/resetpwd',
+      component: ResetPwd
     }
   ]
 })

@@ -7,25 +7,21 @@
         </router-link>
       </div>
       <el-table :data="projList">
-        <el-table-column label="项目ID" prop="id" width="80px">
-        </el-table-column>
-        <el-table-column label="项目logo" width="100px">
+        <el-table-column label="项目ID" prop="id" width="150px"></el-table-column>
+        <el-table-column label="项目logo">
           <template slot-scope="scope">
             <img class="table-image" :src="scope.row.logoUrl" alt="">
           </template>
         </el-table-column>
-        <el-table-column label="项目名称" prop="nameCn">
-        </el-table-column>
-        <el-table-column label="货币名称" prop="tokenName" width="150px">
-        </el-table-column>
-        <el-table-column label="货币符号" prop="tokenSymbol" width="120px">
-        </el-table-column>
+        <el-table-column label="项目名称" prop="nameCn"></el-table-column>
         <el-table-column label="创建时间" prop="createdAt">
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button disabled size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button disabled size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <router-link :to="'/editProject/' + scope.row.id">
+              <el-button size="mini">编辑</el-button>
+            </router-link>
+            <el-button size="mini" type="danger" @click="showDel(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -37,26 +33,48 @@
 export default {
   data () {
     return {
-      projList: [{
-        id: 123,
-        logoUrl: 'testLogo',
-        name: 'demo',
-        tokenName: '比特币',
-        tokenSymbol: 'BTC'
-      }]
+      projList: []
     }
   },
   mounted () {
-    var that = this
-    this.$http.post('/api/getProjList', {
-      pageno: 1,
-      perpage: 10
-    }).then(function (res) {
-      var resData = res.data
-      if (resData.errcode === 0) {
-        that.projList = resData.data.projList
-      }
-    })
+    this.updateData()
+  },
+  methods: {
+    updateData () {
+      this.$http.post('/api/getProjBasicList', {
+        pageno: 1,
+        perpage: 30
+      }).then((res) => {
+        var resData = res.data
+        if (resData.errcode === 0) {
+          this.projList = resData.data.dataList
+        }
+      })
+    },
+    showDel (projId) {
+      this.$confirm('删除后无法恢复, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.delProject(projId)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    delProject (projId) {
+      this.$http.post('/api/delProject', {
+        projId: projId
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$message({ type: 'success', message: '删除成功!' })
+          this.updateData()
+        }
+      })
+    }
   }
 }
 </script>

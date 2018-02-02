@@ -1,14 +1,11 @@
 <template>
   <div class="proj-search-panel">
-    <search :filter-result="filterResult"></search>
+    <search :select-result="selectResult"></search>
     <div class="sort-container">
-      <div class="sort-row" v-for="rule in filterRuleList" :key="rule.type">
-        <span class="title">{{ rule.text }}</span>
+      <div class="sort-row" v-for="(tagInfo, field) in projTagList" :key="tagInfo.field">
+        <span class="title">{{ tagInfo.label }}</span>
         <div class="tag-wrapper">
-           <span class="tag"
-             :class="{ cur: rule.curOption === option.value }"
-             @click="rule.curOption = option.value"
-             v-for="option in rule.optionList" :key="option.value">{{ option.text }}</span>
+           <span class="tag" :class="{ cur: selectResult[field] === tag.value }" @click="selectResult[field] = tag.value" v-for="tag in tagInfo.optionList" :key="tag.value">{{ tag.label }}</span>
         </div>
       </div>
     </div>
@@ -25,54 +22,26 @@ import Search from '@/components/home/Search'
 export default {
   data () {
     return {
-      filterRuleList: [
-        {
-          type: 1,
-          text: '地区',
-          curOption: 0,
-          optionList: [
-            { text: '不限', value: 0 },
-            { text: '国内', value: 1 },
-            { text: '国外', value: 2 }
-          ]
-        },
-        {
-          type: 2,
-          text: '行业',
-          curOption: 0,
-          optionList: [
-            { text: '不限', value: 0 },
-            { text: '人工智能', value: 1 },
-            { text: '房产服务', value: 2 },
-            { text: '教育', value: 3 },
-            { text: '金融', value: 4 },
-            { text: '硬件', value: 5 },
-            { text: '医疗健康', value: 6 },
-            { text: '文化娱乐', value: 7 }
-          ]
-        },
-        {
-          type: 3,
-          text: '阶段',
-          curOption: 0,
-          optionList: [
-            { text: '不限', value: 0 },
-            { text: '初创期', value: 1 },
-            { text: '成长发展期', value: 2 },
-            { text: '上市公司', value: 3 },
-            { text: '成熟期', value: 4 }
-          ]
-        }
-      ]
+      projTagList: {},
+      selectResult: {}
     }
   },
-  computed: {
-    filterResult: function () {
-      return {
-        region: this.filterRuleList[0].curOption,
-        bussinessType: this.filterRuleList[1].curOption,
-        phrase: this.filterRuleList[2].curOption
+  mounted () {
+    var that = this
+    this.$http.get('/api/getProjTagList').then(function (res) {
+      if (res.data.errcode === 0) {
+        var resData = res.data.data
+        for (let field in resData) {
+          that.$set(that.selectResult, field, resData[field].default)
+        }
+        that.projTagList = resData
       }
+    })
+  },
+  methods: {
+    select (field, value) {
+      this.selectResult[field] = value
+      console.log(this.selectResult)
     }
   },
   components: {

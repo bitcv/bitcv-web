@@ -17,7 +17,7 @@
       </div>
       <div class="info-box" v-if="isOnline">
         <img :src="avatarUrl" alt="">
-        <span class="nickname">{{ account }}</span>
+        <span class="nickname">{{ mobile }}</span>
         <div class="signout btn" @click="signout"><span class="btn-text">退出登录</span></div>
       </div>
       <div class="btn-box" v-else>
@@ -38,7 +38,7 @@ export default {
     return {
       isOnline: false,
       avatarUrl: '/static/img/avatar.png',
-      account: 'junderking@163.com',
+      mobile: 'yk_23723952234',
       menuIndex: 0,
       menuList: [
         {url: '/', text: '首页'},
@@ -59,14 +59,12 @@ export default {
     var userId = localStorage.getItem('userId')
     if (userId) {
       this.isOnline = true
-      this.account = localStorage.getItem('account')
+      this.mobile = localStorage.getItem('mobile')
       var avatarUrl = localStorage.getItem('avatarUrl')
       if (avatarUrl) {
         this.avatarUrl = avatarUrl
       }
     }
-    console.log('account')
-    console.log(this.account)
   },
   watch: {
     '$route' (to, from) {
@@ -89,7 +87,7 @@ export default {
         var resData = res.data
         if (resData.errcode === 0) {
           localStorage.removeItem('userId')
-          localStorage.removeItem('account')
+          localStorage.removeItem('mobile')
           localStorage.removeItem('avatarUrl')
           that.$router.go(0)
         }

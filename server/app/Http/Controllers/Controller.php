@@ -26,6 +26,7 @@ class Controller extends BaseController
         '202' => ['errcode' => 202, 'errmsg' => '用户名或密码错误'],
         '203' => ['errcode' => 203, 'errmsg' => '用户不存在'],
         '204' => ['errcode' => 204, 'errmsg' => '重复关注'],
+        '205' => ['errcode' => 205, 'errmsg' => '密码格式不正确'],
         // 项目错误码
         '301' => ['errcode' => 301, 'errmsg' => '项目不存在'],
     ];
