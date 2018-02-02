@@ -29,6 +29,7 @@ class Controller extends BaseController
         '205' => ['errcode' => 205, 'errmsg' => '密码格式不正确'],
         // 项目错误码
         '301' => ['errcode' => 301, 'errmsg' => '项目不存在'],
+        '302' => ['errcode' => 302, 'errmsg' => '验证码错误'],
     ];
 
     public function validation(Request $request, Array $rules)
