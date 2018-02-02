@@ -35,9 +35,9 @@ export default {
   methods: {
     signup () {
       var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
-    if (!mobileReg.test(this.mobile)) {
-      return alert('请填写正确手机号')
-    }
+      if (!mobileReg.test(this.mobile)) {
+        return alert('请填写正确手机号')
+      }
       if (this.passwd.length < 6) {
         return alert('密码长度至少需要6位')
       }
@@ -68,15 +68,14 @@ export default {
     },
     getVcode () {
       var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
-       if (!mobileReg.test(this.mobile)) {
-         return alert('请填写正确手机号')
-       }
+      if (!mobileReg.test(this.mobile)) {
+        return alert('请填写正确手机号')
+      }
       this.$http.post('/api/getVcode', {
         mobile: this.mobile
       }).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
-
         } else {
           alert(resData.errmsg)
         }
@@ -153,7 +152,7 @@ export default {
     }
     .protocl {
       width: 182px;
-      height: 20px; 
+      height: 20px;
       font-size: 14px;
       font-family: PingFangSC-Regular;
       color: rgba(155,155,155,1);

@@ -1,30 +1,30 @@
 <template>
   <div class="findpwd">
-      <h3 class = "panel-title center-title">找回密码</h3>
-        <form>
-        <input v-model="mobile" type="text" placeholder="请输入你的手机号码">
-        <div class = smspanel>
-        <input class = "sms" v-model="vcode" type="text" placeholder="短信验证码" >
-        <span class = "smscode" @click="getVcode">发送短信验证码</span>
-        </div>
-        <button @click.prevent="findPwd">找回密码</button>
+    <h3 class = "panel-title center-title">找回密码</h3>
+      <form>
+      <input v-model="mobile" type="text" placeholder="请输入你的手机号码">
+      <div class = smspanel>
+      <input class = "sms" v-model="vcode" type="text" placeholder="短信验证码" >
+      <span class = "smscode" @click="getVcode">发送短信验证码</span>
+      </div>
+      <button @click.prevent="findPwd">找回密码</button>
       </form>
   </div>
 </template>
 <script>
 export default {
   data () {
-      return {
-          mobile: '',
-          vcode: ''
-      }
+    return {
+      mobile: '',
+      vcode: ''
+    }
   },
   methods: {
-      getVcode () {
+    getVcode () {
       var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
-       if (!mobileReg.test(this.mobile)) {
-         return alert('请填写正确手机号')
-       }
+      if (!mobileReg.test(this.mobile)) {
+        return alert('请填写正确手机号')
+      }
       this.$http.post('/api/getVcode', {
         mobile: this.mobile
       }).then(function (res) {
@@ -39,14 +39,14 @@ export default {
       })
     },
     findPwd () {
-        var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
-        if (!mobileReg.test(this.mobile)) {
-            return alert('请填写正确手机号')
-        }
-        if (!this.vcode) {
-            return alert('验证码不能为空')
-        }
-
+      var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
+      if (!mobileReg.test(this.mobile)) {
+        return alert('请填写正确手机号')
+      }
+      if (!this.vcode) {
+        return alert('验证码不能为空')
+      }
+      var that = this
       this.$http.post('/api/checkVcode', {
         mobile: this.mobile,
         vcode: this.vcode
@@ -60,9 +60,6 @@ export default {
       }).catch(function (err) {
         console.log(err)
       })
-
-
-
     }
   }
 }
@@ -115,9 +112,9 @@ export default {
       text-align: center;
     }
     .sms {
-        height: 50px;
-        width: 273px;
-      }
+      height: 50px;
+      width: 273px;
+    }
     button {
       width: 426px;
       height: 50px;
@@ -127,7 +124,6 @@ export default {
       line-height: 25px;
       background-color: #000;
     }
-    
   }
   .btn-area {
     position: absolute;

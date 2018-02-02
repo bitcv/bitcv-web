@@ -44,9 +44,23 @@
           </el-carousel-item>
         </el-carousel>
       </div>
-      <div class="event-area" id="Event" v-show="false">
+      <div class="event-area" id="Event" v-if="true">
         <h3 class="panel-title">项目发展</h3>
-        <proj-time-line></proj-time-line>
+        <proj-time-line :proj-event="projDetail.eventList"></proj-time-line>
+      </div>
+      <div class="advisor-area" id="Advisor">
+        <h3 class="panel-title center-title">项目顾问</h3>
+        <div class="advisor-box">
+          <ul class="advisor-list">
+            <li class="advisor-item" v-for="(advisor, index) in projDetail.advisorList" :key="index">
+              <img :src="advisor.photoUrl" alt="">
+              <span class="name">{{ advisor.name }}</span>
+              <div class="intro-hover">
+                <span class="intro">{{ advisor.intro }}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="partner-area" id="Partner">
         <h3 class="panel-title center-title">合作伙伴</h3>
@@ -91,9 +105,6 @@ export default {
 <style lang="scss" scoped>
 .proj-detail-panel {
   width: 100%;
-  >div {
-    background-color: #FFF;
-  }
   .header {
     display: flex;
     justify-content: space-around;
@@ -103,6 +114,7 @@ export default {
     margin-bottom: 10px;
     font-size: 0;
     color: #000;
+    background-color: #FFF;
     span {
       font-size: 14px;
       display: inline-block;
@@ -115,138 +127,195 @@ export default {
       }
     }
   }
-  .info-area {
-    padding: 20px;
-    div {
-      margin: 20px 0;
-      text-align: center;
-      img {
-        width: 100%;
-      }
+  .content {
+    >div:nth-child(2n + 1) {
+      background-color: #FFF;
     }
-    .abstract {
-      border-top: 0.5px solid #979797;
-      padding-top: 6px;
-      font-size: 14px;
-      line-height: 28px;
-      text-align: left;
+    >div:nth-child(2n) {
+      background-color: #F6F6F6;
     }
-  }
-  .team-area {
-    background-color: #F6F6F6;
-    .member {
-      box-sizing: border-box;
-      padding: 50px;
-      text-align: center;
-      >* {
-        display: block;
-        margin: 0 auto;
-      }
-      img {
-        width: 96px;
-        height: 96px;
-        border-radius: 50%;
-        margin-bottom: 12px;
-      }
-      .name {
-        margin-bottom: 40px;
-      }
-      .intro {
-        font-size: 16px;
-        line-height: 28px;
-        color: #000;
-        text-align: left;
-        overflow:hidden;
-        text-overflow:ellipsis;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 5;
-        overflow: hidden;
-      }
-    }
-  }
-  .event-area {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 20px;
-  }
-  .partner-area {
-    background-color: #F6F6F6;
-    padding: 40px 0;
-    .logo-box {
-      margin-top: 39px;
-      box-sizing: border-box;
-      padding: 0 30px;
-      width: 100%;
-      overflow: hidden;
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      .img-container {
-        float: left;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 30px 15px 0;
-        border: 1px solid #979797;
-        width: 170px;
-        height: 65px;
+    .info-area {
+      padding: 20px;
+      div {
+        margin: 20px 0;
+        text-align: center;
         img {
-          max-width: 100%;
-          max-height: 100%;
+          width: 100%;
+        }
+      }
+      .abstract {
+        border-top: 0.5px solid #979797;
+        padding-top: 6px;
+        font-size: 14px;
+        line-height: 28px;
+        text-align: left;
+      }
+    }
+    .team-area {
+      .member {
+        box-sizing: border-box;
+        padding: 50px;
+        text-align: center;
+        >* {
+          display: block;
+          margin: 0 auto;
+        }
+        img {
+          width: 96px;
+          height: 96px;
+          border-radius: 50%;
+          margin-bottom: 12px;
+        }
+        .name {
+          margin-bottom: 40px;
+        }
+        .intro {
+          font-size: 16px;
+          line-height: 28px;
+          color: #000;
+          text-align: left;
+          overflow:hidden;
+          text-overflow:ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 5;
+          overflow: hidden;
         }
       }
     }
-  }
-  .media-area {
-    padding: 40px;
-    .item-box {
+    .event-area {
       width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 48px;
-      .item {
+      box-sizing: border-box;
+      padding: 40px 20px;
+    }
+    .advisor-area {
+      padding: 20px;
+      .advisor-box {
+        margin: 48px 30px 0;
+        .advisor-list {
+          display: flex;
+          justify-content: center;
+          .advisor-item {
+            width: 168px;
+            height: 222px;
+            background-color: #FFF;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 5px;
+            img {
+              width: 73px;
+              height: 73px;
+              border-radius: 50%;
+            }
+            .name {
+              font-size: 14px;
+              line-height: 30px;
+              border-top: 2px solid #5AA6FF;
+              color: #000;
+              margin-top: 22px;
+            }
+            .intro-hover {
+              position: absolute;
+              top: 0;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-size: 14px;
+              line-height: 20px;
+              color: rgba(256, 256, 256, 0);
+              background-color: rgba(256, 256, 256, 0);
+              &:hover {
+                color: #4A4A4A;
+                background-color: rgba(256, 256, 256, 0.9);
+              }
+            }
+          }
+        }
+      }
+    }
+    .partner-area {
+      padding: 40px 0;
+      .logo-box {
+        margin-top: 39px;
         box-sizing: border-box;
-        width: 168px;
-        height: 222px;
-        border-top: 9px solid #5AA6FF;
-        box-shadow: 0 0 9px #C0C0C0;
-        margin: 0 5px;
-        &:nth-child(1) {
-          border-color: #3A323D;
-        }
-        &:nth-child(2) {
-          border-color: #5AA6FF;
-        }
-        &:nth-child(3) {
-          border-color: #FFE651;
-        }
-        &:nth-child(4) {
-          border-color: #FF6262;
-        }
-        .image-area {
-          width: 100%;
-          height: 115px;
+        padding: 0 30px;
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        .img-container {
+          float: left;
           display: flex;
           justify-content: center;
           align-items: center;
+          margin: 30px 15px 0;
+          border: 1px solid #979797;
+          width: 170px;
+          height: 65px;
           img {
-            display: block;
-            margin: 0 auto;
-            width: 67px;
-            height: 67px;
+            max-width: 100%;
+            max-height: 100%;
           }
         }
-        .content {
-          display: block;
+      }
+    }
+    .media-area {
+      padding: 40px;
+      .item-box {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 48px;
+        .item {
           box-sizing: border-box;
-          width: 100%;
-          padding: 0 5px;
-          font-size: 12px;
-          line-height: 18px;
-          color: #9B9B9B;
-          text-align: center;
+          width: 168px;
+          height: 222px;
+          border-top: 9px solid #5AA6FF;
+          box-shadow: 0 0 9px #C0C0C0;
+          margin: 0 5px;
+          &:nth-child(1) {
+            border-color: #3A323D;
+          }
+          &:nth-child(2) {
+            border-color: #5AA6FF;
+          }
+          &:nth-child(3) {
+            border-color: #FFE651;
+          }
+          &:nth-child(4) {
+            border-color: #FF6262;
+          }
+          .image-area {
+            width: 100%;
+            height: 115px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            img {
+              display: block;
+              margin: 0 auto;
+              width: 67px;
+              height: 67px;
+            }
+          }
+          .content {
+            display: block;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 0 5px;
+            font-size: 12px;
+            line-height: 18px;
+            color: #9B9B9B;
+            text-align: center;
+          }
         }
       }
     }

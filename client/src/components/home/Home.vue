@@ -41,7 +41,7 @@ export default {
   justify-content: space-between;
   .main-panel {
     flex: 1 1 auto;
-    min-width: 500px;
+    min-width: 300px;
     &>div {
       margin-top: 24px;
       &:nth-child(1) {

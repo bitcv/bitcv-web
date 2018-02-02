@@ -177,8 +177,43 @@ class ProjectController extends Controller
         // 获取项目事件
         $projEventList = Model\ProjEvent::where('proj_id', $projId)
             ->select('occur_time', 'title', 'detail')
+            ->orderBy('occur_time', 'desc')->get()->toArray();
+        $resultList = array();
+        foreach ($projEventList as $event) {
+            $timestamp = strtotime($event['occur_time']);
+            $year = date('Y', $timestamp);
+            $month = date('m', $timestamp);
+            $season = ceil($month / 3);
+            $key = $year . '年 第' . $season . '季度';
+            $isExist = false;
+            foreach ($resultList as &$eventItem) {
+                if ($eventItem['eventKey'] === $key) {
+                    $isExist = true;
+                    $eventItem['eventNode'][] = array(
+                        'time' => date('m月d日', $timestamp),
+                        'title' => $event['title']
+                    );
+                }
+            }
+            if (!$isExist) {
+                $resultList[] = array(
+                    'eventKey' => $key,
+                    'eventNode' => array(
+                        array(
+                            'time' => date('m月d日', $timestamp),
+                            'title' => $event['title']
+                        )
+                    )
+                );
+            }
+        }
+        $projData['eventList'] = $resultList;
+
+        // 获取项目顾问信息
+        $projAdvisorList = Model\ProjAdvisor::where('proj_id', $projId)
+            ->select('name', 'photo_url', 'company', 'intro')
             ->get()->toArray();
-        $projData['eventList'] = $projEventList;
+        $projData['advisorList'] = $projAdvisorList;
 
         // 获取合作伙伴信息
         $projPartnerList = Model\ProjPartner::where('proj_id', $projId)
