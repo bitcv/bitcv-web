@@ -15,7 +15,7 @@ export default {
 <style lang="scss" scoped>
 .panel-title {
   width: 180px;
-  height: 500px;
+  height: 300px;
   font-size: 20px;
   text-align: center;
   font-family: PingFangSC-Semibold;
