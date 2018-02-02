@@ -201,6 +201,7 @@ class UserController extends Controller
         }
         extract($params);
         self::vcode($mobile);
+        return $this->output();
     }
 
     public function checkVcode(Request $request){
