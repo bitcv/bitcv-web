@@ -200,7 +200,7 @@ class UserController extends Controller
             return $this->error(100);
         }
         extract($params);
-        self::vcode($mobile);
+        return self::vcode($mobile);
     }
 
     public function checkVcode(Request $request){
