@@ -193,21 +193,23 @@ export default {
       .advisor-box {
         margin: 48px 30px 0;
         .advisor-list {
-          display: flex;
+          /*display: flex;*/
           justify-content: center;
           .advisor-item {
             width: 168px;
-            height: 222px;
+            /*height: 222px;
+            display: flex;*/
+            display:inline-block;
+            text-align:center;
             background-color: #FFF;
             position: relative;
-            display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             margin: 5px;
             img {
-              width: 73px;
-              height: 73px;
+              width: 100%;
+              /*height: 73px;*/
               border-radius: 50%;
             }
             .name {
