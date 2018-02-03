@@ -52,7 +52,7 @@
         <h3 class="panel-title center-title">项目顾问</h3>
         <div class="advisor-box">
           <ul class="advisor-list">
-            <li class="advisor-item" v-for="(advisor, index) in projDetail.advisorList" :key="index">
+            <li class="advisor-item mobile-list-item" v-for="(advisor, index) in projDetail.advisorList" :key="index">
               <img :src="advisor.photoUrl" alt="">
               <span class="name">{{ advisor.name }}</span>
               <div class="intro-hover">
@@ -73,7 +73,7 @@
       <div class="media-area" id="Media">
         <h3 class="center-title panel-title">媒体报道</h3>
         <div class="item-box">
-          <a class="item" :href="report.linkUrl" target="_blank" v-for="(report, index) in projDetail.reportList" :key="index">
+          <a class="item mobile-list-item" :href="report.linkUrl" target="_blank" v-for="(report, index) in projDetail.reportList" :key="index">
             <div class="image-area">
               <img class="log" :src="report.logoUrl" alt="">
             </div>
@@ -174,12 +174,11 @@ export default {
           line-height: 28px;
           color: #000;
           text-align: left;
-          overflow:hidden;
-          text-overflow:ellipsis;
+          overflow: hidden;
+          text-overflow: ellipsis;
           display: -webkit-box;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 5;
-          overflow: hidden;
         }
       }
     }
@@ -193,8 +192,10 @@ export default {
       .advisor-box {
         margin: 48px 30px 0;
         .advisor-list {
-          /*display: flex;*/
+          display: flex;
           justify-content: center;
+          flex-wrap: wrap;
+          width: 100%;
           .advisor-item {
             width: 168px;
             /*height: 222px;
@@ -258,7 +259,7 @@ export default {
           justify-content: center;
           align-items: center;
           margin: 30px 15px 0;
-          border: 1px solid #979797;
+          border: 1px solid #DCDFE6;
           width: 170px;
           height: 65px;
           img {
@@ -275,6 +276,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-wrap: wrap;
         margin-top: 48px;
         .item {
           box-sizing: border-box;
@@ -282,7 +284,7 @@ export default {
           height: 222px;
           border-top: 9px solid #5AA6FF;
           box-shadow: 0 0 9px #C0C0C0;
-          margin: 0 5px;
+          margin: 5px;
           &:nth-child(1) {
             border-color: #3A323D;
           }
@@ -321,6 +323,11 @@ export default {
         }
       }
     }
+  }
+}
+@media screen and (max-width: 500px) {
+  .mobile-list-item {
+    width: calc(50% - 10px) !important;
   }
 }
 </style>

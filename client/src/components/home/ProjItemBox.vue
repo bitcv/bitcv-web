@@ -9,15 +9,15 @@
         <span class="content">{{ projData.nameEn }}</span>
       </div>
     </div>
-    <div class="column flex index2">
+    <div class="column flex index2 mobile-hide">
       <span class="title">行业</span>
       <span class="content">{{ buzType }}</span>
     </div>
-    <div class="column flex index2">
+    <div class="column flex index2 mobile-hide">
       <span class="title">代币符号</span>
       <span class="content">{{ projData.tokenSymbol }}</span>
     </div>
-    <div class="column flex index4">
+    <div class="column flex index4 mobile-hide">
       <span class="title">融资状态</span>
       <span class="content">{{ fundStage }}</span>
     </div>
@@ -92,7 +92,6 @@ export default {
   .column.index1 {
     display: flex;
     justify-content: start;
-    width: 40%;
     box-sizing: border-box;
     overflow: hidden;
     .image-box {

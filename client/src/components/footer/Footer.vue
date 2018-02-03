@@ -13,7 +13,6 @@
         <span></span>
       </div>
       <div class="right">
-        <span>@storiqa.2018 保留所有权利</span>
         <span>收集到的信息有助于展示个性化广告，为客户提供服务，并接受市场的统计数据。继续浏览即表示同意使用cookie</span>
       </div>
     </div>
@@ -60,6 +59,7 @@ export default {
   display: flex;
   justify-content: center;
   background-color: #FFF;
+  padding: 10px;
   .content {
     width: 1200px;
     height: 150px;
