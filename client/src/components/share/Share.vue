@@ -66,7 +66,7 @@ export default {
   /* margin: -40px 0 -66px;
   padding: 10px; */
   box-sizing: border-box;
-  width: 80%;
+  width: 90%;
   box-sizing: border-box;
   background-color: #FFF;
   border: 1px solid #888;
@@ -113,7 +113,7 @@ export default {
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 5;
+        -webkit-line-clamp: 8;
       }
     }
     .more-info {

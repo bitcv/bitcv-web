@@ -12,10 +12,10 @@
         <input v-model="passwd" type="password" placeholder="密码">
         <input v-model="confirm" type="password" placeholder="再次输入密码">
         <div>
-        <el-checkbox v-model="checked" @click="change"> </el-checkbox>
-        <router-link to="protocol">
-          <span class="protocl">我已阅读并同意<a>链币注册协议</a></span>
-        </router-link>
+        <!--<el-checkbox v-model="checked" @click="change"> </el-checkbox>-->
+        <!--<router-link to="protocol">-->
+          <!--<span class="protocl">我已阅读并同意<a>链币注册协议</a></span>-->
+        <!--</router-link>-->
         </div>
         <button class="signup-btn" @click.prevent="signup">注册</button>
       </form>
@@ -51,9 +51,9 @@ export default {
       if (!this.vcode) {
         return alert('验证码不能为空')
       }
-      if (!this.checked) {
-        return alert('您没有同意链币用户协议')
-      }
+      // if (!this.checked) {
+        // return alert('您没有同意链币用户协议')
+      // }
       this.$http.post('/api/signup', {
         mobile: this.mobile,
         passwd: this.passwd,
