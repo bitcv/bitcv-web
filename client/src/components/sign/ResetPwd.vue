@@ -1,63 +1,37 @@
 <template>
-  <div class="signin">
-    <h3 class="panel-title center-title">登录</h3>
-    <div class="nav">
-      <span class="passwd" :class="{active : curIndex === 0}" @click="curIndex = 0">密码登录</span>
-      <span class="qrcode" :class="{active : curIndex === 1}" @click="curIndex = 1">扫码登录</span>
-    </div>
-    <template v-if="curIndex === 0">
-      <span class="prompt">lianbi会员可直接使用会员名登录</span>
-      <form>
-        <input v-model="mobile" type="text" placeholder="手机号">
-        <input v-model="passwd" type="password" placeholder="登录密码">
-        <button @click.prevent="signin">登录</button>
+    <div class="resetpwd">
+    <h3 class="panel-title center-title">重设密码</h3>
+    <form>
+        <input v-model="passwd" type="password" placeholder="请输入新的密码">
+        <input v-model="repasswd" type="password" placeholder="请再次输入新的密码">
+        <button @click.prevent="resetPwd">确定</button>
       </form>
-      <div class="btn-area">
-        <router-link to="findPwd">
-          <a>忘记密码</a>
-        </router-link>
-        <router-link to="signup">
-          <a>注册会员</a>
-        </router-link>
-      </div>
-    </template>
-    <div class="qrcode-area" v-else>
-      <img src="/static/img/logo.png" alt="">
-      <span>打开<em>微信</em>扫一扫</span>
     </div>
-  </div>
 </template>
-
 <script>
 export default {
   data () {
     return {
-      curIndex: 0,
-      mobile: '',
-      passwd: ''
+      passwd: '',
+      repasswd: ''
     }
   },
   methods: {
-    signin () {
-      var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
-      if (!mobileReg.test(this.mobile)) {
-        return alert('请填写正确的手机号')
-      }
+    resetPwd () {
       if (this.passwd.length < 6) {
-        return alert('账号或密码错误')
+        return alert('密码长度至少需要6位')
       }
-      var that = this
-      this.$http.post('/api/signin', {
-        mobile: this.mobile,
-        passwd: this.passwd
+      if (this.passwd !== this.repasswd) {
+        return alert('两次输入的密码不一致')
+      }
+      var userId = localStorage.getItem('userId')
+      this.$http.post('/api/resetPwd', {
+        userId: userId,
+        passwd: this.passwd,
+        repasswd: this.repasswd
       }).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
-          localStorage.setItem('userId', resData.data.userId)
-          localStorage.setItem('mobile', resData.data.mobile)
-          localStorage.setItem('avatarUrl', resData.data.avatarUrl)
-          that.$router.push('/')
-          that.$router.go(0)
         } else {
           alert(resData.errmsg)
         }
@@ -68,9 +42,8 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
-.signin {
+.resetpwd {
   box-sizing: border-box;
   width: 530px;
   background-color: #FFF;

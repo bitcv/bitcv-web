@@ -6,7 +6,9 @@ Route::any('viewProject', 'UserController@viewProject');
 Route::any('signup', 'UserController@signup');
 Route::any('signin', 'UserController@signin');
 Route::any('signout', 'UserController@signout');
-
+Route::any('getVcode','UserController@getVcode');
+Route::any('checkVcode','UserController@checkVcode');
+Route::any('resetPwd','UserController@resetPwd');
 //Route::group(['middleware' => 'checkLogin'], function () {
     Route::any('getUserInfo', 'UserController@getUserInfo');
     Route::any('updateUserInfo', 'UserController@updateUserInfo');

@@ -1,71 +1,25 @@
 <template>
-  <div class="signup">
-    <h3 class="panel-title center-title">欢迎注册链币网</h3>
-      <span class="prompt">lianbi会员可直接使用会员名登录</span>
+  <div class="findpwd">
+    <h3 class = "panel-title center-title">找回密码</h3>
       <form>
-        <input v-model="mobile" type="text" placeholder="手机号">
-        <div class = smspanel>
-        <input class = "sms" v-model="vcode" type="text" placeholder="短信验证码" >
-        <span class = "smscode" @click="getVcode">发送短信验证码</span>
-        </div>
-        <input v-model="passwd" type="password" placeholder="密码">
-        <input v-model="confirm" type="password" placeholder="再次输入密码">
-        <div>
-        <el-checkbox v-model="checked" @click="change"> </el-checkbox>
-        <router-link to="protocol">
-        <span class="protocl">我已阅读并同意<a>链币注册协议</a></span>
-        </router-link>
-        </div>
-        <button @click.prevent="signup">注册</button>
+      <input v-model="mobile" type="text" placeholder="请输入你的手机号码">
+      <div class = smspanel>
+      <input class = "sms" v-model="vcode" type="text" placeholder="短信验证码" >
+      <span class = "smscode" @click="getVcode">发送短信验证码</span>
+      </div>
+      <button @click.prevent="findPwd">找回密码</button>
       </form>
   </div>
 </template>
-
 <script>
 export default {
   data () {
     return {
       mobile: '',
-      passwd: '',
-      confirm: '',
-      vcode: '',
-      checked: true
+      vcode: ''
     }
   },
   methods: {
-    signup () {
-      var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
-      if (!mobileReg.test(this.mobile)) {
-        return alert('请填写正确手机号')
-      }
-      if (this.passwd.length < 6) {
-        return alert('密码长度至少需要6位')
-      }
-      if (this.passwd !== this.confirm) {
-        return alert('两次输入的密码不一致')
-      }
-      if (!this.vcode) {
-        return alert('验证码不能为空')
-      }
-      if (!this.checked) {
-        return alert('您没有同意链币用户协议')
-      }
-      var that = this
-      this.$http.post('/api/signup', {
-        mobile: this.mobile,
-        passwd: this.passwd,
-        vcode: this.vcode
-      }).then(function (res) {
-        var resData = res.data
-        if (resData.errcode === 0) {
-          that.$router.push('/signin')
-        } else {
-          alert(resData.errmsg)
-        }
-      }).catch(function (err) {
-        console.log(err)
-      })
-    },
     getVcode () {
       var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
       if (!mobileReg.test(this.mobile)) {
@@ -76,6 +30,7 @@ export default {
       }).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
+
         } else {
           alert(resData.errmsg)
         }
@@ -83,15 +38,34 @@ export default {
         console.log(err)
       })
     },
-    change () {
-      this.checked = !this.checked
+    findPwd () {
+      var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
+      if (!mobileReg.test(this.mobile)) {
+        return alert('请填写正确手机号')
+      }
+      if (!this.vcode) {
+        return alert('验证码不能为空')
+      }
+      var that = this
+      this.$http.post('/api/checkVcode', {
+        mobile: this.mobile,
+        vcode: this.vcode
+      }).then(function (res) {
+        var resData = res.data
+        if (resData.errcode === 0) {
+          that.$router.push('/resetPwd')
+        } else {
+          alert(resData.errmsg)
+        }
+      }).catch(function (err) {
+        console.log(err)
+      })
     }
   }
 }
 </script>
-
 <style lang="scss" scoped>
-.signup {
+.findpwd {
   box-sizing: border-box;
   width: 530px;
   background-color: #FFF;
@@ -108,7 +82,7 @@ export default {
     justify-content: space-around;
     align-items: center;
     width: 100%;
-    height: 439px;
+    height: 240px;
     margin-bottom: 25px;
     input {
       display: block;
@@ -138,9 +112,9 @@ export default {
       text-align: center;
     }
     .sms {
-        height: 50px;
-        width: 273px;
-      }
+      height: 50px;
+      width: 273px;
+    }
     button {
       width: 426px;
       height: 50px;
@@ -149,18 +123,6 @@ export default {
       font-size: 18px;
       line-height: 25px;
       background-color: #000;
-    }
-    .protocl {
-      width: 182px;
-      height: 20px;
-      font-size: 14px;
-      font-family: PingFangSC-Regular;
-      color: rgba(155,155,155,1);
-      line-height: 20px;
-      margin-left: 4px;
-      a {
-        color: #FFCF81;
-      }
     }
   }
   .btn-area {

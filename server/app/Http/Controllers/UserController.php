@@ -26,11 +26,17 @@ class UserController extends Controller
         $params = $this->validation($request, [
             'mobile' => 'required|numeric',
             'passwd' => 'required|string',
+            'vcode' => 'required|numeric',
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
+
+        $ret = Service::checkVCode('reg', $mobile, $vcode);
+        if ($ret['err'] > 0) {
+            return $this->error(100);
+        }
 
         // 验证是否重复注册
         $isExist = Model\User::where('mobile', $mobile)->count();
@@ -179,6 +185,55 @@ class UserController extends Controller
         if (!is_null($nickname)) $userData['nickname'] = $nickname;
 
         $flag = Model\User::where('id', $userId)->update($userData);
+        if ($flag === 0) {
+            return $this->error(203);
+        }
+
+        return $this->output();
+    }
+
+    public function getVcode(Request $request){
+        $params = $this->validation($request,[
+            'mobile' => 'required|numeric',
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        return self::vcode($mobile);
+    }
+
+    public function checkVcode(Request $request){
+        $params = $this->validation($request,[
+            'mobile' => 'required|numeric',
+            'vcode' => 'required|numeric',
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        $ret = Service::checkVCode('reg', $mobile, $vcode);
+        if ($ret['err'] > 0) {
+            return $this->error(100);
+        }
+        return $this->output();
+    }
+    public function resetPwd(Request $request){
+        $params = $this->validation($request,[
+            'userId' =>'required|numeric',
+            'passwd' =>'required',
+            'repasswd' => 'required',
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+        if (strlen($passwd) < 6 || strlen($repasswd) > 20) {
+            return $this->error(205);
+        }
+        if (strcmp($passwd,$repasswd) != 0 ){
+            return $this->error(205);
+        }
+        $flag = Model\User::where('id', $userId)->update(['passwd' => $passwd]);
         if ($flag === 0) {
             return $this->error(203);
         }
