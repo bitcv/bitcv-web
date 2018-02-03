@@ -1,13 +1,13 @@
 <template>
   <div class="header">
     <div class="content">
-      <router-link to="/">
+      <router-link to="/" class="middle-hide">
         <div class="logo">
           <img src="/static/img/logo.png" alt="">
         </div>
       </router-link>
       <div class="nav">
-        <ul>
+        <ul class="mobile-nav">
           <li v-for="(menu, index) in menuList" :key="index" :class="{ active : menuIndex === index }">
             <router-link :to="menu.url">
               <span class="nav-text" @click="menuSwitch(index)">{{ menu.text }}</span>
@@ -16,7 +16,7 @@
         </ul>
       </div>
       <div class="info-box" v-if="isOnline">
-        <img :src="avatarUrl" alt="">
+        <img :src="avatarUrl" alt="" class="mobile-hide">
         <span class="nickname">{{ mobile }}</span>
         <div class="signout btn" @click="signout"><span class="btn-text">退出登录</span></div>
       </div>
@@ -193,6 +193,24 @@ export default {
           color: #FFCF81;
         }
       }
+    }
+  }
+  @media screen and (max-width: 750px) {
+    .middle-hide {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 600px) {
+    .mobile-hide {
+      display: none;
+    }
+    .mobile-nav {
+      li {
+        margin-left: 20px !important;
+      }
+    }
+    .content {
+      justify-content: space-around !important;
     }
   }
 }
