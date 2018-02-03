@@ -9,6 +9,7 @@ import Share from '@/components/share/Share'
 import Protocol from '@/components/sign/Protocol'
 import FindPwd from '@/components/sign/FindPwd'
 import ResetPwd from '@/components/sign/ResetPwd'
+import NewList from '@/components/news/NewList'
 
 Vue.use(Router)
 
@@ -54,8 +55,12 @@ export default new Router({
       component: FindPwd
     },
     {
-      path: '/resetpwd',
+      path: '/resetpwd/:mobile',
       component: ResetPwd
+    },
+    {
+      path: '/newList',
+      component: NewList
     }
   ]
 })
