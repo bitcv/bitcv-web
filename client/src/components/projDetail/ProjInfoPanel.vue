@@ -111,9 +111,9 @@ export default {
     img {
       width: 80px;
       height: 80px;
+      margin-right: 24px;
     }
     .text-box {
-      margin-left: 24px;
       height: 80px;
       vertical-align: top;
       display: inline-flex;

@@ -2,7 +2,7 @@
   <div class="home">
     <div class="main-panel">
       <search-panel :select-result="{}"></search-panel>
-      <proj-show-panel></proj-show-panel>
+      <proj-show-panel class="mobile-hide"></proj-show-panel>
       <proj-list-panel></proj-list-panel>
     </div>
     <div class="aside-panel">
@@ -59,6 +59,11 @@ export default {
   }
   @media screen and (max-width: 850px) {
     .aside-panel {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 500px) {
+    .mobile-hide {
       display: none;
     }
   }

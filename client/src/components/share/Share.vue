@@ -82,6 +82,11 @@ export default {
       .multi-content {
         color: #4A4A4A;
         font-size: 9px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 8;
       }
     }
     .more-info {

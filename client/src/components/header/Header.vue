@@ -17,15 +17,15 @@
       </div>
       <div class="info-box" v-if="isOnline">
         <img :src="avatarUrl" alt="" class="mobile-hide">
-        <span class="nickname">{{ mobile }}</span>
-        <div class="signout btn" @click="signout"><span class="btn-text">退出登录</span></div>
+        <span class="nickname mobile-hide">{{ mobile }}</span>
+        <div class="signout btn mobile-btn" @click="signout"><span class="btn-text">退出登录</span></div>
       </div>
       <div class="btn-box" v-else>
         <router-link to="/signin">
-          <div class="signin btn"><span class="btn-text">登录</span></div>
+          <div class="signin btn mobile-btn"><span class="btn-text">登录</span></div>
         </router-link>
         <router-link to="/signup">
-          <div class="signup btn"><span class="btn-text">注册</span></div>
+          <div class="signup btn mobile-btn"><span class="btn-text">注册</span></div>
         </router-link>
       </div>
     </div>
@@ -210,7 +210,23 @@ export default {
       }
     }
     .content {
-      justify-content: space-around !important;
+      /*justify-content: space-around !important;*/
+    }
+    .mobile-btn {
+      width: 50px !important;
+      height: 30px !important;
+      border-radius: 4px !important;
+      &.signout {
+        width: 80px !important;
+      }
+      .btn-text {
+        font-size: 16px !important;
+        line-height: 30px !important;
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        text-align: center !important;
+      }
     }
   }
 }

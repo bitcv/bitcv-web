@@ -5,9 +5,9 @@
       <tr class="info-header">
         <th>公司名称</th>
         <th>代币符号</th>
-        <th>行业</th>
-        <th></th>
-        <th>融资状态</th>
+        <th class="mobile-hide">行业</th>
+        <th class="mobile-hide"></th>
+        <th class="mobile-hide">融资状态</th>
       </tr>
       <tr class="info-row" @click="projNav(project.id)" v-for="(project, index) in projData.projList" :key="project.id">
         <td>
@@ -20,9 +20,9 @@
           </div>
         </td>
         <td><span>{{ project.tokenSymbol }}</span></td>
-        <td><div><span>{{ buzType(project.buzType) }}</span></div></td>
-        <td><img :src="project.focusStatus === 1 ? focusUrl : unfocusUrl" alt="" @click.stop.prevent="focus(project.id, index)"></td>
-        <td><span>{{ fundStage(project.fundStage) }}</span></td>
+        <td class="mobile-hide"><div><span>{{ buzType(project.buzType) }}</span></div></td>
+        <td class="mobile-hide"><img :src="project.focusStatus === 1 ? focusUrl : unfocusUrl" alt="" @click.stop.prevent="focus(project.id, index)"></td>
+        <td class="mobile-hide"><span>{{ fundStage(project.fundStage) }}</span></td>
       </tr>
     </table>
   </div>

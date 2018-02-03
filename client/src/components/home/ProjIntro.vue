@@ -7,17 +7,17 @@
         <div class="content-box">
           <div class="title-box">
             <span class="name">{{ projData.tokenSymbol }}</span>
-            <span class="text">天使轮</span>
+            <!--<span class="text">天使轮</span>-->
           </div>
           <div class="tag-box">
-            <div class="icon-text">
-              <img class="icon" src="/static/img/tag-2x.png" alt="">
-              <span class="text">金融</span>
-            </div>
-            <div class="icon-text">
-              <img class="icon" src="/static/img/location-2x.png" alt="">
-              <span class="text">上海</span>
-            </div>
+<!--            <div class="icon-text">-->
+              <!--<img class="icon" src="/static/img/tag-2x.png" alt="">-->
+              <!--<span class="text">金融</span>-->
+            <!--</div>-->
+            <!--<div class="icon-text">-->
+              <!--<img class="icon" src="/static/img/location-2x.png" alt="">-->
+              <!--<span class="text">上海</span>-->
+            <!--</div>-->
           </div>
         </div>
       </div>

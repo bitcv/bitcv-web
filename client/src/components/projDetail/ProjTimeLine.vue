@@ -20,40 +20,6 @@ export default {
   },
   data () {
     return {
-      eventList: [
-        {
-          eventTime: 2015,
-          eventNode: [
-            {
-              title: '第2-3季度',
-              info: '12345<br/>23456<br/>34567<br/>45678<br/>23456<br/>23456<br/>23456<br/>23456<br/>23456'
-            }, {
-              title: '4季度',
-              info: '12345<br/>23456<br/>34567<br/>45678<br/>23456'
-            }
-          ]
-        }, {
-          eventTime: 2016,
-          eventNode: [
-            {
-              title: '第2-3季度',
-              info: '12345<br/>23456<br/>34567<br/>45678<br/>23456<br/>23456<br/>23456'
-            }
-          ]
-        }, {
-          eventTime: 2017,
-          eventNode: [
-            {
-              title: '第2-3季度',
-              info: '12345<br/>23456<br/>34567<br/>45678<br/>23456<br/>23456<br/>23456'
-            }, {
-              title: '4季度',
-              info: '12345<br/>23456<br/>34567<br/>45678<br/>23456'
-            }
-          ]
-        }
-
-      ]
     }
   }
 }
@@ -71,6 +37,7 @@ export default {
       .event-item {
         width: 100%;
         font-size: 14px;
+        line-height: 18px;
         margin-bottom: 20px;
         .event-time-container {
           display: flex;
