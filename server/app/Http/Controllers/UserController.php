@@ -35,7 +35,7 @@ class UserController extends Controller
 
         $ret = Service::checkVCode('reg', $mobile, $vcode);
         if ($ret['err'] > 0) {
-            return $this->error(100);
+            return $this->error(206);
         }
 
         // 验证是否重复注册
