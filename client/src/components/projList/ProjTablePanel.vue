@@ -4,7 +4,7 @@
     <table class='info-table'>
       <tr class="info-header">
         <th>公司名称</th>
-        <th>代币符号</th>
+        <th class="mobile-hide">代币符号</th>
         <th class="mobile-hide">行业</th>
         <th class="mobile-hide"></th>
         <th class="mobile-hide">融资状态</th>
@@ -19,7 +19,7 @@
             <span class="intro">{{ project.nameEn }}</span>
           </div>
         </td>
-        <td><span>{{ project.tokenSymbol }}</span></td>
+        <td class="mobile-hide"><span>{{ project.tokenSymbol }}</span></td>
         <td class="mobile-hide"><div><span>{{ buzType(project.buzType) }}</span></div></td>
         <td class="mobile-hide"><img :src="project.focusStatus === 1 ? focusUrl : unfocusUrl" alt="" @click.stop.prevent="focus(project.id, index)"></td>
         <td class="mobile-hide"><span>{{ fundStage(project.fundStage) }}</span></td>

@@ -92,7 +92,6 @@ export default {
   .column.index1 {
     display: flex;
     justify-content: start;
-    width: 40%;
     box-sizing: border-box;
     overflow: hidden;
     .image-box {
