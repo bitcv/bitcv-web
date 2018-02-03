@@ -85,7 +85,7 @@ export default {
           this.countDown--
         }
       }, 1000)
-      /*this.$http.post('/api/getVcode', {
+      this.$http.post('/api/getVcode', {
         mobile: this.mobile
       }).then(function (res) {
         var resData = res.data
@@ -95,7 +95,7 @@ export default {
         }
       }).catch(function (err) {
         console.log(err)
-      })*/
+      })
     },
     change () {
       this.checked = !this.checked
