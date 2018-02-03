@@ -5,18 +5,19 @@
       <form>
         <input v-model="mobile" type="text" placeholder="手机号">
         <div class = smspanel>
-        <input class = "sms" v-model="vcode" type="text" placeholder="短信验证码" >
-        <span class = "smscode" @click="getVcode">发送短信验证码</span>
+        <input class = "sms-input" v-model="vcode" type="text" placeholder="短信验证码" >
+        <!--<span class = "smscode" @click="getVcode">发送短信验证码 （60s）</span>-->
+        <el-button :disabled="disableSms" class="sms-btn" :class="{disabled : disableSms}" type="primary" @click="getVcode">发送验证码<span v-show="timerId"> ({{ countDown }}s)</span></el-button>
         </div>
         <input v-model="passwd" type="password" placeholder="密码">
         <input v-model="confirm" type="password" placeholder="再次输入密码">
         <div>
         <el-checkbox v-model="checked" @click="change"> </el-checkbox>
         <router-link to="protocol">
-        <span class="protocl">我已阅读并同意<a>链币注册协议</a></span>
+          <span class="protocl">我已阅读并同意<a>链币注册协议</a></span>
         </router-link>
         </div>
-        <button @click.prevent="signup">注册</button>
+        <button class="signup-btn" @click.prevent="signup">注册</button>
       </form>
   </div>
 </template>
@@ -29,7 +30,10 @@ export default {
       passwd: '',
       confirm: '',
       vcode: '',
-      checked: true
+      checked: true,
+      timerId: '',
+      disableSms: false,
+      countDown: 60
     }
   },
   methods: {
@@ -50,15 +54,14 @@ export default {
       if (!this.checked) {
         return alert('您没有同意链币用户协议')
       }
-      var that = this
       this.$http.post('/api/signup', {
         mobile: this.mobile,
         passwd: this.passwd,
         vcode: this.vcode
-      }).then(function (res) {
+      }).then((res) => {
         var resData = res.data
         if (resData.errcode === 0) {
-          that.$router.push('/signin')
+          this.$router.push('/signin')
         } else {
           alert(resData.errmsg)
         }
@@ -68,10 +71,21 @@ export default {
     },
     getVcode () {
       var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
-      if (!mobileReg.test(this.mobile)) {
+      if (false && !mobileReg.test(this.mobile)) {
         return alert('请填写正确手机号')
       }
-      this.$http.post('/api/getVcode', {
+      this.disableSms = true
+      this.timerId = setInterval(() => {
+        if (this.countDown <= 1) {
+          clearInterval(this.timerId)
+          this.disableSms = false
+          this.timerId = ''
+          this.countDown = 60
+        } else {
+          this.countDown--
+        }
+      }, 1000)
+      /*this.$http.post('/api/getVcode', {
         mobile: this.mobile
       }).then(function (res) {
         var resData = res.data
@@ -81,7 +95,7 @@ export default {
         }
       }).catch(function (err) {
         console.log(err)
-      })
+      })*/
     },
     change () {
       this.checked = !this.checked
@@ -93,10 +107,13 @@ export default {
 <style lang="scss" scoped>
 .signup {
   box-sizing: border-box;
-  width: 530px;
+  max-width: 530px;
+  width: 100%;
   background-color: #FFF;
+  box-sizing: border-box;
   padding: 20px;
   position: relative;
+  margin: 0 10px;
   font-size: 0;
   .panel-title {
     font-size: 30px;
@@ -113,7 +130,8 @@ export default {
     input {
       display: block;
       box-sizing: border-box;
-      width: 426px;
+      width: 100%;
+      max-width: 426px;
       height: 50px;
       border: 1px solid #4A4A4A;
       padding: 0 20px;
@@ -124,25 +142,35 @@ export default {
     }
     .smspanel{
       display: flex;
-    }
-    .smscode{
-      display: block;
-      box-sizing: border-box;
-      width: 151px;
-      height: 50px;
-      border: 1px solid #4A4A4A;
-      padding: 16px 20px;
-      font-size: 14px;
-      color: #9B9B9B;
-      margin-left: 4px;
-      text-align: center;
-    }
-    .sms {
+      max-width: 426px;
+      width: 100%;
+      .sms-btn {
+        display: block;
+        box-sizing: border-box;
+        width: 145px;
         height: 50px;
-        width: 273px;
+        border: 1px solid #4A4A4A;
+        border-radius: 0;
+        margin-left: 5px;
+        text-align: center;
+        color: #FFCF81;
+        font-size: 16px;
+        line-height: 25px;
+        background-color: #000;
+        padding: 0;
+        &.disabled {
+          background-color: #909399;
+          color: #FFF;
+        }
       }
-    button {
-      width: 426px;
+      .sms-input {
+        height: 50px;
+        width: calc(100% - 150px);
+      }
+    }
+    .signup-btn {
+      max-width: 426px;
+      width: 100%;
       height: 50px;
       text-align: center;
       color: #FFCF81;
