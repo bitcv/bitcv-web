@@ -10,6 +10,7 @@ import Protocol from '@/components/sign/Protocol'
 import FindPwd from '@/components/sign/FindPwd'
 import ResetPwd from '@/components/sign/ResetPwd'
 import NewList from '@/components/news/NewList'
+import NewDetail from '@/components/news/NewDetail'
 
 Vue.use(Router)
 
@@ -61,6 +62,10 @@ export default new Router({
     {
       path: '/newList',
       component: NewList
+    },
+    {
+      path: '/NewDetail/:id',
+      component: NewDetail
     }
   ]
 })
