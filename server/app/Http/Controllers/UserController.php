@@ -220,7 +220,7 @@ class UserController extends Controller
     }
     public function resetPwd(Request $request){
         $params = $this->validation($request,[
-            'userId' =>'required|numeric',
+            'mobile' =>'required|numeric',
             'passwd' =>'required',
             'repasswd' => 'required',
         ]);
@@ -233,7 +233,7 @@ class UserController extends Controller
         if (strcmp($passwd,$repasswd) != 0 ){
             return $this->error(205);
         }
-        $flag = Model\User::where('id', $userId)->update(['passwd' => $passwd]);
+        $flag = Model\User::where('mobile', $mobile)->update(['passwd' => $passwd]);
         if ($flag === 0) {
             return $this->error(203);
         }

@@ -24,9 +24,9 @@ export default {
       if (this.passwd !== this.repasswd) {
         return alert('两次输入的密码不一致')
       }
-      var userId = localStorage.getItem('userId')
+      var mobile = this.$route.params.mobile
       this.$http.post('/api/resetPwd', {
-        userId: userId,
+        mobile: mobile,
         passwd: this.passwd,
         repasswd: this.repasswd
       }).then(function (res) {
