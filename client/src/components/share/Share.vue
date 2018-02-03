@@ -86,7 +86,7 @@ export default {
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 8;
+        -webkit-line-clamp: 5;
       }
     }
     .more-info {
