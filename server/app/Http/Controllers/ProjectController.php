@@ -290,7 +290,7 @@ class ProjectController extends Controller
             'bannerUrl' => 'string|nullable',
             'tokenName' => 'string|nullable',
             'tokenSymbol' => 'string|nullable',
-            'tokenPrice' => 'string|numeric|nullable',
+            'tokenPrice' => 'string|nullable',
         ]);
         if ($params === false) {
             return $this->error(100);
