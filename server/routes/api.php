@@ -20,8 +20,6 @@ Route::any('getProjTopList', 'ProjectController@getProjTopList');
 Route::any('getProjDetail', 'ProjectController@getProjDetail');
 Route::any('addProject', 'ProjectController@addProject');
 Route::any('getProjTagList', 'ProjectController@getProjTagList');
-Route::any('getMediaList', 'ProjectController@getMediaList');
-Route::any('getSocialList', 'ProjectController@getSocialList');
 Route::any('getProjBasicInfo', 'ProjectController@getProjBasicInfo');
 Route::any('getProjBasicList', 'ProjectController@getProjBasicList');
 Route::any('updProjBasicInfo', 'ProjectController@updProjBasicInfo');
@@ -58,6 +56,18 @@ Route::any('delProjReport', 'ProjectController@delProjReport');
 Route::any('updProjReport', 'ProjectController@updProjReport');
 
 Route::any('uploadFile', 'FileController@uploadFile');
+
+Route::any('getMediaList', 'AdminController@getMediaList');
+Route::any('addMedia', 'AdminController@addMedia');
+Route::any('updMedia', 'AdminController@updMedia');
+Route::any('delMedia', 'AdminController@delMedia');
+Route::any('updMedia', 'AdminController@updMedia');
+
+Route::any('getSocialList', 'AdminController@getSocialList');
+Route::any('addSocial', 'AdminController@addSocial');
+Route::any('updSocial', 'AdminController@updSocial');
+Route::any('delSocial', 'AdminController@delSocial');
+Route::any('updSocial', 'AdminController@updSocial');
 
 //min program api
 Route::get('getproject/{id?}', 'ProjectController@getProInfo');

@@ -1,7 +1,7 @@
 <template>
   <div class="nav container">
-    <el-menu default-active="2" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-      <el-menu-item v-for="(item, index) in itemList" :index="'' + index + 1" :key="index">
+    <el-menu default-active="0" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+      <el-menu-item v-for="(item, index) in itemList" :index="index + ''" :key="index">
         <a class="router" :href="item.url">
           <i :class="item.icon"></i>
           <span slot="title">{{ item.text }}</span>
@@ -18,7 +18,15 @@ export default {
       itemList: [{
         icon: 'el-icon-menu',
         url: '#/',
-        text: '项目列表'
+        text: '项目管理'
+      }, {
+        icon: 'el-icon-menu',
+        url: '#/social',
+        text: '社群管理'
+      }, {
+        icon: 'el-icon-menu',
+        url: '#/media',
+        text: '媒体管理'
       }, {
         icon: 'el-icon-info',
         url: '#/profile',

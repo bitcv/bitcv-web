@@ -1,22 +1,14 @@
 <template>
   <div class="signup">
     <h3 class="panel-title center-title">欢迎注册链币网</h3>
-      <span class="prompt">lianbi会员可直接使用会员名登录</span>
+      <span class="prompt">链币会员可直接使用会员名登录</span>
       <form>
         <input v-model="mobile" type="text" placeholder="手机号">
         <div class = smspanel>
         <input class = "sms-input" v-model="vcode" type="text" placeholder="短信验证码" >
-        <!--<span class = "smscode" @click="getVcode">发送短信验证码 （60s）</span>-->
         <el-button :disabled="disableSms" class="sms-btn" :class="{disabled : disableSms}" type="primary" @click="getVcode">发送验证码<span v-show="timerId"> ({{ countDown }}s)</span></el-button>
         </div>
         <input v-model="passwd" type="password" placeholder="密码">
-        <input v-model="confirm" type="password" placeholder="再次输入密码">
-        <div>
-        <!--<el-checkbox v-model="checked" @click="change"> </el-checkbox>-->
-        <!--<router-link to="protocol">-->
-          <!--<span class="protocl">我已阅读并同意<a>链币注册协议</a></span>-->
-        <!--</router-link>-->
-        </div>
         <button class="signup-btn" @click.prevent="signup">注册</button>
       </form>
   </div>
@@ -28,7 +20,6 @@ export default {
     return {
       mobile: '',
       passwd: '',
-      confirm: '',
       vcode: '',
       checked: true,
       timerId: '',
@@ -45,15 +36,9 @@ export default {
       if (this.passwd.length < 6) {
         return alert('密码长度至少需要6位')
       }
-      if (this.passwd !== this.confirm) {
-        return alert('两次输入的密码不一致')
-      }
       if (!this.vcode) {
         return alert('验证码不能为空')
       }
-      // if (!this.checked) {
-        // return alert('您没有同意链币用户协议')
-      // }
       this.$http.post('/api/signup', {
         mobile: this.mobile,
         passwd: this.passwd,
@@ -71,7 +56,7 @@ export default {
     },
     getVcode () {
       var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
-      if (false && !mobileReg.test(this.mobile)) {
+      if (!mobileReg.test(this.mobile)) {
         return alert('请填写正确手机号')
       }
       this.disableSms = true
@@ -125,7 +110,7 @@ export default {
     justify-content: space-around;
     align-items: center;
     width: 100%;
-    height: 439px;
+    // height: 439px;
     margin-bottom: 25px;
     input {
       display: block;
@@ -136,6 +121,7 @@ export default {
       border: 1px solid #4A4A4A;
       padding: 0 20px;
       font-size: 14px;
+      margin-bottom: 15px;
       &:focus {
         border: 1px solid #FFCF81;
       }

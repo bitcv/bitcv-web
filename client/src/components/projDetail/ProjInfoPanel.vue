@@ -11,19 +11,22 @@
           <span class="name-en">({{ projDetail.nameEn }})</span>
         </div>
         <div class="bottom-row">
-          <span class="text-title">代币名称：</span>
+          <span class="text-title">项目简称：</span>
           <span class="text">{{ projDetail.tokenName }}</span>
-          <span class="text-title">代币符号：</span>
+          <span class="text-title">项目符号：</span>
           <span class="text">{{ projDetail.tokenSymbol }}</span>
         </div>
       </div>
     </div>
     <div class="btn-box">
+        <a :href="projDetail.homeUrl" target="_blank">
+          <div class="white-paper">项目主页</div>
+        </a>
         <a :href="projDetail.whitePaperUrl" target="_blank">
-        <div class="white-paper">项目白皮书</div>
+          <div class="white-paper">白皮书</div>
         </a>
         <div :class="{ focused: projDetail.focusStatus }" @click="toggleFocus()">
-          {{ projDetail.focusStatus ? '取消收藏' : '收藏项目' }}
+          {{ projDetail.focusStatus ? '取消关注' : '关注项目' }}
         </div>
     </div>
     <div class="tag-box">
@@ -31,13 +34,13 @@
       <span class="tag" v-for="(tag, index) in projDetail.tagList" :key="index">{{ tag }}</span>
     </div>
     <div class="social-box">
-      <span class="title">友情链接：</span>
+      <span class="title">社群：</span>
       <a :href="social.linkUrl" v-for="(social, index) in projDetail.socialList" :key="index" target="_blank">
-        <img :src="social.logoUrl" alt="">
+        <i class="fab" :class="social.fontClass"></i>
       </a>
     </div>
     <div class="share-box" @click="showShare = true">
-      <span class="title">项目分享</span>
+      <span class="title">分享</span>
       <img src="/static/logo/share.png" alt="">
     </div>
   </div>
@@ -61,13 +64,12 @@ export default {
       if (!userId) {
         return alert('请登录')
       }
-      var that = this
       this.$http.post('/api/toggleFocus', {
         projId: this.projDetail.id
-      }).then(function (res) {
+      }).then((res) => {
         var resData = res.data
         if (resData.errcode === 0) {
-          that.projDetail.focusStatus = resData.data.status
+          this.projDetail.focusStatus = resData.data.status
         }
       })
     }
@@ -92,7 +94,7 @@ export default {
     div {
       width: 111px;
       height: 28px;
-      margin-bottom: 24px;
+      margin-bottom: 10px;
       line-height: 28px;
       text-align: center;
       font-size: 14px;
@@ -162,6 +164,14 @@ export default {
     font-size: 14px;
     line-height: 20px;
     color: #000;
+    a {
+      margin-right: 10px;
+      font-size: 24px;
+      color: #9B9B9B;
+      &:hover {
+        color: #F5A623;
+      }
+    }
     img {
       width: 26px;
       height: 26px;

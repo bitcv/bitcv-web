@@ -30,7 +30,8 @@ class Controller extends BaseController
         '206' => ['errcode' => 206, 'errmsg' => '验证码错误'],
         // 项目错误码
         '301' => ['errcode' => 301, 'errmsg' => '项目不存在'],
-        '302' => ['errcode' => 302, 'errmsg' => '验证码错误'],
+        '302' => ['errcode' => 302, 'errmsg' => '社交ID不存在'],
+        '303' => ['errcode' => 303, 'errmsg' => '媒体ID不存在'],
     ];
 
     public function validation(Request $request, Array $rules)

@@ -63,6 +63,66 @@ class ProjectController extends Controller
 
         return $this->output(['dataCount' => $dataCount, 'projList' => $projList]);
     }
+
+    public function getMediaList (Request $request) {
+        $mediaList = Model\Media::select('id', 'name', 'logo_url')->get()->toArray();
+
+        return $this->output(['dataList' => $mediaList]);
+    }
+
+    public function addMedia (Request $request) {
+        //获取请求参数
+        $params = $this->validation($request, [
+            'name' => 'required|string',
+            'logoUrl' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Media::firstOrCreate([
+            'name' => $name,
+            'logo_url' => $logoUrl,
+        ]);
+
+        return $this->output();
+    }
+
+    public function updMedia (Request $request) {
+        //获取请求参数
+        $params = $this->validation($request, [
+            'mediaId' => 'required|string',
+            'name' => 'required|string',
+            'logoUrl' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Media::where('id', $meidaId)->update([
+            'name' => $name,
+            'logo_url' => $logoUrl,
+        ]);
+
+        return $this->output();
+    }
+
+    public function delMedia (Request $request) {
+        //获取请求参数
+        $params = $this->validation($request, [
+            'mediaId' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Media::where('id', $mediaId)->delete();
+
+        return $this->output();
+    }
     
     public function getProjBasicList (Request $request) {
         //获取请求参数
@@ -231,7 +291,7 @@ class ProjectController extends Controller
         // 获取社交链接信息
         $projSocialList = Model\ProjSocial::join('social', 'proj_social.social_id', '=', 'social.id')
             ->where('proj_id', $projId)
-            ->select('name', 'logo_url', 'link_url')
+            ->select('name', 'font_class', 'link_url')
             ->get()->toArray();
         $projData['socialList'] = $projSocialList;
 
@@ -496,8 +556,7 @@ class ProjectController extends Controller
     public function addProjSocial (Request $request) {
         $params = $this->validation($request, [
             'projId' => 'required|numeric',
-            'name' => 'required|string',
-            'logoUrl' => 'required|string',
+            'socialId' => 'required|numeric',
             'linkUrl' => 'required|string',
         ]);
         if ($params === false) {
@@ -506,14 +565,14 @@ class ProjectController extends Controller
         extract($params);
         $linkUrl = strpos($linkUrl, 'http') === 0 ? $linkUrl : 'http://' . $linkUrl;
 
-        $socialObj = Model\Social::firstOrCreate([
-            'name' => $name,
-            'logo_url' => $logoUrl,
-        ]);
+        $isExist = Model\Social::where('id', $socialId)->count();
+        if (!$isExist) {
+            $this->error(302);
+        }
 
         Model\ProjSocial::firstOrCreate([
             'proj_id' => $projId,
-            'social_id' => $socialObj->id,
+            'social_id' => $socialId,
             'link_url' => $linkUrl,
         ]);
 
@@ -531,7 +590,7 @@ class ProjectController extends Controller
 
         $projSocialList = Model\ProjSocial::where('proj_id', $projId)
             ->join('social', 'proj_social.social_id', '=', 'social.id')
-            ->select('proj_social.id', 'name', 'logo_url', 'link_url')
+            ->select('proj_social.id', 'name', 'social_id', 'font_class', 'link_url')
             ->get()->toArray();
 
         return $this->output(['dataList' => $projSocialList]);
@@ -539,9 +598,8 @@ class ProjectController extends Controller
 
     public function updProjSocial (Request $request) {
         $params = $this->validation($request, [
+            'projSocialId' => 'required|numeric',
             'socialId' => 'required|numeric',
-            'name' => 'required|string',
-            'logoUrl' => 'required|string',
             'linkUrl' => 'required|string',
         ]);
         if ($params === false) {
@@ -550,13 +608,13 @@ class ProjectController extends Controller
         extract($params);
         $linkUrl = strpos($linkUrl, 'http') === 0 ? $linkUrl : 'http://' . $linkUrl;
 
-        $socialObj = Model\Social::firstOrCreate([
-            'name' => $name,
-            'logo_url' => $logoUrl,
-        ]);
+        $isExist = Model\Social::where('id', $socialId)->count();
+        if (!$isExist) {
+            $this->error(302);
+        }
 
-        Model\ProjSocial::where('id', $socialId)->update([
-            'social_id' => $socialObj->id,
+        Model\ProjSocial::where('id', $projSocialId)->update([
+            'social_id' => $socialId,
             'link_url' => $linkUrl,
         ]);
 
@@ -565,14 +623,14 @@ class ProjectController extends Controller
 
     public function delProjSocial (Request $request) {
         $params = $this->validation($request, [
-            'socialId' => 'required|numeric'
+            'projSocialId' => 'required|numeric'
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
 
-        Model\ProjSocial::where('id', $socialId)->delete();
+        Model\ProjSocial::where('id', $projSocialId)->delete();
 
         return $this->output();
     }
@@ -653,8 +711,7 @@ class ProjectController extends Controller
     public function addProjReport (Request $request) {
         $params = $this->validation($request, [
             'projId' => 'required|numeric',
-            'name' => 'required|string',
-            'logoUrl' => 'required|string',
+            'mediaId' => 'required|numeric',
             'title' => 'required|string',
             'linkUrl' => 'required|string',
         ]);
@@ -664,14 +721,14 @@ class ProjectController extends Controller
         extract($params);
         $linkUrl = strpos($linkUrl, 'http') === 0 ? $linkUrl : 'http://' . $linkUrl;
 
-        $mediaObj = Model\Media::firstOrCreate([
-            'name' => $name,
-            'logo_url' => $logoUrl,
-        ]);
+        $isExist = Model\Media::where('id', $mediaId)->count();
+        if (!$isExist) {
+            $this->error(303);
+        }
 
         Model\ProjReport::firstOrCreate([
             'proj_id' => $projId,
-            'media_id' => $mediaObj->id,
+            'media_id' => $mediaId,
             'title' => $title,
             'link_url' => $linkUrl,
         ]);
@@ -690,7 +747,7 @@ class ProjectController extends Controller
 
         $projReportList = Model\ProjReport::where('proj_id', $projId)
             ->join('media', 'proj_report.media_id', '=', 'media.id')
-            ->select('proj_report.id', 'name', 'title', 'logo_url', 'link_url')
+            ->select('proj_report.id', 'media_id', 'name', 'title', 'logo_url', 'link_url')
             ->get()->toArray();
 
         return $this->output(['dataList' => $projReportList]);
@@ -698,9 +755,8 @@ class ProjectController extends Controller
 
     public function updProjReport (Request $request) {
         $params = $this->validation($request, [
-            'reportId' => 'required|numeric',
-            'name' => 'required|string',
-            'logoUrl' => 'required|string',
+            'projReportId' => 'required|numeric',
+            'mediaId' => 'required|numeric',
             'title' => 'required|string',
             'linkUrl' => 'required|string',
         ]);
@@ -710,13 +766,13 @@ class ProjectController extends Controller
         extract($params);
         $linkUrl = strpos($linkUrl, 'http') === 0 ? $linkUrl : 'http://' . $linkUrl;
 
-        $mediaObj = Model\Media::firstOrCreate([
-            'name' => $name,
-            'logo_url' => $logoUrl,
-        ]);
+        $isExist = Model\Media::where('id', $mediaId)->count();
+        if (!$isExist) {
+            $this->error(303);
+        }
 
-        Model\ProjReport::where('id', $reportId)->update([
-            'media_id' => $mediaObj->id,
+        Model\ProjReport::where('id', $projReportId)->update([
+            'media_id' => $mediaId,
             'title' => $title,
             'link_url' => $linkUrl,
         ]);
@@ -726,14 +782,14 @@ class ProjectController extends Controller
 
     public function delProjReport (Request $request) {
         $params = $this->validation($request, [
-            'reportId' => 'required|numeric'
+            'projReportId' => 'required|numeric'
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
 
-        Model\ProjReport::where('id', $reportId)->delete();
+        Model\ProjReport::where('id', $projReportId)->delete();
 
         return $this->output();
     }
@@ -916,14 +972,8 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function getMediaList (Request $request) {
-        $mediaList = Model\Media::select('id', 'name', 'logo_url')->get()->toArray();
-
-        return $this->output(['dataList' => $mediaList]);
-    }
-
     public function getSocialList (Request $request) {
-        $socialList = Model\Social::select('id', 'name', 'logo_url')->get()->toArray();
+        $socialList = Model\Social::select('id', 'name')->get()->toArray();
 
         return $this->output(['dataList' => $socialList]);
     }

@@ -1,9 +1,9 @@
 <template>
-  <div class="report">
+  <div class="media">
     <div class="header-btn-area">
       <el-button type="primary" icon="el-icon-plus" @click="showAdd">添加</el-button>
     </div>
-    <el-table :data="reportList">
+    <el-table :data="mediaList">
       <el-table-column label="媒体Logo">
         <template slot-scope="scope">
           <img class="table-image" :src="scope.row.logoUrl" alt="">
@@ -12,12 +12,6 @@
       <el-table-column label="媒体名称">
         <template slot-scope="scope">{{ scope.row.name }}</template>
       </el-table-column>
-      <el-table-column label="新闻标题">
-        <template slot-scope="scope">{{ scope.row.title }}</template>
-      </el-table-column>
-      <el-table-column label="新闻链接">
-        <template slot-scope="scope">{{ scope.row.linkUrl }}</template>
-      </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" @click="showEdit(scope.$index)">编辑</el-button>
@@ -25,20 +19,16 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="媒体报道信息" :visible.sync="showDialog" center>
+    <el-dialog title="媒体信息" :visible.sync="showDialog" center>
       <el-form label-width="80px">
         <el-form-item label="媒体名称">
-          <el-select v-model="inputMediaId" placeholder="请选择媒体">
-            <el-option v-for="(media, index) in mediaList" :key="index" :value="media.id" :label="media.name"></el-option>
-          </el-select>
+          <el-input v-model="inputName" placeholder="请输入媒体名称"></el-input>
         </el-form-item>
-        <el-form-item label="新闻标题">
-          <el-input v-model="inputTitle"></el-input>
-        </el-form-item>
-        <el-form-item label="新闻链接">
-          <el-input v-model="inputLinkUrl">
-            <template slot="prepend" placeholder="请输入新闻地址">http://</template>
-          </el-input>
+        <el-form-item label="媒体Logo">
+          <el-upload class="upload-box" name="logo" action="/api/uploadFile" :on-success="onLogoSuccess" :show-file-list="false">
+            <i class="el-icon-plus"></i>
+            <img :src="inputLogoUrl" alt="">
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -51,63 +41,50 @@
 
 <script>
 export default {
-  props: {
-    projData: Object
-  },
   data () {
     return {
       showDialog: false,
-      inputMediaId: '',
-      inputLinkUrl: '',
-      inputTitle: '',
-      projReportId: '',
-      mediaList: [],
-      reportList: []
+      inputName: '',
+      inputLogoUrl: '',
+      mediaList: []
     }
   },
   mounted () {
     this.updateData()
-    this.getMediaList()
   },
   methods: {
     updateData () {
-      this.$http.post('/api/getProjReportList', {
-        projId: this.$route.params.id
-      }).then((res) => {
-        if (res.data.errcode === 0) {
-          this.reportList = res.data.data.dataList
-        }
-      })
-    },
-    getMediaList () {
       this.$http.get('/api/getMediaList').then((res) => {
         if (res.data.errcode === 0) {
           this.mediaList = res.data.data.dataList
         }
       })
     },
+    onLogoSuccess (res) {
+      if (res.errcode === 0) {
+        this.inputLogoUrl = res.data.url
+      }
+    },
     showAdd () {
-      this.projReportId = ''
-      this.inputMediaId = ''
-      this.inputLinkUrl = ''
-      this.inputTitle = ''
+      this.mediaId = ''
+      this.inputName = ''
+      this.inputLogoUrl = ''
       this.showDialog = true
     },
     showEdit (index) {
-      var reportInfo = this.reportList[index]
-      this.projReportId = reportInfo.id
-      this.inputMediaId = reportInfo.mediaId
-      this.inputLinkUrl = reportInfo.linkUrl
-      this.inputTitle = reportInfo.title
+      var mediaData = this.mediaList[index]
+      this.mediaId = mediaData.id
+      this.inputName = mediaData.name
+      this.inputLogoUrl = mediaData.logoUrl
       this.showDialog = true
     },
-    showDel (projReportId) {
+    showDel (mediaId) {
       this.$confirm('删除后无法恢复, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.delReport(projReportId)
+        this.delMedia(mediaId)
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -116,18 +93,16 @@ export default {
       })
     },
     submit () {
-      if (this.projReportId) {
-        this.updReport()
+      if (this.mediaId) {
+        this.updMedia()
       } else {
-        this.addReport()
+        this.addMedia()
       }
     },
-    addReport () {
-      this.$http.post('/api/addProjReport', {
-        projId: this.$route.params.id,
-        mediaId: this.inputMediaId,
-        linkUrl: this.inputLinkUrl,
-        title: this.inputTitle
+    addMedia () {
+      this.$http.post('/api/addMedia', {
+        name: this.inputName,
+        logoUrl: this.inputLogoUrl,
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '添加成功!' })
@@ -136,12 +111,11 @@ export default {
         }
       })
     },
-    updReport () {
-      this.$http.post('/api/updProjReport', {
-        projReportId: this.projReportId,
-        mediaId: this.inputMediaId,
-        linkUrl: this.inputLinkUrl,
-        title: this.inputTitle
+    updMedia () {
+      this.$http.post('/api/updMedia', {
+        mediaId: this.mediaId,
+        name: this.inputName,
+        logoUrl: this.inputLogoUrl,
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '更新成功!' })
@@ -150,9 +124,9 @@ export default {
         }
       })
     },
-    delReport (projReportId) {
-      this.$http.post('/api/delProjReport', {
-        projReportId: projReportId
+    delMedia (mediaId) {
+      this.$http.post('/api/delMedia', {
+        mediaId: mediaId
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '删除成功!' })
