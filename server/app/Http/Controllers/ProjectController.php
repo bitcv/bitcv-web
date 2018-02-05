@@ -1047,9 +1047,9 @@ class ProjectController extends Controller
         $projData['partnerList'] = $projPartnerList;
 
         // 获取媒体报道信息
-        $projMediaList = Model\ProjMedia::where('proj_id', $id)
-            ->get()->toArray();
-        $projData['mediaList'] = $projMediaList;
+//        $projMediaList = Model\ProjMedia::where('proj_id', $id)
+//            ->get()->toArray();
+//        $projData['mediaList'] = $projMediaList;
 
         // 获取社交链接信息
         $projSocialList = Model\ProjSocial::where('proj_id', $id)
