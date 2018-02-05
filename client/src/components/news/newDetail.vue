@@ -26,7 +26,7 @@ export default {
   .new-title{
     width:593px;
     height:33px;
-    text-align: center; 
+    text-align: center;
     font-size:24px;
     margin-left: 117px;
     margin-top: 52px;
@@ -36,7 +36,7 @@ export default {
   }
   .new-time{
     width:82px;
-    height:20px; 
+    height:20px;
     font-size:14px;
     margin-left: 371px;
     text-align: center;
@@ -46,7 +46,7 @@ export default {
   }
   .new-content{
     width:693px;
-    height:1064px; 
+    height:1064px;
     font-size:14px;
     text-align: center;
     font-family:PingFangSC-Regular;
