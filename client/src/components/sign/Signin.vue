@@ -1,10 +1,10 @@
 <template>
   <div class="signin">
     <h3 class="panel-title center-title">登录</h3>
-    <div class="nav">
-      <span class="passwd" :class="{active : curIndex === 0}" @click="curIndex = 0">密码登录</span>
-      <span class="qrcode" :class="{active : curIndex === 1}" @click="curIndex = 1">扫码登录</span>
-    </div>
+    <!--<div class="nav">-->
+      <!--<span class="passwd" :class="{active : curIndex === 0}" @click="curIndex = 0">密码登录</span>-->
+      <!--<span class="qrcode" :class="{active : curIndex === 1}" @click="curIndex = 1">扫码登录</span>-->
+    <!--</div>-->
     <template v-if="curIndex === 0">
       <span class="prompt">lianbi会员可直接使用会员名登录</span>
       <form>
@@ -72,10 +72,12 @@ export default {
 <style lang="scss" scoped>
 .signin {
   box-sizing: border-box;
-  width: 530px;
+  width: 100%;
+  max-width: 530px;
   background-color: #FFF;
   padding: 20px;
   position: relative;
+  margin: 0 10px;
   font-size: 0;
   .panel-title {
     font-size: 30px;
@@ -123,6 +125,7 @@ export default {
       display: block;
       box-sizing: border-box;
       width: 426px;
+      width: 100%;
       height: 50px;
       border: 1px solid #4A4A4A;
       padding: 0 20px;
@@ -134,6 +137,7 @@ export default {
     button {
       width: 426px;
       height: 50px;
+      width: 100%;
       text-align: center;
       color: #FFCF81;
       font-size: 18px;

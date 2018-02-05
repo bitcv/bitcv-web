@@ -1,6 +1,6 @@
 <template>
   <div class="share">
-    <img src="/static/img/Group 3@2x.png" alt="" class="share-img">
+    <img src="/static/img/share_header.png" alt="" class="share-img">
     <div class="share-content">
       <div class="logo"><img :src="projDetail.logoUrl" alt=""></div>
       <div class="share-content-container">
@@ -23,18 +23,39 @@
       </div>
       <div class="more-info">（登陆<a class="link" href="lianbi.io">lianbi.io</a>获取更多项目详细信息）</div>
     </div>
-    <img src="/static/img/Group 5@2x.png" alt="" class="share-img">
+    <div class="footer-box">
+      <img src="/static/img/share_footer.png" alt="" class="share-img">
+      <div class="qrcode-box" id="qrcode"></div>
+    </div>
   </div>
 </template>
 
 <script>
+
 export default {
   props: {
     projDetail: Object
   },
+  mounted () {
+    this.$nextTick(() => {
+      this.path = location.href
+      require ('@/components/share/jquery.min.js')
+      require ('@/components/share/qrcode.min.js')
+      this.getQrcode()
+    })
+  },
   data () {
     return {
-
+      path: ''
+    }
+  },
+  methods: {
+    getQrcode () {
+      $("#qrcode").qrcode({
+        text: this.path,
+        width: 100,
+        height: 100
+      });
     }
   }
 }
@@ -42,7 +63,13 @@ export default {
 
 <style lang="scss" scoped>
 .share {
-  margin: -40px 0 -76px;
+  /* margin: -40px 0 -66px;
+  padding: 10px; */
+  box-sizing: border-box;
+  width: 90%;
+  box-sizing: border-box;
+  background-color: #FFF;
+  border: 1px solid #888;
   .share-content {
     padding: 0 29px;
     .logo {
@@ -86,7 +113,7 @@ export default {
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 5;
+        -webkit-line-clamp: 8;
       }
     }
     .more-info {
@@ -96,6 +123,15 @@ export default {
       .link {
         color: #F5A623;
       }
+    }
+  }
+  .footer-box {
+    position: relative;
+    font-size: 0;
+    .qrcode-box {
+      position: absolute;
+      right: 10px;
+      top: 5px;
     }
   }
   .share-img {
