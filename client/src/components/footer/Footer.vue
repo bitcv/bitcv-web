@@ -3,7 +3,7 @@
     <div class="content">
       <div class="icon-box">
         <a :href="social.url" target="_blank" v-for="(social, index) in socialList" :key="index">
-          <img :src="social.logoUrl" @mouseover="social.logoUrl = social.hoverUrl" @mouseout="social.logoUrl = social.unhoverUrl" alt="">
+          <i class=" fab" :class="social.fontClass"></i>
         </a>
       </div>
       <div class="name">
@@ -13,7 +13,7 @@
         <span></span>
       </div>
       <div class="right">
-        <span>收集到的信息有助于展示个性化广告，为客户提供服务，并接受市场的统计数据。继续浏览即表示同意使用cookie</span>
+        <span>copyright 2018 lian.io</span>
       </div>
     </div>
   </div>
@@ -25,29 +25,19 @@ export default {
     return {
       socialList: [{
         url: 'https://weibo.com/bitcv',
-        logoUrl: '/static/logo/blog.png',
-        unhoverUrl: '/static/logo/blog.png',
-        hoverUrl: '/static/logo/blog-hover.png'
+        fontClass: 'fa-weibo',
       }, {
         url: 'https://www.facebook.com/groups/1301707606641533/',
-        logoUrl: '/static/logo/facebook.png',
-        unhoverUrl: '/static/logo/facebook.png',
-        hoverUrl: '/static/logo/facebook-hover.png'
+        fontClass: 'fa-facebook',
       }, {
         url: 'https://github.com/bitcv',
-        logoUrl: '/static/logo/github.png',
-        unhoverUrl: '/static/logo/github.png',
-        hoverUrl: '/static/logo/github-hover.png'
+        fontClass: 'fa-github',
       }, {
         url: 'https://t.me/bcvtoken',
-        logoUrl: '/static/logo/telegram.png',
-        unhoverUrl: '/static/logo/telegram.png',
-        hoverUrl: '/static/logo/telegram-hover.png'
+        fontClass: 'fa-telegram-plane',
       }, {
         url: 'https://twitter.com/BCVofficial',
-        logoUrl: '/static/logo/twitter.png',
-        unhoverUrl: '/static/logo/twitter.png',
-        hoverUrl: '/static/logo/twitter-hover.png'
+        fontClass: 'fa-twitter',
       }]
     }
   }
@@ -73,17 +63,18 @@ export default {
       position: absolute;
       right: 0;
       top: 24px;
-      color: #D8D8D8;
-      img {
-        width: 28px;
-        height: 28px;
-        margin-left: 20px;
+      a {
+        margin-right: 13px;
+        font-size: 28px;
+        color: #9B9B9B;
+        &:hover {
+          color: #F5A623;
+        }
       }
     }
     .name {
       font-size: 30px;
       line-height: 42px;
-      color: #F5A623;
     }
     .addr {
       font-size: 16px;

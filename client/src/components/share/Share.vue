@@ -39,8 +39,8 @@ export default {
   mounted () {
     this.$nextTick(() => {
       this.path = location.href
-      require ('@/components/share/jquery.min.js')
-      require ('@/components/share/qrcode.min.js')
+      require('@/components/share/jquery.min.js')
+      require('@/components/share/qrcode.min.js')
       this.getQrcode()
     })
   },
@@ -51,11 +51,12 @@ export default {
   },
   methods: {
     getQrcode () {
-      $("#qrcode").qrcode({
+      // eslint-disable-next-line
+      $('#qrcode').qrcode({
         text: this.path,
         width: 100,
         height: 100
-      });
+      })
     }
   }
 }
