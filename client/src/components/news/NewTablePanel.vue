@@ -1,28 +1,18 @@
 <template>
 <div class = "new-area">
-  <li v-for="(news, index) in newList" :key="index">
+  <a v-for="(news, index) in newList" :key="index">
   <div class = "new-table-panel">
-    <router-link :to="{ path: 'newdetail/' + 1}">
-    <img src="/static/img/bitcoin.jpeg" alt="">
+    <router-link :to="{ path: 'newdetail/' + news.id}">
+    <img :src="news.bannerUrl" alt="">
       <div class = "content">
-        <span class="content-title">{{"比特币价格失守9000美元 多国监管风向突变"}}</span>
-        <span class="content-text">{{"近期,比特币可谓是“跌跌不休”。本周二,比特币价格跌幅逾10%,失守10000美元大关。2月2日,据韩国虚拟货币交易平台Bithumb显示,比特币价格已跌至8247美元。2月2日,据韩国虚拟货币交易平台Bithumb显示,比特币价格已跌至8247美元。"}}</span>
-        <span class="content-time">{{"2018-02-01"}}</span>
+        <span class="content-title">{{news.title}}</span>
+        <!-- <span class="content-text">{{news.content}}</span> -->
+        <span class = "content-text" v-html="news.content"></span>
+        <span class="content-time">{{news.releaseTime}}</span>
       </div>
-    </router-link>  
+    </router-link>
   </div>
-  </li>
-
-  <!-- <div class = "new-table-panel">
-    <router-link :to="{ path: 'newdetail/' + 1}">
-    <img src="/static/img/bitcoin.jpeg" alt="">
-      <div class = "content">
-        <span class="content-title">{{"比特币价格失守9000美元 多国监管风向突变"}}</span>
-        <span class="content-text">{{"近期,比特币可谓是“跌跌不休”。本周二,比特币价格跌幅逾10%,失守10000美元大关。2月2日,据韩国虚拟货币交易平台Bithumb显示,比特币价格已跌至8247美元。2月2日,据韩国虚拟货币交易平台Bithumb显示,比特币价格已跌至8247美元。"}}</span>
-        <span class="content-time">{{"2018-02-01"}}</span>
-      </div>
-    </router-link>  
-  </div> -->
+  </a>
 </div>
 </template>
 <script>
@@ -39,8 +29,9 @@ export default {
       perpage: 10
     }).then(function (res) {
       var resdata = res.data
-      if (resData.errcode === 0) {
-        that.newList = resData.data
+      console.log(resdata)
+      if (resdata.errcode === 0) {
+        that.newList = resdata.data
       }
     })
   }
@@ -78,7 +69,7 @@ export default {
       }
       .content-text{
         width: 540px;
-        //height: 50px;
+        height: 40px;
         font-size: 14px;
         margin-top: 20px;
         font-family: PingFangSC-Medium;
@@ -92,13 +83,13 @@ export default {
         overflow: hidden;  /** 隐藏超出的内容 **/
       }
       .content-time{
-        width: 70px;
-        height: 17px;
+        width: 170px;
+        height: 57px;
         font-size: 12px;
         font-family: PingFangSC-Regular;
         color: rgba(155,155,155,1);
         line-height: 17px;
-        margin-top: 50px;
+        margin-top: 40px;
       }
     }
   }
