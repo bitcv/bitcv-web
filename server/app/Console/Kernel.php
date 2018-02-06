@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel
     }
 
     protected function projReportRobot () {
-        $projReportList = Model\projReport::join('media', 'proj_report.media_id', '=', 'media.id')
+        $projReportList = Model\ProjReport::join('media', 'proj_report.media_id', '=', 'media.id')
             ->where('status', 0)
             ->select('proj_report.id', 'link_url', 'title_reg', 'release_time_reg', 'banner_url_reg', 'content_reg')
             ->get()->toArray();
