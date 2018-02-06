@@ -1,7 +1,7 @@
 <template>
   <div class = "new-list">
     <div class="main-panel">
-      <span class = "new-title">{{newdetail.title}}</span>
+      <span class = "new-title">{{"区块链项目如雨后春笋，2018年也成为创投圈最火的"}}</span>
       <span class = "new-time" >{{ newdetail.releaseTime}}</span>
       <span class = "new-content" v-html="newdetail.content"></span>
     </div>
@@ -82,6 +82,7 @@ export default {
     .new-time{
     width:182px;
     height:50px;
+    margin-top: 30px;
     font-size:14px;
     margin-left: 331px;
     text-align: center;
