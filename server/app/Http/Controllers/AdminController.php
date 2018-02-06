@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class AdminController extends Controller
 {
     public function getMediaList (Request $request) {
-        $mediaList = Model\Media::select('id', 'name', 'logo_url')->get()->toArray();
+        $mediaList = Model\Media::select('id', 'name', 'logo_url', 'title_reg', 'release_time_reg', 'banner_url_reg', 'content_reg')->get()->toArray();
 
         return $this->output(['dataList' => $mediaList]);
     }
@@ -19,16 +19,33 @@ class AdminController extends Controller
         $params = $this->validation($request, [
             'name' => 'required|string',
             'logoUrl' => 'required|string',
+            'titleReg' => 'string|nullable',
+            'releaseTimeReg' => 'string|nullable',
+            'bannerUrlReg' => 'string|nullable',
+            'contentReg' => 'string|nullable',
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
 
-        Model\Media::firstOrCreate([
+        $mediaData = [
             'name' => $name,
             'logo_url' => $logoUrl,
-        ]);
+        ];
+        if ($titleReg) {
+            $mediaData['title_reg'] = $titleReg;
+        }
+        if ($releaseTimeReg) {
+            $mediaData['release_time_reg'] = $releaseTimeReg;
+        }
+        if ($bannerUrlReg) {
+            $mediaData['banner_url_reg'] = $bannerUrlReg;
+        }
+        if ($contentReg) {
+            $mediaData['content_reg'] = $contentReg;
+        }
+        Model\Media::firstOrCreate($mediaData);
 
         return $this->output();
     }
@@ -39,16 +56,34 @@ class AdminController extends Controller
             'mediaId' => 'required|numeric',
             'name' => 'required|string',
             'logoUrl' => 'required|string',
+            'titleReg' => 'string|nullable',
+            'releaseTimeReg' => 'string|nullable',
+            'bannerUrlReg' => 'string|nullable',
+            'contentReg' => 'string|nullable',
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
 
-        Model\Media::where('id', $mediaId)->update([
+        $mediaData = [
             'name' => $name,
             'logo_url' => $logoUrl,
-        ]);
+        ];
+        if ($titleReg) {
+            $mediaData['title_reg'] = $titleReg;
+        }
+        if ($releaseTimeReg) {
+            $mediaData['release_time_reg'] = $releaseTimeReg;
+        }
+        if ($bannerUrlReg) {
+            $mediaData['banner_url_reg'] = $bannerUrlReg;
+        }
+        if ($contentReg) {
+            $mediaData['content_reg'] = $contentReg;
+        }
+
+        Model\Media::where('id', $mediaId)->update($mediaData);
 
         return $this->output();
     }

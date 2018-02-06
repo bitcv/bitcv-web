@@ -12,6 +12,18 @@
       <el-table-column label="媒体名称">
         <template slot-scope="scope">{{ scope.row.name }}</template>
       </el-table-column>
+      <el-table-column label="新闻标题正则">
+        <template slot-scope="scope">{{ scope.row.titleReg }}</template>
+      </el-table-column>
+      <el-table-column label="新闻发表时间正则">
+        <template slot-scope="scope">{{ scope.row.releaseTimeReg }}</template>
+      </el-table-column>
+      <el-table-column label="新闻头图正则">
+        <template slot-scope="scope">{{ scope.row.bannerUrlReg }}</template>
+      </el-table-column>
+      <el-table-column label="新闻内容正则">
+        <template slot-scope="scope">{{ scope.row.contentReg }}</template>
+      </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" @click="showEdit(scope.$index)">编辑</el-button>
@@ -30,6 +42,18 @@
             <img :src="inputLogoUrl" alt="">
           </el-upload>
         </el-form-item>
+        <el-form-item label="新闻标题正则">
+          <el-input v-model="inputTitleReg" placeholder="请输入新闻标题正则表达式"></el-input>
+        </el-form-item>
+        <el-form-item label="新闻发布时间正则">
+          <el-input v-model="inputReleaseTimeReg" placeholder="请输入新闻发布时间正则表达式"></el-input>
+        </el-form-item>
+        <el-form-item label="新闻头图正则">
+          <el-input v-model="inputBannerUrlReg" placeholder="请输入新闻头图正则表达式"></el-input>
+        </el-form-item>
+        <el-form-item label="新闻内容正则">
+          <el-input v-model="inputContentReg" placeholder="请输入新闻内容正则表达式"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer">
         <el-button @click="showDialog = false">取消</el-button>
@@ -46,6 +70,10 @@ export default {
       showDialog: false,
       inputName: '',
       inputLogoUrl: '',
+      inputTitleReg: '',
+      inputReleaseTimeReg: '',
+      inputBannerUrlReg: '',
+      inputContentReg: '',
       mediaList: []
     }
   },
@@ -69,6 +97,10 @@ export default {
       this.mediaId = ''
       this.inputName = ''
       this.inputLogoUrl = ''
+      this.inputTitleReg = ''
+      this.inputReleaseTimeReg = ''
+      this.inputBannerUrlReg = ''
+      this.inputContentReg = ''
       this.showDialog = true
     },
     showEdit (index) {
@@ -76,6 +108,10 @@ export default {
       this.mediaId = mediaData.id
       this.inputName = mediaData.name
       this.inputLogoUrl = mediaData.logoUrl
+      this.inputTitleReg = mediaData.titleReg
+      this.inputReleaseTimeReg = mediaData.releaseTimeReg
+      this.inputBannerUrlReg = mediaData.bannerUrlReg
+      this.inputContentReg = mediaData.contentReg
       this.showDialog = true
     },
     showDel (mediaId) {
@@ -103,6 +139,10 @@ export default {
       this.$http.post('/api/addMedia', {
         name: this.inputName,
         logoUrl: this.inputLogoUrl,
+        titleReg: this.inputTitleReg,
+        releaseTimeReg: this.inputReleaseTimeReg,
+        bannerUrlReg: this.inputBannerUrlReg,
+        contentReg: this.inputContentReg
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '添加成功!' })
@@ -116,6 +156,10 @@ export default {
         mediaId: this.mediaId,
         name: this.inputName,
         logoUrl: this.inputLogoUrl,
+        titleReg: this.inputTitleReg,
+        releaseTimeReg: this.inputReleaseTimeReg,
+        bannerUrlReg: this.inputBannerUrlReg,
+        contentReg: this.inputContentReg
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '更新成功!' })
