@@ -40,6 +40,9 @@ export default {
     flex-shrink: 0;
     width: 350px;
     margin-left: 24px;
+    div {
+      margin-bottom: 24px;
+    }
   }
 }
 </style>

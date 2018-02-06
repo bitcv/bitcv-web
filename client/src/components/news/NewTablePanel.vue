@@ -1,4 +1,6 @@
 <template>
+<div class = "new-area">
+  <li v-for="(news, index) in newList" :key="index">
   <div class = "new-table-panel">
     <router-link :to="{ path: 'newdetail/' + 1}">
     <img src="/static/img/bitcoin.jpeg" alt="">
@@ -7,62 +9,97 @@
         <span class="content-text">{{"近期,比特币可谓是“跌跌不休”。本周二,比特币价格跌幅逾10%,失守10000美元大关。2月2日,据韩国虚拟货币交易平台Bithumb显示,比特币价格已跌至8247美元。2月2日,据韩国虚拟货币交易平台Bithumb显示,比特币价格已跌至8247美元。"}}</span>
         <span class="content-time">{{"2018-02-01"}}</span>
       </div>
-    </router-link>
+    </router-link>  
   </div>
+  </li>
+
+  <!-- <div class = "new-table-panel">
+    <router-link :to="{ path: 'newdetail/' + 1}">
+    <img src="/static/img/bitcoin.jpeg" alt="">
+      <div class = "content">
+        <span class="content-title">{{"比特币价格失守9000美元 多国监管风向突变"}}</span>
+        <span class="content-text">{{"近期,比特币可谓是“跌跌不休”。本周二,比特币价格跌幅逾10%,失守10000美元大关。2月2日,据韩国虚拟货币交易平台Bithumb显示,比特币价格已跌至8247美元。2月2日,据韩国虚拟货币交易平台Bithumb显示,比特币价格已跌至8247美元。"}}</span>
+        <span class="content-time">{{"2018-02-01"}}</span>
+      </div>
+    </router-link>  
+  </div> -->
+</div>
 </template>
 <script>
 export default {
+  data () {
+    return {
+      newList: []
+    }
+  },
+  mounted () {
+    var that = this
+    this.$http.post('api/getNewsList', {
+      pageno: 1,
+      perpage: 10
+    }).then(function (res) {
+      var resdata = res.data
+      if (resData.errcode === 0) {
+        that.newList = resData.data
+      }
+    })
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-.new-table-panel{
-  width: 826px;
-  height: 190px;
-  background: rgba(255,255,255,1);
-  img{
-    width: 219px;
-    height: 150px;
-    margin: 20px 20px 20px 10px;
-  }
-  .content{
-    margin-left: 2px;
-    vertical-align: top;
-    display: inline-flex;
-    justify-content: space-between;
-    flex-direction: column;
-    .content-title{
-      width: 540px;
-      height: 16px;
-      margin-top: 27px;
-      font-size: 20px;
-      font-family: PingFangSC-Regular;
-      color: rgba(245,166,35,1);
-      line-height: 28px;
+.new-area{
+  div {
+      margin-bottom: 24px;
     }
-    .content-text{
-      width: 540px;
-      //height: 50px;
-      font-size: 14px;
-      margin-top: 20px;
-      font-family: PingFangSC-Medium;
-      color: rgba(155,155,155,1);
-      line-height: 20px;
-      word-break: break-all;
-      text-overflow: ellipsis;
-      display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
-      -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
-      -webkit-line-clamp: 2; /** 显示的行数 **/
-      overflow: hidden;  /** 隐藏超出的内容 **/
+  .new-table-panel{
+    width: 826px;
+    height: 190px;
+    background: rgba(255,255,255,1);
+    img{
+      width: 219px;
+      height: 150px;
+      margin: 20px 20px 20px 10px;
     }
-    .content-time{
-      width: 70px;
-      height: 17px;
-      font-size: 12px;
-      font-family: PingFangSC-Regular;
-      color: rgba(155,155,155,1);
-      line-height: 17px;
-      margin-top: 50px;
+    .content{
+      margin-left: 2px;
+      vertical-align: top;
+      display: inline-flex;
+      justify-content: space-between;
+      flex-direction: column;
+      .content-title{
+        width: 540px;
+        height: 16px;
+        margin-top: 27px;
+        font-size: 20px;
+        font-family: PingFangSC-Regular;
+        color: rgba(245,166,35,1);
+        line-height: 28px;
+      }
+      .content-text{
+        width: 540px;
+        //height: 50px;
+        font-size: 14px;
+        margin-top: 20px;
+        font-family: PingFangSC-Medium;
+        color: rgba(155,155,155,1);
+        line-height: 20px;
+        word-break: break-all;
+        text-overflow: ellipsis;
+        display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
+        -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+        -webkit-line-clamp: 2; /** 显示的行数 **/
+        overflow: hidden;  /** 隐藏超出的内容 **/
+      }
+      .content-time{
+        width: 70px;
+        height: 17px;
+        font-size: 12px;
+        font-family: PingFangSC-Regular;
+        color: rgba(155,155,155,1);
+        line-height: 17px;
+        margin-top: 50px;
+      }
     }
   }
 }

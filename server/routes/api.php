@@ -60,5 +60,8 @@ Route::any('updProjReport', 'ProjectController@updProjReport');
 Route::any('uploadFile', 'FileController@uploadFile');
 
 //min program api
-Route::get('getproject/{id?}', 'ProjectController@getProInfo');
-Route::get('getplist/{p?}{chid?}','ProjectController@getPList');
+Route::any('getproject/{id?}', 'ProjectController@getProInfo');
+Route::any('getplist/{p?}{chid?}','ProjectController@getPList');
+
+Route::any('getNewsList','NewsController@getNewsList');
+Route::any('getNewsDetail/{id?}','NewsController@getNewsDetail');

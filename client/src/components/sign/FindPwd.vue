@@ -5,7 +5,8 @@
       <input v-model="mobile" type="text" placeholder="请输入你的手机号码">
       <div class = smspanel>
       <input class = "sms" v-model="vcode" type="text" placeholder="短信验证码" >
-      <span class = "smscode" @click="getVcode">发送短信验证码</span>
+      <el-button :disabled="disableSms" class="sms-btn" :class="{disabled : disableSms}" type="primary" @click="getVcode">发送验证码<span v-show="timerId"> ({{ countDown }}s)</span></el-button>
+      <!-- <span class = "smscode" @click="getVcode">发送短信验证码</span> -->
       </div>
       <button @click.prevent="findPwd">找回密码</button>
       </form>
@@ -16,7 +17,10 @@ export default {
   data () {
     return {
       mobile: '',
-      vcode: ''
+      vcode: '',
+      timerId: '',
+      disableSms: false,
+      countDown: 60
     }
   },
   methods: {
@@ -25,6 +29,17 @@ export default {
       if (!mobileReg.test(this.mobile)) {
         return alert('请填写正确手机号')
       }
+      this.disableSms = true
+      this.timerId = setInterval(() => {
+        if (this.countDown <= 1) {
+          clearInterval(this.timerId)
+          this.disableSms = false
+          this.timerId = ''
+          this.countDown = 60
+        } else {
+          this.countDown--
+        }
+      }, 1000)
       this.$http.post('/api/getVcode', {
         mobile: this.mobile
       }).then(function (res) {
@@ -98,6 +113,27 @@ export default {
     }
     .smspanel{
       display: flex;
+      max-width: 426px;
+      width: 100%;
+      .sms-btn {
+        display: block;
+        box-sizing: border-box;
+        width: 145px;
+        height: 50px;
+        border: 1px solid #4A4A4A;
+        border-radius: 0;
+        margin-left: 5px;
+        text-align: center;
+        color: #FFCF81;
+        font-size: 16px;
+        line-height: 25px;
+        background-color: #000;
+        padding: 0;
+        &.disabled {
+          background-color: #909399;
+          color: #FFF;
+        }
+      }
     }
     .smscode{
       display: block;

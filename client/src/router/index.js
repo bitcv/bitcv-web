@@ -11,6 +11,7 @@ import FindPwd from '@/components/sign/FindPwd'
 import ResetPwd from '@/components/sign/ResetPwd'
 import NewList from '@/components/news/NewList'
 import NewDetail from '@/components/news/NewDetail'
+import CandyList from '@/components/candy/CandyList'
 
 Vue.use(Router)
 
@@ -64,7 +65,7 @@ export default new Router({
       component: NewList
     },
     {
-      path: '/NewDetail/:id',
+      path: '/newdetail/:id',
       component: NewDetail
     }
   ]

@@ -1008,4 +1008,9 @@ class ProjectController extends Controller
 
         return response()->json($projData);
     }
+
+
+    public function gerNewsList(){
+
+    }
 }
