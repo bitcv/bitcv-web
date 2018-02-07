@@ -63,7 +63,7 @@ export default {
         height: 16px;
         margin-top: 27px;
         font-size: 14px;
-        text-align: left;  
+        text-align: left;
         font-family: PingFangSC-Regular;
         color: rgba(245,166,35,1);
         line-height: 28px;
@@ -76,7 +76,7 @@ export default {
         font-family: PingFangSC-Medium;
         color: rgba(155,155,155,1);
         line-height: 20px;
-        text-align: left;  
+        text-align: left;
         word-break: break-all;
         text-overflow: ellipsis;
         display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
@@ -92,7 +92,7 @@ export default {
         color: rgba(155,155,155,1);
         line-height: 17px;
         margin-top: 40px;
-        text-align: left;  
+        text-align: left;
       }
     }
   }
