@@ -41,8 +41,8 @@ export default {
 <style lang="scss" scoped>
 .new-area{
   div {
-      margin-bottom: 24px;
-    }
+    margin-bottom: 24px;
+  }
   .new-table-panel{
     width: 826px;
     height: 190px;
@@ -50,10 +50,10 @@ export default {
     img{
       width: 219px;
       height: 150px;
-      margin: 20px 20px 20px 10px;
+      margin: 20px 20px 10px 10px;
     }
     .content{
-      margin-left: 2px;
+      //margin-left: 2px;
       vertical-align: top;
       display: inline-flex;
       justify-content: space-between;
@@ -62,7 +62,7 @@ export default {
         width: 540px;
         height: 16px;
         margin-top: 27px;
-        font-size: 20px;
+        font-size: 15px;
         font-family: PingFangSC-Regular;
         color: rgba(245,166,35,1);
         line-height: 28px;

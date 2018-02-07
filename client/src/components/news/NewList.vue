@@ -39,7 +39,7 @@ export default {
   .aside-panel{
     flex-shrink: 0;
     width: 350px;
-    margin-left: 24px;
+    margin-left: 124px;
     div {
       margin-bottom: 24px;
     }
