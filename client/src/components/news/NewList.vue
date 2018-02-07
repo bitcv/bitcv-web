@@ -35,6 +35,8 @@ export default {
   .main-panel{
     flex: 1 1 auto;
     min-width: 500px;
+    height: 190px;
+    width: 826px;
   }
   .aside-panel{
     flex-shrink: 0;
