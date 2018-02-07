@@ -52,16 +52,12 @@ export default {
   display: flex;
   justify-content: space-between;
   .main-panel{
-    //flex: 1 1 auto;
-    //min-width: 826px;
     width: 826px;
     height: 100%;
-    // margin-left: 13px;
     text-align: center;
     background:rgba(255,255,255,1);
     border-radius: 4px;
     display: inline-flex;
-    //   justify-content: space-between;
     flex-direction: column;
     p{
       text-indent: 2em;
@@ -70,7 +66,6 @@ export default {
     .new-title{
     width:593px;
     height:40px;
-    //text-align: center;
     font-size:24px;
     margin-left: 117px;
     margin-top: 52px;
@@ -92,7 +87,7 @@ export default {
     }
     .new-content{
     width:693px;
-    height:1064px;
+    height:100%;
     font-size:14px;
     text-align: center;
     font-family:PingFangSC-Regular;
@@ -100,6 +95,7 @@ export default {
     line-height:28px;
     margin-left: 60px;
     margin-right: 173px;
+    margin-bottom: 60px;
     }
   }
   .aside-panel{
