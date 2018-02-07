@@ -21,7 +21,7 @@ class NewsController extends Controller{
         extract($params);
 
         $offset = $perpage * ($pageno - 1);
-        $newList = Model\ProjReport::offset($offset)->limit($perpage)->get()->toArray();
+        $newList = Model\ProjReport::where('status',1)->offset($offset)->limit($perpage)->get()->toArray();
         //$dataCount = Model\News::count();
 
         return $this->output($newList);
