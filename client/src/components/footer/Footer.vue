@@ -25,19 +25,19 @@ export default {
     return {
       socialList: [{
         url: 'https://weibo.com/bitcv',
-        fontClass: 'fa-weibo',
+        fontClass: 'fa-weibo'
       }, {
         url: 'https://www.facebook.com/groups/1301707606641533/',
-        fontClass: 'fa-facebook',
+        fontClass: 'fa-facebook'
       }, {
         url: 'https://github.com/bitcv',
-        fontClass: 'fa-github',
+        fontClass: 'fa-github'
       }, {
         url: 'https://t.me/bcvtoken',
-        fontClass: 'fa-telegram-plane',
+        fontClass: 'fa-telegram-plane'
       }, {
         url: 'https://twitter.com/BCVofficial',
-        fontClass: 'fa-twitter',
+        fontClass: 'fa-twitter'
       }]
     }
   }
