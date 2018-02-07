@@ -62,7 +62,8 @@ export default {
         width: 540px;
         height: 16px;
         margin-top: 27px;
-        font-size: 15px;
+        font-size: 14px;
+        float: left;
         font-family: PingFangSC-Regular;
         color: rgba(245,166,35,1);
         line-height: 28px;

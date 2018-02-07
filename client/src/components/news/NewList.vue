@@ -29,19 +29,19 @@ export default {
 <style lang="scss" scoped>
 .new-list{
   width: 1200px;
-  max-width: 100%;
+  //max-width: 100%;
   display: flex;
   justify-content: space-between;
   .main-panel{
-    flex: 1 1 auto;
-    min-width: 500px;
+    //flex: 1 1 auto;
+    //min-width: 500px;
     height: 190px;
     width: 826px;
   }
   .aside-panel{
     flex-shrink: 0;
     width: 350px;
-    margin-left: 124px;
+    margin-left: 24px;
     div {
       margin-bottom: 24px;
     }
