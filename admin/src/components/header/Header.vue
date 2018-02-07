@@ -4,8 +4,8 @@
       <img src="/static/logo.png" alt="">
     </div>
     <div class="info">
-      <div class="account"><span>JunderKing</span></div>
-      <div class="signout"><span>退出登录</span></div>
+      <!--<div class="account"><span>JunderKing</span></div>-->
+      <div class="signout" @click="signout"><span>退出登录</span></div>
     </div>
   </div>
 </template>
@@ -15,6 +15,15 @@ export default {
   data () {
     return {
 
+    }
+  },
+  methods: {
+    signout () {
+      this.$http.post('/api/adminSignout', {}).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$router.push('/signin')
+        }
+      })
     }
   }
 }
@@ -51,6 +60,7 @@ export default {
       color: #FFF;
       height: 100%;
       display: flex;
+      cursor: pointer;
       align-items: center;
     }
   }

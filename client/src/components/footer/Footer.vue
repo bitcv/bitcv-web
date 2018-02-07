@@ -1,18 +1,15 @@
 <template>
   <div class="footer">
     <div class="content">
+      <div class="name">
+        <img src="/static/img/logo.png" alt="">
+      </div>
       <div class="icon-box">
         <a :href="social.url" target="_blank" v-for="(social, index) in socialList" :key="index">
           <i class=" fab" :class="social.fontClass"></i>
         </a>
       </div>
-      <div class="name">
-        <span class="name">LIANBI</span>
-      </div>
-      <div class="addr">
-        <span></span>
-      </div>
-      <div class="right">
+      <div class="bottom">
         <span>copyright 2018 lian.io</span>
       </div>
     </div>
@@ -25,19 +22,19 @@ export default {
     return {
       socialList: [{
         url: 'https://weibo.com/bitcv',
-        fontClass: 'fa-weibo',
+        fontClass: 'fa-weibo'
       }, {
         url: 'https://www.facebook.com/groups/1301707606641533/',
-        fontClass: 'fa-facebook',
+        fontClass: 'fa-facebook'
       }, {
         url: 'https://github.com/bitcv',
-        fontClass: 'fa-github',
+        fontClass: 'fa-github'
       }, {
         url: 'https://t.me/bcvtoken',
-        fontClass: 'fa-telegram-plane',
+        fontClass: 'fa-telegram-plane'
       }, {
         url: 'https://twitter.com/BCVofficial',
-        fontClass: 'fa-twitter',
+        fontClass: 'fa-twitter'
       }]
     }
   }
@@ -52,36 +49,34 @@ export default {
   padding: 10px;
   .content {
     width: 1200px;
-    height: 150px;
-    position: relative;
+    height: 222px;
     display: flex;
+    box-sizing: border-box;
+    padding: 33px 0 12px;
     flex-direction: column;
     justify-content: space-between;
-    padding: 26px 0 17px;
+    align-items: center;
     box-sizing: border-box;
     .icon-box {
-      position: absolute;
-      right: 0;
-      top: 24px;
       a {
-        margin-right: 13px;
+        margin-right: 68px;
         font-size: 28px;
         color: #9B9B9B;
         &:hover {
           color: #F5A623;
         }
+        &:last-child {
+          margin: 0;
+        }
       }
     }
     .name {
-      font-size: 30px;
-      line-height: 42px;
+      img {
+        width: 133px;
+        height: 25px;
+      }
     }
-    .addr {
-      font-size: 16px;
-      line-height: 22px;
-      color: #9B9B9B;
-    }
-    .right {
+    .bottom {
       font-size: 14px;
       line-height: 20px;
       color: #9B9B9B;

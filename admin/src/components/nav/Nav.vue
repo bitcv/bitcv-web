@@ -17,7 +17,7 @@ export default {
     return {
       itemList: [{
         icon: 'el-icon-menu',
-        url: '#/',
+        url: '#/project',
         text: '项目管理'
       }, {
         icon: 'el-icon-menu',
@@ -27,10 +27,6 @@ export default {
         icon: 'el-icon-menu',
         url: '#/media',
         text: '媒体管理'
-      }, {
-        icon: 'el-icon-info',
-        url: '#/profile',
-        text: '个人信息'
       }]
     }
   }
