@@ -8,6 +8,42 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+    public function signin (Request $request) {
+        $params = $this->validation($request, [
+            'account' => 'required|string',
+            'passwd' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $passwd = md5($passwd);
+        $adminData = Model\Admin::where([['account', $account], ['passwd', $passwd]])->first();
+        if (!$adminData) {
+            $this->error(202);
+        }
+
+        $timestamp = time();
+        $adminSig = md5($adminData->id . 'test' . $timestamp);
+        $expireTime = time() + 3600 * 12;
+
+        setcookie('adminId', $adminData->id, $expireTime);
+        setcookie('adminTimestamp', $timestamp, $expireTime);
+        setcookie('adminSig', $adminSig, $expireTime);
+
+        return $this->output();
+    }
+
+    public function signout () {
+
+        setcookie('adminId', '', time() - 3600);
+        setcookie('adminTimestamp', '', time() - 3600);
+        setcookie('adminSig', '', time() - 3600);
+
+        return $this->output();
+    }
+
     public function getMediaList (Request $request) {
         $mediaList = Model\Media::select('id', 'name', 'logo_url', 'title_reg', 'release_time_reg', 'banner_url_reg', 'content_reg')->get()->toArray();
 
@@ -163,4 +199,662 @@ class AdminController extends Controller
         return $this->output();
     }
 
+    public function getProjBasicList (Request $request) {
+        //获取请求参数
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\Project::offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = Model\Project::count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+    }
+
+    public function addProject (Request $request) {
+
+        // 获取请求参数
+        $params = $this->validation($request, [
+            'nameCn' => 'required|string',
+            'nameEn' => 'required|string',
+            'foundDate' => 'required|string',
+            'logoUrl' => 'required|string',
+            'homeUrl' => 'required|string',
+            'shortDesc' => 'required|string',
+            'whitePaperUrl' => 'required|string',
+            'abstract' => 'required|string',
+            'region' => 'required|numeric',
+            'buzType' => 'required|numeric',
+            'stage' => 'required|numeric',
+            'fundStage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
+
+        // 创建项目
+        $projModel = Model\Project::firstOrCreate([
+            'name_cn' => $nameCn,
+            'name_en' => $nameEn,
+            'found_date' => $foundDate,
+            'logo_url' => $logoUrl,
+            'home_url' => $homeUrl,
+            'white_paper_url' => $whitePaperUrl,
+            'region' => $region,
+            'stage' => $stage,
+            'buz_type' => $buzType,
+            'abstract' => $abstract,
+            'fund_stage' => $fundStage,
+            'short_desc' => $shortDesc,
+            'found_date' => date('Y-m-d H-i-s', strtotime($foundDate)),
+        ]);
+
+        return $this->output(['projId' => $projModel->id]);
+    }
+
+    public function delProject (Request $request) {
+
+        // 获取请求参数
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjAdvantage::where('proj_id', $projId)->delete();
+        Model\ProjAdvisor::where('proj_id', $projId)->delete();
+        Model\ProjEvent::where('proj_id', $projId)->delete();
+        Model\ProjMember::where('proj_id', $projId)->delete();
+        Model\ProjPartner::where('proj_id', $projId)->delete();
+        Model\ProjReport::where('proj_id', $projId)->delete();
+        Model\ProjSocial::where('proj_id', $projId)->delete();
+        Model\ProjTag::where('proj_id', $projId)->delete();
+        Model\Project::where('id', $projId)->delete();
+
+        return $this->output();
+    }
+
+    public function getProjBasicInfo (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        // 获取项目基本信息
+        $projBasicInfo = Model\Project::where('id', $projId)->first();
+        if ($projBasicInfo == null) {
+            return $this->error(301);
+        }
+        // 获取项目标签
+        $projBasicInfo['tagList'] = Model\ProjTag::where('proj_id', $projId)->pluck('tag')->toArray();
+
+        // 获取项目token
+        $tokenId = $projBasicInfo->token_id;
+        if ($tokenId) {
+            $tokenModel = Model\Token::where('id', $tokenId)->first();
+            $projBasicInfo['tokenName'] = $tokenModel->name;
+            $projBasicInfo['tokenSymbol'] = $tokenModel->symbol;
+            $projBasicInfo['tokenPrice'] = $tokenModel->price;
+        }
+
+        return $this->output($projBasicInfo);
+    }
+
+    public function updProjBasicInfo (Request $request) {
+        // 获取请求参数
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'nameCn' => 'required|string',
+            'nameEn' => 'required|string',
+            'foundDate' => 'required|string',
+            'logoUrl' => 'required|string',
+            'homeUrl' => 'required|string',
+            'shortDesc' => 'required|string',
+            'whitePaperUrl' => 'required|string',
+            'abstract' => 'required|string',
+            'region' => 'required|numeric',
+            'buzType' => 'required|numeric',
+            'stage' => 'required|numeric',
+            'fundStage' => 'required|numeric',
+            'tagList' => 'array',
+            'fundStartTime' => 'string|nullable',
+            'fundEndTime' => 'string|nullable',
+            'companyEmail' => 'string|nullable',
+            'companyAddr' => 'string|nullable',
+            'bannerUrl' => 'string|nullable',
+            'tokenName' => 'string|nullable',
+            'tokenSymbol' => 'string|nullable',
+            'tokenPrice' => 'string|nullable',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
+
+        $projInfo = [
+            'name_cn' => $nameCn,
+            'name_en' => $nameEn,
+            'found_date' => date('Y-m-d H-i-s', strtotime($foundDate)),
+            'logo_url' => $logoUrl,
+            'home_url' => $homeUrl,
+            'short_desc' => $shortDesc,
+            'white_paper_url' => $whitePaperUrl,
+            'abstract' => $abstract,
+            'region' => $region,
+            'buz_type' => $buzType,
+            'stage' => $stage,
+            'fund_stage' => $fundStage,
+        ];
+
+        if ($tokenName && $tokenSymbol) {
+            $tokenModel = Model\Token::firstOrCreate([
+                'name' => $tokenName,
+                'symbol' => $tokenSymbol,
+                'price' => $tokenPrice ?: 0,
+            ]);
+            $projInfo['token_id'] = $tokenModel->id;
+        }
+        if ($fundStartTime) {
+            $projInfo['fund_start_time'] = date('Y-m-d H-i-s', strtotime($fundStartTime));
+        }
+        if ($fundEndTime) {
+            $projInfo['fund_end_time'] = date('Y-m-d H-i-s', strtotime($fundEndTime));
+        }
+        if ($companyEmail) {
+            $projInfo['company_email'] = $companyEmail;
+        }
+        if ($companyAddr) {
+            $projInfo['company_addr'] = $companyAddr;
+        }
+        if ($bannerUrl) {
+            $projInfo['banner_url'] = $bannerUrl;
+        }
+
+        Model\Project::where('id', $projId)->update($projInfo);
+
+        foreach ($tagList as $tag) {
+            Model\ProjTag::firstOrCreate(['proj_id' => $projId, 'tag' => $tag]);
+        }
+
+        return $this->output();
+    }
+
+    public function getProjMemberList (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $projMemberList = Model\ProjMember::where('proj_id', $projId)->get()->toArray();
+
+        return $this->output(['dataList' => $projMemberList]);
+    }
+
+    public function addProjMember (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'name' => 'required|string',
+            'photoUrl' => 'required|string',
+            'position' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjMember::firstOrCreate([
+            'proj_id' => $projId,
+            'name' => $name,
+            'photo_url' => $photoUrl,
+            'position' => $position,
+            'intro' => $intro,
+        ]);
+
+        return $this->output();
+    }
+
+    public function updProjMember (Request $request) {
+        $params = $this->validation($request, [
+            'memberId' => 'required|numeric',
+            'name' => 'required|string',
+            'photoUrl' => 'required|string',
+            'position' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjMember::where('id', $memberId)->update([
+            'name' => $name,
+            'photo_url' => $photoUrl,
+            'position' => $position,
+            'intro' => $intro,
+        ]);
+
+        return $this->output();
+    }
+
+    public function delProjMember (Request $request) {
+        $params = $this->validation($request, [
+            'memberId' => 'required|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjMember::where('id', $memberId)->delete();
+
+        return $this->output();
+    }
+
+    public function getProjEventList (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $projEventList = Model\ProjEvent::where('proj_id', $projId)->get()->toArray();
+
+        return $this->output(['dataList' => $projEventList]);
+    }
+
+    public function addProjEvent (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'occurTime' => 'required|string',
+            'title' => 'required|string',
+            'detail' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjEvent::firstOrCreate([
+            'proj_id' => $projId,
+            'occur_time' => date('Y-m-d H:i:s', strtotime($occurTime)),
+            'title' => $title,
+            'detail' => $detail,
+        ]);
+
+        return $this->output();
+    }
+
+    public function updProjEvent (Request $request) {
+        $params = $this->validation($request, [
+            'eventId' => 'required|numeric',
+            'occurTime' => 'required|string',
+            'title' => 'required|string',
+            'detail' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjEvent::where('id', $eventId)->update([
+            'occur_time' => date('Y-m-d H:i:s', strtotime($occurTime)),
+            'title' => $title,
+            'detail' => $detail,
+        ]);
+
+        return $this->output();
+    }
+
+    public function delProjEvent (Request $request) {
+        $params = $this->validation($request, [
+            'eventId' => 'required|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjEvent::where('id', $eventId)->delete();
+
+        return $this->output();
+    }
+
+    public function getProjSocialList (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $projSocialList = Model\ProjSocial::where('proj_id', $projId)
+            ->join('social', 'proj_social.social_id', '=', 'social.id')
+            ->select('proj_social.id', 'name', 'social_id', 'font_class', 'link_url')
+            ->get()->toArray();
+
+        return $this->output(['dataList' => $projSocialList]);
+    }
+
+    public function addProjSocial (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'socialId' => 'required|numeric',
+            'linkUrl' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $linkUrl = strpos($linkUrl, 'http') === 0 ? $linkUrl : 'http://' . $linkUrl;
+
+        $isExist = Model\Social::where('id', $socialId)->count();
+        if (!$isExist) {
+            $this->error(302);
+        }
+
+        Model\ProjSocial::firstOrCreate([
+            'proj_id' => $projId,
+            'social_id' => $socialId,
+            'link_url' => $linkUrl,
+        ]);
+
+        return $this->output();
+    }
+
+    public function updProjSocial (Request $request) {
+        $params = $this->validation($request, [
+            'projSocialId' => 'required|numeric',
+            'socialId' => 'required|numeric',
+            'linkUrl' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $linkUrl = strpos($linkUrl, 'http') === 0 ? $linkUrl : 'http://' . $linkUrl;
+
+        $isExist = Model\Social::where('id', $socialId)->count();
+        if (!$isExist) {
+            $this->error(302);
+        }
+
+        Model\ProjSocial::where('id', $projSocialId)->update([
+            'social_id' => $socialId,
+            'link_url' => $linkUrl,
+        ]);
+
+        return $this->output();
+    }
+
+    public function delProjSocial (Request $request) {
+        $params = $this->validation($request, [
+            'projSocialId' => 'required|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjSocial::where('id', $projSocialId)->delete();
+
+        return $this->output();
+    }
+
+    public function getProjPartnerList (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $projPartnerList = Model\ProjPartner::where('proj_id', $projId)->get()->toArray();
+
+        return $this->output(['dataList' => $projPartnerList]);
+    }
+
+    public function addProjPartner (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'name' => 'required|string',
+            'logoUrl' => 'required|string',
+            'homeUrl' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
+
+        Model\ProjPartner::firstOrCreate([
+            'proj_id' => $projId,
+            'name' => $name,
+            'logo_url' => $logoUrl,
+            'home_url' => $homeUrl,
+        ]);
+
+        return $this->output();
+    }
+
+    public function updProjPartner (Request $request) {
+        $params = $this->validation($request, [
+            'partnerId' => 'required|numeric',
+            'name' => 'required|string',
+            'logoUrl' => 'required|string',
+            'homeUrl' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
+
+        Model\ProjPartner::where('id', $partnerId)->update([
+            'name' => $name,
+            'logo_url' => $logoUrl,
+            'home_url' => $homeUrl,
+        ]);
+
+        return $this->output();
+    }
+
+    public function delProjPartner (Request $request) {
+        $params = $this->validation($request, [
+            'partnerId' => 'required|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjPartner::where('id', $partnerId)->delete();
+
+        return $this->output();
+    }
+
+    public function getProjReportList (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $projReportList = Model\ProjReport::where('proj_id', $projId)
+            ->join('media', 'proj_report.media_id', '=', 'media.id')
+            ->select('proj_report.id', 'media_id', 'name', 'title', 'logo_url', 'link_url')
+            ->get()->toArray();
+
+        return $this->output(['dataList' => $projReportList]);
+    }
+
+    public function addProjReport (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'mediaId' => 'required|numeric',
+            'title' => 'required|string',
+            'linkUrl' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $linkUrl = strpos($linkUrl, 'http') === 0 ? $linkUrl : 'http://' . $linkUrl;
+
+        $isExist = Model\Media::where('id', $mediaId)->count();
+        if (!$isExist) {
+            $this->error(303);
+        }
+
+        Model\ProjReport::firstOrCreate([
+            'proj_id' => $projId,
+            'media_id' => $mediaId,
+            'title' => $title,
+            'link_url' => $linkUrl,
+        ]);
+
+        return $this->output();
+    }
+
+    public function updProjReport (Request $request) {
+        $params = $this->validation($request, [
+            'projReportId' => 'required|numeric',
+            'mediaId' => 'required|numeric',
+            'title' => 'required|string',
+            'linkUrl' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $linkUrl = strpos($linkUrl, 'http') === 0 ? $linkUrl : 'http://' . $linkUrl;
+
+        $isExist = Model\Media::where('id', $mediaId)->count();
+        if (!$isExist) {
+            $this->error(303);
+        }
+
+        Model\ProjReport::where('id', $projReportId)->update([
+            'media_id' => $mediaId,
+            'title' => $title,
+            'link_url' => $linkUrl,
+        ]);
+
+        return $this->output();
+    }
+
+    public function delProjReport (Request $request) {
+        $params = $this->validation($request, [
+            'projReportId' => 'required|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjReport::where('id', $projReportId)->delete();
+
+        return $this->output();
+    }
+
+    public function getProjAdvisorList (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $projAdvisorList = Model\ProjAdvisor::where('proj_id', $projId)->get()->toArray();
+
+        return $this->output(['dataList' => $projAdvisorList]);
+    }
+
+    public function addProjAdvisor (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'name' => 'required|string',
+            'photoUrl' => 'required|string',
+            'company' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjAdvisor::firstOrCreate([
+            'proj_id' => $projId,
+            'name' => $name,
+            'photo_url' => $photoUrl,
+            'company' => $company,
+            'intro' => $intro,
+        ]);
+
+        return $this->output();
+    }
+
+    public function updProjAdvisor (Request $request) {
+        $params = $this->validation($request, [
+            'advisorId' => 'required|numeric',
+            'name' => 'required|string',
+            'photoUrl' => 'required|string',
+            'company' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjAdvisor::where('id', $advisorId)->update([
+            'name' => $name,
+            'photo_url' => $photoUrl,
+            'company' => $company,
+            'intro' => $intro,
+        ]);
+
+        return $this->output();
+    }
+
+    public function delProjAdvisor (Request $request) {
+        $params = $this->validation($request, [
+            'advisorId' => 'required|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjAdvisor::where('id', $advisorId)->delete();
+
+        return $this->output();
+    }
 }
