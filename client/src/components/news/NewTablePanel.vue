@@ -45,7 +45,7 @@ export default {
   }
   .new-table-panel{
     width: 826px;
-    height: 190px;
+    height: 100%;
     background: rgba(255,255,255,1);
     img{
       width: 219px;
@@ -86,7 +86,7 @@ export default {
       }
       .content-time{
         width: 170px;
-        height: 57px;
+        //height: 57px;
         font-size: 12px;
         font-family: PingFangSC-Regular;
         color: rgba(155,155,155,1);
