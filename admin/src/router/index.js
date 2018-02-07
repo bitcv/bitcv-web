@@ -12,37 +12,28 @@ import Home from '@/components/home/Home'
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
-      path: '/',
-      redirect: '/project',
-      component: Home,
-      children: [
-        {
-          path: '/project',
-          component: ProjList
-        },
-        {
-          path: '/social',
-          component: Social
-        },
-        {
-          path: '/media',
-          component: Media
-        },
-        {
-          path: '/addProject',
-          component: AddProject
-        },
-        {
-          path: '/editProject/:id',
-          component: EditProject
-        }
-      ]
-    },
-    {
-      path: '/signin',
-        component: Signin
-    }
-  ]
+  routes: [{
+    path: '/',
+    redirect: '/project',
+    component: Home,
+    children: [{
+      path: '/project',
+      component: ProjList
+    }, {
+      path: '/social',
+      component: Social
+    }, {
+      path: '/media',
+      component: Media
+    }, {
+      path: '/addProject',
+      component: AddProject
+    }, {
+      path: '/editProject/:id',
+      component: EditProject
+    }]
+  }, {
+    path: '/signin',
+    component: Signin
+  }]
 })
