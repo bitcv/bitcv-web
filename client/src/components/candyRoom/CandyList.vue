@@ -6,7 +6,7 @@
         <span class="title">链币糖果屋</span>
       </div>
       <div class="filter-box">
-        <span class="title">糖果期限</span>
+        <span class="title">锁仓期限</span>
         <ul class="select">
           <li>全部</li>
           <li>3个月</li>

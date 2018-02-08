@@ -8,6 +8,139 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+    public function addCandybox (Request $request) {
+
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'minAmount' => 'required|numeric',
+            'lockTime' => 'required|numeric',
+            'totalAmount' => 'required|numeric',
+            'interestRate' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        // 获取钱包地址
+        $projData = Model\Project::where('id', $projId)->first();
+        if (!$projData) {
+            return $this->error(301);
+        }
+
+        $walletAddr = $projData->wallet_addr;
+        if (!$walletAddr) {
+            // 生成钱包地址
+            
+        }
+
+        Model\CandyBox::create([
+            'proj_id' => $projId,
+            'min_amount' => $minAmount,
+            'lock_time' => $lockTime,
+            'total_amount' => $totalAmount,
+            'remain_amount' => $remainAmount,
+            'interest_rate' => $interestRate,
+            'status' => 1,
+        ]);
+        $totalInterest = $totalAmount * $interestRate;
+
+        return $this->output([
+            'walletAddr' => $walletAddr,
+            'totalInterest' => $totalInterest,
+        ]);
+    }
+
+    public function getProjCandyBoxList (Request $request) {
+
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $candyBoxList = Model\CandyBox::where('proj_id', $projId)
+            ->get()->toArray();
+
+        return $this->output(['dataList' => $candyBoxList]);
+    }
+
+    public function getProjTradeRecordList (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'candyBoxId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        // 验证糖果盒Id
+        $candyBoxData = Model\CandyBox::where([ ['id', $candyBoxId], ['proj_id', $projId]])
+            ->join('project', 'candy_box.proj_id', '=', 'project.id')
+            ->select('candy_box.pay_addr', 'project.candy_wallet_addr')
+            ->first();
+        if (!$candyBoxData) {
+            return $this->error(304);
+        }
+
+        // 刷新项目交易记录
+
+        // 获取未确认的项目交易记录
+        $projTradeRecordModel = Model\ProjTradeRecord::where([
+            ['candy_box_id', 0],
+            ['from_addr', $candyBoxData->pay_addr],
+            ['to_addr', $candyBoxData->candy_wallet_addr],
+        ]);
+
+        $dataCount = $projTradeRecordModel->count();
+        $dataList = $projTradeRecordModel->get()->toArray();
+        return $this->output(['dataCount' => $dataCount, 'dataList' => $dataList]);
+    }
+
+    public function confirmCandyBox (Request $request) {
+
+        // 获取请求参数
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'candyBoxId' => 'required|numeric',
+            'projTradeRecordIdList' => 'required|array',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        // 获取订单信息
+        $candyBoxModel = Model\CandyBox::join('project', 'candy_box.proj_id', '=', 'project.id')
+            ->select('candy_wallet_addr', 'pay_addr', 'candy_box.total_amount', 'candy_box.interest_rate')
+            ->where([['proj_id', $projId], ['id', $candyBoxId]]);
+        $candyBoxData = $candyBoxModel->first();
+        if (!$candyBoxData) {
+            return $this->error(304);
+        }
+
+        $projTradeRecordModel = Model\ProjTradeRecord::where([
+            ['id', 'in', $projTradeRecordIdList],
+            ['candy_box_id', 0],
+            ['from_addr', $candyBoxData->pay_addr],
+            ['to_addr', $candyBoxData->candy_wallet_addr],
+        ]);
+
+        $recordAmountSum = $projTradeRecordModel->sum('trade_amount');
+        if ($recordAmountSum !== $candyBoxData->total_amount * $candyBox->interest_rate) {
+            return $this->error(307);
+        }
+
+        // 更新交易记录信息
+        $projTradeRecordModel->update(['candy_box_id' => $candyBoxId]);
+        $candyBoxModel->update(['status' => 2]);
+
+        return $this->output();
+    }
+
     public function signin (Request $request) {
         $params = $this->validation($request, [
             'account' => 'required|string',

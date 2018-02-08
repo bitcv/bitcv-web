@@ -6,6 +6,8 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import common from './common'
+Vue.use(common)
 
 require('es6-promise').polyfill()
 Vue.prototype.$http = axios

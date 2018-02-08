@@ -30,5 +30,6 @@ export default {
   display: flex;
   justify-content: center;
   overflow: hidden;
+  min-height: calc(100vh - 418px);
 }
 </style>
