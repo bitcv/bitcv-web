@@ -1,9 +1,9 @@
 <template>
   <div class="candy-order">
     <div class="header-nav">
-      <span>糖果屋</span>
+      <span>余币宝</span>
       >
-      <span>糖果调配</span>
+      <span>地址设置</span>
     </div>
     <div class="info-area">
       <span>抢购详情</span>
@@ -15,7 +15,7 @@
         <span class="step-index">1</span>
         <div class="input-box">
           <span class="title">接收钱包地址</span>
-          <input>
+          <span class="text">0x7dfffb38b871fda8a820378d6531a8267cc414a5</span>
         </div>
       </div>
       <div class="form-row">
@@ -127,6 +127,13 @@ export default {
         }
         input {
           border-bottom: 1px solid #4A4A4A;
+          width: 570px;
+          height: 50px;
+          font-size: 24px;
+          line-height: 50px;
+          text-align: left;
+        }
+        .text {
           width: 570px;
           height: 50px;
           font-size: 24px;

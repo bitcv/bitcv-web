@@ -2,8 +2,8 @@
   <div class="my-candy-order">
     <div class="main-area">
       <div class="title-box">
-        <span class="title">我的糖果屋</span>
-        <img src="/static/img/logo.png" alt="">
+        <span class="title">我的余币宝清单</span>
+        <!--<img src="/static/img/logo.png" alt="">-->
       </div>
       <div class="filter-box">
         <span class="title">订单状态</span>
@@ -49,7 +49,7 @@
                 <span class="text">订单完成</span>
               </div>
             </td>
-            <td>{{ order.orderHash }}</td>
+            <td><a :href="order.orderHashUrl" target="_blank">{{ order.orderHash }}</a></td>
           </tr>
         </table>
       </div>
@@ -64,7 +64,7 @@ export default {
       orderList: [{
         id: 1,
         projData: {
-          logoUrl: '/static/img/logo.png',
+          logoUrl: '/static/logo/bcv.png',
           tokenName: 'bitCV',
           tokenSymbol: 'BCV'
         },
@@ -73,7 +73,8 @@ export default {
         lockTime: '180天',
         interest: '300000',
         orderStatus: '等待确认',
-        orderHash: 'kdjsglagjelwgjlaskfjwef'
+        orderHashUrl: 'https://etherscan.io/tx/0x23bdcb9ff2e1e7dbe6e229c22e456dde985315e98995620606d3b59f61e36552',
+        orderHash: '0x23bdcb9ff2e1...6d3b59f61e36552'
       }]
     }
   },

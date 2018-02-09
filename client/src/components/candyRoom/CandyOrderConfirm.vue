@@ -8,7 +8,7 @@
         <div class="info-row">
           <span class="title">项目：</span>
           <div class="content-box">
-            <img src="/static/img/logo.png" alt="">
+            <img src="/static/logo/bcv.png" alt="">
             <div class="info-box">
               <span class="title">BCV</span>
               <span class="text">BitCV</span>
@@ -31,11 +31,11 @@
         </div>
         <div class="info-row">
           <span class="title">接收地址：</span>
-          <span class="content">dsksdgjsugsndnvsasgsage</span>
+          <span class="content">0x7dfffb38b871fda8a820378d6531a8267cc414a5</span>
         </div>
         <div class="info-row">
           <span class="title">您的地址：</span>
-          <span class="content">dsksdgjsugsndnvsasgsage</span>
+          <span class="content">0x32f979010a5f54cccfb28a4b13769c6b8749af2e</span>
         </div>
       </div>
       <div class="table-box">
@@ -50,7 +50,7 @@
           <tr v-for="(record, index) in recordList" :key="index">
             <td>{{ record.amount }}</td>
             <td>{{ record.time }}</td>
-            <td>{{ record.hash }}</td>
+            <td><a :href="record.hashUrl" target="_blank">{{ record.hash }}</a></td>
             <td><input type="checkbox"></td>
           </tr>
         </table>
@@ -69,7 +69,8 @@ export default {
       recordList: [{
         amount: 3000,
         time: '2018-02-01 09:03',
-        hash: 'kdjslgjlgsdjglewkgjlwekg'
+        hashUrl: 'https://etherscan.io/tx/0x23bdcb9ff2e1e7dbe6e229c22e456dde985315e98995620606d3b59f61e36552',
+        hash: '0x23bdcb9ff2e1...6d3b59f61e36552'
       }]
     }
   },

@@ -2,8 +2,8 @@
   <div class="candy-list">
     <div class="main-area">
       <div class="title-box">
-        <img src="/static/img/logo.png" alt="">
-        <span class="title">链币糖果屋</span>
+        <!--<img src="/static/img/logo.png" alt="">-->
+        <span class="title">余币宝计划</span>
       </div>
       <div class="filter-box">
         <span class="title">锁仓期限</span>
@@ -20,7 +20,7 @@
             <th>回报（每万枚）</th>
             <th>锁仓期</th>
             <th colspan="2">项目</th>
-            <th>起购额度</th>
+            <th>起始额度</th>
             <th>剩余额度</th>
             <th></th>
           </tr>
@@ -59,7 +59,7 @@ export default {
         interest: '3000枚',
         lockTime: '3个月',
         projData: {
-          logoUrl: '/static/img/logo.png',
+          logoUrl: '/static/logo/bcv.png',
           tokenName: 'bitCV',
           tokenSymbol: 'BCV'
         },
@@ -67,6 +67,8 @@ export default {
         remainAmount: '5000'
       }]
     }
+  },
+  mounted () {
   },
   methods: {
     toCandyBuy () {

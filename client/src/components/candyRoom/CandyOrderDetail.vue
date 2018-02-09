@@ -8,7 +8,7 @@
         <div class="info-row">
           <span class="title">项目：</span>
           <div class="content-box">
-            <img src="/static/img/logo.png" alt="">
+            <img src="/static/logo/bcv.png" alt="">
             <div class="info-box">
               <span class="title">BCV</span>
               <span class="text">BitCV</span>
@@ -31,16 +31,17 @@
         </div>
         <div class="info-row">
           <span class="title">接收地址：</span>
-          <span class="content">dsksdgjsugsndnvsasgsage</span>
+          <span class="content">0x7dfffb38b871fda8a820378d6531a8267cc414a5</span>
         </div>
         <div class="info-row">
           <span class="title">您的地址：</span>
-          <span class="content">dsksdgjsugsndnvsasgsage</span>
+          <span class="content">0x32f979010a5f54cccfb28a4b13769c6b8749af2e</span>
         </div>
         <div class="status-row">
           <span class="title">订单状态：</span>
           <span class="content">等待确认</span>
         </div>
+        <img class="qrcode" src="/static/logo/qrcode.png" alt="">
       </div>
       <div class="btn-box">
         <div class="btn-row">
@@ -178,5 +179,12 @@ export default {
       }
     }
   }
+}
+.qrcode {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: 110px;
+  top: 80px;
 }
 </style>

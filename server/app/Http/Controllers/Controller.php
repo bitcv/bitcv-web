@@ -89,7 +89,7 @@ class Controller extends BaseController
         return json_encode($rtnArr, JSON_UNESCAPED_UNICODE);
     }
 
-    public function error($errcode)
+    public function error($errcode = 101)
     {
         if (array_key_exists($errcode, self::ERROR)) {
             return json_encode(self::ERROR[$errcode], JSON_UNESCAPED_UNICODE);

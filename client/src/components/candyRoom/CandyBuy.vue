@@ -1,9 +1,9 @@
 <template>
   <div class="candy-buy">
     <div class="header-nav">
-      <span>糖果屋</span>
+      <span>余币宝</span>
       >
-      <span>糖果调配</span>
+      <span>抢购额度</span>
     </div>
     <div class="title-box">
       <span class="title">剩余额度</span>
@@ -14,7 +14,7 @@
         <div class="row-box">
           <span class="title">项目：</span>
           <div class="content-box">
-            <img src="/static/img/logo.png" alt="">
+            <img src="/static/logo/bcv.png" alt="">
             <div class="info-box">
               <span class="title">BCV</span>
               <span class="text">Bitcv</span>
@@ -26,7 +26,7 @@
           <span class="content">180天</span>
         </div>
         <div class="row-box">
-          <span class="title">起购额度：</span>
+          <span class="title">起始额度：</span>
           <span class="content">30000</span>
         </div>
       </div>
