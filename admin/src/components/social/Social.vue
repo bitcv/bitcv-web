@@ -94,7 +94,7 @@ export default {
     addSocial () {
       this.$http.post('/api/addSocial', {
         name: this.inputName,
-        fontClass: this.inputFontClass,
+        fontClass: this.inputFontClass
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '添加成功!' })
@@ -107,7 +107,7 @@ export default {
       this.$http.post('/api/updSocial', {
         socialId: this.socialId,
         name: this.inputName,
-        fontClass: this.inputFontClass,
+        fontClass: this.inputFontClass
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '更新成功!' })

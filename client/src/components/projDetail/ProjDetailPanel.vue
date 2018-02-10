@@ -29,14 +29,14 @@
     <div class="content">
       <div class="info-area" id="Info">
         <h3 class="panel-title">项目简介</h3>
-        <div>
+        <div class="image-box" v-if="projDetail.bannerUrl">
           <img :src="projDetail.bannerUrl" alt="">
         </div>
         <div class="abstract">
           <span>{{ projDetail.abstract }}</span>
         </div>
       </div>
-      <div class="team-area" id="Team">
+      <div v-if="projDetail.memberList.length" class="team-area" id="Team">
         <el-carousel :interval="5000" arrow="always" height="390px">
           <el-carousel-item class="member" v-for="(member, index) in projDetail.memberList" :key="index">
             <img class="avatar" :src="member.photoUrl" alt="">
@@ -45,11 +45,11 @@
           </el-carousel-item>
         </el-carousel>
       </div>
-      <div class="event-area" id="Event" v-if="true">
+      <div v-if="projDetail.eventList.length" class="event-area" id="Event">
         <h3 class="panel-title">项目发展</h3>
         <proj-time-line :proj-event="projDetail.eventList"></proj-time-line>
       </div>
-      <div class="advisor-area" id="Advisor">
+      <div v-if="projDetail.advisorList.length" class="advisor-area" id="Advisor">
         <h3 class="panel-title center-title">项目顾问</h3>
         <div class="advisor-box">
           <ul class="advisor-list">
@@ -63,7 +63,7 @@
           </ul>
         </div>
       </div>
-      <div class="partner-area" id="Partner">
+      <div v-if="projDetail.partnerList.length" class="partner-area" id="Partner">
         <h3 class="panel-title center-title">合作伙伴</h3>
         <div class="logo-box">
           <a :href="partner.homeUrl" target="_blank" v-for="(partner, index) in projDetail.partnerList" :key="index" class="img-container">
@@ -71,7 +71,11 @@
           </a>
         </div>
       </div>
+<<<<<<< HEAD
       <!-- <div class="media-area" id="Media">
+=======
+      <div v-if="projDetail.reportList.length" class="media-area" id="Media">
+>>>>>>> 882947b6ced4ba2a1356fdc547bb3c15eda66281
         <h3 class="center-title panel-title">媒体报道</h3>
         <div class="item-box">
           <a class="item mobile-list-item" :href="report.linkUrl" target="_blank" v-for="(report, index) in projDetail.reportList" :key="index">
@@ -137,15 +141,15 @@ export default {
     }
     .info-area {
       padding: 20px;
-      div {
+      .image-box {
         margin: 20px 0;
         text-align: center;
         img {
           width: 100%;
         }
+        border-bottom: 0.5px solid #979797;
       }
       .abstract {
-        border-top: 0.5px solid #979797;
         padding-top: 6px;
         font-size: 14px;
         line-height: 28px;

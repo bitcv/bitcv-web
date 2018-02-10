@@ -20,9 +20,9 @@
           </div>
         </td>
         <td class="mobile-hide"><span>{{ project.tokenSymbol }}</span></td>
-        <td class="mobile-hide"><div><span>{{ buzType(project.buzType) }}</span></div></td>
+        <td class="mobile-hide"><div><span>{{ convertBuzType(project.buzType) }}</span></div></td>
         <td class="mobile-hide"><img :src="project.focusStatus === 1 ? focusUrl : unfocusUrl" alt="" @click.stop.prevent="focus(project.id, index)"></td>
-        <td class="mobile-hide"><span>{{ fundStage(project.fundStage) }}</span></td>
+        <td class="mobile-hide"><span>{{ convertFundStage(project.fundStage) }}</span></td>
       </tr>
     </table>
   </div>
@@ -47,8 +47,6 @@ export default {
   },
   beforeDestroy () {
     this.$root.eventHub.$off('updateProjList', this.updateProjList)
-  },
-  computed: {
   },
   mounted () {
     var that = this
@@ -87,46 +85,6 @@ export default {
           that.projData.projList[index].focusStatus = resData.data.status
         }
       })
-    },
-    fundStage (fundStage) {
-      switch (fundStage) {
-        case 0:
-          return '保密'
-        case 1:
-          return '未融资'
-        case 2:
-          return '融资中'
-        case 3:
-          return '已融资'
-      }
-    },
-    buzType (buzType) {
-      switch (buzType) {
-        case 1:
-          return '金融'
-        case 2:
-          return '数字货币'
-        case 3:
-          return '娱乐'
-        case 4:
-          return '供应链管理'
-        case 5:
-          return '法律服务'
-        case 6:
-          return '医疗'
-        case 7:
-          return '能源服务'
-        case 8:
-          return '公益'
-        case 9:
-          return '物联网'
-        case 10:
-          return '农业'
-        case 11:
-          return '社交'
-        default:
-          return '其它'
-      }
     }
   }
 }

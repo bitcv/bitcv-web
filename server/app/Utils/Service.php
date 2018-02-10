@@ -38,9 +38,9 @@ class Service {
             return array('err' => 1, 'msg' => 'no vcode');
         }
 //for test 上线删除
-//if ($vcode == env('SMS_TEST_VCODE')) {
-    //return array('err' => 0);
-//}
+if ($vcode == env('SMS_TEST_VCODE')) {
+    return array('err' => 0);
+}
         if (0 != strcasecmp($vcode, Redis::get("{$type}_{$id}"))) {
             return array('err' => 2, 'msg' => 'vilidation code is invalid');
         }

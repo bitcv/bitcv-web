@@ -12,13 +12,13 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://www.kingco.com/api',
+        target: 'http://lb.io/api',
         pathRewrite: {
           '^/api': ''
         }
       },
       '/storage': {
-        target: 'http://www.kingco.com/storage',
+        target: 'http://lb.io/storage',
         pathRewrite: {
           '^/storage': ''
         }
@@ -26,7 +26,7 @@ module.exports = {
     },
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: 'lb.io', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

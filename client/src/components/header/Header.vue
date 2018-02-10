@@ -43,6 +43,7 @@ export default {
       menuList: [
         {url: '/', text: '首页'},
         {url: '/projList', text: '发现'},
+        {url: '/candyRoom', text: '余币宝'},
         {url: '/newlist', text: '资讯'}
       ]
     }
@@ -144,12 +145,12 @@ export default {
     .btn-box {
       .btn {
         display: inline-block;
-        width: 75px;
-        height: 40px;
+        width: 65px;
+        height: 30px;
         border-radius: 4px;
         .btn-text {
-          font-size: 20px;
-          line-height: 40px;
+          font-size: 16px;
+          line-height: 30px;
           display: block;
           width: 100%;
           height: 100%;

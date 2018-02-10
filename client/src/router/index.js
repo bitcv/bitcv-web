@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/home/Home'
 import ProjList from '@/components/projList/ProjList'
+import CandyRoom from '@/components/candyRoom/CandyRoom'
+import CandyList from '@/components/candyRoom/CandyList'
 import ProjDetail from '@/components/projDetail/ProjDetail'
 import Signin from '@/components/sign/Signin'
 import Signup from '@/components/sign/Signup'
@@ -11,7 +13,16 @@ import FindPwd from '@/components/sign/FindPwd'
 import ResetPwd from '@/components/sign/ResetPwd'
 import NewList from '@/components/news/NewList'
 import NewDetail from '@/components/news/NewDetail'
+<<<<<<< HEAD
 import ProjNews from '@/components/projDetail/projNews'
+=======
+import CandyBuy from '@/components/candyRoom/CandyBuy'
+import CandyOrder from '@/components/candyRoom/CandyOrder'
+import CandyOrderConfirm from '@/components/candyRoom/CandyOrderConfirm'
+import CandyOrderDetail from '@/components/candyRoom/CandyOrderDetail'
+import MyCandyOrder from '@/components/candyRoom/MyCandyOrder'
+import Apply from '@/components/apply/Apply'
+>>>>>>> 882947b6ced4ba2a1356fdc547bb3c15eda66281
 
 Vue.use(Router)
 
@@ -23,6 +34,7 @@ export default new Router({
       }
     }
   },
+<<<<<<< HEAD
   routes: [
     {
       path: '/',
@@ -73,4 +85,67 @@ export default new Router({
       component: NewDetail
     }
   ]
+=======
+  mode: 'history',
+  routes: [{
+    path: '/',
+    component: Home
+  }, {
+    path: '/projList',
+    component: ProjList
+  }, {
+    path: '/candyRoom',
+    redirect: '/candyRoom/candyList',
+    component: CandyRoom,
+    children: [{
+      path: 'candyList',
+      component: CandyList
+    }, {
+      path: 'candyBuy',
+      component: CandyBuy
+    }, {
+      path: 'candyOrder',
+      component: CandyOrder
+    }, {
+      path: 'candyOrderDetail',
+      component: CandyOrderDetail
+    }, {
+      path: 'candyOrderConfirm',
+      component: CandyOrderConfirm
+    }, {
+      path: 'myCandyOrder',
+      component: MyCandyOrder
+    }]
+  }, {
+    path: '/projDetail/:id',
+    component: ProjDetail
+  }, {
+    path: '/signin',
+    component: Signin
+  }, {
+    path: '/signup',
+    component: Signup
+  }, {
+    path: '/share',
+    component: Share
+  }, {
+    path: '/protocol',
+    component: Protocol
+  }, {
+    path: '/findpwd',
+    component: FindPwd
+  }, {
+    path: '/resetpwd/:mobile',
+    component: ResetPwd
+  }, {
+    path: '/newList',
+    component: NewList
+  }, {
+    path: '/newDetail/:id',
+    component: NewDetail
+  }, {
+    path: '/apply',
+    component: Apply
+  }]
+>>>>>>> 882947b6ced4ba2a1356fdc547bb3c15eda66281
 })

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models as Model;
 use Illuminate\Support\Facades\Cookie;
 use App\Utils\Service;
+use Redis;
 
 class UserController extends Controller
 {
@@ -71,6 +72,8 @@ class UserController extends Controller
         if (!$userData) {
             return $this->error(202);
         }
+        $uid = $userData->id;
+        /*
         $timestamp = time();
         $userSig = md5($userData->id . 'test' . $timestamp);
         $expireTime = time() + 3600 * 24;
@@ -78,6 +81,14 @@ class UserController extends Controller
         setcookie('userId', $userData->id, $expireTime);
         setcookie('timestamp', $timestamp, $expireTime);
         setcookie('userSig', $userSig, $expireTime);
+        */
+        $user = (new Model\User())->getUser($uid);
+        try {
+            \App\Utils\Auth::setLogin($user);            
+        } catch (\Exception $ex) {
+            return $this->error(100);
+        }
+        //var_dump(Cookie::get('token'));exit;
 
         return $this->output([
             'userId' => $userData->id,
@@ -87,12 +98,14 @@ class UserController extends Controller
     }
 
     public function signout (Request $request) {
-
+        /*
         $expireTime = time() - 3600;
         setcookie('userId', '', $expireTime);
         setcookie('account', '', $expireTime);
         setcookie('avatarUrl', '', $expireTime);
         setcookie('userSig', '', $expireTime);
+        */
+        \App\Utils\Auth::setLogout();
 
         return $this->output();
     }

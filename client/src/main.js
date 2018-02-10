@@ -6,12 +6,29 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import common from './common'
+Vue.use(common)
 
 require('es6-promise').polyfill()
 Vue.prototype.$http = axios
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+
+axios.interceptors.response.use(
+  response => {
+    if (response.data['errcode'] === 302) {
+      location.href = '/signin'
+    }
+    return response
+  },
+  error => {
+    if (error.response.status === 302) {
+      location.href = '/signin'
+    }
+    return Promise.reject(error)
+  }
+)
 
 /* eslint-disable no-new */
 new Vue({

@@ -20,6 +20,7 @@ class Controller extends BaseController
         // 通用错误码
         '100' => ['errcode' => 100, 'errmsg' => '参数错误'],
         '101' => ['errcode' => 101, 'errmsg' => '未知错误'],
+        '102' => ['errcode' => 102, 'errmsg' => '无权限'],
         '110' => ['errcode' => 110, 'errmsg' => '文件名称错误'],
         // 用户错误码
         '201' => ['errcode' => 201, 'errmsg' => '用户名已注册'],
@@ -32,6 +33,10 @@ class Controller extends BaseController
         '301' => ['errcode' => 301, 'errmsg' => '项目不存在'],
         '302' => ['errcode' => 302, 'errmsg' => '社交ID不存在'],
         '303' => ['errcode' => 303, 'errmsg' => '媒体ID不存在'],
+        '304' => ['errcode' => 304, 'errmsg' => '糖果盒ID不存在'],
+        '305' => ['errcode' => 305, 'errmsg' => '糖果盒余额不足'],
+        '306' => ['errcode' => 306, 'errmsg' => '订单ID不存在'],
+        '307' => ['errcode' => 307, 'errmsg' => '支付金额与订单金额不符'],
     ];
 
     public function validation(Request $request, Array $rules)
@@ -75,7 +80,7 @@ class Controller extends BaseController
         if (is_object($data)) {
             $data = $data->toArray();
         }
-        if ($data == null) {
+        if ($data === null) {
             return json_encode(self::ERROR[0], JSON_UNESCAPED_UNICODE);
         }
         $result = $this->arrayKeyToCamel($data);
@@ -84,12 +89,13 @@ class Controller extends BaseController
         return json_encode($rtnArr, JSON_UNESCAPED_UNICODE);
     }
 
-    public function error($errcode)
+    public function error($errcode = 101, $errmsg = '')
     {
-        if (array_key_exists($errcode, self::ERROR)) {
-            return json_encode(self::ERROR[$errcode], JSON_UNESCAPED_UNICODE);
+        $err = array_key_exists($errcode, self::ERROR) ? self::ERROR[$errcode] : self::ERROR[101];
+        if ($errmsg) {
+            $err['errmsg'] = $errmsg;
         }
-        return json_encode(self::ERROR[101], JSON_UNESCAPED_UNICODE);
+        return json_encode($err, JSON_UNESCAPED_UNICODE);
     }
 
     public function arrayKeyToCamel (Array $array)
