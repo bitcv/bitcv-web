@@ -25,12 +25,36 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+
+//        $schedule->call(function (){
+//            $this->projReportWeChat();
+//            })->everyMinute();
+//
+//        $schedule->call(function (){
+//            $this->projReportWeibo();
+//        })->everyMinute();
+
         $schedule->call(function () {
             $this->projReportRobot();
         })->everyMinute();
     }
 
     protected function projReportRobot () {
+
+        //如果是特定的 link_url,遍历
+//        $html = file_get_contents("https://mp.weixin.qq.com/profile?src=3&timestamp=1518079945&ver=1&signature=Ns*O1*XgfMswxhIOwwQ0DclOzfJdU7Cc4u3iwvJ8sDDHMRjWFwWQSsFUrqx6Jt9A8*6P1TvujFVDJ-BJQ*eJhw==");
+//        preg_match_all('/msgList =(.*?)seajs/ism',$html,$matches);
+//        $json = $matches[1][0];
+//        $resultList = json_decode($json,true);
+//        foreach ($resultList['list'] as $result) {
+//            $con_url = $result['app_msg_ext_info']['content_url'];
+//            //$con_url = $result['list'][0]['app_msg_ext_info']['content_url'];
+//            $cut_url = explode('&amp', $con_url);
+//            $sub_url = implode('&', $cut_url);
+//
+//            Model\ProjReport::where('id',1)->update(['link_url' => $sub_url]);
+//        }
+
         $projReportList = Model\ProjReport::join('media', 'proj_report.media_id', '=', 'media.id')
             ->where('status', 0)
             ->select('proj_report.id', 'link_url', 'title_reg', 'release_time_reg', 'banner_url_reg', 'content_reg')
@@ -71,6 +95,7 @@ class Kernel extends ConsoleKernel
         }
     }
 
+    
     /**
      * Register the Closure based commands for the application.
      *
@@ -81,3 +106,4 @@ class Kernel extends ConsoleKernel
         require base_path('routes/console.php');
     }
 }
+

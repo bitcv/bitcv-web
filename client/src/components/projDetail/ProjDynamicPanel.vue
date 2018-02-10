@@ -1,81 +1,22 @@
 <template>
-
   <div class="proj-detail-panel">
     <div class="header">
       <span :class="{active: activeIndex === 1}" @click="activeIndex=1">
-        <router-link to="#Info">项目信息</router-link>
+        <router-link to="#Media">媒体报道</router-link>
       </span>
       <span :class="{active: activeIndex === 2}" @click="activeIndex=2">
-        <router-link to="#Team">
-          团队信息
+        <router-link to="#Public">
+          官方公告
         </router-link>
       </span>
       <span :class="{active: activeIndex === 3}" @click="activeIndex=3">
-        <router-link to="#Event">
-          项目发展
+        <router-link to="#Group">
+          社群发布
         </router-link>
       </span>
-      <span :class="{active: activeIndex === 4}" @click="activeIndex=4">
-        <router-link to="#Partner">
-          合作伙伴
-        </router-link>
-      </span>
-      <!-- <span :class="{active: activeIndex === 5}" @click="activeIndex=5">
-        <router-link to="#Media">
-          媒体报道
-        </router-link>
-      </span> -->
     </div>
     <div class="content">
-      <div class="info-area" id="Info">
-        <h3 class="panel-title">项目简介</h3>
-        <div class="image-box" v-if="projDetail.bannerUrl">
-          <img :src="projDetail.bannerUrl" alt="">
-        </div>
-        <div class="abstract">
-          <span>{{ projDetail.abstract }}</span>
-        </div>
-      </div>
-      <div v-if="projDetail.memberList.length" class="team-area" id="Team">
-        <el-carousel :interval="5000" arrow="always" height="390px">
-          <el-carousel-item class="member" v-for="(member, index) in projDetail.memberList" :key="index">
-            <img class="avatar" :src="member.photoUrl" alt="">
-            <span class="name">{{ member.name }}</span>
-            <span class="intro">{{ member.intro }}</span>
-          </el-carousel-item>
-        </el-carousel>
-      </div>
-      <div v-if="projDetail.eventList.length" class="event-area" id="Event">
-        <h3 class="panel-title">项目发展</h3>
-        <proj-time-line :proj-event="projDetail.eventList"></proj-time-line>
-      </div>
-      <div v-if="projDetail.advisorList.length" class="advisor-area" id="Advisor">
-        <h3 class="panel-title center-title">项目顾问</h3>
-        <div class="advisor-box">
-          <ul class="advisor-list">
-            <li class="advisor-item mobile-list-item" v-for="(advisor, index) in projDetail.advisorList" :key="index">
-              <img :src="advisor.photoUrl" alt="">
-              <span class="name">{{ advisor.name }}</span>
-              <div class="intro-hover">
-                <span class="intro">{{ advisor.intro }}</span>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div v-if="projDetail.partnerList.length" class="partner-area" id="Partner">
-        <h3 class="panel-title center-title">合作伙伴</h3>
-        <div class="logo-box">
-          <a :href="partner.homeUrl" target="_blank" v-for="(partner, index) in projDetail.partnerList" :key="index" class="img-container">
-            <img :src="partner.logoUrl" alt="">
-          </a>
-        </div>
-      </div>
-<<<<<<< HEAD
-      <!-- <div class="media-area" id="Media">
-=======
-      <div v-if="projDetail.reportList.length" class="media-area" id="Media">
->>>>>>> 882947b6ced4ba2a1356fdc547bb3c15eda66281
+      <div class="media-area" id="Media">
         <h3 class="center-title panel-title">媒体报道</h3>
         <div class="item-box">
           <a class="item mobile-list-item" :href="report.linkUrl" target="_blank" v-for="(report, index) in projDetail.reportList" :key="index">
@@ -85,11 +26,39 @@
             <span class="content">{{ report.title }}</span>
           </a>
         </div>
-      </div> -->
+      </div>
+      <div class="group-area" id="Public">
+        <h3 class="center-title panel-title">官方公告</h3>
+        <!-- <div>
+          <img :src="projDetail.bannerUrl" alt="">
+        </div> -->
+        <!-- <div class="abstract">
+          <span>{{ projDetail.abstract }}</span>
+        </div> -->
+        <a :href="publicItem.referUrl" target="_blank" v-for="(publicItem, index) in projDetail.publicList" :key="index">
+        <div class = "public-content">
+          <span class = "official">*</span>
+          <span class = "content">{{publicItem.title}}</span>
+          <span class = "pub_time">{{publicItem.createdAt}}</span>
+        </div>
+        </a>
+      </div>
+      <div class = "public-area" id="Group">
+        <h3 class="center-title center-title">社群发布</h3>
+        <a :href="dynamic.referUrl" target="_blank" v-for="(dynamic, index) in projDetail.dynamicList" :key="index">
+        <div class = "group-panel">
+          <img :src="dynamic.logoUrl" alt="">
+          <div class = "content">
+            <span class="content-title">{{dynamic.officialName}}</span>
+            <span class = "content-text">{{dynamic.title}}</span>
+            <span class="content-time">{{dynamic.createdAt}}</span>
+          </div>
+        </div>
+        </a>
+      </div>
     </div>
   </div>
 </template>
-
 <script>
 import ProjTimeLine from '@/components/projDetail/ProjTimeLine'
 export default {
@@ -141,15 +110,15 @@ export default {
     }
     .info-area {
       padding: 20px;
-      .image-box {
+      div {
         margin: 20px 0;
         text-align: center;
         img {
           width: 100%;
         }
-        border-bottom: 0.5px solid #979797;
       }
       .abstract {
+        border-top: 0.5px solid #979797;
         padding-top: 6px;
         font-size: 14px;
         line-height: 28px;
@@ -274,8 +243,122 @@ export default {
         }
       }
     }
+    .public-area {
+    width: 826px;
+    //max-height: 184px;
+    height: 100%;
+    background: rgba(255,255,255,1);
+    .center-title {
+      font-size:20px;
+      padding-top: 30px;
+      width:826px;
+      height:56px;
+      background:rgba(74,74,74,1);
+      font-family:PingFangSC-Semibold;
+      //color:rgba(0,0,0,1);
+      line-height:28px;
+    }
+    .group-panel{
+      height: 100%;
+    img{
+      width: 62px;
+      height: 62px;
+      margin: 40px 10px 30px 40px;
+    }
+    .content{
+      //margin-left: 2px;
+      vertical-align: top;
+      display: inline-flex;
+      justify-content: space-between;
+      flex-direction: column;
+      margin-top: 30px;
+      .content-title{
+        width: 248px;
+        height: 22px;
+        margin-top: 7px;
+        text-align: left;
+        font-size:14px;
+        font-family:PingFangSC-Regular;
+        color:rgba(74,144,226,1);
+        line-height:22px;
+      }
+      .content-text{
+        width: 650px;
+        height: 40px;
+        font-size: 14px;
+        margin-top: 10px;
+        font-family:PingFangSC-Regular;
+        color:rgba(74,74,74,1);
+        line-height: 20px;
+        text-align: left;
+        word-break: break-all;
+        text-overflow: ellipsis;
+        display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
+        -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+        -webkit-line-clamp: 2; /** 显示的行数 **/
+        overflow: hidden;  /** 隐藏超出的内容 **/
+      }
+      .content-time{
+        width: 191px;
+        height: 14px;
+        font-size: 12px;
+        font-family:PingFangSC-Regular;
+        color:rgba(155,155,155,1);
+        line-height: 17px;
+        margin-top: 8px;
+        text-align: left;
+      }
+    }
+    }
+    }
+    .group-area {
+      padding: 40px;
+      //display: flex;
+      //height: 200px;
+      align-items: center;
+      flex-wrap: wrap;
+      h3{
+        white-space: pre-wrap;
+        text-align: center;
+        // width:80px;
+        // height:28px;
+        font-size:20px;
+        font-family:PingFangSC-Semibold;
+        color:rgba(0,0,0,1);
+        line-height:28px;
+      }
+      //justify-content: space-between;
+      .public-content{
+        margin-top: 20px;
+        border-bottom: 0.5px solid #979797;
+        padding-bottom: 4px;
+        .content{
+          margin-left: 5px;
+          font-size:16px;
+          font-family:PingFangSC-Regular;
+          color:rgba(74,74,74,1);
+          line-height:22px;
+          width: 450px;
+          //word-break: break-all;
+          text-overflow: ellipsis;
+          //display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
+          -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+          -webkit-line-clamp: 1; /** 显示的行数 **/
+          overflow: hidden;  /** 隐藏超出的内容 **/
+          }
+        .pub_time{
+          //margin-left: 50px;
+          float: right;
+          font-size:16px;
+          font-family:PingFangSC-Regular;
+          color:rgba(116,116,116,1);
+          line-height:22px;
+        }
+      }
+    }
     .media-area {
       padding: 40px;
+      font-family:PingFangSC-Semibold;
       .item-box {
         width: 100%;
         display: flex;

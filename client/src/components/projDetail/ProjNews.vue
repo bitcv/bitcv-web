@@ -10,7 +10,7 @@
         <el-button class = "news">项目动态</el-button>
         </router-link>
       </div>
-      <proj-detail-panel :proj-detail="projDetail"></proj-detail-panel>
+      <proj-dynamic-panel :proj-detail="projDetail"></proj-dynamic-panel>
     </div>
     <div class="aside-panel">
       <div class="record-panel">
@@ -33,17 +33,17 @@
         <h3 class="center-title panel-title">认领该公司</h3>
         <img src="/static/img/头像扫描@2x.png" alt="">
       </div>
-      <div v-if="projDetail.companyTel || projDetail.companyEmail || projDetail.companyAddr" class="contact-panel">
+      <div class="contact-panel">
         <h3 class="center-title panel-title">公司联系信息</h3>
-        <div v-if="projDetail.companyTel" class="info-row">
+        <div class="info-row">
           <img src="/static/img/tel@2x.png" alt="">
           <span class="text">{{ projDetail.companyTel }}</span>
         </div>
-        <div v-if="projDetail.companyEmail" class="info-row">
+        <div class="info-row">
           <img src="/static/img/email@2x.png" alt="">
           <span class="text">{{ projDetail.companyEmail }}</span>
         </div>
-        <div v-if="projDetail.companyAddr" class="info-row">
+        <div class="info-row">
           <img src="/static/img/addr@2x.png" alt="">
           <span class="text">{{ projDetail.companyAddr }}</span>
         </div>
@@ -54,7 +54,7 @@
 
 <script>
 import ProjInfoPanel from '@/components/projDetail/ProjInfoPanel'
-import ProjDetailPanel from '@/components/projDetail/ProjDetailPanel'
+import ProjDynamicPanel from '@/components/projDetail/ProjDynamicPanel'
 
 export default {
   data () {
@@ -66,14 +66,12 @@ export default {
         logoUrl: '',
         tokenName: '',
         tokenSymbol: '',
-        whitePaperUrl: '',
-        abstract: '',
         tagList: [],
         partnerList: [],
+        whitePaperUrl: '',
+        abstract: '',
         memberList: [],
-        reportList: [],
-        eventList: [],
-        advisorList: [],
+        mediaList: [],
         bannerUrl: '',
         companyTel: '',
         companyAddr: '',
@@ -107,7 +105,7 @@ export default {
   },
   components: {
     ProjInfoPanel,
-    ProjDetailPanel
+    ProjDynamicPanel
   }
 }
 </script>

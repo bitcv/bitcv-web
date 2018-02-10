@@ -13,12 +13,16 @@ import FindPwd from '@/components/sign/FindPwd'
 import ResetPwd from '@/components/sign/ResetPwd'
 import NewList from '@/components/news/NewList'
 import NewDetail from '@/components/news/NewDetail'
+<<<<<<< HEAD
+import ProjNews from '@/components/projDetail/projNews'
+=======
 import CandyBuy from '@/components/candyRoom/CandyBuy'
 import CandyOrder from '@/components/candyRoom/CandyOrder'
 import CandyOrderConfirm from '@/components/candyRoom/CandyOrderConfirm'
 import CandyOrderDetail from '@/components/candyRoom/CandyOrderDetail'
 import MyCandyOrder from '@/components/candyRoom/MyCandyOrder'
 import Apply from '@/components/apply/Apply'
+>>>>>>> 882947b6ced4ba2a1356fdc547bb3c15eda66281
 
 Vue.use(Router)
 
@@ -30,6 +34,58 @@ export default new Router({
       }
     }
   },
+<<<<<<< HEAD
+  routes: [
+    {
+      path: '/',
+      component: Home
+    },
+    {
+      path: '/projList',
+      component: ProjList
+    },
+    {
+      path: '/projDetail/:id',
+      component: ProjDetail
+    },
+    {
+      path: '/projNews/:id',
+      component: ProjNews
+    },
+    {
+      path: '/signin',
+      component: Signin
+    },
+    {
+      path: '/signup',
+      component: Signup
+    },
+    {
+      path: '/share',
+      component: Share
+    },
+    {
+      path: '/protocol',
+      component: Protocol
+    },
+    {
+      path: '/findpwd',
+      component: FindPwd
+    },
+    {
+      path: '/resetpwd/:mobile',
+      component: ResetPwd
+    },
+    {
+      path: '/newList',
+      component: NewList
+    },
+    {
+      path: '/newDetail/:id',
+      component: NewDetail
+    }
+  ]
+=======
   mode: 'history',
   routes: [{
     path: '/',
@@ -91,4 +147,5 @@ export default new Router({
     path: '/apply',
     component: Apply
   }]
+>>>>>>> 882947b6ced4ba2a1356fdc547bb3c15eda66281
 })
