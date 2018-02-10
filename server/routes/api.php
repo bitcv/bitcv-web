@@ -21,8 +21,14 @@ Route::any('getProjTopList', 'ProjectController@getProjTopList');
 Route::any('getProjDetail', 'ProjectController@getProjDetail');
 Route::any('getProjTagList', 'ProjectController@getProjTagList');
 
-Route::any('adminSignin', 'AdminController@signin');
-Route::any('adminSignout', 'AdminController@signout');
+//Route::any('adminSignin', 'AdminController@signin');
+//Route::any('adminSignout', 'AdminController@signout');
+//min program api
+Route::any('getproject/{id?}', 'ProjectController@getProInfo');
+Route::any('getplist/{p?}{chid?}','ProjectController@getPList');
+
+Route::any('getNewsList','NewsController@getNewsList');
+Route::any('getNewsDetail/{id?}','NewsController@getNewsDetail');
 
 //获取自己的登录信息
 Route::post('getUser', 'AdminController@getUser');
@@ -32,14 +38,31 @@ Route::group(['middleware' => 'checkLogin'], function() {
     Route::post('apply', 'AdminController@apply');
 });
 
-//管理员接口
+//超级管理员接口
 Route::group(['middleware' => 'checkAdmin'], function () {
-
     Route::any('addProject', 'AdminController@addProject');
+    Route::any('delProject', 'AdminController@delProject');
+    
+    Route::any('addMedia', 'AdminController@addMedia');
+    Route::any('updMedia', 'AdminController@updMedia');
+    Route::any('delMedia', 'AdminController@delMedia');
+    Route::any('updMedia', 'AdminController@updMedia');
+
+    Route::any('addSocial', 'AdminController@addSocial');
+    Route::any('updSocial', 'AdminController@updSocial');
+    Route::any('delSocial', 'AdminController@delSocial');
+    Route::any('updSocial', 'AdminController@updSocial');
+});
+
+//项目管理员只能操作自己的projId
+Route::group(['middleware' => 'checkProj'], function () {
+
+    Route::any('getMediaList', 'AdminController@getMediaList');
+    Route::any('getSocialList', 'AdminController@getSocialList');
+    
     Route::any('getProjBasicInfo', 'AdminController@getProjBasicInfo');
     Route::any('getProjBasicList', 'AdminController@getProjBasicList');
     Route::any('updProjBasicInfo', 'AdminController@updProjBasicInfo');
-    Route::any('delProject', 'AdminController@delProject');
 
     Route::any('getProjMemberList', 'AdminController@getProjMemberList');
     Route::any('addProjMember', 'AdminController@addProjMember');
@@ -71,22 +94,5 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('delProjReport', 'AdminController@delProjReport');
     Route::any('updProjReport', 'AdminController@updProjReport');
 
-    Route::any('getMediaList', 'AdminController@getMediaList');
-    Route::any('addMedia', 'AdminController@addMedia');
-    Route::any('updMedia', 'AdminController@updMedia');
-    Route::any('delMedia', 'AdminController@delMedia');
-    Route::any('updMedia', 'AdminController@updMedia');
-
-    Route::any('getSocialList', 'AdminController@getSocialList');
-    Route::any('addSocial', 'AdminController@addSocial');
-    Route::any('updSocial', 'AdminController@updSocial');
-    Route::any('delSocial', 'AdminController@delSocial');
-    Route::any('updSocial', 'AdminController@updSocial');
 });
 
-//min program api
-Route::any('getproject/{id?}', 'ProjectController@getProInfo');
-Route::any('getplist/{p?}{chid?}','ProjectController@getPList');
-
-Route::any('getNewsList','NewsController@getNewsList');
-Route::any('getNewsDetail/{id?}','NewsController@getNewsDetail');

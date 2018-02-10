@@ -29,7 +29,7 @@ class CheckAdmin
         if (! Auth::$uid) {
             return response()->json(['errcode' => 302]);
         }
-        if (!Auth::$user['is_sys'] && !Auth::$user['proj_id']) {
+        if (!Auth::$user['is_sys']) {
             return response()->json(['errcode' => 302]);
         }
 
