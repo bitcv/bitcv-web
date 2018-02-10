@@ -9,6 +9,11 @@ use App\Utils\BaseUtil;
 
 class AdminController extends Controller
 {
+
+    public function getUser() {
+        return $this->output(\App\Utils\Auth::$user);
+    }
+
     public function addDepositBox (Request $request) {
 
         $params = $this->validation($request, [
@@ -98,7 +103,7 @@ class AdminController extends Controller
         $passwd = md5($passwd);
         $adminData = Model\Admin::where([['account', $account], ['passwd', $passwd]])->first();
         if (!$adminData) {
-            $this->error(202);
+            return $this->error(202);
         }
 
         $timestamp = time();
@@ -295,6 +300,26 @@ class AdminController extends Controller
             'dataCount' => $dataCount,
             'dataList' => $projList
         ]);
+    }
+
+    //申请项目创建
+    public function apply(Request $request) {
+        $uid = \App\Utils\Auth::$uid;
+        $adminproj = Model\Admin::where('id', $uid)->first();
+        if ($adminproj) {
+            return $this->error(100, '没人只能创建并管理一个项目');
+        }
+        $data = $this->validation($request, [
+            'name_cn' => 'required|string',
+            'name_en' => 'required|string',
+        ]);
+        if (Model\Project::where('name_cn', $data['name_cn'])->first()) {
+            return $this->error(100);
+        } else {
+            $proj = Model\Project::create($data);
+            Model\Admin::insert(['id'=>$uid, 'proj_id'=>$proj->id]);
+            return $this->output(['projId' => $proj->id]);
+        }
     }
 
     public function addProject (Request $request) {

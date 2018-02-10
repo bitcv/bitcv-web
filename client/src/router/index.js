@@ -18,6 +18,7 @@ import CandyOrder from '@/components/candyRoom/CandyOrder'
 import CandyOrderConfirm from '@/components/candyRoom/CandyOrderConfirm'
 import CandyOrderDetail from '@/components/candyRoom/CandyOrderDetail'
 import MyCandyOrder from '@/components/candyRoom/MyCandyOrder'
+import Apply from '@/components/apply/Apply'
 
 Vue.use(Router)
 
@@ -29,6 +30,7 @@ export default new Router({
       }
     }
   },
+  mode: 'history',
   routes: [{
     path: '/',
     component: Home
@@ -85,5 +87,8 @@ export default new Router({
   }, {
     path: '/newDetail/:id',
     component: NewDetail
+  }, {
+    path: '/apply',
+    component: Apply
   }]
 })

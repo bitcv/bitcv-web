@@ -8,28 +8,32 @@ import AddProject from '@/components/projList/addProject/AddProject'
 import EditProject from '@/components/projList/editProject/EditProject'
 import Signin from '@/components/signin/Signin'
 import Home from '@/components/home/Home'
+import Setting from '@/components/setting/Setting'
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [{
-    path: '/',
-    redirect: '/project',
+    path: '/admin',
     component: Home,
     children: [{
-      path: '/project',
+      path: '/admin/project',
       component: ProjList
     }, {
-      path: '/social',
+      path: '/admin/social',
       component: Social
     }, {
-      path: '/media',
+      path: '/admin/media',
       component: Media
     }, {
-      path: '/addProject',
+      path: '/admin/setting',
+      component: Setting
+    }, {
+      path: '/admin/addProject',
       component: AddProject
     }, {
-      path: '/editProject/:id',
+      path: '/admin/editProject/:id',
       component: EditProject
     }]
   }, {
