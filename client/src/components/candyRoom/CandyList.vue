@@ -24,20 +24,20 @@
             <th>剩余额度</th>
             <th></th>
           </tr>
-          <tr class="table-row" v-for="candyBox in candyBoxList" :key="candyBox.id">
-            <td>{{ candyBox.interest }}</td>
-            <td>{{ candyBox.lockTime }}</td>
+          <tr class="table-row" v-for="depositBox in depositBoxList" :key="depositBox.id">
+            <td>{{ depositBox.interestRate * 10000 }}</td>
+            <td>{{ depositBox.lockTime }}个月</td>
             <td>
-              <img :src="candyBox.projData.logoUrl" alt="">
+              <img :src="depositBox.logoUrl" alt="">
             </td>
             <td>
               <div class="info-box">
-                <span class="title">{{ candyBox.projData.tokenName }}</span>
-                <span class="text">{{ candyBox.projData.tokenSymbol }}</span>
+                <span class="title">{{ depositBox.tokenName }}</span>
+                <span class="text">{{ depositBox.tokenSymbol }}</span>
               </div>
             </td>
-            <td>{{ candyBox.minAmount }}</td>
-            <td>{{ candyBox.remainAmount }}</td>
+            <td>{{ depositBox.minAmount }}</td>
+            <td>{{ depositBox.remainAmount }}</td>
             <td>
               <div>
                 <span @click="toCandyBuy">抢糖果</span>
@@ -54,21 +54,20 @@
 export default {
   data () {
     return {
-      candyBoxList: [{
-        id: 1,
-        interest: '3000枚',
-        lockTime: '3个月',
-        projData: {
-          logoUrl: '/static/logo/bcv.png',
-          tokenName: 'bitCV',
-          tokenSymbol: 'BCV'
-        },
-        minAmount: '3000',
-        remainAmount: '5000'
-      }]
+      depositBoxList: [],
+      inputLockTime: 3
     }
   },
   mounted () {
+    this.$http.post('/api/getDepositBoxList', {
+      inputLockTime: this.inputLockTime,
+      pageno: 1,
+      perpage: 10
+    }).then((res) => {
+      if (res.data.errcode === 0) {
+        this.depositBoxList = res.data.data.dataList
+      }
+    })
   },
   methods: {
     toCandyBuy () {
