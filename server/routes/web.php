@@ -11,9 +11,18 @@
 |
 */
 
-Route::get('/', function () {
+Route::group(['prefix'=>'admin'], function() {
+    Route::pattern('path', '.+');
+    Route::any('{path}',function($path){ 
+        return view('admin');
+    });
+});
+
+Route::pattern('path', '.+');
+Route::any('{path}',function($path) {
     return view('index');
 });
-Route::get('/admin', function () {
-    return view('admin');
+
+Route::get('/', function() {
+    return view('index');
 });

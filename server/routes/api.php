@@ -35,6 +35,15 @@ Route::any('getProjDepositBoxList', 'AdminController@getProjDepositBoxList');
 Route::any('adminSignin', 'AdminController@signin');
 Route::any('adminSignout', 'AdminController@signout');
 
+//获取自己的登录信息
+Route::post('getUser', 'AdminController@getUser');
+
+//个人登录后的接口
+Route::group(['middleware' => 'checkLogin'], function() {
+    Route::post('apply', 'AdminController@apply');
+});
+
+//管理员接口
 Route::group(['middleware' => 'checkAdmin'], function () {
 
     Route::any('addProject', 'AdminController@addProject');

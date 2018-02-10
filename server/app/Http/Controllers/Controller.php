@@ -80,7 +80,7 @@ class Controller extends BaseController
         if (is_object($data)) {
             $data = $data->toArray();
         }
-        if ($data == null) {
+        if ($data === null) {
             return json_encode(self::ERROR[0], JSON_UNESCAPED_UNICODE);
         }
         $result = $this->arrayKeyToCamel($data);
@@ -89,12 +89,13 @@ class Controller extends BaseController
         return json_encode($rtnArr, JSON_UNESCAPED_UNICODE);
     }
 
-    public function error($errcode = 101)
+    public function error($errcode = 101, $errmsg = '')
     {
-        if (array_key_exists($errcode, self::ERROR)) {
-            return json_encode(self::ERROR[$errcode], JSON_UNESCAPED_UNICODE);
+        $err = array_key_exists($errcode, self::ERROR) ? self::ERROR[$errcode] : self::ERROR[101];
+        if ($errmsg) {
+            $err['errmsg'] = $errmsg;
         }
-        return json_encode(self::ERROR[101], JSON_UNESCAPED_UNICODE);
+        return json_encode($err, JSON_UNESCAPED_UNICODE);
     }
 
     public function arrayKeyToCamel (Array $array)

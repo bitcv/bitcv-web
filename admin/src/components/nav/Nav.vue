@@ -15,19 +15,56 @@
 export default {
   data () {
     return {
-      itemList: [{
-        icon: 'el-icon-menu',
-        url: '#/project',
-        text: '项目管理'
-      }, {
-        icon: 'el-icon-menu',
-        url: '#/social',
-        text: '社群管理'
-      }, {
-        icon: 'el-icon-menu',
-        url: '#/media',
-        text: '媒体管理'
-      }]
+      itemList: []
+    }
+  },
+  mounted () {
+    this.updateData()
+  },
+  methods: {
+    updateData () {
+      this.$http.post('/api/getUser', {
+      }).then((res) => {
+        var resData = res.data
+        if (resData.errcode === 0) {
+          var user = resData.data
+          // 超级管理员
+          if (user['isSys'] === 1) {
+            this.$router.push('/admin/project')
+            this.itemList = [{
+              icon: 'el-icon-menu',
+              url: '/admin/project',
+              text: '项目管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/social',
+              text: '社群管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/media',
+              text: '媒体管理'
+            }]
+          // 项目管理员
+          } else if (user['projId'] > 0) {
+            this.$router.push('/admin/editProject/' + user['projId'])
+            this.itemList = [{
+              icon: 'el-icon-menu',
+              url: '/admin/editProject/' + user['projId'],
+              text: '项目管理'
+            }]
+          // 个人
+          } else {
+            this.$router.push('/admin/setting')
+            this.itemList = [{
+              icon: 'el-icon-menu',
+              url: '/admin/setting',
+              text: '个人中心'
+            }]
+          }
+        } else {
+          this.$router.push('/signin')
+        }
+      })
     }
   }
 }

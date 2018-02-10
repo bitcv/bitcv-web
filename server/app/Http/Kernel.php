@@ -35,9 +35,15 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+
+            \App\Http\Middleware\AutoLogin::class,
         ],
 
         'api' => [
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+
+            \App\Http\Middleware\AutoLogin::class,
+            
             'throttle:60,1',
             'bindings',
         ],

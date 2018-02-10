@@ -24,12 +24,14 @@ export default {
   },
   methods: {
     signin () {
-      this.$http.post('/api/adminSignin', {
-        account: this.inputAccount,
+      this.$http.post('/api/signin', {
+        mobile: this.inputAccount,
         passwd: this.inputPasswd
       }).then((res) => {
         if (res.data.errcode === 0) {
-          this.$router.push('/project')
+          this.$router.push('/admin')
+        } else {
+          alert(res.data.errmsg)
         }
       })
     }
