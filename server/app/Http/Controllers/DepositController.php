@@ -34,7 +34,7 @@ class DepositController extends Controller
 
         $dataCount = $depositBoxModel->count();
         $offset = $perpage * ($pageno - 1);
-        $dataList = $depositBoxModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.logo_url', 'deposit_box.id', 'deposit_box.min_amount', 'deposit_box.lock_time', 'deposit_box.remain_amount', 'deposit_box.interest_rate')
+        $dataList = $depositBoxModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.logo_url', 'deposit_box.id', 'deposit_box.min_amount', 'deposit_box.lock_time', 'deposit_box.remain_amount', 'deposit_box.interest_rate', 'deposit_box.to_addr')
             ->offset($offset)->limit($perpage)->get()->toArray();
 
         return $this->output([
@@ -48,7 +48,7 @@ class DepositController extends Controller
         // 获取请求参数
         $params = $this->validation($request, [
             'depositBoxId' => 'required|numeric',
-            'orderAmount' => 'required|numeric',
+            'orderAmount' => 'required|string',
             'fromAddr' => 'required|string',
         ]);
         if ($params === false) {

@@ -31,11 +31,12 @@
         </div>
         <div class="info-row">
           <span class="title">接收地址：</span>
-          <span class="content">0x7dfffb38b871fda8a820378d6531a8267cc414a5</span>
+          <!--<span class="content">0x7dfffb38b871fda8a820378d6531a8267cc414a5</span>-->
+          <span class="content">{{ depositBoxData.toAddr }}</span>
         </div>
         <div class="info-row">
           <span class="title">您的地址：</span>
-          <span class="content">0x32f979010a5f54cccfb28a4b13769c6b8749af2e</span>
+          <span class="content">{{ depositBoxData.fromAddr }}</span>
         </div>
         <div class="status-row">
           <span class="title">订单状态：</span>
@@ -59,11 +60,15 @@
 <script>
 export default {
   data () {
-    return {}
+    return {
+      depositBoxData: {}
+    }
+  },
+  mounted () {
+    this.depositBoxData = this.$route.query
   },
   methods: {
     toOrderConfirm () {
-      console.log('click')
       this.$router.push('/candyRoom/candyOrderConfirm')
     }
   }

@@ -7,27 +7,27 @@
     </div>
     <div class="title-box">
       <span class="title">剩余额度</span>
-      <span class="text">9000000.00</span>
+      <span class="text">{{ depositBoxData.remainAmount }}</span>
     </div>
     <div class="content-area">
       <div class="left-area">
         <div class="row-box">
           <span class="title">项目：</span>
           <div class="content-box">
-            <img src="/static/logo/bcv.png" alt="">
+            <img :src="depositBoxData.logoUrl" alt="">
             <div class="info-box">
-              <span class="title">BCV</span>
-              <span class="text">Bitcv</span>
+              <span class="title">{{ depositBoxData.tokenSymbol }}</span>
+              <span class="text">{{ depositBoxData.tokenName }}</span>
             </div>
           </div>
         </div>
         <div class="row-box">
           <span class="title">锁仓期：</span>
-          <span class="content">180天</span>
+          <span class="content">{{ depositBoxData.lockTime }}个月</span>
         </div>
         <div class="row-box">
           <span class="title">起始额度：</span>
-          <span class="content">30000</span>
+          <span class="content">{{ depositBoxData.minAmount }}</span>
         </div>
       </div>
       <div class="right-area">
@@ -46,7 +46,7 @@
         </div>
         <div class="bottom-row">
           <input v-model="inputAmount">
-          <span class="buy-btn" @click="toCandyOrder">抢糖果</span>
+          <span class="buy-btn" @click="toDepositOrder">抢糖果</span>
         </div>
       </div>
     </div>
@@ -57,17 +57,25 @@
 export default {
   data () {
     return {
-      inputAmount: 30000
+      inputAmount: 30000,
+      depositBoxData: {}
     }
+  },
+  mounted () {
+    this.depositBoxData = this.$route.query
   },
   computed: {
     outputInterest () {
-      return this.inputAmount * 0.1
+      return this.inputAmount * this.depositBoxData.interestRate
     }
   },
   methods: {
-    toCandyOrder () {
-      this.$router.push('/candyRoom/candyOrder')
+    toDepositOrder () {
+      this.depositBoxData.orderAmount = this.inputAmount
+      this.$router.push({
+        path: '/candyRoom/candyOrder',
+        query: this.depositBoxData
+      })
     }
   }
 }

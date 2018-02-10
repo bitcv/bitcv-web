@@ -46,7 +46,8 @@ export default new Router({
       component: CandyList
     }, {
       path: 'candyBuy',
-      component: CandyBuy
+      component: CandyBuy,
+      props: true
     }, {
       path: 'candyOrder',
       component: CandyOrder

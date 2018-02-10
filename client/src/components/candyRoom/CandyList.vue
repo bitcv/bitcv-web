@@ -25,7 +25,7 @@
             <th></th>
           </tr>
           <tr class="table-row" v-for="depositBox in depositBoxList" :key="depositBox.id">
-            <td>{{ depositBox.interestRate * 10000 }}</td>
+            <td>{{ depositBox.interestRate * 10000 }}枚</td>
             <td>{{ depositBox.lockTime }}个月</td>
             <td>
               <img :src="depositBox.logoUrl" alt="">
@@ -40,7 +40,7 @@
             <td>{{ depositBox.remainAmount }}</td>
             <td>
               <div>
-                <span @click="toCandyBuy">抢糖果</span>
+                <span @click="toDeposit(depositBox)">抢糖果</span>
               </div>
             </td>
           </tr>
@@ -70,8 +70,11 @@ export default {
     })
   },
   methods: {
-    toCandyBuy () {
-      this.$router.push('/candyRoom/candyBuy')
+    toDeposit (depositBox) {
+      this.$router.push({
+        path: '/candyRoom/candyBuy',
+        query: depositBox
+      })
     }
   }
 }
