@@ -7,28 +7,29 @@
     </div>
     <div class="info-area">
       <span>抢购详情</span>
-      <span>需充值30000枚</span>
-      <span>180天后获得糖果<em>3000</em>枚</span>
+      <span>需充值{{ depositBoxData.orderAmount }}枚</span>
+      <span>{{ depositBoxData.lockTime }}个月后获得糖果<em>{{ interestAmount }}</em>枚</span>
     </div>
     <div class="content-area">
       <div class="form-row">
         <span class="step-index">1</span>
         <div class="input-box">
           <span class="title">接收钱包地址</span>
-          <span class="text">0x7dfffb38b871fda8a820378d6531a8267cc414a5</span>
+          <!--<span class="text">0x7dfffb38b871fda8a820378d6531a8267cc414a5</span>-->
+          <span class="text">{{ depositBoxData.toAddr }}</span>
         </div>
       </div>
       <div class="form-row">
         <span class="step-index">2</span>
         <div class="input-box">
           <span class="title">支付钱包地址</span>
-          <input>
+          <input v-model="inputFromAddr">
         </div>
       </div>
       <div class="form-row">
         <span class="step-index">3</span>
         <div class="btn-box">
-          <span @click="toOrderDetail">提交订单</span>
+          <span @click="submitOrder">提交订单</span>
         </div>
       </div>
     </div>
@@ -38,11 +39,40 @@
 <script>
 export default {
   data () {
-    return {}
+    return {
+      inputFromAddr: '',
+      depositBoxData: {}
+    }
+  },
+  mounted () {
+    this.depositBoxData = this.$route.query
+  },
+  computed: {
+    interestAmount () {
+      return this.depositBoxData.interestRate * this.depositBoxData.orderAmount
+    }
   },
   methods: {
-    toOrderDetail () {
-      this.$router.push('/candyRoom/candyOrderDetail')
+    submitOrder () {
+      if (!this.inputFromAddr) {
+        console.log(this.depositBoxData.orderAmount)
+        return alert('请输入正确的支付钱包地址')
+      }
+      this.$http.post('/api/addDepositOrder', {
+        'depositBoxId': this.depositBoxData.id,
+        'orderAmount': this.depositBoxData.orderAmount,
+        'fromAddr': this.inputFromAddr
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          var orderData = res.data.data
+          this.depositBoxData.depositOrderId = orderData.id
+          this.depositBoxData.fromAddr = orderData.fromAddr
+          this.$router.push({
+            path: '/candyRoom/candyOrderDetail',
+            query: this.depositBoxData
+          })
+        }
+      })
     }
   }
 }

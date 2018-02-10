@@ -71,11 +71,7 @@
           </a>
         </div>
       </div>
-<<<<<<< HEAD
-      <!-- <div class="media-area" id="Media">
-=======
       <div v-if="projDetail.reportList.length" class="media-area" id="Media">
->>>>>>> 882947b6ced4ba2a1356fdc547bb3c15eda66281
         <h3 class="center-title panel-title">媒体报道</h3>
         <div class="item-box">
           <a class="item mobile-list-item" :href="report.linkUrl" target="_blank" v-for="(report, index) in projDetail.reportList" :key="index">
@@ -85,7 +81,7 @@
             <span class="content">{{ report.title }}</span>
           </a>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>

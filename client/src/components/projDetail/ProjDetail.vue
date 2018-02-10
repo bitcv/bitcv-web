@@ -3,14 +3,19 @@
     <div class="main-panel">
       <proj-info-panel :proj-detail="projDetail"></proj-info-panel>
       <div class = "banner">
-        <router-link :to="{ path: '/projDetail/' + projDetail.id}">
-        <el-button class = "detail">项目信息</el-button>
+        <router-link class="detail-box" :class="{ active: current === 1 }" :to="{ path: '/projDetail/info/' + projDetail.id}">
+          <img :src="'/static/img/project' + (current === 1 ? '.png' : '-default.png')" alt="">
+          <span class="detail">项目信息</span>
+          <!--<el-button class = "detail">项目信息</el-button>-->
         </router-link>
-        <router-link :to="{ path: '/projNews/' + projDetail.id}">
-        <el-button class = "news">项目动态</el-button>
+        <router-link class="news-box" :class="{ active: current === 2 }" :to="{ path: '/projDetail/dynamic/' + projDetail.id}">
+          <img :src="'/static/img/dynamic' + (current === 2 ? '.png' : '-default.png')" alt="">
+          <span class="news">项目动态</span>
+          <!--<el-button class = "news">项目动态</el-button>-->
         </router-link>
       </div>
-      <proj-detail-panel :proj-detail="projDetail"></proj-detail-panel>
+      <!--<proj-detail-panel :proj-detail="projDetail"></proj-detail-panel>-->
+      <router-view :proj-detail="projDetail"></router-view>
     </div>
     <div class="aside-panel">
       <div class="record-panel">
@@ -59,6 +64,7 @@ import ProjDetailPanel from '@/components/projDetail/ProjDetailPanel'
 export default {
   data () {
     return {
+      current: 1,
       showShare: false,
       projDetail: {
         nameCn: '',
@@ -105,6 +111,16 @@ export default {
       projId: projId
     })
   },
+  watch: {
+    $route () {
+      var path = this.$route.path
+      if (path.indexOf('dynamic') !== -1) {
+        this.current = 2
+      } else {
+        this.current = 1
+      }
+    }
+  },
   components: {
     ProjInfoPanel,
     ProjDetailPanel
@@ -125,14 +141,36 @@ export default {
       margin-bottom: 24px;
     }
     .banner{
-      display: inline-block;
+      background-color: #FFF;
+      width: 100%;
+      height: 40px;
       margin-top: -11px;
       margin-bottom: 10px;
-      .detail{
-        width: 410px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      color: #9B9B9B;
+      font-size: 16px;
+      text-align: center;
+      .detail-box {
+        width: 50%;
+        height: 22px;
+        display: inline-block;
+        box-sizing: border-box;
+        border-right: 1px solid #9B9B9B;
+        &.active {
+          color: #FF6276;
+        }
+        img {
+          position: relative;
+          top: 3px;
+        }
       }
-      .news{
-        width: 410px;
+      .news-box {
+        width: 50%;
+        &.active {
+          color: #FF6276;
+        }
       }
     }
   }

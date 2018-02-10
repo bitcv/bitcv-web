@@ -19,6 +19,8 @@ import CandyOrderConfirm from '@/components/candyRoom/CandyOrderConfirm'
 import CandyOrderDetail from '@/components/candyRoom/CandyOrderDetail'
 import MyCandyOrder from '@/components/candyRoom/MyCandyOrder'
 import Apply from '@/components/apply/Apply'
+import ProjDetailPanel from '@/components/projDetail/ProjDetailPanel'
+import ProjDynamicPanel from '@/components/projDetail/ProjDynamicPanel'
 
 Vue.use(Router)
 
@@ -46,7 +48,8 @@ export default new Router({
       component: CandyList
     }, {
       path: 'candyBuy',
-      component: CandyBuy
+      component: CandyBuy,
+      props: true
     }, {
       path: 'candyOrder',
       component: CandyOrder
@@ -62,7 +65,14 @@ export default new Router({
     }]
   }, {
     path: '/projDetail/:id',
-    component: ProjDetail
+    component: ProjDetail,
+    children: [{
+      path: '/projDetail/info/:id',
+      component: ProjDetailPanel
+    }, {
+      path: '/projDetail/dynamic/:id',
+      component: ProjDynamicPanel
+    }]
   }, {
     path: '/signin',
     component: Signin

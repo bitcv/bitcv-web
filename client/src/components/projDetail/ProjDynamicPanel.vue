@@ -29,32 +29,59 @@
       </div>
       <div class="group-area" id="Public">
         <h3 class="center-title panel-title">官方公告</h3>
+        <ul class="notice-list">
+          <li v-for="(notice, index) in noticeList" :key="index">
+            <a :href="notice.url" target="_blank">
+              <div class="title">
+                <span class="dot"> </span>
+                <span>{{ notice.title }}</span>
+              </div>
+              <span class="date">{{ notice.date }}</span>
+            </a>
+          </li>
+        </ul>
         <!-- <div>
           <img :src="projDetail.bannerUrl" alt="">
-        </div> -->
-        <!-- <div class="abstract">
-          <span>{{ projDetail.abstract }}</span>
-        </div> -->
-        <a :href="publicItem.referUrl" target="_blank" v-for="(publicItem, index) in projDetail.publicList" :key="index">
-        <div class = "public-content">
-          <span class = "official">*</span>
-          <span class = "content">{{publicItem.title}}</span>
-          <span class = "pub_time">{{publicItem.createdAt}}</span>
-        </div>
-        </a>
+          </div> -->
+          <!-- <div class="abstract">
+            <span>{{ projDetail.abstract }}</span>
+            </div> -->
+            <!--<a :href="publicItem.referUrl" target="_blank" v-for="(publicItem, index) in projDetail.publicList" :key="index">-->
+            <!--<div class = "public-content">-->
+            <!--<span class = "official">*</span>-->
+            <!--<span class = "content">{{publicItem.title}}</span>-->
+            <!--<span class = "pub_time">{{publicItem.createdAt}}</span>-->
+            <!--</div>-->
+            <!--</a>-->
       </div>
       <div class = "public-area" id="Group">
-        <h3 class="center-title center-title">社群发布</h3>
+        <h3 class="center-title">社群发布</h3>
         <a :href="dynamic.referUrl" target="_blank" v-for="(dynamic, index) in projDetail.dynamicList" :key="index">
-        <div class = "group-panel">
-          <img :src="dynamic.logoUrl" alt="">
-          <div class = "content">
-            <span class="content-title">{{dynamic.officialName}}</span>
-            <span class = "content-text">{{dynamic.title}}</span>
-            <span class="content-time">{{dynamic.createdAt}}</span>
+          <div class = "group-panel">
+            <img :src="dynamic.logoUrl" alt="">
+            <div class = "content">
+              <span class="content-title">{{dynamic.officialName}}</span>
+              <span class = "content-text">{{dynamic.title}}</span>
+              <span class="content-time">{{dynamic.createdAt}}</span>
+            </div>
           </div>
-        </div>
         </a>
+        <ul class="social-list">
+          <li v-for="(social, index) in socialList" :key="index">
+            <img :src="social.logoUrl" alt="">
+            <div class="content-box">
+              <div class="title-box">
+                <span class="content-title">{{ social.title }}</span>
+                <a class="content-source"><i class="fab fa-facebook"></i></a>
+              </div>
+              <span class="content-text">{{ social.text }}</span>
+              <div class="content-footer">
+                <span class="content-time">{{ social.time }}</span>
+                <a :href="social.linkUrl">查看原文</a>
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -67,7 +94,29 @@ export default {
   },
   data () {
     return {
-      activeIndex: 1
+      activeIndex: 1,
+      noticeList: [{
+        title: '有利论坛升级改造',
+        url: 'http://www.baidu.com',
+        date: '2018-10-13'
+      }, {
+        title: '有利论坛升级改造',
+        url: 'http://www.baidu.com',
+        date: '2018-10-13'
+      }],
+      socialList: [{
+        title: '张默默',
+        text: '的飞洒干啥跟帅哥撒旦个撒个是的个是多个砂锅大撒个是爱国撒个撒个是爱国按时高大上多个暗示过按时个啊三个大个啊三个大撒个撒个萨顶顶噶啥干撒个',
+        logoUrl: '/static/img/logo.png',
+        time: '2018-10-13',
+        source: 'facebook'
+      }, {
+        title: '张默默',
+        text: '的飞洒干啥跟帅哥撒旦个撒个是的个是多个砂锅大撒个是爱国撒个撒个是爱国按时高大上多个暗示过按时个啊三个大个啊三个大撒个撒个萨顶顶噶啥干撒个',
+        logoUrl: '/static/img/logo.png',
+        time: '2018-10-13',
+        source: 'facebook'
+      }]
     }
   },
   components: {
@@ -174,44 +223,44 @@ export default {
             width: 168px;
             /*height: 222px;
             display: flex;*/
-            display:inline-block;
-            text-align:center;
-            background-color: #FFF;
-            position: relative;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            margin: 5px;
-            img {
-              width: 100%;
-              /*height: 73px;*/
-              border-radius: 50%;
-            }
-            .name {
-              font-size: 14px;
-              line-height: 30px;
-              border-top: 2px solid #5AA6FF;
-              color: #000;
-              margin-top: 22px;
-            }
-            .intro-hover {
-              position: absolute;
-              top: 0;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              font-size: 14px;
-              line-height: 20px;
-              color: rgba(256, 256, 256, 0);
-              background-color: rgba(256, 256, 256, 0);
-              &:hover {
-                color: #4A4A4A;
-                background-color: rgba(256, 256, 256, 0.9);
-              }
-            }
+display:inline-block;
+text-align:center;
+background-color: #FFF;
+position: relative;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+margin: 5px;
+img {
+  width: 100%;
+  /*height: 73px;*/
+  border-radius: 50%;
+}
+.name {
+  font-size: 14px;
+  line-height: 30px;
+  border-top: 2px solid #5AA6FF;
+  color: #000;
+  margin-top: 22px;
+}
+.intro-hover {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(256, 256, 256, 0);
+  background-color: rgba(256, 256, 256, 0);
+  &:hover {
+    color: #4A4A4A;
+    background-color: rgba(256, 256, 256, 0.9);
+  }
+}
           }
         }
       }
@@ -244,72 +293,124 @@ export default {
       }
     }
     .public-area {
-    width: 826px;
-    //max-height: 184px;
-    height: 100%;
-    background: rgba(255,255,255,1);
-    .center-title {
-      font-size:20px;
-      padding-top: 30px;
-      width:826px;
-      height:56px;
-      background:rgba(74,74,74,1);
-      font-family:PingFangSC-Semibold;
-      //color:rgba(0,0,0,1);
-      line-height:28px;
-    }
-    .group-panel{
+      width: 100%;
+      //max-height: 184px;
       height: 100%;
-    img{
-      width: 62px;
-      height: 62px;
-      margin: 40px 10px 30px 40px;
-    }
-    .content{
-      //margin-left: 2px;
-      vertical-align: top;
-      display: inline-flex;
-      justify-content: space-between;
-      flex-direction: column;
-      margin-top: 30px;
-      .content-title{
-        width: 248px;
-        height: 22px;
-        margin-top: 7px;
-        text-align: left;
-        font-size:14px;
-        font-family:PingFangSC-Regular;
-        color:rgba(74,144,226,1);
-        line-height:22px;
+      background: rgba(255,255,255,1);
+      .center-title {
+        font-size:20px;
+        padding-top: 30px;
+        width: 100%;
+        height: 56px;
+        background: #4A4A4A;
+        color: #FFF;
+        font-family:PingFangSC-Semibold;
+        //color:rgba(0,0,0,1);
+        line-height:28px;
       }
-      .content-text{
-        width: 650px;
-        height: 40px;
-        font-size: 14px;
-        margin-top: 10px;
-        font-family:PingFangSC-Regular;
-        color:rgba(74,74,74,1);
-        line-height: 20px;
-        text-align: left;
-        word-break: break-all;
-        text-overflow: ellipsis;
-        display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
-        -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
-        -webkit-line-clamp: 2; /** 显示的行数 **/
-        overflow: hidden;  /** 隐藏超出的内容 **/
+        .social-list {
+          padding: 30px 40px 20px;
+          li {
+            margin-bottom: 10px;
+            img {
+              width: 62px;
+              height: 62px;
+              border-radius: 50%;
+            }
+            .content-box {
+              width: calc( 100% - 72px );
+              min-height: 70px;
+              vertical-align: top;
+              display: inline-flex;
+              flex-direction: column;
+              justify-content: center;
+              font-size: 16px;
+              .title-box {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .content-title {
+                  color: #4A90E2;
+                  line-height: 42px;
+                }
+                .content-source {
+                  font-size: 20px;
+                  color: #4A90E2;
+                }
+              }
+              .content-text {
+                color: #4A4A4A;
+                line-height: 20px;
+              }
+              .content-footer {
+                line-height: 30px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .content-time {
+                  font-size: 14px;
+                  color: #9B9B9B;
+                }
+                a {
+                  font-size: 14px;
+                  color: #4A90E2;
+                }
+              }
+            }
+          }
+        }
+      .group-panel{
+        height: 100%;
+        img{
+          width: 62px;
+          height: 62px;
+          margin: 40px 10px 30px 40px;
+        }
+        .content{
+          //margin-left: 2px;
+          vertical-align: top;
+          display: inline-flex;
+          justify-content: space-between;
+          flex-direction: column;
+          margin-top: 30px;
+          .content-title{
+            width: 248px;
+            height: 22px;
+            margin-top: 7px;
+            text-align: left;
+            font-size:14px;
+            font-family:PingFangSC-Regular;
+            color:rgba(74,144,226,1);
+            line-height:22px;
+          }
+          .content-text{
+            width: 650px;
+            height: 40px;
+            font-size: 14px;
+            margin-top: 10px;
+            font-family:PingFangSC-Regular;
+            color:rgba(74,74,74,1);
+            line-height: 20px;
+            text-align: left;
+            word-break: break-all;
+            text-overflow: ellipsis;
+            display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
+            -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+            -webkit-line-clamp: 2; /** 显示的行数 **/
+            overflow: hidden;  /** 隐藏超出的内容 **/
+          }
+          .content-time{
+            width: 191px;
+            height: 14px;
+            font-size: 12px;
+            font-family:PingFangSC-Regular;
+            color:rgba(155,155,155,1);
+            line-height: 17px;
+            margin-top: 8px;
+            text-align: left;
+          }
+        }
       }
-      .content-time{
-        width: 191px;
-        height: 14px;
-        font-size: 12px;
-        font-family:PingFangSC-Regular;
-        color:rgba(155,155,155,1);
-        line-height: 17px;
-        margin-top: 8px;
-        text-align: left;
-      }
-    }
-    }
     }
     .group-area {
       padding: 40px;
@@ -328,7 +429,42 @@ export default {
         line-height:28px;
       }
       //justify-content: space-between;
-      .public-content{
+      .notice-list {
+        width: 100%;
+        li {
+          width: 100%;
+          height: 40px;
+          border-bottom: 1px solid #CACACA;
+          font-size: 16px;
+          color: #4A4A4A;
+          a {
+            height: 100%;
+            display: block;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .title {
+              .dot {
+                display: inline-block;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background-color: #3A323D;
+                position: relative;
+                bottom: 3px;
+                margin-right: 6px;
+                margin-left: 6px;
+              }
+            }
+            .date {
+              color: #747474;
+              margin-right: 25px;
+            }
+          }
+        }
+      }
+      .public-content {
         margin-top: 20px;
         border-bottom: 0.5px solid #979797;
         padding-bottom: 4px;
@@ -345,7 +481,7 @@ export default {
           -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
           -webkit-line-clamp: 1; /** 显示的行数 **/
           overflow: hidden;  /** 隐藏超出的内容 **/
-          }
+        }
         .pub_time{
           //margin-left: 50px;
           float: right;
