@@ -33,8 +33,8 @@ export default {
   display: flex;
   justify-content: space-between;
   .main-panel{
-    //flex: 1 1 auto;
-    //min-width: 500px;
+    flex: 1 1 auto;
+    max-width: 826px;
     height: 100%;
     width: 826px;
   }

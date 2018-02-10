@@ -10,7 +10,7 @@
         <el-button class = "news">项目动态</el-button>
         </router-link>
       </div>
-      <proj-detail-panel :proj-detail="projDetail"></proj-detail-panel>
+      <proj-dynamic-panel :proj-detail="projDetail"></proj-dynamic-panel>
     </div>
     <div class="aside-panel">
       <div class="record-panel">
@@ -54,7 +54,7 @@
 
 <script>
 import ProjInfoPanel from '@/components/projDetail/ProjInfoPanel'
-import ProjDetailPanel from '@/components/projDetail/ProjDetailPanel'
+import ProjDynamicPanel from '@/components/projDetail/ProjDynamicPanel'
 
 export default {
   data () {
@@ -105,7 +105,7 @@ export default {
   },
   components: {
     ProjInfoPanel,
-    ProjDetailPanel
+    ProjDynamicPanel
   }
 }
 </script>

@@ -288,6 +288,15 @@ class ProjectController extends Controller
             ->limit(4)->get()->toArray();
         $projData['reportList'] = $projReportList;
 
+        $projDynamicList = Model\ProjSocial::where([['proj_id', $projId], ['status', 1]])
+            ->limit(4)->orderBy('created_at','desc')->get()->toArray();
+        $projData['dynamicList'] = $projDynamicList;
+
+        $projPublicList = Model\ProjSocial::where([['proj_id', $projId], ['status', 1]])
+            ->whereIn('social_id', [5])
+            ->limit(2)->orderBy('created_at','desc')->get()->toArray();
+        $projData['publicList'] = $projPublicList;
+
         // 获取社交链接信息
         $projSocialList = Model\ProjSocial::join('social', 'proj_social.social_id', '=', 'social.id')
             ->where('proj_id', $projId)

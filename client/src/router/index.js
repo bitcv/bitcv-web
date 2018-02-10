@@ -11,6 +11,7 @@ import FindPwd from '@/components/sign/FindPwd'
 import ResetPwd from '@/components/sign/ResetPwd'
 import NewList from '@/components/news/NewList'
 import NewDetail from '@/components/news/NewDetail'
+import ProjNews from '@/components/projDetail/projNews'
 
 Vue.use(Router)
 
@@ -34,6 +35,10 @@ export default new Router({
     {
       path: '/projDetail/:id',
       component: ProjDetail
+    },
+    {
+      path: '/projNews/:id',
+      component: ProjNews
     },
     {
       path: '/signin',
