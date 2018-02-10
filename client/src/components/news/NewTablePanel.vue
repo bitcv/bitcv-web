@@ -4,12 +4,12 @@
   <div class = "new-table-panel">
     <router-link :to="{ path: 'newdetail/' + news.id}">
     <img :src="news.bannerUrl" alt="">
-      <div class = "content">
-        <span class="content-title">{{news.title}}</span>
-        <!-- <span class="content-text">{{news.content}}</span> -->
-        <span class = "content-text" v-html="news.content"></span>
-        <span class="content-time">{{news.releaseTime}}</span>
-      </div>
+    <div class = "content">
+      <span class="content-title">{{news.title}}</span>
+      <!-- <span class="content-text">{{news.content}}</span> -->
+      <span class = "content-text" v-html="news.content"></span>
+      <span class="content-time">{{news.releaseTime}}</span>
+    </div>
     </router-link>
   </div>
   </a>
@@ -40,12 +40,14 @@ export default {
 
 <style lang="scss" scoped>
 .new-area{
-  div {
-    margin-bottom: 24px;
-  }
+  // div {
+  //   margin-bottom: 24px;
+  // }
+  height: 100%;
+  width: 826px;
   .new-table-panel{
     width: 826px;
-    height: 100%;
+    max-height: 184px;
     background: rgba(255,255,255,1);
     img{
       width: 219px;
