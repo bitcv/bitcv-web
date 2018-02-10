@@ -1,7 +1,7 @@
 <template>
   <div class="header container">
     <div class="logo">
-      <img src="/static/logo.png" alt="">
+      <img src="/static/logo-white.png" alt="">
     </div>
     <div class="info">
       <!--<div class="account"><span>JunderKing</span></div>-->
