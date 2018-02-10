@@ -43,6 +43,10 @@ export default {
               icon: 'el-icon-menu',
               url: '/admin/media',
               text: '媒体管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/module',
+              text: '运营工具管理'
             }]
           // 项目管理员
           } else if (user['projId'] > 0) {
@@ -50,7 +54,7 @@ export default {
             this.itemList = [{
               icon: 'el-icon-menu',
               url: '/admin/editProject/' + user['projId'],
-              text: '项目管理'
+              text: '项目信息'
             }]
           // 个人
           } else {
