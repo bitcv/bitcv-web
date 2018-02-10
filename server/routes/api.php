@@ -21,8 +21,20 @@ Route::any('getProjTopList', 'ProjectController@getProjTopList');
 Route::any('getProjDetail', 'ProjectController@getProjDetail');
 Route::any('getProjTagList', 'ProjectController@getProjTagList');
 
+Route::any('getDepositBoxList', 'DepositController@getDepositBoxList');
+Route::any('addDepositOrder', 'DepositController@addDepositOrder');
+Route::any('getOrderTxRecordList', 'DepositController@getOrderTxRecordList');
+Route::any('confirmDepositTx', 'DepositController@confirmDepositTx');
+Route::any('getUserOrderList', 'DepositController@getUserOrderList');
+
+Route::any('addDepositBox', 'AdminController@addDepositBox');
+Route::any('getBoxTxRecordList', 'AdminController@getBoxTxRecordList');
+Route::any('confirmBoxTx', 'AdminController@confirmBoxTx');
+Route::any('getProjDepositBoxList', 'AdminController@getProjDepositBoxList');
+
 Route::any('adminSignin', 'AdminController@signin');
 Route::any('adminSignout', 'AdminController@signout');
+
 Route::group(['middleware' => 'checkAdmin'], function () {
 
     Route::any('addProject', 'AdminController@addProject');

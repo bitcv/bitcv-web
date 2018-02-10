@@ -13,11 +13,11 @@ class AdminController extends Controller
 
         $params = $this->validation($request, [
             'projId' => 'required|numeric',
-            'minAmount' => 'required|numeric',
+            'minAmount' => 'required|string',
             'lockTime' => 'required|numeric',
-            'totalAmount' => 'required|numeric',
-            'interestRate' => 'required|numeric',
-            'payAddr' => 'required|string',
+            'totalAmount' => 'required|string',
+            'interestRate' => 'required|string',
+            'fromAddr' => 'required|string',
         ]);
         if ($params === false) {
             return $this->error(100);
@@ -25,7 +25,8 @@ class AdminController extends Controller
         extract($params);
 
         // 获取钱包地址
-        $projData = Model\Project::find($projId);
+        $projData = Model\Project::join('token', 'project.token_id', '=', 'token.id')
+            ->where('project.id', $projId)->first();
         if (!$projData) {
             return $this->error(301);
         }
@@ -33,10 +34,10 @@ class AdminController extends Controller
         $walletAddr = $projData->wallet_addr;
         if (!$walletAddr) {
             // 生成钱包地址
-            $walletJson = BlockCypher::createWallet('eth');
-            $resJson = BaseUtil::curlPost('locaohost:9999/api/createWallet', array(
+            $resJson = BaseUtil::curlPost('localhost:9999/api/createWallet', array(
                 'symbol' => 'eth',
             ));
+            var_dump($resJson);
             $resArr = json_decode($resJson, true);
             if (!$resArr || $resArr['errcode'] !== 0) {
                 return $this->error();
@@ -50,23 +51,104 @@ class AdminController extends Controller
             ]);
         }
 
-        Model\DepositBox::create([
+        $depositBoxData = Model\DepositBox::create([
             'proj_id' => $projId,
             'min_amount' => $minAmount,
             'lock_time' => $lockTime,
             'total_amount' => $totalAmount,
-            'remain_amount' => $remainAmount,
+            'remain_amount' => $totalAmount,
             'interest_rate' => $interestRate,
-            'pay_addr' => $payAddr,
-            'status' => 1,
+            'from_addr' => $fromAddr,
+            'to_addr' => $walletAddr,
+            'contract_addr' => $projData->contract_addr,
+            'status' => 0,
         ]);
         $totalInterest = $totalAmount * $interestRate;
 
         return $this->output([
-            'walletAddr' => $walletAddr,
-            'payAddr' => $payAddr,
+            'fromAddr' => $fromAddr,
+            'toAddr' => $walletAddr,
             'totalInterest' => $totalInterest,
+            'depositBoxId' => $depositBoxData->id,
         ]);
+    }
+
+    public function getBoxTxRecordList (Request $request) {
+        $params = $this->validation($request, [
+            'depositBoxId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $depositBoxData = Model\DepositBox::find($depositBoxId);
+        if (!$depositBoxData) {
+            return $this->error();
+        }
+        $postData = array(
+            'fromAddr' => $depositBoxData->from_addr,
+            'toAddr' => $depositBoxData->to_addr,
+            'contractAddr' => $depositBoxData->contract_addr,
+        );
+        $resJson = BaseUtil::curlPost('localhost:9999/api/getTxRecordList', $postData);
+        $resArr = json_decode($resJson, true);
+        if (!$resArr || $resArr['errcode'] !== 0) {
+            return $this->error();
+        }
+        $txRecordList = $resArr['data']['dataList'];
+
+        return $this->output(['dataList' => $txRecordList]);
+    }
+
+    public function confirmBoxTx (Request $request) {
+
+        $params = $this->validation($request, [
+            'depositBoxId' => 'required|numeric',
+            'txRecordIdList' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        // temp
+        $txRecordIdList = json_decode($txRecordIdList, true);
+
+        $depositBoxData = Model\DepositBox::find($depositBoxId);
+        if (!$depositBoxData) {
+            return $this->error();
+        }
+
+        $orderAmount = $depositBoxData->interest_rate * $depositBoxData->totalAmount;
+        // temp
+        $orderAmount = 1910000;
+        $postData = array(
+            'fromAddr' => $depositBoxData->from_addr,
+            'toAddr' => $depositBoxData->to_addr,
+            'contractAddr' => $depositBoxData->contract_addr,
+            'orderAmount' => $orderAmount . '',
+            'txRecordIdList' => $txRecordIdList,
+        );
+        $resJson = BaseUtil::curlPost('localhost:9999/api/confirmTx', $postData);
+        $resArr = json_decode($resJson, true);
+        if (!$resArr || $resArr['errcode'] !== 0) {
+            return $this->error(307);
+        }
+
+        $txRecordList = $resArr['data']['dataList'];
+        foreach ($txRecordList as $txRecord) {
+            Model\OrderTxRecord::create([
+                'tx_record_id' => $txRecord['id'],
+                'tx_hash' => $txRecord['tx_hash'],
+                'tx_type' => 1,
+                'target_id' => $depositBoxId,
+            ]);
+        }
+
+        Model\DepositBox::where('id', $depositBoxId)->update(['status' => 1]);
+
+        return $this->output();
     }
 
     public function getProjDepositBoxList (Request $request) {
