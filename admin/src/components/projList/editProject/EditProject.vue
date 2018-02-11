@@ -22,6 +22,9 @@
       <el-tab-pane label="媒体报道">
         <report></report>
       </el-tab-pane>
+      <el-tab-pane label="余币宝">
+        <deposit-box></deposit-box>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -34,6 +37,7 @@ import Social from '@/components/projList/editProject/Social'
 import Advisor from '@/components/projList/editProject/Advisor'
 import Partner from '@/components/projList/editProject/Partner'
 import Report from '@/components/projList/editProject/Report'
+import DepositBox from '@/components/projList/editProject/DepositBox'
 
 export default {
   data () {
@@ -48,7 +52,8 @@ export default {
     Social,
     Advisor,
     Partner,
-    Report
+    Report,
+    DepositBox
   }
 }
 </script>
