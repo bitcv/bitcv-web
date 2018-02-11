@@ -19,10 +19,13 @@
         <img :src="avatarUrl" alt="" class="mobile-hide" v-on:click="dropdown">
         <ul class="nav-dropdown" v-bind:style="[displayStyles]">
           <li>
-            <!--<a href="" class="nav-link" target="_blank">我的订单</a>-->
-            <router-link class="nav-link" to="/candyRoom/myCandyOrder">我的订单</router-link>
+            <router-link class="nav-link" to="/candyRoom/myCandyOrder">订单</router-link>
           </li>
-          <li><a class="nav-link" @click="signout">退出登录</a></li>
+          <li>
+            <!--<router-link class="nav-link" to="/admin/project">设置</router-link>-->
+            <a href="/admin/project" target="_blank">设置</a>
+          </li>
+          <li><a class="nav-link" @click="signout">注销</a></li>
         </ul>
         <span class="nickname mobile-hide">{{ mobile }}</span>
         <!--<div class="signout btn mobile-btn" @click="signout"><span class="btn-text">退出登录</span></div>-->

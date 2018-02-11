@@ -72,8 +72,7 @@ export default {
     }
     .name {
       img {
-        width: 133px;
-        height: 25px;
+        width: 180px;
       }
     }
     .bottom {

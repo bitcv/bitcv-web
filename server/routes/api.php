@@ -30,6 +30,7 @@ Route::any('confirmDepositTx', 'DepositController@confirmDepositTx');
 Route::any('getUserOrderList', 'DepositController@getUserOrderList');
 
 Route::any('addDepositBox', 'AdminController@addDepositBox');
+Route::any('delDepositBox', 'AdminController@delDepositBox');
 Route::any('getBoxTxRecordList', 'AdminController@getBoxTxRecordList');
 Route::any('confirmBoxTx', 'AdminController@confirmBoxTx');
 Route::any('getProjDepositBoxList', 'AdminController@getProjDepositBoxList');

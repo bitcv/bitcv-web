@@ -40,7 +40,7 @@
             <td>{{ depositBox.remainAmount }}枚</td>
             <td>
               <div>
-                <span @click="toDeposit(depositBox)">抢糖果</span>
+                <span @click="toDeposit(depositBox)">立即抢购</span>
               </div>
             </td>
           </tr>

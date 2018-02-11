@@ -13,21 +13,22 @@
       <el-table-column label="回报率">
         <template slot-scope="scope">{{ scope.row.interestRate }}</template>
       </el-table-column>
-      <el-table-column label="收币地址">
-        <template slot-scope="scope">{{ scope.row.toAddr }}</template>
+      <el-table-column label="接收地址">
+        <template slot-scope="scope">{{ getShortStr(scope.row.toAddr, 6) }}</template>
       </el-table-column>
-      <el-table-column label="状态">
-        <template slot-scope="scope">{{ scope.row.status }}</template>
+      <el-table-column label="操作或状态">
+        <template slot-scope="scope">
+          <div v-if="scope.row.status===0">
+            <el-button size="mini" @click="showOrderDialog(scope.$index)">付款</el-button>
+            <el-button size="mini" type="danger" @click="showDel(scope.row.id)">删除</el-button>
+          </div>
+          <div v-else>{{scope.row.status === 1 ? '进行中' : scope.row.status}}</div>
+        </template>
       </el-table-column>
-      <!--<el-table-column label="操作">-->
-        <!--<template slot-scope="scope">-->
-          <!--<el-button size="mini" @click="showEdit(scope.$index)">编辑</el-button>-->
-          <!--<el-button size="mini" type="danger" @click="showDel(scope.row.id)">删除</el-button>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
     </el-table>
-    <el-dialog title="糖果盒信息" :visible.sync="showDialog" center>
-      <el-form label-width="80px">
+
+    <el-dialog title="余币宝信息" :visible.sync="showDialog" center>
+      <el-form label-width="100px">
         <el-form-item label="总额度">
           <el-input v-model="inputTotalAmount"></el-input>
         </el-form-item>
@@ -40,8 +41,8 @@
         <el-form-item label="回报利率">
           <el-input v-model="inputInterestRate"></el-input>
         </el-form-item>
-        <el-form-item label="打币地址">
-          <el-input v-model="inputFromAddr"></el-input>
+        <el-form-item label="回报打出地址">
+          <el-input v-model="inputFromAddr" placeholder="请输入您用于支付回报的钱包地址"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -49,6 +50,43 @@
         <el-button type="primary" @click="submit">确定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="请支付余币宝利息" :visible.sync="showOrder" center>
+      <el-form label-width="80px">
+        <el-form-item label="打出地址">
+          <span>{{ fromAddr }}</span>
+        </el-form-item>
+        <el-form-item label="接收地址">
+          <span>{{ toAddr }}</span>
+        </el-form-item>
+        <el-form-item label="扫码支付">
+          <div id="qrcode" v-if="clear"></div>
+        </el-form-item>
+        <el-form-item label="支付金额">
+          <span>{{ totalInterest }}</span>
+        </el-form-item>
+      </el-form>
+      <el-table :data="txRecordList" v-if="inScan">
+        <el-table-column label="交易金额" prop="txAmount"></el-table-column>
+        <el-table-column label="交易时间" prop="txTime"></el-table-column>
+        <el-table-column label="交易哈希" prop="txHash"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-checkbox @change="selectRecord($event, scope.row.id)"></el-checkbox>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div slot="footer">
+        <template v-if="!inScan">
+          <el-button type="primary" @click="getTxRecord">开始确认</el-button>
+        </template>
+        <template v-else>
+          <el-button type="default" @click="getTxRecord">刷新</el-button>
+          <el-button type="primary" @click="confirmTx">确认</el-button>
+        </template>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -69,7 +107,13 @@ export default {
       fromAddr: '',
       toAddr: '',
       totalInterest: '',
-      depositBoxId: ''
+      depositBoxId: '',
+      showOrder: false,
+      inScan: false,
+      txRecordList: [],
+      txRecordIdList: [],
+      hasQrcode: false,
+      clear: true
     }
   },
   mounted () {
@@ -85,13 +129,6 @@ export default {
         }
       })
     },
-    getMediaList () {
-      this.$http.get('/api/getMediaList').then((res) => {
-        if (res.data.errcode === 0) {
-          this.mediaList = res.data.data.dataList
-        }
-      })
-    },
     showAdd () {
       this.depositBoxId = ''
       this.inputTotalAmount = ''
@@ -101,15 +138,20 @@ export default {
       this.inputFromAddr = ''
       this.showDialog = true
     },
-    showEdit (index) {
+    showOrderDialog (index) {
       var depositBox = this.depositBoxList[index]
-      this.projReportId = depositBox.id
-      this.inputTotalAmount = depositBox.totalAmount
-      this.inputMinAmount = depositBox.minAmount
-      this.inputLockTime = depositBox.lockTime
-      this.inputInterestRate = depositBox.interestRate
       this.fromAddr = depositBox.fromAddr
-      this.showDialog = true
+      this.toAddr = depositBox.toAddr
+      this.depositBoxId = depositBox.id
+      this.totalInterest = depositBox.interestRate * depositBox.totalAmount
+      this.inScan = false
+      this.showOrder = true
+      // if (!this.hasQrcode) {
+      require('@/components/common/jquery.min.js')
+      $("#qrcode").html("")
+      this.getQrcode()
+        // this.hasQrcode = true
+      // }
     },
     showDel (depositBoxId) {
       this.$confirm('删除后无法恢复, 是否继续?', '提示', {
@@ -117,7 +159,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.delReport(depositBoxId)
+        this.delDepositBox(depositBoxId)
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -126,11 +168,16 @@ export default {
       })
     },
     submit () {
-      if (this.depositBoxId) {
-        this.updDepositBox()
-      } else {
-        this.addDepositBox()
-      }
+      this.addDepositBox()
+    },
+    getQrcode () {
+      require('@/components/common/qrcode.min.js')
+      // eslint-disable-next-line
+      $('#qrcode').qrcode({
+        text: this.toAddr,
+        width: 150,
+        height: 150
+      })
     },
     addDepositBox () {
       this.$http.post('/api/addDepositBox', {
@@ -149,27 +196,44 @@ export default {
         }
       })
     },
-    updDepositBox () {
-      this.$http.post('/api/updDepositBox', {
-        projReportId: this.projReportId,
-        mediaId: this.inputMediaId,
-        linkUrl: this.inputLinkUrl,
-        title: this.inputTitle
-      }).then((res) => {
-        if (res.data.errcode === 0) {
-          this.$message({ type: 'success', message: '更新成功!' })
-          this.showDialog = false
-          this.updateData()
-        }
-      })
-    },
-    delReport (depositBoxId) {
+    delDepositBox (depositBoxId) {
       this.$http.post('/api/delDepositBox', {
         depositBoxId: depositBoxId
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '删除成功!' })
           this.updateData()
+        }
+      })
+    },
+    getTxRecord () {
+      this.$http.post('/api/getBoxTxRecordList', {
+        depositBoxId: this.depositBoxId
+      }).then((res) => {
+        console.log(res)
+        if (res.data.errcode === 0) {
+          this.txRecordList = res.data.data.dataList
+          this.inScan = true
+        }
+      })
+    },
+    selectRecord (e, txRecordId) {
+      if (e) {
+        this.txRecordIdList.push(txRecordId)
+      } else {
+        this.txRecordIdList.remove(txRecordId)
+      }
+    },
+    confirmTx () {
+      this.$http.post('/api/confirmBoxTx', {
+        depositBoxId: this.depositBoxId,
+        txRecordIdList: this.txRecordIdList
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.showOrder = false
+          this.updateData()
+        } else {
+          alert(res.data.errmsg)
         }
       })
     }

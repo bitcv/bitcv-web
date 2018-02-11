@@ -73,6 +73,9 @@
         <el-form-item label="代币价格">
           <el-input v-model="formData.tokenPrice" placeholder="请输入代币价格"></el-input>
         </el-form-item>
+        <el-form-item label="合约地址">
+          <el-input v-model="formData.contractAddr" placeholder="请输入代币以太坊合约地址"></el-input>
+        </el-form-item>
         <el-form-item label="公司邮箱">
           <el-input v-model="formData.companyEmail" placeholder="请输入公司邮箱"></el-input>
         </el-form-item>
@@ -117,7 +120,8 @@ export default {
         companyAddr: '',
         tokenName: '',
         tokenSymbol: '',
-        tokenPrice: ''
+        tokenPrice: '',
+        contractAddr: ''
       }
     }
   },

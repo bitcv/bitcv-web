@@ -8,13 +8,13 @@
     <div class="info-area">
       <span>抢购详情</span>
       <span>需充值{{ depositBoxData.orderAmount }}枚</span>
-      <span>{{ depositBoxData.lockTime }}个月后获得糖果<em>{{ interestAmount }}</em>枚</span>
+      <span>{{ depositBoxData.lockTime }}个月后获得回报<em>{{ interestAmount }}</em>枚</span>
     </div>
     <div class="content-area">
       <div class="form-row">
         <span class="step-index">1</span>
         <div class="input-box">
-          <span class="title">接收钱包地址</span>
+          <span class="title">充值接收地址</span>
           <!--<span class="text">0x7dfffb38b871fda8a820378d6531a8267cc414a5</span>-->
           <span class="text">{{ depositBoxData.toAddr }}</span>
         </div>
@@ -22,7 +22,7 @@
       <div class="form-row">
         <span class="step-index">2</span>
         <div class="input-box">
-          <span class="title">支付钱包地址</span>
+          <span class="title">您的支出地址</span>
           <input v-model="inputFromAddr">
         </div>
       </div>

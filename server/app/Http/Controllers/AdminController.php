@@ -36,6 +36,10 @@ class AdminController extends Controller
             return $this->error(301);
         }
 
+        if (!$projData->contract_addr) {
+            return $this->error(308);
+        }
+
         $walletAddr = $projData->wallet_addr;
         if (!$walletAddr) {
             // 生成钱包地址
@@ -78,6 +82,28 @@ class AdminController extends Controller
         ]);
     }
 
+    public function delDepositBox (Request $request) {
+        $params = $this->validation($request, [
+            'depositBoxId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $depositBoxModel = Model\DepositBox::where([
+            ['id', $depositBoxId],
+            ['status', 0]
+        ]);
+
+        if (!$depositBoxModel->count()) {
+            return $this->error(100);
+        }
+        $depositBoxModel->delete();
+
+        return $this->output();
+    }
+
     public function getBoxTxRecordList (Request $request) {
         $params = $this->validation($request, [
             'depositBoxId' => 'required|numeric',
@@ -111,24 +137,19 @@ class AdminController extends Controller
         $params = $this->validation($request, [
             'depositBoxId' => 'required|numeric',
             'txRecordIdList' => 'required|array',
-            //'txRecordIdList' => 'required|string',
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
 
-        // temp
-        //$txRecordIdList = json_decode($txRecordIdList, true);
-
         $depositBoxData = Model\DepositBox::find($depositBoxId);
         if (!$depositBoxData) {
             return $this->error();
         }
 
-        $orderAmount = $depositBoxData->interest_rate * $depositBoxData->totalAmount;
-        // temp
-        //$orderAmount = 1910000;
+        $orderAmount = $depositBoxData->interest_rate * $depositBoxData->total_amount;
+
         $postData = array(
             'fromAddr' => $depositBoxData->from_addr,
             'toAddr' => $depositBoxData->to_addr,
@@ -168,6 +189,7 @@ class AdminController extends Controller
         extract($params);
 
         $depositBoxList = Model\DepositBox::where('proj_id', $projId)
+            ->orderBy('created_at', 'desc')
             ->get()->toArray();
 
         return $this->output(['dataList' => $depositBoxList]);
@@ -390,7 +412,7 @@ class AdminController extends Controller
         $uid = \App\Utils\Auth::$uid;
         $adminproj = Model\Admin::where('id', $uid)->first();
         if ($adminproj) {
-            return $this->error(100, '没人只能创建并管理一个项目');
+            return $this->error(100, '每人只能创建并管理一个项目');
         }
         $data = $this->validation($request, [
             'name_cn' => 'required|string',
@@ -525,6 +547,7 @@ class AdminController extends Controller
             'tokenName' => 'string|nullable',
             'tokenSymbol' => 'string|nullable',
             'tokenPrice' => 'string|nullable',
+            'contractAddr' => 'string|nullable'
         ]);
         if ($params === false) {
             return $this->error(100);
@@ -548,12 +571,16 @@ class AdminController extends Controller
             'fund_stage' => $fundStage,
         ];
 
-        if ($tokenName && $tokenSymbol) {
-            $tokenModel = Model\Token::firstOrCreate([
-                'name' => $tokenName,
-                'symbol' => $tokenSymbol,
-                'price' => $tokenPrice ?: 0,
-            ]);
+        if ($tokenName && $tokenSymbol && $contractAddr) {
+            $tokenModel = Model\Token::where('contract_addr', $contractAddr)->first();
+            if (!$tokenModel) {
+                $tokenModel = Model\Token::create([
+                    'name' => $tokenName,
+                    'symbol' => $tokenSymbol,
+                    'contract_addr' => $contractAddr,
+                    'price' => $tokenPrice ?: 0,
+                ]);
+            }
             $projInfo['token_id'] = $tokenModel->id;
         }
         if ($fundStartTime) {

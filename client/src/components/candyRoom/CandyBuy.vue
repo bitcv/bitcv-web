@@ -40,13 +40,13 @@
             <span class="arrow">-></span>
           </div>
           <div class="output-box">
-            <span class="title">糖果回报</span>
+            <span class="title">余币宝回报</span>
             <span class="output">{{ outputInterest }}</span>
           </div>
         </div>
         <div class="bottom-row">
           <input v-model="inputAmount">
-          <span class="buy-btn" @click="toDepositOrder">抢糖果</span>
+          <span class="buy-btn" @click="toDepositOrder">抢购</span>
         </div>
       </div>
     </div>

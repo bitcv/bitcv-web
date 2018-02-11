@@ -8,9 +8,9 @@
     <div class="aside-panel">
       <top-list></top-list>
       <div class="apply-btn-box">
-        <a href="/apply" class="btn btn-cy transition">立即申请项目</a>
+        <a @click="toApply" class="btn btn-cy transition">立即申请项目</a>
       </div>
-      <news-panel></news-panel>
+      <!--<news-panel></news-panel>-->
     </div>
   </div>
 </template>
@@ -25,6 +25,16 @@ import NewsPanel from '@/components/home/NewsPanel'
 export default {
   data () {
     return {}
+  },
+  methods: {
+    toApply () {
+      var userId = localStorage.getItem('userId')
+      if (!userId) {
+        alert('请登录')
+      } else {
+        this.$router.push('/apply')
+      }
+    }
   },
   components: {
     SearchPanel,
