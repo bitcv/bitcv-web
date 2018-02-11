@@ -8,34 +8,34 @@
         <div class="info-row">
           <span class="title">项目：</span>
           <div class="content-box">
-            <img src="/static/logo/bcv.png" alt="">
+            <img :src="depositBoxData.logoUrl" alt="">
             <div class="info-box">
-              <span class="title">BCV</span>
-              <span class="text">BitCV</span>
+              <span class="title">{{ depositBoxData.tokenSymbol }}</span>
+              <span class="text">{{ depositBoxData.tokenName }}</span>
             </div>
           </div>
         </div>
         <div class="info-row">
           <div class="info-item">
             <span class="title">充值数量：</span>
-            <span class="content">3000枚</span>
+            <span class="content">{{ depositBoxData.orderAmount }}枚</span>
           </div>
           <div class="info-item">
             <span class="title">锁仓期：</span>
-            <span class="content">180天</span>
+            <span class="content">{{ depositBoxData.lockTime }}个月</span>
           </div>
           <div class="info-item">
             <span class="title">回报：</span>
-            <span class="content">8000枚</span>
+            <span class="content">{{depositBoxData.interestRate * depositBoxData.orderAmount}}枚</span>
           </div>
         </div>
         <div class="info-row">
           <span class="title">接收地址：</span>
-          <span class="content">0x7dfffb38b871fda8a820378d6531a8267cc414a5</span>
+          <span class="content">{{ depositBoxData.toAddr }}</span>
         </div>
         <div class="info-row">
           <span class="title">您的地址：</span>
-          <span class="content">0x32f979010a5f54cccfb28a4b13769c6b8749af2e</span>
+          <span class="content">{{ depositBoxData.fromAddr }}</span>
         </div>
       </div>
       <div class="table-box">
@@ -48,13 +48,13 @@
             <th>操作</th>
           </tr>
           <tr v-for="(record, index) in recordList" :key="index">
-            <td>{{ record.amount }}</td>
-            <td>{{ record.time }}</td>
-            <td><a :href="record.hashUrl" target="_blank">{{ record.hash }}</a></td>
-            <td><input type="checkbox"></td>
+            <td>{{ record.txAmount }}</td>
+            <td>{{ record.txTime }}</td>
+            <td><a :href="'https://etherscan.io/tx/' + record.txHash" target="_blank">{{ getShortStr(record.txHash, 12) }}</a></td>
+            <td><input @change="changeCheck($event, record.id)" type="checkbox"></td>
           </tr>
         </table>
-        <div class="btn" @click="toMyCandyRoom">
+        <div class="btn" @click="confirmTx">
           <span>确认完成</span>
         </div>
       </div>
@@ -66,17 +66,45 @@
 export default {
   data () {
     return {
-      recordList: [{
-        amount: 3000,
-        time: '2018-02-01 09:03',
-        hashUrl: 'https://etherscan.io/tx/0x23bdcb9ff2e1e7dbe6e229c22e456dde985315e98995620606d3b59f61e36552',
-        hash: '0x23bdcb9ff2e1...6d3b59f61e36552'
-      }]
+      checkBox: '',
+      recordList: [],
+      depositBoxData: {},
+      recordIdList: []
     }
   },
+  mounted () {
+    this.depositBoxData = this.$route.query
+    this.updTxRecord()
+  },
   methods: {
-    toMyCandyRoom () {
-      this.$router.push('/candyRoom/myCandyOrder')
+    confirmTx () {
+      this.$http.post('/api/confirmDepositTx', {
+        depositOrderId: this.depositBoxData.depositOrderId,
+        txRecordIdList: this.recordIdList
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$router.push('/candyRoom/myCandyOrder')
+        } else {
+          alert(res.data.errmsg)
+        }
+      })
+    },
+    updTxRecord () {
+      this.$http.post('/api/getOrderTxRecordList', {
+        depositOrderId: this.depositBoxData.depositOrderId
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.recordList = res.data.data.dataList
+        }
+      })
+    },
+    changeCheck (e, recordId) {
+      var isChecked = e.target.checked
+      if (isChecked) {
+        this.recordIdList.push(recordId)
+      } else {
+        this.recordIdList.remove(recordId)
+      }
     }
   }
 }

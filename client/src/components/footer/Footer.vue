@@ -10,7 +10,7 @@
         </a>
       </div>
       <div class="bottom">
-        <span>copyright 2018 lian.io</span>
+        <span>Copyright © 2018 BitCV. All Rights Reserved</span>
       </div>
     </div>
   </div>

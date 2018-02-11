@@ -43,7 +43,7 @@ export default {
       menuList: [
         {url: '/', text: '首页'},
         {url: '/projList', text: '发现'},
-        {url: '/candyRoom', text: '余币宝'},
+        // {url: '/candyRoom', text: '余币宝'},
         {url: '/newlist', text: '资讯'}
       ]
     }

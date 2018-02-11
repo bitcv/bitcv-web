@@ -1,7 +1,7 @@
 <template>
   <div class="signup">
-    <h3 class="panel-title center-title">欢迎注册链币网</h3>
-      <span class="prompt">链币会员可直接使用会员名登录</span>
+    <h3 class="panel-title center-title">欢迎注册 BCV</h3>
+      <!--<span class="prompt">链币会员可直接使用会员名登录</span>-->
       <form>
         <input v-model="mobile" type="text" placeholder="手机号">
         <div class = smspanel>

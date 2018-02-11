@@ -27,21 +27,21 @@
           </tr>
           <tr class="table-row" v-for="order in orderList" :key="order.id">
             <td>
-              <img :src="order.projData.logoUrl" alt="">
+              <img :src="order.logoUrl" alt="">
             </td>
             <td>
               <div class="info-box">
-                <span class="title">{{ order.projData.tokenName }}</span>
-                <span class="text">{{ order.projData.tokenSymbol }}</span>
+                <span class="title">{{ order.tokenName }}</span>
+                <span class="text">{{ order.tokenSymbol }}</span>
               </div>
             </td>
             <td>{{ order.orderTime }}</td>
-            <td>{{ order.buyAmount }}</td>
+            <td>{{ order.orderAmount }}</td>
             <td>{{ order.lockTime }}</td>
-            <td>{{ order.interest }}</td>
-            <td>{{ order.orderStatus }}</td>
+            <td>{{ order.interestRate * order.orderAmount }}</td>
+            <td>{{ order.status }}</td>
             <td>
-              <div class="btn-box" v-if="true">
+              <div class="btn-box" v-if="order.status === 0">
                 <span @click="confirmOrder">确认订单</span>
                 <span @click="cancelOrder">取消订单</span>
               </div>
@@ -61,22 +61,19 @@
 export default {
   data () {
     return {
-      orderList: [{
-        id: 1,
-        projData: {
-          logoUrl: '/static/logo/bcv.png',
-          tokenName: 'bitCV',
-          tokenSymbol: 'BCV'
-        },
-        orderTime: '2018-01-01 09:20',
-        buyAmount: '3000000',
-        lockTime: '180天',
-        interest: '300000',
-        orderStatus: '等待确认',
-        orderHashUrl: 'https://etherscan.io/tx/0x23bdcb9ff2e1e7dbe6e229c22e456dde985315e98995620606d3b59f61e36552',
-        orderHash: '0x23bdcb9ff2e1...6d3b59f61e36552'
-      }]
+      orderList: []
     }
+  },
+  mounted () {
+    this.$http.post('/api/getUserOrderList', {
+      pageno: 1,
+      perpage: 10
+    }).then((res) => {
+      if (res.data.errcode === 0) {
+        this.orderList = res.data.data.dataList
+        console.log(this.orderList)
+      }
+    })
   },
   methods: {
     confirmOrder () {
