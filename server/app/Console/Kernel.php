@@ -25,17 +25,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-
-//        $schedule->call(function (){
-//            $this->projReportWeChat();
-//            })->everyMinute();
-//
-//        $schedule->call(function (){
-//            $this->projReportWeibo();
+//        $schedule->call(function () {
+//            $this->projReportRobot();
 //        })->everyMinute();
 
         $schedule->call(function () {
-            $this->projReportRobot();
+            $this->projReportWeibo();
         })->everyMinute();
     }
 
@@ -95,6 +90,77 @@ class Kernel extends ConsoleKernel
         }
     }
 
+    protected function projReportWeibo(){
+
+        $socialList = Model\ProjSocial::where('social_id', 6)->get()->toArray();
+
+        foreach ($socialList as $socialItem){
+            $keyword = trim(strrchr($socialItem['link_url'], '/'),'/');
+            $content = file_get_contents('http://s.weibo.com/weibo/'.$keyword.'?topnav=1&wvr=6&b=1');
+            //$content = file_get_contents("weibo.txt");
+            $pattern = "/STK.pageletM.view\((.*?)\)<\/script>/smi";
+            if(preg_match_all($pattern, $content, $result)) {
+                $list = $result[1];
+                foreach ($list as $item) {
+                    $str = $item;
+                    //  echo $item."\n";
+                    $obj = json_decode($str);
+                    if ($obj->pid == "pl_weibo_direct") {
+
+                        $html = $obj->html;
+                        $contentpattern = "/class=\"feed_action clearfix\">(.*?)<\!\-\-\/feed_detail\-\->/sim";
+                        if (preg_match_all($contentpattern, $html, $result)) {
+
+                            $weiboitem = array();
+                            foreach ($result[1] as $content) {
+                                $weiboitem = array();
+                                $pattern = "/<p class=\"comment_txt\".*?>(.*?)<\/p>/ism";
+                                if (preg_match_all($pattern, $content, $listitems)) {
+
+                                    $weiboitem['content'] = strip_tags($listitems[1][0]);
+                                    $weiboitem['content'] = str_replace("展开全文c", "", $weiboitem['content']);
+                                }
+                                $name_pattern = "/suda-data=\"key=tblog_search_weibo&value=weibo_ss_\d_icon\"\s+href=\"(.*?)\"\s+title=\"(.*?)\"(.*?)<img src=\"(.*?)\"\s+alt=\"(.*?)\"\s+width=\"50\"\s+height=\"50\"\s+class=\"W_face_radius\"/sim";
+                                if (preg_match_all($name_pattern, $content, $nameitems)) {
+
+                                    $weiboitem['homeurl'] = $nameitems[1][0];
+                                    $weiboitem['name'] = $nameitems[2][0];
+                                    $weiboitem['logo'] = $nameitems[4][0];
+
+                                }
+
+                                $linkpattern = "/title\s+\-\-\>\s+<a\s+href=\"(.*?)\"\s+target=\"_blank\"\s+title=\"(.*?)\"\s+date=\"(.*?)\"\s+class=\"W_textb\"\s+node-type=\"feed_list_item_date/sim";
+                                if (preg_match_all($linkpattern, $content, $linkitems)) {
+
+                                    $weiboitem['url'] = $linkitems[1][0];
+                                    $weiboitem['date'] = $linkitems[2][0];
+
+                                }
+                                if (strpos($content, "fl_unfold") !== false) {
+                                    $actionpattern = "/action-type=\"fl_unfold\"\s+action-data=\"(.*?)\">/";
+                                    if (preg_match_all($actionpattern, $content, $actitems)) {
+
+                                        $weiboitem['unfold'] = $actitems[1][0];
+                                    }
+                                }
+
+                                Model\ProjSocial::create([
+                                    'proj_id' => $socialItem['proj_id'],
+                                    'social_id' => $socialItem['social_id'],
+                                    'title' => $weiboitem['content'],
+                                    'logo_url' => $weiboitem['logo'],
+                                    'refer_url' => $weiboitem['homeurl'],
+                                    'created_at' => strtotime($weiboitem['date']),
+                                    'official_name' => $weiboitem['name'],
+                                    'status' => 1,
+                                ]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Register the Closure based commands for the application.
