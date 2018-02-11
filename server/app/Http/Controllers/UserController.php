@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models as Model;
 use Illuminate\Support\Facades\Cookie;
 use App\Utils\Service;
+use App\Utils\Auth;
 use Redis;
 
 class UserController extends Controller
@@ -73,15 +74,6 @@ class UserController extends Controller
             return $this->error(202);
         }
         $uid = $userData->id;
-        /*
-        $timestamp = time();
-        $userSig = md5($userData->id . 'test' . $timestamp);
-        $expireTime = time() + 3600 * 24;
-
-        setcookie('userId', $userData->id, $expireTime);
-        setcookie('timestamp', $timestamp, $expireTime);
-        setcookie('userSig', $userSig, $expireTime);
-        */
         $user = (new Model\User())->getUser($uid);
         try {
             \App\Utils\Auth::setLogin($user);            
@@ -98,13 +90,6 @@ class UserController extends Controller
     }
 
     public function signout (Request $request) {
-        /*
-        $expireTime = time() - 3600;
-        setcookie('userId', '', $expireTime);
-        setcookie('account', '', $expireTime);
-        setcookie('avatarUrl', '', $expireTime);
-        setcookie('userSig', '', $expireTime);
-        */
         \App\Utils\Auth::setLogout();
 
         return $this->output();
@@ -140,7 +125,10 @@ class UserController extends Controller
         }
         extract($params);
 
-        $userId = $_COOKIE['userId'];
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
         // 检验是否重复关注
         $userFocusData = Model\UserFocus::where([['user_id', $userId], ['proj_id', $projId]])->first();
         if ($userFocusData) {

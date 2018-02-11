@@ -3,7 +3,8 @@
 namespace App\Utils;
 
 use Request;
-use Redis;
+//use Redis;
+use Illuminate\Support\Facades\Redis;
 
 class Service {
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models as Model;
 use Illuminate\Support\Facades\DB;
+use App\Utils\Auth;
 
 class ProjectController extends Controller
 {
@@ -48,7 +49,8 @@ class ProjectController extends Controller
             ->offset($offset)->limit($perpage)->orderBy('project.created_at', 'desc')->get()->toArray();
 
         // 获取用户关注状态
-        $userId = isset($_COOKIE['userId']) ? $_COOKIE['userId'] : null;
+        //$userId = isset($_COOKIE['userId']) ? $_COOKIE['userId'] : null;
+        $userId = Auth::getUserId();
         if (!$userId) {
             foreach ($projList as &$project) {
                 $project['focusStatus'] = 0;
@@ -88,7 +90,8 @@ class ProjectController extends Controller
         $projData['focusNum'] = Model\UserFocus::where([['proj_id', $projId], ['status', 1]])->count();
 
         // 获取项目关注状态
-        $userId = isset($_COOKIE['userId']) ? $_COOKIE['userId'] : null;
+        //$userId = isset($_COOKIE['userId']) ? $_COOKIE['userId'] : null;
+        $userId = Auth::getUserId();
         if (!$userId) {
             $projData['focusStatus'] = 0;
         } else {
