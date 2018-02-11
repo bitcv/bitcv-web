@@ -16,7 +16,11 @@
         </ul>
       </div>
       <div class="info-box" v-if="isOnline">
-        <img :src="avatarUrl" alt="" class="mobile-hide">
+        <img :src="avatarUrl" alt="" class="mobile-hide" v-on:click="dropdown">
+        <ul class="nav-dropdown" v-bind:style="[displayStyles]">
+          <li><a href="" class="nav-link" target="_blank">我的订单</a></li>
+          <li><a href="" class="nav-link" target="_blank">退出登录</a></li>
+        </ul>
         <span class="nickname mobile-hide">{{ mobile }}</span>
         <div class="signout btn mobile-btn" @click="signout"><span class="btn-text">退出登录</span></div>
       </div>
@@ -45,7 +49,10 @@ export default {
         {url: '/projList', text: '发现'},
         {url: '/candyRoom', text: '余币宝'},
         {url: '/newlist', text: '资讯'}
-      ]
+      ],
+      displayStyles: {
+        display: 'none'
+      }
     }
   },
   mounted () {
@@ -93,6 +100,9 @@ export default {
           that.$router.go(0)
         }
       })
+    },
+    dropdown() {
+        this.displayStyles.display = this.displayStyles.display == 'none' ? 'block' : 'none'
     }
   }
 }
@@ -172,10 +182,34 @@ export default {
     .info-box {
       display: flex;
       align-items: center;
+      position: relative;
       .nickname {
         padding-left: 8px;
         font-size: 14px;
         color: #4A4A4A;
+      }
+      .nav-dropdown {
+        display: none;
+        box-sizing: border-box;
+        max-height: calc(100vh - 61px);
+        overflow-y: auto;
+        position: absolute;
+        top: 100%;
+        background-color: #fff;
+        padding: 10px 0;
+        border: 1px solid #ddd;
+        border-bottom-color: #ccc;
+        text-align: left;
+        border-radius: 4px;
+        white-space: nowrap;
+      }
+      .nav-dropdown li {
+        line-height: 1.8em;
+        margin: 0;
+        display: block;
+      }
+      .nav-dropdown a {
+        padding: 0 24px 0 20px;
       }
       .signout {
         cursor: pointer;
