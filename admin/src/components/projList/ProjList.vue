@@ -2,7 +2,7 @@
   <div class="proj-list">
     <div class="content-container">
       <div class="header-btn-area">
-        <router-link to="/addProject">
+        <router-link to="/admin/addProject">
           <el-button type="primary" icon="el-icon-plus">新建项目</el-button>
         </router-link>
       </div>
@@ -18,7 +18,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <router-link :to="'/editProject/' + scope.row.id">
+            <router-link :to="'/admin/editProject/' + scope.row.id">
               <el-button size="mini">编辑</el-button>
             </router-link>
             <el-button size="mini" type="danger" @click="showDel(scope.row.id)">删除</el-button>
