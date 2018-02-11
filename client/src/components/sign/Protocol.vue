@@ -1,6 +1,6 @@
 <template>
     <div class="protocol">
-        <h3 class="panel-title center-title">链币用户协议</h3>
+        <h3 class="panel-title center-title">BitCV用户协议</h3>
         <span class = "content"></span>
     </div>
 </template>
