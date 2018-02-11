@@ -54,7 +54,7 @@ export default new Router({
       path: 'candyOrder',
       component: CandyOrder
     }, {
-      path: 'candyOrderDetail',
+      path: 'candyOrderDetail/:id',
       component: CandyOrderDetail
     }, {
       path: 'candyOrderConfirm',

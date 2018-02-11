@@ -8,9 +8,9 @@
       <div class="filter-box">
         <span class="title">订单状态</span>
         <ul class="select">
-          <li>全部</li>
-          <li>已完成</li>
-          <li>未充值</li>
+          <li :class="{cur: inputStatus===null}" @click="inputStatus=null">全部</li>
+          <li :class="{cur: inputStatus===1}" @click="inputStatus=1">已完成</li>
+          <li :class="{cur: inputStatus===0}" @click="inputStatus=0">待充值</li>
         </ul>
       </div>
       <div class="table-box">
@@ -20,8 +20,7 @@
             <th>下单时间</th>
             <th>充值数量</th>
             <th>锁仓期</th>
-            <th>回报</th>
-            <th>订单状态</th>
+            <th>总回报</th>
             <th>操作</th>
             <th>交易哈希</th>
           </tr>
@@ -35,21 +34,28 @@
                 <span class="text">{{ order.tokenSymbol }}</span>
               </div>
             </td>
-            <td>{{ order.orderTime }}</td>
-            <td>{{ order.orderAmount }}</td>
-            <td>{{ order.lockTime }}</td>
-            <td>{{ order.interestRate * order.orderAmount }}</td>
-            <td>{{ order.status }}</td>
+            <td>{{ convertDate(order.orderTime) }}</td>
+            <td>{{ order.orderAmount }}枚</td>
+            <td>{{ order.lockTime }}个月</td>
+            <td>{{ order.interestRate * order.orderAmount }}枚</td>
             <td>
               <div class="btn-box" v-if="order.status === 0">
-                <span @click="confirmOrder">确认订单</span>
-                <span @click="cancelOrder">取消订单</span>
+                <span @click="confirmOrder(order.id)">确认订单</span>
+                <span @click="cancelOrder(order.id)">取消订单</span>
               </div>
-              <div class="btn-box" v-else>
+              <div class="btn-box" v-else-if="order.status === 1">
                 <span class="text">订单完成</span>
               </div>
+              <div class="btn-box" v-else-if="order.status === 2">
+                <span class="text">已取消</span>
+              </div>
             </td>
-            <td><a :href="order.orderHashUrl" target="_blank">{{ order.orderHash }}</a></td>
+            <td>
+              <template v-if="order.txHashList.length">
+                <a v-for="(txHash, index) in order.txHashList" :key="index" :href="'https://etherscan.io/tx/' + txHash" target="_blank">{{ getShortStr(txHash, 10) }}</a>
+              </template>
+              <span v-else>暂无交易</span>
+            </td>
           </tr>
         </table>
       </div>
@@ -61,26 +67,47 @@
 export default {
   data () {
     return {
-      orderList: []
+      orderList: [],
+      inputStatus: null
     }
   },
   mounted () {
-    this.$http.post('/api/getUserOrderList', {
-      pageno: 1,
-      perpage: 10
-    }).then((res) => {
-      if (res.data.errcode === 0) {
-        this.orderList = res.data.data.dataList
-        console.log(this.orderList)
-      }
-    })
+    this.updateData()
+  },
+  watch: {
+    inputStatus () {
+      this.updateData()
+    }
   },
   methods: {
-    confirmOrder () {
-      this.$router.push('/candyRoom/candyOrderConfirm')
+    confirmOrder (orderId) {
+      this.$router.push('/candyRoom/candyOrderDetail/' + orderId)
     },
-    cancelOrder () {
-      console.log('cancel')
+    updateData () {
+      var params = {
+        pageno: 1,
+        perpage: 10
+      }
+      if (this.inputStatus !== null) {
+        params.status = this.inputStatus + ''
+      }
+      console.log(params)
+      this.$http.post('/api/getUserOrderList', params).then((res) => {
+        if (res.data.errcode === 0) {
+          this.orderList = res.data.data.dataList
+        }
+      })
+    },
+    cancelOrder (orderId) {
+      this.$http.post('/api/cancelDepositOrder', {
+        depositOrderId: orderId
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.updateData()
+        } else {
+          alert(res.data.errmsg)
+        }
+      })
     }
   }
 }
@@ -121,6 +148,9 @@ export default {
         display: inline-block;
         font-size: 14px;
         li {
+          &.cur {
+            color: #F5A623;
+          }
           display: inline-block;
           margin-right: 47px;
           cursor: pointer;
@@ -170,10 +200,10 @@ export default {
               }
             }
           }
-          td:nth-child(7) {
+          td:nth-child(6) {
             color: #FF6276;
           }
-          td:nth-child(8) {
+          td:nth-child(7) {
             span {
               display: block;
               cursor: pointer;
@@ -192,6 +222,19 @@ export default {
                   background-color: #FFF;
                   cursor: text;
                 }
+              }
+            }
+          }
+          td:nth-child(8) {
+            padding: 5px 0;
+            font-size: 14px;
+            max-width: 100px;
+            a {
+              color: #000;
+              display: block;
+              line-height: 20px;
+              &:hover {
+                color: #F5A623;
               }
             }
           }

@@ -60,17 +60,14 @@ export default {
       }
       this.$http.post('/api/addDepositOrder', {
         'depositBoxId': this.depositBoxData.id,
-        'orderAmount': this.depositBoxData.orderAmount,
+        'orderAmount': this.depositBoxData.orderAmount + '',
         'fromAddr': this.inputFromAddr
       }).then((res) => {
         if (res.data.errcode === 0) {
           var orderData = res.data.data
-          this.depositBoxData.depositOrderId = orderData.id
-          this.depositBoxData.fromAddr = orderData.fromAddr
-          this.$router.push({
-            path: '/candyRoom/candyOrderDetail',
-            query: this.depositBoxData
-          })
+          this.$router.push('/candyRoom/candyOrderDetail/' + orderData.id)
+        } else {
+          alert(res.data.errmsg)
         }
       })
     }

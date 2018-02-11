@@ -110,7 +110,8 @@ class AdminController extends Controller
 
         $params = $this->validation($request, [
             'depositBoxId' => 'required|numeric',
-            'txRecordIdList' => 'required|string',
+            'txRecordIdList' => 'required|array',
+            //'txRecordIdList' => 'required|string',
         ]);
         if ($params === false) {
             return $this->error(100);
@@ -118,7 +119,7 @@ class AdminController extends Controller
         extract($params);
 
         // temp
-        $txRecordIdList = json_decode($txRecordIdList, true);
+        //$txRecordIdList = json_decode($txRecordIdList, true);
 
         $depositBoxData = Model\DepositBox::find($depositBoxId);
         if (!$depositBoxData) {
@@ -127,7 +128,7 @@ class AdminController extends Controller
 
         $orderAmount = $depositBoxData->interest_rate * $depositBoxData->totalAmount;
         // temp
-        $orderAmount = 1910000;
+        //$orderAmount = 1910000;
         $postData = array(
             'fromAddr' => $depositBoxData->from_addr,
             'toAddr' => $depositBoxData->to_addr,

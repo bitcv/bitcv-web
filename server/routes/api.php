@@ -23,6 +23,8 @@ Route::any('getProjTagList', 'ProjectController@getProjTagList');
 
 Route::any('getDepositBoxList', 'DepositController@getDepositBoxList');
 Route::any('addDepositOrder', 'DepositController@addDepositOrder');
+Route::any('getOrderDetail', 'DepositController@getOrderDetail');
+Route::any('cancelDepositOrder', 'DepositController@cancelDepositOrder');
 Route::any('getOrderTxRecordList', 'DepositController@getOrderTxRecordList');
 Route::any('confirmDepositTx', 'DepositController@confirmDepositTx');
 Route::any('getUserOrderList', 'DepositController@getUserOrderList');

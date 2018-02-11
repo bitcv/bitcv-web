@@ -5,13 +5,13 @@
     </div>
     <div class="content-area">
       <div class="info-area">
-        <div class="info-row">
+        <div class="info-row" v-if="depositBoxData.projData">
           <span class="title">项目：</span>
           <div class="content-box">
-            <img :src="depositBoxData.logoUrl" alt="">
+            <img :src="depositBoxData.projData.logoUrl" alt="">
             <div class="info-box">
-              <span class="title">{{ depositBoxData.tokenSymbol }}</span>
-              <span class="text">{{ depositBoxData.tokenName }}</span>
+              <span class="title">{{ depositBoxData.projData.tokenSymbol }}</span>
+              <span class="text">{{ depositBoxData.projData.tokenName }}</span>
             </div>
           </div>
         </div>
@@ -79,7 +79,7 @@ export default {
   methods: {
     confirmTx () {
       this.$http.post('/api/confirmDepositTx', {
-        depositOrderId: this.depositBoxData.depositOrderId,
+        depositOrderId: this.depositBoxData.id,
         txRecordIdList: this.recordIdList
       }).then((res) => {
         if (res.data.errcode === 0) {
@@ -91,7 +91,7 @@ export default {
     },
     updTxRecord () {
       this.$http.post('/api/getOrderTxRecordList', {
-        depositOrderId: this.depositBoxData.depositOrderId
+        depositOrderId: this.depositBoxData.id
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.recordList = res.data.data.dataList

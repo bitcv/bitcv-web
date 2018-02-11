@@ -1,6 +1,6 @@
 <template>
   <div class="share">
-    <img src="/static/img/share_header.png" alt="" class="share-img">
+    <img src="/static/img/share-header.jpg" alt="" class="share-img">
     <div class="share-content">
       <div class="logo"><img :src="projDetail.logoUrl" alt=""></div>
       <div class="share-content-container">
@@ -24,7 +24,7 @@
       <div class="more-info">（登陆<a class="link" href="http://www.bitcv.com">bitcv.com</a>获取更多项目详细信息）</div>
     </div>
     <div class="footer-box">
-      <img src="/static/img/share_footer.png" alt="" class="share-img">
+      <img src="/static/img/share-footer.jpg" alt="" class="share-img">
       <div class="qrcode-box" id="qrcode"></div>
     </div>
   </div>

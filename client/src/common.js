@@ -43,6 +43,51 @@ exports.install = function (Vue, options) {
   Vue.prototype.getShortStr = function (string, num) {
     return string.substr(0, num) + '...' + string.substr(-1 * num)
   }
+  Vue.prototype.convertOrderStatus = function (index) {
+    switch (index) {
+      case 0:
+        return '待支付'
+        break
+      case 1:
+        return '已完成'
+        break
+      case 2:
+        return '已取消'
+        break
+      case 3:
+        return '已过期'
+        break
+      default:
+        return '未知状态'
+        
+    }
+  }
+  Vue.prototype.convertDate = function (dateTimeStamp) {
+    var minute = 1000 * 60;
+    var hour = minute * 60;
+    var day = hour * 24;
+    var halfamonth = day * 15;
+    var month = day * 30;
+
+    var now = new Date().getTime();
+    var diffValue = now - new Date(dateTimeStamp).getTime();
+
+    var monthC = diffValue/month;
+    var weekC = diffValue/(7*day);
+    var dayC = diffValue/day;
+    var hourC = diffValue/hour;
+    var minC = diffValue/minute;
+    if(hourC > 24){
+      var result = parseInt(dayC) + '天前';
+    } else if(hourC>=1){
+      var result = parseInt(hourC) +"个小时前";
+    } else if(minC>=1){
+      var result = parseInt(minC) +"分钟前";
+    } else {
+      var result = "刚刚"
+    }
+    return result;
+  }
   Array.prototype.indexOf = function (val) {
     for (var i = 0; i < this.length; i++) {
       if (this[i] === val) return i
