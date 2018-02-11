@@ -12,13 +12,13 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://kingco.io/api',
+        target: 'http://kingco.com/api',
         pathRewrite: {
           '^/api': ''
         }
       },
       '/storage': {
-        target: 'http://kingco.io/storage',
+        target: 'http://kingco.com/storage',
         pathRewrite: {
           '^/storage': ''
         }
@@ -26,7 +26,7 @@ module.exports = {
     },
 
     // Various Dev Server settings
-    host: 'kingco.io', // can be overwritten by process.env.HOST
+    host: 'kingco.com', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

@@ -2,7 +2,7 @@
 
 namespace App\Utils;
 use Cookie;
-use Redis;
+use Illuminate\Support\Facades\Redis;
 
 class Auth {
     

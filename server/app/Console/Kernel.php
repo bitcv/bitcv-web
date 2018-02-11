@@ -25,15 +25,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-
-//        $schedule->call(function (){
-//            $this->projReportWeChat();
-//            })->everyMinute();
-//
-//        $schedule->call(function (){
-//            $this->projReportWeibo();
-//        })->everyMinute();
-
         $schedule->call(function () {
             $this->projReportRobot();
         })->everyMinute();
@@ -95,6 +86,7 @@ class Kernel extends ConsoleKernel
         }
     }
 
+    
 
     /**
      * Register the Closure based commands for the application.

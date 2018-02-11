@@ -6,7 +6,6 @@
     <img :src="news.bannerUrl" alt="">
     <div class = "content">
       <span class="content-title">{{news.title}}</span>
-      <!-- <span class="content-text">{{news.content}}</span> -->
       <span class = "content-text" v-html="news.content"></span>
       <span class="content-time">{{news.releaseTime}}</span>
     </div>

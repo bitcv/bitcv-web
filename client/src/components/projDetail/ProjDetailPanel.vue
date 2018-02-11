@@ -20,11 +20,6 @@
           合作伙伴
         </router-link>
       </span>
-      <!-- <span :class="{active: activeIndex === 5}" @click="activeIndex=5">
-        <router-link to="#Media">
-          媒体报道
-        </router-link>
-      </span> -->
     </div>
     <div class="content">
       <div class="info-area" id="Info">
