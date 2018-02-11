@@ -27,7 +27,7 @@
           </a>
         </div>
       </div>
-      <div class="group-area" id="Public">
+      <div class="group-area" v-if="noticeList.length" id="Public">
         <h3 class="center-title panel-title">官方公告</h3>
         <ul class="notice-list">
           <li v-for="(notice, index) in noticeList" :key="index">
@@ -54,7 +54,7 @@
             <!--</div>-->
             <!--</a>-->
       </div>
-      <div class = "public-area" id="Group">
+      <div class = "public-area" id="Group" v-if="socialList.length">
         <h3 class="center-title">社群发布</h3>
         <a :href="dynamic.referUrl" target="_blank" v-for="(dynamic, index) in projDetail.dynamicList" :key="index">
           <div class = "group-panel">
@@ -95,28 +95,7 @@ export default {
   data () {
     return {
       activeIndex: 1,
-      noticeList: [{
-        title: '有利论坛升级改造',
-        url: 'http://www.baidu.com',
-        date: '2018-10-13'
-      }, {
-        title: '有利论坛升级改造',
-        url: 'http://www.baidu.com',
-        date: '2018-10-13'
-      }],
-      socialList: [{
-        title: '张默默',
-        text: '的飞洒干啥跟帅哥撒旦个撒个是的个是多个砂锅大撒个是爱国撒个撒个是爱国按时高大上多个暗示过按时个啊三个大个啊三个大撒个撒个萨顶顶噶啥干撒个',
-        logoUrl: '/static/img/logo.png',
-        time: '2018-10-13',
-        source: 'facebook'
-      }, {
-        title: '张默默',
-        text: '的飞洒干啥跟帅哥撒旦个撒个是的个是多个砂锅大撒个是爱国撒个撒个是爱国按时高大上多个暗示过按时个啊三个大个啊三个大撒个撒个萨顶顶噶啥干撒个',
-        logoUrl: '/static/img/logo.png',
-        time: '2018-10-13',
-        source: 'facebook'
-      }]
+      noticeList: []
     }
   },
   components: {
