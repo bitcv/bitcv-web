@@ -20,11 +20,6 @@
           合作伙伴
         </router-link>
       </span>
-      <!-- <span :class="{active: activeIndex === 5}" @click="activeIndex=5">
-        <router-link to="#Media">
-          媒体报道
-        </router-link>
-      </span> -->
     </div>
     <div class="content">
       <div class="info-area" id="Info">
@@ -71,17 +66,17 @@
           </a>
         </div>
       </div>
-      <div v-if="projDetail.reportList.length" class="media-area" id="Media">
-        <h3 class="center-title panel-title">媒体报道</h3>
-        <div class="item-box">
-          <a class="item mobile-list-item" :href="report.linkUrl" target="_blank" v-for="(report, index) in projDetail.reportList" :key="index">
-            <div class="image-area">
-              <img class="log" :src="report.logoUrl" alt="">
-            </div>
-            <span class="content">{{ report.title }}</span>
-          </a>
-        </div>
-      </div>
+      <!--<div v-if="projDetail.reportList.length" class="media-area" id="Media">-->
+        <!--<h3 class="center-title panel-title">媒体报道</h3>-->
+        <!--<div class="item-box">-->
+          <!--<a class="item mobile-list-item" :href="report.linkUrl" target="_blank" v-for="(report, index) in projDetail.reportList" :key="index">-->
+            <!--<div class="image-area">-->
+              <!--<img class="log" :src="report.logoUrl" alt="">-->
+            <!--</div>-->
+            <!--<span class="content">{{ report.title }}</span>-->
+          <!--</a>-->
+        <!--</div>-->
+      <!--</div>-->
     </div>
   </div>
 </template>

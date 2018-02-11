@@ -1,3 +1,4 @@
+/* eslint-disable */
 exports.install = function (Vue, options) {
   Vue.prototype.convertFundStage = function (index) {
     switch (index) {
@@ -37,6 +38,21 @@ exports.install = function (Vue, options) {
         return '社交'
       default:
         return '其它'
+    }
+  }
+  Vue.prototype.getShortStr = function (string, num) {
+    return string.substr(0, num) + '...' + string.substr(-1 * num)
+  }
+  Array.prototype.indexOf = function (val) {
+    for (var i = 0; i < this.length; i++) {
+      if (this[i] === val) return i
+    }
+    return -1
+  }
+  Array.prototype.remove = function (val) {
+    var index = this.indexOf(val)
+    if (index > -1) {
+      this.splice(index, 1)
     }
   }
 }

@@ -6,15 +6,12 @@
         <router-link class="detail-box" :class="{ active: current === 1 }" :to="{ path: '/projDetail/info/' + projDetail.id}">
           <img :src="'/static/img/project' + (current === 1 ? '.png' : '-default.png')" alt="">
           <span class="detail">项目信息</span>
-          <!--<el-button class = "detail">项目信息</el-button>-->
         </router-link>
         <router-link class="news-box" :class="{ active: current === 2 }" :to="{ path: '/projDetail/dynamic/' + projDetail.id}">
           <img :src="'/static/img/dynamic' + (current === 2 ? '.png' : '-default.png')" alt="">
           <span class="news">项目动态</span>
-          <!--<el-button class = "news">项目动态</el-button>-->
         </router-link>
       </div>
-      <!--<proj-detail-panel :proj-detail="projDetail"></proj-detail-panel>-->
       <router-view :proj-detail="projDetail"></router-view>
     </div>
     <div class="aside-panel">

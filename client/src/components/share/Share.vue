@@ -21,7 +21,7 @@
           <span class="multi-content">{{ projDetail.abstract }}</span>
         </div>
       </div>
-      <div class="more-info">（登陆<a class="link" href="lianbi.io">lianbi.io</a>获取更多项目详细信息）</div>
+      <div class="more-info">（登陆<a class="link" href="http://www.bitcv.com">bitcv.com</a>获取更多项目详细信息）</div>
     </div>
     <div class="footer-box">
       <img src="/static/img/share_footer.png" alt="" class="share-img">

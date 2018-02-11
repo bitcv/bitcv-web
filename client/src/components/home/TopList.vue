@@ -36,7 +36,6 @@ export default {
 .top-list {
   box-sizing: border-box;
   width: 350px;
-  height: 339px;
   padding: 20px;
   background-color: #FFF;
   .info-container {

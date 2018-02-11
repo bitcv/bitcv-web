@@ -7,7 +7,7 @@
     </div>
     <div class="aside-panel">
       <top-list></top-list>
-      <news-panel></news-panel>
+      <!--<news-panel></news-panel>-->
     </div>
   </div>
 </template>

@@ -66,6 +66,7 @@ export default new Router({
   }, {
     path: '/projDetail/:id',
     component: ProjDetail,
+    redirect: '/projDetail/info/:id',
     children: [{
       path: '/projDetail/info/:id',
       component: ProjDetailPanel

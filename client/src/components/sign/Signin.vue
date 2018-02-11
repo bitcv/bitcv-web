@@ -6,7 +6,7 @@
       <!--<span class="qrcode" :class="{active : curIndex === 1}" @click="curIndex = 1">扫码登录</span>-->
     <!--</div>-->
     <template v-if="curIndex === 0">
-      <span class="prompt">lianbi会员可直接使用会员名登录</span>
+      <!--<span class="prompt">lianbi会员可直接使用会员名登录</span>-->
       <form>
         <input v-model="mobile" type="text" placeholder="手机号">
         <input v-model="passwd" type="password" placeholder="登录密码">

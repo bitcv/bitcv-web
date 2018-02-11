@@ -8,25 +8,26 @@
         <div class="info-row">
           <span class="title">项目：</span>
           <div class="content-box">
-            <img src="/static/logo/bcv.png" alt="">
+            <!--<img src="/static/logo/bcv.png" alt="">-->
+            <img :src="depositBoxData.logoUrl" alt="">
             <div class="info-box">
-              <span class="title">BCV</span>
-              <span class="text">BitCV</span>
+              <span class="title">{{ depositBoxData.tokenSymbol }}</span>
+              <span class="text">{{ depositBoxData.tokenName }}</span>
             </div>
           </div>
         </div>
         <div class="info-row">
           <div class="info-item">
             <span class="title">充值数量：</span>
-            <span class="content">3000枚</span>
+            <span class="content">{{ depositBoxData.orderAmount }}枚</span>
           </div>
           <div class="info-item">
             <span class="title">锁仓期：</span>
-            <span class="content">180天</span>
+            <span class="content">{{ depositBoxData.lockTime }}个月</span>
           </div>
           <div class="info-item">
             <span class="title">回报：</span>
-            <span class="content">8000枚</span>
+            <span class="content">{{ depositBoxData.interestRate * depositBoxData.orderAmount }}枚</span>
           </div>
         </div>
         <div class="info-row">
@@ -42,12 +43,13 @@
           <span class="title">订单状态：</span>
           <span class="content">等待确认</span>
         </div>
-        <img class="qrcode" src="/static/logo/qrcode.png" alt="">
+        <!--<img class="qrcode" src="/static/logo/qrcode.png" alt="">-->
+        <div class="qrcode"></div>
       </div>
       <div class="btn-box">
         <div class="btn-row">
           <input type="checkbox">
-          <span>我已向目标接收地址充值<em>30000</em>枚</span>
+          <span>我已向目标接收地址充值<em>{{ depositBoxData.orderAmount }}</em>枚</span>
         </div>
         <div class="btn" @click="toOrderConfirm">
           <span>开始确认</span>
@@ -66,10 +68,27 @@ export default {
   },
   mounted () {
     this.depositBoxData = this.$route.query
+    this.$nextTick(() => {
+      require('@/components/share/jquery.min.js')
+      require('@/components/share/qrcode.min.js')
+      this.getQrcode()
+    })
   },
   methods: {
     toOrderConfirm () {
-      this.$router.push('/candyRoom/candyOrderConfirm')
+      console.log('click')
+      this.$router.push({
+        path: '/candyRoom/candyOrderConfirm',
+        query: this.depositBoxData
+      })
+    },
+    getQrcode () {
+      // eslint-disable-next-line
+      $('.qrcode').qrcode({
+        text: this.depositBoxData.toAddr,
+        width: 150,
+        height: 150
+      })
     }
   }
 }
@@ -90,6 +109,7 @@ export default {
   .content-area {
     background-color: #FFF;
     padding: 20px;
+    position: relative;
     .info-area {
       box-sizing: border-box;
       width: 100%;

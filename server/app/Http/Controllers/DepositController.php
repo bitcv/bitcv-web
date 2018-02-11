@@ -122,16 +122,13 @@ class DepositController extends Controller
         // 获取请求参数
         $params = $this->validation($request, [
             'depositOrderId' => 'required|numeric',
-            //'txRecordIdList' => 'required|array',
-            'txRecordIdList' => 'required|string',
+            'txRecordIdList' => 'required|array',
+            //'txRecordIdList' => 'required|string',
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
-
-        // temp
-        $txRecordIdList = json_decode($txRecordIdList, true);
 
         // 获取订单信息
         $depositOrderData = Model\DepositOrder::find($depositOrderId);
@@ -149,7 +146,6 @@ class DepositController extends Controller
             'txRecordIdList' => $txRecordIdList,
         );
         $resJson = BaseUtil::curlPost('localhost:9999/api/confirmTx', $postData);
-        var_dump($resJson);
         $resArr = json_decode($resJson, true);
         if (!$resArr || $resArr['errcode'] !== 0) {
             return $this->error(307);
@@ -166,12 +162,25 @@ class DepositController extends Controller
         }
 
         // 更新订单状态
-        Model\DepositOrder::where('id', $depositOrderId)->update([
+        $flag = Model\DepositOrder::where('id', $depositOrderId)->update([
             'status' => 1,
             'finish_time' => date('Y-m-d H:i:s'),
         ]);
 
         return $this->output();
+    }
+
+    public function cancelDepositOrder (Request $request) {
+
+        // 获取请求参数
+        $params = $this->validation($request, [
+            'depositOrderId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
     }
 
     public function getUserOrderList (Request $request) {
@@ -203,8 +212,8 @@ class DepositController extends Controller
 
         $dataCount = $depositOrderModel->count();
         $offset = $perpage * ($pageno - 1);
-        $depositOrderList = $depositOrderModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.logo_url', 'deposit_box.lock_time', 'deposit_box.interest_rate', 'deposit_order.id', 'deposit_order.created_at as orderTime', 'deposit_order.order_amount')
-            ->offset($offset)->limit($perpage)->get()->toArray();
+        $depositOrderList = $depositOrderModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.logo_url', 'deposit_box.lock_time', 'deposit_box.interest_rate', 'deposit_order.id', 'deposit_order.created_at as orderTime', 'deposit_order.order_amount', 'deposit_order.status')
+            ->orderBy('deposit_order.created_at', 'desc')->offset($offset)->limit($perpage)->get()->toArray();
 
         return $this->output([
             'dataCount' => $dataCount,

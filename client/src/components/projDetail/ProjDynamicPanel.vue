@@ -27,57 +27,34 @@
           </a>
         </div>
       </div>
-      <div class="group-area" id="Public">
+      <div class="group-area" v-if="projDetail.publicList.length" id="Public">
         <h3 class="center-title panel-title">官方公告</h3>
         <ul class="notice-list">
-          <li v-for="(notice, index) in noticeList" :key="index">
-            <a :href="notice.url" target="_blank">
+          <li v-for="(notice, index) in projDetail.publicList" :key="index">
+            <a :href="notice.referUrl" target="_blank">
               <div class="title">
                 <span class="dot"> </span>
                 <span>{{ notice.title }}</span>
               </div>
-              <span class="date">{{ notice.date }}</span>
+              <span class="date">{{ notice.createdAt }}</span>
             </a>
           </li>
         </ul>
-        <!-- <div>
-          <img :src="projDetail.bannerUrl" alt="">
-          </div> -->
-          <!-- <div class="abstract">
-            <span>{{ projDetail.abstract }}</span>
-            </div> -->
-            <!--<a :href="publicItem.referUrl" target="_blank" v-for="(publicItem, index) in projDetail.publicList" :key="index">-->
-            <!--<div class = "public-content">-->
-            <!--<span class = "official">*</span>-->
-            <!--<span class = "content">{{publicItem.title}}</span>-->
-            <!--<span class = "pub_time">{{publicItem.createdAt}}</span>-->
-            <!--</div>-->
-            <!--</a>-->
       </div>
-      <div class = "public-area" id="Group">
+      <div class = "public-area" id="Group" v-if="projDetail.dynamicList.length">
         <h3 class="center-title">社群发布</h3>
-        <a :href="dynamic.referUrl" target="_blank" v-for="(dynamic, index) in projDetail.dynamicList" :key="index">
-          <div class = "group-panel">
-            <img :src="dynamic.logoUrl" alt="">
-            <div class = "content">
-              <span class="content-title">{{dynamic.officialName}}</span>
-              <span class = "content-text">{{dynamic.title}}</span>
-              <span class="content-time">{{dynamic.createdAt}}</span>
-            </div>
-          </div>
-        </a>
         <ul class="social-list">
-          <li v-for="(social, index) in socialList" :key="index">
+          <li v-for="(social, index) in projDetail.dynamicList" :key="index">
             <img :src="social.logoUrl" alt="">
             <div class="content-box">
               <div class="title-box">
-                <span class="content-title">{{ social.title }}</span>
-                <a class="content-source"><i class="fab fa-facebook"></i></a>
+                <span class="content-title">{{ social.officialName }}</span>
+                <a :href="social.referUrl" class="content-source"><i class="fab" :class="social.fontClass"></i></a>
               </div>
-              <span class="content-text">{{ social.text }}</span>
+              <span class="content-text">{{ social.title }}</span>
               <div class="content-footer">
-                <span class="content-time">{{ social.time }}</span>
-                <a :href="social.linkUrl">查看原文</a>
+                <span class="content-time">{{ social.createdAt }}</span>
+                <a :href="social.referUrl">查看原文</a>
               </div>
             </div>
           </li>
@@ -95,28 +72,7 @@ export default {
   data () {
     return {
       activeIndex: 1,
-      noticeList: [{
-        title: '有利论坛升级改造',
-        url: 'http://www.baidu.com',
-        date: '2018-10-13'
-      }, {
-        title: '有利论坛升级改造',
-        url: 'http://www.baidu.com',
-        date: '2018-10-13'
-      }],
-      socialList: [{
-        title: '张默默',
-        text: '的飞洒干啥跟帅哥撒旦个撒个是的个是多个砂锅大撒个是爱国撒个撒个是爱国按时高大上多个暗示过按时个啊三个大个啊三个大撒个撒个萨顶顶噶啥干撒个',
-        logoUrl: '/static/img/logo.png',
-        time: '2018-10-13',
-        source: 'facebook'
-      }, {
-        title: '张默默',
-        text: '的飞洒干啥跟帅哥撒旦个撒个是的个是多个砂锅大撒个是爱国撒个撒个是爱国按时高大上多个暗示过按时个啊三个大个啊三个大撒个撒个萨顶顶噶啥干撒个',
-        logoUrl: '/static/img/logo.png',
-        time: '2018-10-13',
-        source: 'facebook'
-      }]
+      noticeList: []
     }
   },
   components: {
@@ -223,44 +179,44 @@ export default {
             width: 168px;
             /*height: 222px;
             display: flex;*/
-display:inline-block;
-text-align:center;
-background-color: #FFF;
-position: relative;
-justify-content: center;
-align-items: center;
-flex-direction: column;
-margin: 5px;
-img {
-  width: 100%;
-  /*height: 73px;*/
-  border-radius: 50%;
-}
-.name {
-  font-size: 14px;
-  line-height: 30px;
-  border-top: 2px solid #5AA6FF;
-  color: #000;
-  margin-top: 22px;
-}
-.intro-hover {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  line-height: 20px;
-  color: rgba(256, 256, 256, 0);
-  background-color: rgba(256, 256, 256, 0);
-  &:hover {
-    color: #4A4A4A;
-    background-color: rgba(256, 256, 256, 0.9);
-  }
-}
+            display:inline-block;
+            text-align:center;
+            background-color: #FFF;
+            position: relative;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 5px;
+            img {
+              width: 100%;
+              /*height: 73px;*/
+              border-radius: 50%;
+            }
+            .name {
+              font-size: 14px;
+              line-height: 30px;
+              border-top: 2px solid #5AA6FF;
+              color: #000;
+              margin-top: 22px;
+            }
+            .intro-hover {
+              position: absolute;
+              top: 0;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-size: 14px;
+              line-height: 20px;
+              color: rgba(256, 256, 256, 0);
+              background-color: rgba(256, 256, 256, 0);
+              &:hover {
+                color: #4A4A4A;
+                background-color: rgba(256, 256, 256, 0.9);
+              }
+            }
           }
         }
       }

@@ -2,7 +2,9 @@
 
 namespace App\Utils;
 use Cookie;
-use Redis;
+//use Redis;
+
+use Illuminate\Support\Facades\Redis;
 
 class Auth {
     
@@ -66,4 +68,19 @@ class Auth {
         return $token;
     }
 
+    public static function getUserId () {
+        //先从cookie获取，laravel会把加密cookie放到_REQUEST数组
+        $token = Cookie::get('token');
+        if (!$token) { // 移动端通过参数验证登录
+            $token = isset($_REQUEST['token']) ? $_REQUEST['token'] : '';
+        }
+        if (!$token) {
+            return false;
+        }
+        $uid = self::getTokenUid($token);
+        if (!$uid) {
+            return false;
+        }
+        return $uid;
+    }
 }
