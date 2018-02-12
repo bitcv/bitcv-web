@@ -29,7 +29,7 @@ export default {
           localStorage.removeItem('userId')
           localStorage.removeItem('mobile')
           localStorage.removeItem('avatarUrl')
-          window.location.href = "/"
+          window.location.href = '/'
         }
       })
     }

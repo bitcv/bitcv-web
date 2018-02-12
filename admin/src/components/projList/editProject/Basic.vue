@@ -52,7 +52,7 @@
         </el-form-item>
         <el-form-item :label="select.label" v-for="(select, field) in selectList" :key="field" required>
           <el-select v-model="formData[field]">
-            <el-option v-for="(option, index) in select.optionList" :key="option.value" :label="option.label" :value="option.value"></el-option>
+            <el-option v-for="option in select.optionList" :key="option.value" :label="option.label" :value="option.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="融资开始日期" prop="fundStartTime">

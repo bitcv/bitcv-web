@@ -115,7 +115,7 @@ export default {
       inputTotalAmount: '',
       inputMinAmount: '',
       inputLockTime: 3,
-      inputInterestRate: '',
+      inputInterestRate: 3,
       inputFromAddr: '',
       depositBoxList: [],
       fromAddr: '',
@@ -183,7 +183,7 @@ export default {
       this.inputTotalAmount = ''
       this.inputMinAmount = ''
       this.inputLockTime = 3
-      this.inputInterestRate = ''
+      this.inputInterestRate = 3
       this.inputFromAddr = ''
       this.showDialog = true
     },
@@ -195,12 +195,12 @@ export default {
       this.totalInterest = depositBox.interestRate * depositBox.totalAmount * depositBox.lockTime / 12
       this.inScan = false
       this.showOrder = true
-      // if (!this.hasQrcode) {
-      require('@/components/common/jquery.min.js')
-      $("#qrcode").html("")
-      this.getQrcode()
-      // this.hasQrcode = true
-      // }
+      this.$nextTick(function () {
+        require('@/components/common/jquery.min.js')
+        // eslint-disable-next-line
+        $('#qrcode').html('')
+        this.getQrcode()
+      })
     },
     showDel (depositBoxId) {
       this.$confirm('删除后无法恢复, 是否继续?', '提示', {
