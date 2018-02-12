@@ -291,6 +291,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.empty {
+  width: 100%;
+  color: #FFCF81;
+  text-align: center;
+}
 .link {
   &:hover {
     color: #FFCF81;

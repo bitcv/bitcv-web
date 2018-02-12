@@ -26,7 +26,7 @@
           </div>
           <div class="info-item">
             <span class="title">回报：</span>
-            <span class="content">{{ orderData.interestRate * orderData.orderAmount }}枚</span>
+            <span class="content">{{ getInterest(orderData.orderAmount, orderData.interestRate, orderData.lockTime) }}枚</span>
           </div>
         </div>
         <div class="info-row">
@@ -262,7 +262,6 @@ export default {
         cursor: pointer;
         margin-bottom: 10px;
         &.default {
-          background-color: #909399;
           margin-right: 20px;
         }
       }
