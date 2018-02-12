@@ -10,6 +10,7 @@ use App\Utils\Auth;
 
 class DepositController extends Controller
 {
+
     public function getDepositBoxList (Request $request) {
 
         // 获取请求参数
@@ -142,7 +143,7 @@ class DepositController extends Controller
             'toAddr' => $depositOrderData->to_addr,
             'contractAddr' => $depositOrderData->contract_addr,
         );
-        $resJson = BaseUtil::curlPost('localhost:9999/api/getTxRecordList', $postData);
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/getTxRecordList', $postData);
         $resArr = json_decode($resJson, true);
         if (!$resArr || $resArr['errcode'] !== 0) {
             return $this->error();
@@ -157,7 +158,7 @@ class DepositController extends Controller
         // 获取请求参数
         $params = $this->validation($request, [
             'depositOrderId' => 'required|numeric',
-            'txRecordIdList' => 'required|array',
+            'txRecordIdList' => 'nullable|array',
         ]);
         if ($params === false) {
             return $this->error(100);
@@ -170,6 +171,10 @@ class DepositController extends Controller
             return $this->error(306);
         }
 
+        if ($txRecordIdList == null) {
+            return $this->error(309);
+        }
+
         $postData = array(
             'fromAddr' => $depositOrderData->from_addr,
             'toAddr' => $depositOrderData->to_addr,
@@ -177,7 +182,7 @@ class DepositController extends Controller
             'orderAmount' => $depositOrderData->order_amount . '',
             'txRecordIdList' => $txRecordIdList,
         );
-        $resJson = BaseUtil::curlPost('localhost:9999/api/confirmTx', $postData);
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/confirmTx', $postData);
         $resArr = json_decode($resJson, true);
         if (!$resArr || $resArr['errcode'] !== 0) {
             return $this->error(307);

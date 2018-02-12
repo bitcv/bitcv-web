@@ -88,6 +88,9 @@ exports.install = function (Vue, options) {
     }
     return result;
   }
+  Vue.prototype.getInterest = function (amount, interestRate, lockTime) {
+    return amount * interestRate * lockTime / 12
+  }
   Array.prototype.indexOf = function (val) {
     for (var i = 0; i < this.length; i++) {
       if (this[i] === val) return i

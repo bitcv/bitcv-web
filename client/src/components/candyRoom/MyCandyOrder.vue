@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     confirmOrder (orderId) {
-      this.$router.push('/candyRoom/candyOrderDetail/' + orderId)
+      this.$router.push('/candyRoom/candyOrderConfirm/' + orderId)
     },
     updateData () {
       var params = {

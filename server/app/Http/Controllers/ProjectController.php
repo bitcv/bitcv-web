@@ -232,13 +232,16 @@ class ProjectController extends Controller
     public function getProjTagList (Request $request) {
         $regionOptionList = [
             array('label' => '不限', 'value' => 0),
-            array('label' => '国内', 'value' => 1),
-            array('label' => '国外', 'value' => 2),
+            array('label' => '美国', 'value' => 1),
+            array('label' => '日韩', 'value' => 2),
+            array('label' => '欧洲', 'value' => 3),
+            array('label' => '东南亚', 'value' => 4),
+            array('label' => '其他地区', 'value' => 5),
         ];
         $buzOptionList = [
             array('label' => '不限', 'value' => 0),
             array('label' => '金融', 'value' => 1),
-            array('label' => '数字货币', 'value' => 2),
+            array('label' => '数字资产', 'value' => 2),
             array('label' => '娱乐', 'value' => 3),
             array('label' => '供应链管理', 'value' => 4),
             array('label' => '法律服务', 'value' => 5),
@@ -252,10 +255,10 @@ class ProjectController extends Controller
         ];
         $stageOptionList = [
             array('label' => '不限', 'value' => 0),
-            array('label' => '初创期', 'value' => 1),
-            array('label' => '成长发展期', 'value' => 2),
-            array('label' => '上市公司', 'value' => 3),
-            array('label' => '成熟期', 'value' => 4),
+            array('label' => '募资前', 'value' => 1),
+            array('label' => '募资中', 'value' => 2),
+            array('label' => '公开发行', 'value' => 3),
+            array('label' => '产品落地', 'value' => 4),
         ];
 
         return $this->output([

@@ -9,7 +9,7 @@
           <img class="table-image" :src="scope.row.logoUrl" alt="">
         </template>
       </el-table-column>
-      <el-table-column label="名称">
+      <el-table-column label="机构名称">
         <template slot-scope="scope">{{ scope.row.name }}</template>
       </el-table-column>
       <el-table-column label="主页url">
@@ -22,7 +22,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="合作伙伴信息" :visible.sync="showDialog" center>
+    <el-dialog title="合作机构信息" :visible.sync="showDialog" center>
       <el-form label-width="80px">
         <el-form-item label="名称">
           <el-input v-model="inputName"></el-input>

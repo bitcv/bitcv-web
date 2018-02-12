@@ -95,15 +95,12 @@ export default {
       this.menuIndex = index
     },
     signout () {
-      var that = this
-      this.$http.post('/api/signout', {}).then(function (res) {
-        console.log('signout')
-        var resData = res.data
-        if (resData.errcode === 0) {
+      this.$http.post('/api/signout', {}).then((res) => {
+        if (res.data.errcode === 0) {
           localStorage.removeItem('userId')
           localStorage.removeItem('mobile')
           localStorage.removeItem('avatarUrl')
-          that.$router.go(0)
+          this.$router.go(0)
         }
       })
     },

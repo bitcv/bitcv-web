@@ -39,6 +39,7 @@ class Controller extends BaseController
         '306' => ['errcode' => 306, 'errmsg' => '订单ID不存在'],
         '307' => ['errcode' => 307, 'errmsg' => '支付金额与订单金额不符'],
         '308' => ['errcode' => 308, 'errmsg' => '未填写合约地址'],
+        '309' => ['errcode' => 309, 'errmsg' => '没有发现相关联的交易'],
     ];
 
     public function validation(Request $request, Array $rules)

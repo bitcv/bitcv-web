@@ -43,10 +43,9 @@ class AdminController extends Controller
         $walletAddr = $projData->wallet_addr;
         if (!$walletAddr) {
             // 生成钱包地址
-            $resJson = BaseUtil::curlPost('localhost:9999/api/createWallet', array(
+            $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/createWallet', array(
                 'symbol' => 'eth',
             ));
-            var_dump($resJson);
             $resArr = json_decode($resJson, true);
             if (!$resArr || $resArr['errcode'] !== 0) {
                 return $this->error();
@@ -67,16 +66,16 @@ class AdminController extends Controller
             'total_amount' => $totalAmount,
             'remain_amount' => $totalAmount,
             'interest_rate' => $interestRate,
-            'from_addr' => $fromAddr,
-            'to_addr' => $walletAddr,
-            'contract_addr' => $projData->contract_addr,
+            'from_addr' => strtolower($fromAddr),
+            'to_addr' => strtolower($walletAddr),
+            'contract_addr' => strtolower($projData->contract_addr),
             'status' => 0,
         ]);
         $totalInterest = $totalAmount * $interestRate;
 
         return $this->output([
-            'fromAddr' => $fromAddr,
-            'toAddr' => $walletAddr,
+            'fromAddr' => strtolower($fromAddr),
+            'toAddr' => strtolower($walletAddr),
             'totalInterest' => $totalInterest,
             'depositBoxId' => $depositBoxData->id,
         ]);
@@ -122,7 +121,7 @@ class AdminController extends Controller
             'toAddr' => $depositBoxData->to_addr,
             'contractAddr' => $depositBoxData->contract_addr,
         );
-        $resJson = BaseUtil::curlPost('localhost:9999/api/getTxRecordList', $postData);
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/getTxRecordList', $postData);
         $resArr = json_decode($resJson, true);
         if (!$resArr || $resArr['errcode'] !== 0) {
             return $this->error();
@@ -136,7 +135,7 @@ class AdminController extends Controller
 
         $params = $this->validation($request, [
             'depositBoxId' => 'required|numeric',
-            'txRecordIdList' => 'required|array',
+            'txRecordIdList' => 'nullable|array',
         ]);
         if ($params === false) {
             return $this->error(100);
@@ -148,7 +147,11 @@ class AdminController extends Controller
             return $this->error();
         }
 
-        $orderAmount = $depositBoxData->interest_rate * $depositBoxData->total_amount;
+        if ($txRecordIdList == null) {
+            return $this->error(309);
+        }
+
+        $orderAmount = $depositBoxData->interest_rate * $depositBoxData->total_amount * $depositBoxData->lock_time / 12;
 
         $postData = array(
             'fromAddr' => $depositBoxData->from_addr,
@@ -157,7 +160,7 @@ class AdminController extends Controller
             'orderAmount' => $orderAmount . '',
             'txRecordIdList' => $txRecordIdList,
         );
-        $resJson = BaseUtil::curlPost('localhost:9999/api/confirmTx', $postData);
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/confirmTx', $postData);
         $resArr = json_decode($resJson, true);
         if (!$resArr || $resArr['errcode'] !== 0) {
             return $this->error(307);
@@ -517,6 +520,7 @@ class AdminController extends Controller
             $projBasicInfo['tokenName'] = $tokenModel->name;
             $projBasicInfo['tokenSymbol'] = $tokenModel->symbol;
             $projBasicInfo['tokenPrice'] = $tokenModel->price;
+            $projBasicInfo['contractAddr'] = $tokenModel->contract_addr;
         }
 
         return $this->output($projBasicInfo);
@@ -544,8 +548,8 @@ class AdminController extends Controller
             'companyEmail' => 'string|nullable',
             'companyAddr' => 'string|nullable',
             'bannerUrl' => 'string|nullable',
-            'tokenName' => 'string|nullable',
-            'tokenSymbol' => 'string|nullable',
+            'tokenName' => 'string|required',
+            'tokenSymbol' => 'string|required',
             'tokenPrice' => 'string|nullable',
             'contractAddr' => 'string|nullable'
         ]);
@@ -554,14 +558,12 @@ class AdminController extends Controller
         }
         extract($params);
 
-        $homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
 
         $projInfo = [
             'name_cn' => $nameCn,
             'name_en' => $nameEn,
             'found_date' => date('Y-m-d H-i-s', strtotime($foundDate)),
             'logo_url' => $logoUrl,
-            'home_url' => $homeUrl,
             'short_desc' => $shortDesc,
             'white_paper_url' => $whitePaperUrl,
             'abstract' => $abstract,
@@ -597,6 +599,10 @@ class AdminController extends Controller
         }
         if ($bannerUrl) {
             $projInfo['banner_url'] = $bannerUrl;
+        }
+        if ($homeUrl) {
+            $homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
+            $projInfo['home_url'] = $homeUrl;
         }
 
         Model\Project::where('id', $projId)->update($projInfo);

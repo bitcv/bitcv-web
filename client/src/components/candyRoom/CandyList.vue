@@ -25,7 +25,7 @@
             <th></th>
           </tr>
           <tr class="table-row" v-for="depositBox in depositBoxList" :key="depositBox.id">
-            <td>{{ depositBox.interestRate * 10000 }}枚</td>
+            <td>{{ getInterest(10000, depositBox.interestRate, depositBox.lockTime) }}枚</td>
             <td>{{ depositBox.lockTime }}个月</td>
             <td>
               <img :src="depositBox.logoUrl" alt="">
