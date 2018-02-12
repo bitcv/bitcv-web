@@ -2,7 +2,7 @@
   <div class="header container">
     <div class="logo">
       <a href="/">
-        <img src="/admin_static/img/logo-white.png" alt="">
+        <img src="/static/img/logo-white.png" alt="">
       </a>
     </div>
     <div class="info">
