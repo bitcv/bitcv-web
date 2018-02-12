@@ -25,7 +25,8 @@ class ProjectController extends Controller
         }
         extract($params);
 
-        $projModel = Model\Project::join('token', 'project.token_id', '=', 'token.id');
+        $projModel = Model\Project::join('token', 'project.token_id', '=', 'token.id')
+            ->where('status', 1);
         if ($keyword) {
             $projModel = $projModel
                 ->where('name_cn', 'like', "%$keyword%")
@@ -213,12 +214,14 @@ class ProjectController extends Controller
 
         if ($type === 'view') {
             $projList = Model\Project::orderBy('view_times', 'desc')
+                ->where('status', 1)
                 ->select('id as proj_id', 'name_cn', 'view_times as count')->limit($count)
                 ->get()->toArray();
             return $this->output($projList);
         }
         if ($type === 'focus') {
             $focusList = Model\UserFocus::select('proj_id', DB::raw('COUNT(proj_id) as count'))
+                ->where('status', 1)
                 ->groupBy('proj_id')->orderBy('count', 'desc')->limit($count)
                 ->get()->toArray();
             foreach ($focusList as $index => &$focus) {

@@ -14,14 +14,15 @@
           </template>
         </el-table-column>
         <el-table-column label="项目名称" prop="nameCn"></el-table-column>
-        <el-table-column label="创建时间" prop="createdAt">
-        </el-table-column>
+        <el-table-column label="创建时间" prop="createdAt"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <router-link :to="'/admin/editProject/' + scope.row.id">
               <el-button size="mini">编辑</el-button>
             </router-link>
             <el-button size="mini" type="danger" @click="showDel(scope.row.id)">删除</el-button>
+            <el-button v-if="scope.row.status===0" size="mini" type="primary" @click="authProject(scope.row.id)">审核通过</el-button>
+            <el-button v-else size="mini" type="warning" @click="clearAuth(scope.row.id)">取消授权</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -71,6 +72,26 @@ export default {
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '删除成功!' })
+          this.updateData()
+        }
+      })
+    },
+    authProject (projId) {
+      this.$http.post('/api/authProject', {
+        projId: projId
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$message({ type: 'success', message: '授权成功!' })
+          this.updateData()
+        }
+      })
+    },
+    clearAuth (projId) {
+      this.$http.post('/api/clearProjAuth', {
+        projId: projId
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$message({ type: 'success', message: '取消授权成功!' })
           this.updateData()
         }
       })

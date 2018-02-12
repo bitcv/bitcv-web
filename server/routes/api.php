@@ -57,6 +57,8 @@ Route::group(['middleware' => 'checkLogin'], function() {
 //超级管理员接口
 Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('addProject', 'AdminController@addProject');
+    Route::any('authProject', 'AdminController@authProject');
+    Route::any('clearProjAuth', 'AdminController@clearProjAuth');
     Route::any('delProject', 'AdminController@delProject');
     
     Route::any('addMedia', 'AdminController@addMedia');

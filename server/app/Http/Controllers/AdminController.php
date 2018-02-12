@@ -14,6 +14,34 @@ class AdminController extends Controller
         return $this->output(\App\Utils\Auth::$user);
     }
 
+    public function authProject (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Project::where('id', $projId)->update(['status' => 1]);
+
+        return $this->output();
+    }
+
+    public function clearProjAuth (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Project::where('id', $projId)->update(['status' => 0]);
+
+        return $this->output();
+    }
+
     public function addDepositBox (Request $request) {
 
         $params = $this->validation($request, [
