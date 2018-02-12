@@ -221,9 +221,13 @@ class ProjectController extends Controller
             $focusList = Model\UserFocus::select('proj_id', DB::raw('COUNT(proj_id) as count'))
                 ->groupBy('proj_id')->orderBy('count', 'desc')->limit($count)
                 ->get()->toArray();
-            foreach ($focusList as &$focus) {
+            foreach ($focusList as $index => &$focus) {
                 $project = Model\Project::find($focus['proj_id']);
-                $focus['name_cn'] = $project->name_cn;
+                if (!$project) {
+                    unset($focusList[$index]);
+                } else {
+                    $focus['name_cn'] = $project->name_cn;
+                }
             }
             return $this->output($focusList);
         }
@@ -236,7 +240,7 @@ class ProjectController extends Controller
             array('label' => '日韩', 'value' => 2),
             array('label' => '欧洲', 'value' => 3),
             array('label' => '东南亚', 'value' => 4),
-            array('label' => '其他地区', 'value' => 5),
+            array('label' => '其它地区', 'value' => 5),
         ];
         $buzOptionList = [
             array('label' => '不限', 'value' => 0),

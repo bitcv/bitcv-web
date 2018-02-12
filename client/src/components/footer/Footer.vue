@@ -58,8 +58,11 @@ export default {
     align-items: center;
     box-sizing: border-box;
     .icon-box {
+      width: 350px;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: no-wrap;
       a {
-        margin-right: 68px;
         font-size: 28px;
         color: #9B9B9B;
         &:hover {

@@ -36,30 +36,31 @@
           </el-input>
             <el-button v-else class="tag-btn" size="small" @click="showTagInput">+ 添加标签</el-button>
         </el-form-item>
-        <el-form-item label="成立时间" prop="foundDate" required>
-          <el-date-picker v-model="formData.foundDate" type="datetime" default-value="2018-01-01T00:00:00" placeholder="请选择项目成立日期">
+        <el-form-item label="项目成立日期" prop="foundDate" required>
+          <el-date-picker v-model="formData.foundDate" type="date" placeholder="请选择项目成立日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="项目简介" prop="abstract">
-          <el-input type="textarea" v-model="formData.abstract" placeholder="请输入项目简介"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 8}" v-model="formData.abstract" placeholder="请输入项目简介"></el-input>
         </el-form-item>
         <el-form-item label="项目白皮书" prop="whitePaperUrl" required>
-          <el-upload class="upload-box" name="whitePaper" action="/api/uploadFile" :on-success="onWhitePaperSuccess" :show-file-list="false">
+          <el-upload class="upload-box" name="whitePaper" action="/api/uploadFile" :on-success="onWhitePaperSuccess" :show-file-list="false" style="display: inline-flex" accept="*.pdf">
             <i class="el-icon-plus"></i>
             <img :src="formData.whitePaperUrl" alt="">
           </el-upload>
+          <span>请上传项目白皮书 pdf 文件</span>
         </el-form-item>
         <el-form-item :label="select.label" v-for="(select, field) in selectList" :key="field" required>
           <el-select v-model="formData[field]">
             <el-option v-for="(option, index) in select.optionList" :key="option.value" :label="option.label" :value="option.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="融资开始时间" prop="fundStartTime">
-          <el-date-picker v-model="formData.fundStartTime" type="datetime" default-value="2018-01-01T00:00:00" placeholder="请选择融资开始日期">
+        <el-form-item label="融资开始日期" prop="fundStartTime">
+          <el-date-picker v-model="formData.fundStartTime" type="date" placeholder="请选择融资开始日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="融资结束时间" prop="fundEndTime">
-          <el-date-picker v-model="formData.fundEndTime" type="datetime" default-value="2018-01-01T00:00:00" placeholder="请选择融资结束日期">
+        <el-form-item label="融资结束日期" prop="fundEndTime">
+          <el-date-picker v-model="formData.fundEndTime" type="date" placeholder="请选择融资结束日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="融资阶段" prop="fundStage">
@@ -70,15 +71,15 @@
             <el-option label="已融资" :value="3"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="通证名称" prop="tokenName">
-          <el-input v-model="formData.tokenName" placeholder="请输入通证名称"></el-input>
-        </el-form-item>
-        <el-form-item label="通证符号" prop="tokenSymbol">
-          <el-input v-model="formData.tokenSymbol" placeholder="请输入通证符号"></el-input>
-        </el-form-item>
-        <el-form-item label="通证价格">
-          <el-input v-model="formData.tokenPrice" placeholder="请输入通证价格"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="通证名称" prop="tokenName">-->
+          <!--<el-input v-model="formData.tokenName" placeholder="请输入通证名称"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="通证符号" prop="tokenSymbol">-->
+          <!--<el-input v-model="formData.tokenSymbol" placeholder="请输入通证符号"></el-input>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="通证价格">-->
+          <!--<el-input v-model="formData.tokenPrice" placeholder="请输入通证价格"></el-input>-->
+        <!--</el-form-item>-->
         <el-form-item label="合约地址">
           <el-input v-model="formData.contractAddr" placeholder="请输入ERC20合约地址"></el-input>
         </el-form-item>
@@ -195,7 +196,7 @@ export default {
     },
     onWhitePaperSuccess (res) {
       if (res.errcode === 0) {
-        this.formData.whitePaperUrl = res.data.url
+        this.formData.whitePaperUrl = '/storage/static/pdf.jpg'
       }
     },
     showTagInput () {
@@ -215,9 +216,19 @@ export default {
       this.tagList.splice(index, 1)
     },
     submit () {
-      this.$http.post('/api/updProjBasicInfo', this.formData).then((res) => {
-        if (res.data.errcode === 0) {
-          this.$message({ type: 'success', message: '修改成功!' })
+      this.$refs['formData'].validate((valid) => {
+        if (!valid) {
+          this.$message({
+            message: '请填写所有必填项',
+            type: 'warning'
+          })
+        } else {
+          this.$http.post('/api/updProjBasicInfo', this.formData).then((res) => {
+            if (res.data.errcode === 0) {
+              this.$message({ type: 'success', message: '修改成功!' })
+              this.updateData()
+            }
+          })
         }
       })
     }

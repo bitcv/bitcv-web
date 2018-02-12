@@ -14,7 +14,7 @@
           <li :class="{cur: inputLockTime===12}" @click="inputLockTime=12">12个月</li>
         </ul>
       </div>
-      <div class="table-box">
+      <div class="table-box" v-if="depositBoxList.length">
         <table>
           <tr class="table-header">
             <th>回报（每万枚）</th>
@@ -46,6 +46,7 @@
           </tr>
         </table>
       </div>
+      <div class="message" v-else>暂时没有人发起余币宝计划</div>
     </div>
   </div>
 </template>
@@ -134,6 +135,13 @@ export default {
           }
         }
       }
+    }
+    .message {
+      width: 100%;
+      color: #9B9B9B;
+      text-align: center;
+      line-height: 60px;
+      border-top: 1px solid #E4E4E4;
     }
     .table-box {
       table {

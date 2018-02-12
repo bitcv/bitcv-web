@@ -55,7 +55,7 @@ class AdminController extends Controller
             $walletAddr = $resArr['data']['walletAddr'];
             Model\Project::where('id', $projId)->update([
                 'wallet_id' => $walletId,
-                'wallet_addr' => $walletAddr,
+                'wallet_addr' => strtolower($walletAddr),
             ]);
         }
 
@@ -548,16 +548,12 @@ class AdminController extends Controller
             'companyEmail' => 'string|nullable',
             'companyAddr' => 'string|nullable',
             'bannerUrl' => 'string|nullable',
-            'tokenName' => 'string|required',
-            'tokenSymbol' => 'string|required',
-            'tokenPrice' => 'string|nullable',
             'contractAddr' => 'string|nullable'
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
-
 
         $projInfo = [
             'name_cn' => $nameCn,
@@ -573,18 +569,40 @@ class AdminController extends Controller
             'fund_stage' => $fundStage,
         ];
 
-        if ($tokenName && $tokenSymbol && $contractAddr) {
-            $tokenModel = Model\Token::where('contract_addr', $contractAddr)->first();
-            if (!$tokenModel) {
-                $tokenModel = Model\Token::create([
-                    'name' => $tokenName,
-                    'symbol' => $tokenSymbol,
-                    'contract_addr' => $contractAddr,
-                    'price' => $tokenPrice ?: 0,
-                ]);
+        if ($contractAddr) {
+            $contractAddr = strtolower($contractAddr);
+            // 查询token数据库
+            $tokenObj = Model\Token::where('contract_addr', $contractAddr)->first();
+            if ($tokenObj) {
+                $projInfo['token_id'] = $tokenObj->id;
+            } else {
+                // 数据库中没有则抓取
+                $url = "https://etherscan.io/searchHandler?t=t&term=$contractAddr";
+                $result = file_get_contents($url);
+                $result = json_decode($result, true);
+                $isExist = false;
+                foreach ($result as $item) {
+                    preg_match('/(0x.*?)\\s.*TOKEN: (.*) \\((.*)\\)/is', $item, $match);
+                    $resContractAddr = $match[1];
+                    if ($contractAddr === strtolower($resContractAddr)) {
+                        $tokenName = $match[2];
+                        $tokenSymbol = $match[3];
+                        $isExist = true;
+                        break;
+                    }
+                }
+                if ($isExist) {
+                    // 抓取到后填充值数据库
+                    $tokenObj = Model\Token::create([
+                        'name' => $tokenName,
+                        'symbol' => $tokenSymbol,
+                        'contract_addr' => $contractAddr,
+                    ]);
+                    $projInfo['token_id'] = $tokenObj->id;
+                }
             }
-            $projInfo['token_id'] = $tokenModel->id;
         }
+
         if ($fundStartTime) {
             $projInfo['fund_start_time'] = date('Y-m-d H-i-s', strtotime($fundStartTime));
         }

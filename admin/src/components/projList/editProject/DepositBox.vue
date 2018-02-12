@@ -15,7 +15,9 @@
           <template slot-scope="scope">{{ scope.row.interestRate * 100 }}%</template>
         </el-table-column>
         <el-table-column label="接收地址">
-          <template slot-scope="scope">{{ getShortStr(scope.row.toAddr, 6) }}</template>
+          <template slot-scope="scope">
+            <a class="link" :href="'https://etherscan.io/token/EOS?a=' + scope.row.toAddr" target="_blank">{{ getShortStr(scope.row.toAddr, 6) }}</a>
+          </template>
         </el-table-column>
         <el-table-column label="操作或状态">
           <template slot-scope="scope">
@@ -77,7 +79,7 @@
           <el-table-column label="交易时间" prop="txTime"></el-table-column>
           <el-table-column label="交易哈希" prop="txHash">
             <template slot-scope="scope">
-              <a :href="'https://etherscan.io/tx/' + scope.row.txHash" target="_blank">{{ getShortStr(scope.row.txHash, 5) }}</a>
+              <a class="link" :href="'https://etherscan.io/tx/' + scope.row.txHash" target="_blank">{{ getShortStr(scope.row.txHash, 5) }}</a>
             </template>
           </el-table-column>
           <el-table-column label="操作">
@@ -289,9 +291,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.empty {
-  width: 100%;
-  text-align: center;
-  color: #F56C6C;
+.link {
+  &:hover {
+    color: #FFCF81;
+  }
 }
 </style>
