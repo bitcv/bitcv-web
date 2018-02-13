@@ -21,7 +21,8 @@ class NewsController extends Controller{
         extract($params);
 
         $offset = $perpage * ($pageno - 1);
-        $newList = Model\ProjReport::where('status',1)->offset($offset)->limit($perpage)->get()->toArray();
+        $newList = Model\ProjReport::join('media', 'proj_report.media_id', '=', 'media.id')
+            ->where('status',1)->offset($offset)->limit($perpage)->get()->toArray();
         //$dataCount = Model\News::count();
 
         return $this->output($newList);
@@ -37,7 +38,8 @@ class NewsController extends Controller{
             return $this->error(100);
         }
         extract($params);
-        $newDetail = Model\ProjReport::where('id', $id)->first();
+        $newDetail = Model\ProjReport::join('media', 'proj_report.media_id', '=', 'media.id')
+            ->where('proj_report.id', $id)->first();
         if ($newDetail === null) {
             return $this->error(203);
         }
