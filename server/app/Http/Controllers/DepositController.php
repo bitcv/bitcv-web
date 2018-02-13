@@ -80,7 +80,7 @@ class DepositController extends Controller
             'user_id' => $userId,
             'deposit_box_id' => $depositBoxId,
             'order_amount' => $orderAmount,
-            'from_addr' => $fromAddr,
+            'from_addr' => strtolower($fromAddr),
             'to_addr' => $depositBoxData['to_addr'],
             'contract_addr' => $depositBoxData['contract_addr'],
             'status' => 0,
