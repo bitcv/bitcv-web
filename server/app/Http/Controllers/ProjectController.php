@@ -192,7 +192,7 @@ class ProjectController extends Controller
 
         // 获取社交链接信息
         $projSocialList = Model\ProjSocial::join('social', 'proj_social.social_id', '=', 'social.id')
-            ->where('proj_id', $projId)
+            ->where([['proj_id', $projId],['status', 0]])
             ->select('name', 'font_class', 'link_url')
             ->get()->toArray();
         $projData['socialList'] = $projSocialList;
