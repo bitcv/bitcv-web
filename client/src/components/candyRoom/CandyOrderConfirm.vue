@@ -5,40 +5,45 @@
     </div>
     <div class="content-area">
       <div class="info-area">
-        <div class="info-row">
+        <div v-if="orderData.projData" class="info-row">
           <span class="title">项目：</span>
           <div class="content-box">
-            <img :src="depositBoxData.logoUrl" alt="">
+            <img :src="orderData.projData.logoUrl" alt="">
             <div class="info-box">
-              <span class="title">{{ depositBoxData.tokenSymbol }}</span>
-              <span class="text">{{ depositBoxData.tokenName }}</span>
+              <span class="title">{{ orderData.projData.tokenSymbol }}</span>
+              <span class="text">{{ orderData.projData.tokenName }}</span>
             </div>
           </div>
         </div>
         <div class="info-row">
           <div class="info-item">
             <span class="title">充值数量：</span>
-            <span class="content">{{ depositBoxData.orderAmount }}枚</span>
+            <span class="content">{{ orderData.orderAmount }}枚</span>
           </div>
           <div class="info-item">
             <span class="title">锁仓期：</span>
-            <span class="content">{{ depositBoxData.lockTime }}个月</span>
+            <span class="content">{{ orderData.lockTime }}个月</span>
           </div>
           <div class="info-item">
             <span class="title">回报：</span>
-            <span class="content">{{depositBoxData.interestRate * depositBoxData.orderAmount}}枚</span>
+            <span class="content">{{ getInterest(orderData.orderAmount, orderData.interestRate, orderData.lockTime) }}枚</span>
           </div>
         </div>
         <div class="info-row">
           <span class="title">接收地址：</span>
-          <span class="content">{{ depositBoxData.toAddr }}</span>
+          <span class="content">{{ orderData.toAddr }}</span>
         </div>
         <div class="info-row">
           <span class="title">您的地址：</span>
-          <span class="content">{{ depositBoxData.fromAddr }}</span>
+          <span class="content">{{ orderData.fromAddr }}</span>
         </div>
+        <div class="status-row">
+          <span class="title">订单状态：</span>
+          <span class="content">等待确认</span>
+        </div>
+        <div class="qrcode"></div>
       </div>
-      <div class="table-box">
+      <div class="table-box" v-if="showConfirm">
         <span class="title">以下为系统自动检测到的交易记录，请勾选此笔订单相关的交易记录进行确认！</span>
         <table>
           <tr>
@@ -54,8 +59,20 @@
             <td><input @change="changeCheck($event, record.id)" type="checkbox"></td>
           </tr>
         </table>
+        <div class="btn default" @click="refreshTx">
+          <span>刷新数据</span>
+        </div>
         <div class="btn" @click="confirmTx">
           <span>确认完成</span>
+        </div>
+      </div>
+      <div class="btn-box" v-else>
+        <div class="btn-row">
+          <input type="checkbox">
+          <span>我已向目标接收地址充值<em>{{ orderData.orderAmount }}</em>枚</span>
+        </div>
+        <div class="btn" @click="toOrderConfirm">
+          <span>开始确认</span>
         </div>
       </div>
     </div>
@@ -68,18 +85,29 @@ export default {
     return {
       checkBox: '',
       recordList: [],
-      depositBoxData: {},
-      recordIdList: []
+      recordIdList: [],
+      orderData: {},
+      showConfirm: false
     }
   },
   mounted () {
-    this.depositBoxData = this.$route.query
-    this.updTxRecord()
+    this.$http.post('/api/getOrderDetail', {
+      depositOrderId: this.$route.params.id
+    }).then((res) => {
+      if (res.data.errcode === 0) {
+        this.orderData = res.data.data
+        this.$nextTick(() => {
+          require('@/components/share/jquery.min.js')
+          require('@/components/share/qrcode.min.js')
+          this.getQrcode()
+        })
+      }
+    })
   },
   methods: {
     confirmTx () {
       this.$http.post('/api/confirmDepositTx', {
-        depositOrderId: this.depositBoxData.depositOrderId,
+        depositOrderId: this.orderData.id,
         txRecordIdList: this.recordIdList
       }).then((res) => {
         if (res.data.errcode === 0) {
@@ -89,9 +117,16 @@ export default {
         }
       })
     },
+    refreshTx () {
+      this.updTxRecord()
+    },
+    toOrderConfirm () {
+      this.updTxRecord()
+      this.showConfirm = true
+    },
     updTxRecord () {
       this.$http.post('/api/getOrderTxRecordList', {
-        depositOrderId: this.depositBoxData.depositOrderId
+        depositOrderId: this.orderData.id
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.recordList = res.data.data.dataList
@@ -105,6 +140,14 @@ export default {
       } else {
         this.recordIdList.remove(recordId)
       }
+    },
+    getQrcode () {
+      // eslint-disable-next-line
+      $('.qrcode').qrcode({
+        text: this.orderData.toAddr,
+        width: 150,
+        height: 150
+      })
     }
   }
 }
@@ -177,6 +220,14 @@ export default {
           }
         }
       }
+      .status-row {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        .content {
+          color: #FF6276;
+        }
+      }
     }
     .table-box {
       text-align: center;
@@ -210,8 +261,50 @@ export default {
         line-height: 40px;
         cursor: pointer;
         margin-bottom: 10px;
+        &.default {
+          margin-right: 20px;
+        }
       }
     }
+    .btn-box {
+      text-align: center;
+      .btn-row {
+        color: #9B9B9B;
+        line-height: 70px;
+        font-size: 0;
+        input {
+          vertical-align: middle;
+          width: 22px;
+          height: 22px;
+          position: relative;
+          bottom: 6px;
+        }
+        span {
+          font-size: 16px;
+          em {
+            color: #FF6276;
+          }
+        }
+      }
+      .btn {
+        display: inline-block;
+        width: 160px;
+        height: 40px;
+        border-radius: 23px;
+        background-color: #FF6276;
+        color: #FFF;
+        line-height: 40px;
+        cursor: pointer;
+        margin-bottom: 10px;
+      }
+    }
+  }
+  .qrcode {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    right: 110px;
+    top: 80px;
   }
 }
 </style>

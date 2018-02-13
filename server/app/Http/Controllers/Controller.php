@@ -29,6 +29,7 @@ class Controller extends BaseController
         '204' => ['errcode' => 204, 'errmsg' => '重复关注'],
         '205' => ['errcode' => 205, 'errmsg' => '密码格式不正确'],
         '206' => ['errcode' => 206, 'errmsg' => '验证码错误'],
+        '207' => ['errcode' => 207, 'errmsg' => '未登录'],
         // 项目错误码
         '301' => ['errcode' => 301, 'errmsg' => '项目不存在'],
         '302' => ['errcode' => 302, 'errmsg' => '社交ID不存在'],
@@ -37,6 +38,8 @@ class Controller extends BaseController
         '305' => ['errcode' => 305, 'errmsg' => '糖果盒余额不足'],
         '306' => ['errcode' => 306, 'errmsg' => '订单ID不存在'],
         '307' => ['errcode' => 307, 'errmsg' => '支付金额与订单金额不符'],
+        '308' => ['errcode' => 308, 'errmsg' => '未填写合约地址'],
+        '309' => ['errcode' => 309, 'errmsg' => '没有发现相关联的交易'],
     ];
 
     public function validation(Request $request, Array $rules)

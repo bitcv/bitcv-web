@@ -16,9 +16,19 @@
         </ul>
       </div>
       <div class="info-box" v-if="isOnline">
-        <img :src="avatarUrl" alt="" class="mobile-hide">
+        <img :src="avatarUrl" alt="" class="mobile-hide" v-on:click="dropdown">
+        <ul class="nav-dropdown" v-bind:style="[displayStyles]">
+          <li>
+            <router-link class="nav-link" to="/candyRoom/myCandyOrder">订单</router-link>
+          </li>
+          <li>
+            <!--<router-link class="nav-link" to="/admin/project">设置</router-link>-->
+            <a href="/admin/project" target="_blank">设置</a>
+          </li>
+          <li><a class="nav-link" @click="signout">注销</a></li>
+        </ul>
         <span class="nickname mobile-hide">{{ mobile }}</span>
-        <div class="signout btn mobile-btn" @click="signout"><span class="btn-text">退出登录</span></div>
+        <!--<div class="signout btn mobile-btn" @click="signout"><span class="btn-text">退出登录</span></div>-->
       </div>
       <div class="btn-box" v-else>
         <router-link to="/signin">
@@ -43,9 +53,12 @@ export default {
       menuList: [
         {url: '/', text: '首页'},
         {url: '/projList', text: '发现'},
-        // {url: '/candyRoom', text: '余币宝'},
+        {url: '/candyRoom', text: '余币宝'},
         {url: '/newlist', text: '资讯'}
-      ]
+      ],
+      displayStyles: {
+        display: 'none'
+      }
     }
   },
   mounted () {
@@ -82,17 +95,17 @@ export default {
       this.menuIndex = index
     },
     signout () {
-      var that = this
-      this.$http.post('/api/signout', {}).then(function (res) {
-        console.log('signout')
-        var resData = res.data
-        if (resData.errcode === 0) {
+      this.$http.post('/api/signout', {}).then((res) => {
+        if (res.data.errcode === 0) {
           localStorage.removeItem('userId')
           localStorage.removeItem('mobile')
           localStorage.removeItem('avatarUrl')
-          that.$router.go(0)
+          this.$router.go(0)
         }
       })
+    },
+    dropdown () {
+      this.displayStyles.display = this.displayStyles.display === 'none' ? 'block' : 'none'
     }
   }
 }
@@ -111,6 +124,8 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-sizing: border-box;
+    padding: 0 10px;
     .logo {
       width: 161px;
       height: 30px;
@@ -172,10 +187,38 @@ export default {
     .info-box {
       display: flex;
       align-items: center;
+      position: relative;
       .nickname {
         padding-left: 8px;
         font-size: 14px;
         color: #4A4A4A;
+      }
+      .nav-dropdown {
+        display: none;
+        box-sizing: border-box;
+        max-height: calc(100vh - 61px);
+        overflow-y: auto;
+        position: absolute;
+        top: 100%;
+        background-color: #fff;
+        padding: 10px 0;
+        border: 1px solid #ddd;
+        border-bottom-color: #ccc;
+        text-align: left;
+        border-radius: 4px;
+        white-space: nowrap;
+      }
+      .nav-dropdown li {
+        line-height: 1.8em;
+        margin: 0;
+        display: block;
+      }
+      .nav-dropdown a {
+        padding: 0 24px 0 20px;
+        cursor: pointer;
+        &:hover {
+          background-color: #FFCF81;
+        }
       }
       .signout {
         cursor: pointer;

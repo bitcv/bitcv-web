@@ -1,7 +1,7 @@
 <template>
   <div class="social">
     <div class="header-btn-area">
-      <el-button type="primary" icon="el-icon-plus" @click="showDialog = true">添加</el-button>
+      <el-button type="primary" icon="el-icon-plus" @click="showAdd">添加</el-button>
     </div>
     <el-table :data="socialList">
       <el-table-column label="Logo">

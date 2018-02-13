@@ -27,7 +27,7 @@
           </a>
         </div>
       </div>
-      <div class="group-area" v-if="projDetail.publicList.length" id="Public">
+      <div class="group-area" v-if="projDetail.publicList && projDetail.publicList.length" id="Public">
         <h3 class="center-title panel-title">官方公告</h3>
         <ul class="notice-list">
           <li v-for="(notice, index) in projDetail.publicList" :key="index">
@@ -41,7 +41,7 @@
           </li>
         </ul>
       </div>
-      <div class = "public-area" id="Group" v-if="projDetail.dynamicList.length">
+      <div class = "public-area" id="Group" v-if="projDetail.dynamicList && projDetail.dynamicList.length">
         <h3 class="center-title">社群发布</h3>
         <ul class="social-list">
           <li v-for="(social, index) in projDetail.dynamicList" :key="index">

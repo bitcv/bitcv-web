@@ -14,6 +14,34 @@ class AdminController extends Controller
         return $this->output(\App\Utils\Auth::$user);
     }
 
+    public function authProject (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Project::where('id', $projId)->update(['status' => 1]);
+
+        return $this->output();
+    }
+
+    public function clearProjAuth (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Project::where('id', $projId)->update(['status' => 0]);
+
+        return $this->output();
+    }
+
     public function addDepositBox (Request $request) {
 
         $params = $this->validation($request, [
@@ -36,13 +64,16 @@ class AdminController extends Controller
             return $this->error(301);
         }
 
+        if (!$projData->contract_addr) {
+            return $this->error(308);
+        }
+
         $walletAddr = $projData->wallet_addr;
         if (!$walletAddr) {
             // 生成钱包地址
-            $resJson = BaseUtil::curlPost('localhost:9999/api/createWallet', array(
+            $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/createWallet', array(
                 'symbol' => 'eth',
             ));
-            var_dump($resJson);
             $resArr = json_decode($resJson, true);
             if (!$resArr || $resArr['errcode'] !== 0) {
                 return $this->error();
@@ -52,7 +83,7 @@ class AdminController extends Controller
             $walletAddr = $resArr['data']['walletAddr'];
             Model\Project::where('id', $projId)->update([
                 'wallet_id' => $walletId,
-                'wallet_addr' => $walletAddr,
+                'wallet_addr' => strtolower($walletAddr),
             ]);
         }
 
@@ -63,19 +94,41 @@ class AdminController extends Controller
             'total_amount' => $totalAmount,
             'remain_amount' => $totalAmount,
             'interest_rate' => $interestRate,
-            'from_addr' => $fromAddr,
-            'to_addr' => $walletAddr,
-            'contract_addr' => $projData->contract_addr,
+            'from_addr' => strtolower($fromAddr),
+            'to_addr' => strtolower($walletAddr),
+            'contract_addr' => strtolower($projData->contract_addr),
             'status' => 0,
         ]);
         $totalInterest = $totalAmount * $interestRate;
 
         return $this->output([
-            'fromAddr' => $fromAddr,
-            'toAddr' => $walletAddr,
+            'fromAddr' => strtolower($fromAddr),
+            'toAddr' => strtolower($walletAddr),
             'totalInterest' => $totalInterest,
             'depositBoxId' => $depositBoxData->id,
         ]);
+    }
+
+    public function delDepositBox (Request $request) {
+        $params = $this->validation($request, [
+            'depositBoxId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $depositBoxModel = Model\DepositBox::where([
+            ['id', $depositBoxId],
+            ['status', 0]
+        ]);
+
+        if (!$depositBoxModel->count()) {
+            return $this->error(100);
+        }
+        $depositBoxModel->delete();
+
+        return $this->output();
     }
 
     public function getBoxTxRecordList (Request $request) {
@@ -96,7 +149,9 @@ class AdminController extends Controller
             'toAddr' => $depositBoxData->to_addr,
             'contractAddr' => $depositBoxData->contract_addr,
         );
-        $resJson = BaseUtil::curlPost('localhost:9999/api/getTxRecordList', $postData);
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/getTxRecordList', $postData);
+        echo env('TX_API_URL') . '/api/getTxRecordList';
+        var_dump($resJson);
         $resArr = json_decode($resJson, true);
         if (!$resArr || $resArr['errcode'] !== 0) {
             return $this->error();
@@ -110,24 +165,24 @@ class AdminController extends Controller
 
         $params = $this->validation($request, [
             'depositBoxId' => 'required|numeric',
-            'txRecordIdList' => 'required|string',
+            'txRecordIdList' => 'nullable|array',
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
 
-        // temp
-        $txRecordIdList = json_decode($txRecordIdList, true);
-
         $depositBoxData = Model\DepositBox::find($depositBoxId);
         if (!$depositBoxData) {
             return $this->error();
         }
 
-        $orderAmount = $depositBoxData->interest_rate * $depositBoxData->totalAmount;
-        // temp
-        $orderAmount = 1910000;
+        if ($txRecordIdList == null) {
+            return $this->error(309);
+        }
+
+        $orderAmount = $depositBoxData->interest_rate * $depositBoxData->total_amount * $depositBoxData->lock_time / 12;
+
         $postData = array(
             'fromAddr' => $depositBoxData->from_addr,
             'toAddr' => $depositBoxData->to_addr,
@@ -135,7 +190,7 @@ class AdminController extends Controller
             'orderAmount' => $orderAmount . '',
             'txRecordIdList' => $txRecordIdList,
         );
-        $resJson = BaseUtil::curlPost('localhost:9999/api/confirmTx', $postData);
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/confirmTx', $postData);
         $resArr = json_decode($resJson, true);
         if (!$resArr || $resArr['errcode'] !== 0) {
             return $this->error(307);
@@ -167,6 +222,7 @@ class AdminController extends Controller
         extract($params);
 
         $depositBoxList = Model\DepositBox::where('proj_id', $projId)
+            ->orderBy('created_at', 'desc')
             ->get()->toArray();
 
         return $this->output(['dataList' => $depositBoxList]);
@@ -389,7 +445,7 @@ class AdminController extends Controller
         $uid = \App\Utils\Auth::$uid;
         $adminproj = Model\Admin::where('id', $uid)->first();
         if ($adminproj) {
-            return $this->error(100, '没人只能创建并管理一个项目');
+            return $this->error(100, '每人只能创建并管理一个项目');
         }
         $data = $this->validation($request, [
             'name_cn' => 'required|string',
@@ -494,6 +550,7 @@ class AdminController extends Controller
             $projBasicInfo['tokenName'] = $tokenModel->name;
             $projBasicInfo['tokenSymbol'] = $tokenModel->symbol;
             $projBasicInfo['tokenPrice'] = $tokenModel->price;
+            $projBasicInfo['contractAddr'] = $tokenModel->contract_addr;
         }
 
         return $this->output($projBasicInfo);
@@ -521,23 +578,18 @@ class AdminController extends Controller
             'companyEmail' => 'string|nullable',
             'companyAddr' => 'string|nullable',
             'bannerUrl' => 'string|nullable',
-            'tokenName' => 'string|nullable',
-            'tokenSymbol' => 'string|nullable',
-            'tokenPrice' => 'string|nullable',
+            'contractAddr' => 'string|nullable'
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
 
-        $homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
-
         $projInfo = [
             'name_cn' => $nameCn,
             'name_en' => $nameEn,
             'found_date' => date('Y-m-d H-i-s', strtotime($foundDate)),
             'logo_url' => $logoUrl,
-            'home_url' => $homeUrl,
             'short_desc' => $shortDesc,
             'white_paper_url' => $whitePaperUrl,
             'abstract' => $abstract,
@@ -547,14 +599,40 @@ class AdminController extends Controller
             'fund_stage' => $fundStage,
         ];
 
-        if ($tokenName && $tokenSymbol) {
-            $tokenModel = Model\Token::firstOrCreate([
-                'name' => $tokenName,
-                'symbol' => $tokenSymbol,
-                'price' => $tokenPrice ?: 0,
-            ]);
-            $projInfo['token_id'] = $tokenModel->id;
+        if ($contractAddr) {
+            $contractAddr = strtolower($contractAddr);
+            // 查询token数据库
+            $tokenObj = Model\Token::where('contract_addr', $contractAddr)->first();
+            if ($tokenObj) {
+                $projInfo['token_id'] = $tokenObj->id;
+            } else {
+                // 数据库中没有则抓取
+                $url = "https://etherscan.io/searchHandler?t=t&term=$contractAddr";
+                $result = file_get_contents($url);
+                $result = json_decode($result, true);
+                $isExist = false;
+                foreach ($result as $item) {
+                    preg_match('/(0x.*?)\\s.*TOKEN: (.*) \\((.*)\\)/is', $item, $match);
+                    $resContractAddr = $match[1];
+                    if ($contractAddr === strtolower($resContractAddr)) {
+                        $tokenName = $match[2];
+                        $tokenSymbol = $match[3];
+                        $isExist = true;
+                        break;
+                    }
+                }
+                if ($isExist) {
+                    // 抓取到后填充值数据库
+                    $tokenObj = Model\Token::create([
+                        'name' => $tokenName,
+                        'symbol' => $tokenSymbol,
+                        'contract_addr' => $contractAddr,
+                    ]);
+                    $projInfo['token_id'] = $tokenObj->id;
+                }
+            }
         }
+
         if ($fundStartTime) {
             $projInfo['fund_start_time'] = date('Y-m-d H-i-s', strtotime($fundStartTime));
         }
@@ -569,6 +647,10 @@ class AdminController extends Controller
         }
         if ($bannerUrl) {
             $projInfo['banner_url'] = $bannerUrl;
+        }
+        if ($homeUrl) {
+            $homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
+            $projInfo['home_url'] = $homeUrl;
         }
 
         Model\Project::where('id', $projId)->update($projInfo);

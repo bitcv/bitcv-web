@@ -8,21 +8,21 @@
     <div class="info-area">
       <span>抢购详情</span>
       <span>需充值{{ depositBoxData.orderAmount }}枚</span>
-      <span>{{ depositBoxData.lockTime }}个月后获得糖果<em>{{ interestAmount }}</em>枚</span>
+      <span>{{ depositBoxData.lockTime }}个月后获得回报<em>{{ getInterest(depositBoxData.orderAmount, depositBoxData.interestRate, depositBoxData.lockTime) }}</em>枚</span>
     </div>
     <div class="content-area">
       <div class="form-row">
         <span class="step-index">1</span>
         <div class="input-box">
-          <span class="title">接收钱包地址</span>
-          <!--<span class="text">0x7dfffb38b871fda8a820378d6531a8267cc414a5</span>-->
+          <span class="title">充值接收地址</span>
           <span class="text">{{ depositBoxData.toAddr }}</span>
+          <span class="foot-text">此地址为项目方与平台共同认可的资金存管地址，回报已入账，请放心充值</span>
         </div>
       </div>
       <div class="form-row">
         <span class="step-index">2</span>
         <div class="input-box">
-          <span class="title">支付钱包地址</span>
+          <span class="title">您的支出地址</span>
           <input v-model="inputFromAddr">
         </div>
       </div>
@@ -60,17 +60,14 @@ export default {
       }
       this.$http.post('/api/addDepositOrder', {
         'depositBoxId': this.depositBoxData.id,
-        'orderAmount': this.depositBoxData.orderAmount,
+        'orderAmount': this.depositBoxData.orderAmount + '',
         'fromAddr': this.inputFromAddr
       }).then((res) => {
         if (res.data.errcode === 0) {
           var orderData = res.data.data
-          this.depositBoxData.depositOrderId = orderData.id
-          this.depositBoxData.fromAddr = orderData.fromAddr
-          this.$router.push({
-            path: '/candyRoom/candyOrderDetail',
-            query: this.depositBoxData
-          })
+          this.$router.push('/candyRoom/candyOrderConfirm/' + orderData.id)
+        } else {
+          alert(res.data.errmsg)
         }
       })
     }
@@ -169,6 +166,10 @@ export default {
           font-size: 24px;
           line-height: 50px;
           text-align: left;
+        }
+        .foot-text {
+          font-size: 12px;
+          color: #FF6276;
         }
       }
       .btn-box {

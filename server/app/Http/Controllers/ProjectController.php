@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models as Model;
 use Illuminate\Support\Facades\DB;
+use App\Utils\Auth;
 
 class ProjectController extends Controller
 {
@@ -24,7 +25,8 @@ class ProjectController extends Controller
         }
         extract($params);
 
-        $projModel = Model\Project::join('token', 'project.token_id', '=', 'token.id');
+        $projModel = Model\Project::join('token', 'project.token_id', '=', 'token.id')
+            ->where('status', 1);
         if ($keyword) {
             $projModel = $projModel
                 ->where('name_cn', 'like', "%$keyword%")
@@ -48,7 +50,8 @@ class ProjectController extends Controller
             ->offset($offset)->limit($perpage)->orderBy('project.created_at', 'desc')->get()->toArray();
 
         // 获取用户关注状态
-        $userId = isset($_COOKIE['userId']) ? $_COOKIE['userId'] : null;
+        //$userId = isset($_COOKIE['userId']) ? $_COOKIE['userId'] : null;
+        $userId = Auth::getUserId();
         if (!$userId) {
             foreach ($projList as &$project) {
                 $project['focusStatus'] = 0;
@@ -88,7 +91,8 @@ class ProjectController extends Controller
         $projData['focusNum'] = Model\UserFocus::where([['proj_id', $projId], ['status', 1]])->count();
 
         // 获取项目关注状态
-        $userId = isset($_COOKIE['userId']) ? $_COOKIE['userId'] : null;
+        //$userId = isset($_COOKIE['userId']) ? $_COOKIE['userId'] : null;
+        $userId = Auth::getUserId();
         if (!$userId) {
             $projData['focusStatus'] = 0;
         } else {
@@ -210,17 +214,23 @@ class ProjectController extends Controller
 
         if ($type === 'view') {
             $projList = Model\Project::orderBy('view_times', 'desc')
+                ->where('status', 1)
                 ->select('id as proj_id', 'name_cn', 'view_times as count')->limit($count)
                 ->get()->toArray();
             return $this->output($projList);
         }
         if ($type === 'focus') {
             $focusList = Model\UserFocus::select('proj_id', DB::raw('COUNT(proj_id) as count'))
+                ->where('status', 1)
                 ->groupBy('proj_id')->orderBy('count', 'desc')->limit($count)
                 ->get()->toArray();
-            foreach ($focusList as &$focus) {
+            foreach ($focusList as $index => &$focus) {
                 $project = Model\Project::find($focus['proj_id']);
-                $focus['name_cn'] = $project->name_cn;
+                if (!$project) {
+                    unset($focusList[$index]);
+                } else {
+                    $focus['name_cn'] = $project->name_cn;
+                }
             }
             return $this->output($focusList);
         }
@@ -229,13 +239,16 @@ class ProjectController extends Controller
     public function getProjTagList (Request $request) {
         $regionOptionList = [
             array('label' => '不限', 'value' => 0),
-            array('label' => '国内', 'value' => 1),
-            array('label' => '国外', 'value' => 2),
+            array('label' => '美国', 'value' => 1),
+            array('label' => '日韩', 'value' => 2),
+            array('label' => '欧洲', 'value' => 3),
+            array('label' => '东南亚', 'value' => 4),
+            array('label' => '其它地区', 'value' => 5),
         ];
         $buzOptionList = [
             array('label' => '不限', 'value' => 0),
             array('label' => '金融', 'value' => 1),
-            array('label' => '数字货币', 'value' => 2),
+            array('label' => '数字资产', 'value' => 2),
             array('label' => '娱乐', 'value' => 3),
             array('label' => '供应链管理', 'value' => 4),
             array('label' => '法律服务', 'value' => 5),
@@ -249,10 +262,10 @@ class ProjectController extends Controller
         ];
         $stageOptionList = [
             array('label' => '不限', 'value' => 0),
-            array('label' => '初创期', 'value' => 1),
-            array('label' => '成长发展期', 'value' => 2),
-            array('label' => '上市公司', 'value' => 3),
-            array('label' => '成熟期', 'value' => 4),
+            array('label' => '募资前', 'value' => 1),
+            array('label' => '募资中', 'value' => 2),
+            array('label' => '公开发行', 'value' => 3),
+            array('label' => '产品落地', 'value' => 4),
         ];
 
         return $this->output([

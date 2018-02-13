@@ -8,13 +8,13 @@
       <div class="filter-box">
         <span class="title">锁仓期限</span>
         <ul class="select">
-          <li>全部</li>
-          <li>3个月</li>
-          <li>6个月</li>
-          <li>12个月</li>
+          <li :class="{cur: inputLockTime===0}" @click="inputLockTime=0">全部</li>
+          <li :class="{cur: inputLockTime===3}" @click="inputLockTime=3">3个月</li>
+          <li :class="{cur: inputLockTime===6}" @click="inputLockTime=6">6个月</li>
+          <li :class="{cur: inputLockTime===12}" @click="inputLockTime=12">12个月</li>
         </ul>
       </div>
-      <div class="table-box">
+      <div class="table-box" v-if="depositBoxList.length">
         <table>
           <tr class="table-header">
             <th>回报（每万枚）</th>
@@ -25,7 +25,7 @@
             <th></th>
           </tr>
           <tr class="table-row" v-for="depositBox in depositBoxList" :key="depositBox.id">
-            <td>{{ depositBox.interestRate * 10000 }}枚</td>
+            <td>{{ getInterest(10000, depositBox.interestRate, depositBox.lockTime) }}枚</td>
             <td>{{ depositBox.lockTime }}个月</td>
             <td>
               <img :src="depositBox.logoUrl" alt="">
@@ -36,16 +36,17 @@
                 <span class="text">{{ depositBox.tokenSymbol }}</span>
               </div>
             </td>
-            <td>{{ depositBox.minAmount }}</td>
-            <td>{{ depositBox.remainAmount }}</td>
+            <td>{{ depositBox.minAmount }}枚</td>
+            <td>{{ depositBox.remainAmount }}枚</td>
             <td>
               <div>
-                <span @click="toDeposit(depositBox)">抢糖果</span>
+                <span @click="toDeposit(depositBox)">立即抢购</span>
               </div>
             </td>
           </tr>
         </table>
       </div>
+      <div class="message" v-else>暂时没有人发起余币宝计划</div>
     </div>
   </div>
 </template>
@@ -55,21 +56,32 @@ export default {
   data () {
     return {
       depositBoxList: [],
-      inputLockTime: 3
+      inputLockTime: 0
+    }
+  },
+  watch: {
+    inputLockTime () {
+      this.updateData()
     }
   },
   mounted () {
-    this.$http.post('/api/getDepositBoxList', {
-      inputLockTime: this.inputLockTime,
-      pageno: 1,
-      perpage: 10
-    }).then((res) => {
-      if (res.data.errcode === 0) {
-        this.depositBoxList = res.data.data.dataList
-      }
-    })
+    this.updateData()
   },
   methods: {
+    updateData () {
+      var params = {
+        pageno: 1,
+        perpage: 10
+      }
+      if (this.inputLockTime) {
+        params.lockTime = this.inputLockTime
+      }
+      this.$http.post('/api/getDepositBoxList', params).then((res) => {
+        if (res.data.errcode === 0) {
+          this.depositBoxList = res.data.data.dataList
+        }
+      })
+    },
     toDeposit (depositBox) {
       this.$router.push({
         path: '/candyRoom/candyBuy',
@@ -118,8 +130,18 @@ export default {
           display: inline-block;
           margin-right: 47px;
           cursor: pointer;
+          &.cur {
+            color: #F5A623;
+          }
         }
       }
+    }
+    .message {
+      width: 100%;
+      color: #9B9B9B;
+      text-align: center;
+      line-height: 60px;
+      border-top: 1px solid #E4E4E4;
     }
     .table-box {
       table {
