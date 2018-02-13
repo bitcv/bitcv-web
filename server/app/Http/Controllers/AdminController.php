@@ -154,7 +154,6 @@ class AdminController extends Controller
         );
         $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/getTxRecordList', $postData);
         echo env('TX_API_URL') . '/api/getTxRecordList';
-        var_dump($resJson);
         $resArr = json_decode($resJson, true);
         if (!$resArr || $resArr['errcode'] !== 0) {
             return $this->error();
