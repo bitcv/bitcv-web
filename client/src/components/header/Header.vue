@@ -16,7 +16,7 @@
         </ul>
       </div>
       <div class="info-box" v-if="isOnline">
-        <img :src="avatarUrl" alt="" class="mobile-hide" v-on:click="dropdown">
+        <img :src="avatarUrl" alt="" v-on:click="dropdown">
         <ul class="nav-dropdown" v-bind:style="[displayStyles]">
           <li>
             <router-link class="nav-link" to="/candyRoom/myCandyOrder">订单</router-link>
@@ -30,7 +30,7 @@
         <span class="nickname mobile-hide">{{ mobile }}</span>
         <!--<div class="signout btn mobile-btn" @click="signout"><span class="btn-text">退出登录</span></div>-->
       </div>
-      <div class="btn-box" v-else>
+      <div class="btn-box" :class="mediaClass()" v-else>
         <router-link to="/signin">
           <div class="signin btn mobile-btn"><span class="btn-text">登录</span></div>
         </router-link>
@@ -161,6 +161,15 @@ export default {
       }
     }
     .btn-box {
+      &.media-mobile {
+        width: 120px;
+        .btn {
+          width: 45px;
+        }
+        .signup {
+          margin: 0 0 0 6px;
+        }
+      }
       .btn {
         display: inline-block;
         width: 65px;
