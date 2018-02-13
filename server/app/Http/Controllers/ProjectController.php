@@ -182,12 +182,12 @@ class ProjectController extends Controller
         $projData['reportList'] = $projReportList;
 
         $projDynamicList = Model\ProjSocial::join('social','proj_social.social_id','=','social.id')->where([['proj_id', $projId], ['status', 1]])
-            ->limit(4)->orderBy('proj_social.created_at','desc')->get()->toArray();
+            ->limit(10)->orderBy('proj_social.created_at','desc')->get()->toArray();
         $projData['dynamicList'] = $projDynamicList;
 
         $projPublicList = Model\ProjSocial::join('social','proj_social.social_id','=','social.id')->where([['proj_id', $projId], ['status', 1]])
             ->whereIn('social_id', [5])
-            ->limit(2)->orderBy('proj_social.created_at','desc')->get()->toArray();
+            ->limit(10)->orderBy('proj_social.created_at','desc')->get()->toArray();
         $projData['publicList'] = $projPublicList;
 
         // 获取社交链接信息
