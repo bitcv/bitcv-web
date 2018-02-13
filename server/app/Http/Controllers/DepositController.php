@@ -24,7 +24,10 @@ class DepositController extends Controller
         }
         extract($params);
 
-        $whereArr = array(array('deposit_box.status', 1));
+        $whereArr = [
+            ['deposit_box.status', 1],
+            ['project.status', 1],
+        ];
 
         if ($lockTime) {
             $whereArr[] = array('lock_time', $lockTime);
@@ -36,7 +39,7 @@ class DepositController extends Controller
 
         $dataCount = $depositBoxModel->count();
         $offset = $perpage * ($pageno - 1);
-        $dataList = $depositBoxModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.logo_url', 'deposit_box.id', 'deposit_box.min_amount', 'deposit_box.lock_time', 'deposit_box.remain_amount', 'deposit_box.interest_rate', 'deposit_box.to_addr')
+        $dataList = $depositBoxModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.name_cn', 'project.logo_url', 'deposit_box.id', 'deposit_box.min_amount', 'deposit_box.lock_time', 'deposit_box.remain_amount', 'deposit_box.interest_rate', 'deposit_box.to_addr')
             ->offset($offset)->limit($perpage)->get()->toArray();
 
         return $this->output([
@@ -267,7 +270,7 @@ class DepositController extends Controller
 
         $dataCount = $depositOrderModel->count();
         $offset = $perpage * ($pageno - 1);
-        $depositOrderList = $depositOrderModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.logo_url', 'deposit_box.lock_time', 'deposit_box.interest_rate', 'deposit_order.id', 'deposit_order.created_at as orderTime', 'deposit_order.order_amount', 'deposit_order.status')
+        $depositOrderList = $depositOrderModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.name_cn', 'project.logo_url', 'deposit_box.lock_time', 'deposit_box.interest_rate', 'deposit_order.id', 'deposit_order.created_at as orderTime', 'deposit_order.order_amount', 'deposit_order.status')
             ->orderBy('deposit_order.created_at', 'desc')->offset($offset)->limit($perpage)->get()->toArray();
 
         foreach ($depositOrderList as &$depositOrder) {

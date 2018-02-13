@@ -1,7 +1,7 @@
 <template>
   <div class="basic">
     <div class="form-container">
-      <el-form label-position="left" label-width="100px" :rules="ruleList" ref="formData" :model="formData">
+      <el-form label-position="right" label-width="120px" :rules="ruleList" ref="formData" :model="formData">
         <el-form-item label="项目中文名" prop="nameCn">
           <el-input v-model="formData.nameCn" placeholder="请输入项目中文名"></el-input>
         </el-form-item>
@@ -21,7 +21,7 @@
           <span>建议 128*128 的 png 格式图片</span>
         </el-form-item>
         <el-form-item label="项目横幅" prop="bannerUrl">
-          <el-upload class="upload-box" name="picture" action="/api/uploadFile" :on-success="onBannerSuccess" :show-file-list="false" style="display: inline-flex">
+          <el-upload class="upload-box banner" name="picture" action="/api/uploadFile" :on-success="onBannerSuccess" :show-file-list="false" style="display: inline-flex">
             <i class="el-icon-plus"></i>
             <img :src="formData.bannerUrl" alt="">
           </el-upload>
@@ -246,6 +246,9 @@ export default {
     .tag-input {
       width: 90px;
     }
+  }
+  .upload-box.banner {
+    width: 250px;
   }
 }
 </style>

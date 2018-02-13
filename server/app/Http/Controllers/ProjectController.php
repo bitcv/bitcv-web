@@ -221,11 +221,13 @@ class ProjectController extends Controller
         }
         if ($type === 'focus') {
             $focusList = Model\UserFocus::select('proj_id', DB::raw('COUNT(proj_id) as count'))
-                ->where('status', 1)
                 ->groupBy('proj_id')->orderBy('count', 'desc')->limit($count)
                 ->get()->toArray();
             foreach ($focusList as $index => &$focus) {
-                $project = Model\Project::find($focus['proj_id']);
+                $project = Model\Project::where([
+                    ['id', $focus['proj_id']],
+                    ['status', 1],
+                ])->first();
                 if (!$project) {
                     unset($focusList[$index]);
                 } else {

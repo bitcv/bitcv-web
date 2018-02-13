@@ -91,6 +91,14 @@ exports.install = function (Vue, options) {
   Vue.prototype.getInterest = function (amount, interestRate, lockTime) {
     return amount * interestRate * lockTime / 12
   }
+  Vue.prototype.mediaClass = function () {
+    var width = document.body.clientWidth
+    if (width <= 600) {
+      return 'media-mobile'
+    } else {
+      return ''
+    }
+  }
   Array.prototype.indexOf = function (val) {
     for (var i = 0; i < this.length; i++) {
       if (this[i] === val) return i

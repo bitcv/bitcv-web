@@ -10,7 +10,7 @@
         <ul class="mobile-nav">
           <li v-for="(menu, index) in menuList" :key="index" :class="{ active : menuIndex === index }">
             <router-link :to="menu.url">
-              <span class="nav-text" @click="menuSwitch(index)">{{ menu.text }}</span>
+              <span class="nav-text" :class="mediaClass()" @click="menuSwitch(index)">{{ menu.text }}</span>
             </router-link>
           </li>
         </ul>
@@ -151,6 +151,9 @@ export default {
             color: #4A4A4A;
           }
           .nav-text {
+            &.media-mobile {
+              font-size: 16px;
+            }
             font-size: 18px;
             line-height: 25px;
           }

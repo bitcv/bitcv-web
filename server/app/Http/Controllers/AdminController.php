@@ -59,7 +59,10 @@ class AdminController extends Controller
 
         // 获取钱包地址
         $projData = Model\Project::join('token', 'project.token_id', '=', 'token.id')
-            ->where('project.id', $projId)->first();
+            ->where([
+                ['project.id', $projId],
+                ['project.status', 1],
+            ])->first();
         if (!$projData) {
             return $this->error(301);
         }

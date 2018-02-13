@@ -1,43 +1,79 @@
 <template>
   <div class="my-candy-order">
     <div class="main-area">
-      <div class="title-box">
+      <div class="title-box" :class="mediaClass()">
         <span class="title">我的余币宝清单</span>
         <!--<img src="/static/img/logo.png" alt="">-->
       </div>
       <div class="filter-box">
-        <span class="title">订单状态</span>
-        <ul class="select">
+        <span class="title" :class="mediaClass()">订单状态</span>
+        <ul class="select" :class="mediaClass()">
           <li :class="{cur: inputStatus===null}" @click="inputStatus=null">全部</li>
           <li :class="{cur: inputStatus===1}" @click="inputStatus=1">已完成</li>
           <li :class="{cur: inputStatus===0}" @click="inputStatus=0">待充值</li>
         </ul>
       </div>
       <div class="table-box">
-        <table>
+        <el-table :data="orderList" v-if="mediaClass() === 'media-mobile'">
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-form label-position="left" inline>
+                <el-form-item label="项目名称">{{ props.row.nameCn }}</el-form-item>
+                <el-form-item label="符号">{{ props.row.tokenSymbol }}</el-form-item>
+                <el-form-item label="购买数量">{{ props.row.orderAmount }}</el-form-item>
+                <el-form-item label="锁仓期">{{ props.row.lockTime }}个月</el-form-item>
+                <el-form-item label="总回报">{{ props.row.interestRate * props.row.orderAmount * props.row.lockTime / 12 }}枚</el-form-item>
+                <el-form-item label="交易哈希">{{ props.row.txHash }}</el-form-item>
+              </el-form>
+            </template>
+          </el-table-column>
+          <el-table-column label="项目符号" prop="tokenSymbol">
+            <template slot-scope="scope">
+              <img class="small-image" :src="scope.row.logoUrl" alt="">
+              <span>{{ scope.row.tokenSymbol }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="订单金额" prop="orderAmount"></el-table-column>
+          <el-table-column label="操作" prop="orderAmount">
+            <template slot-scope="scope">
+              <div v-if="scope.row.status === 0">
+              <el-button @click="confirmOrder(scope.row.id)" size="mini" type="primary" style="margin:0 0 10px;display:inline;">确认</el-button>
+              <el-button @click="cancelOrder(scope.row.id)" size="mini" type="danger" style="margin:0">删除</el-button>
+              </div>
+              <div class="btn-box" v-else-if="scope.row.status === 1">
+                <span class="text">订单完成</span>
+              </div>
+              <div class="btn-box" v-else-if="scope.row.status === 2">
+                <span class="text">已取消</span>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <table v-else>
           <tr class="table-header">
             <th colspan="2">项目</th>
-            <th>下单时间</th>
+            <th class="mobile-hide">下单时间</th>
             <th>充值数量</th>
-            <th>锁仓期</th>
-            <th>总回报</th>
+            <th class="mobile-hide">锁仓期</th>
+            <th class="mobile-hide">总回报</th>
             <th>操作</th>
-            <th>交易哈希</th>
+            <th class="mobile-hide">交易哈希</th>
           </tr>
-          <tr class="table-row" v-for="order in orderList" :key="order.id">
+          <template v-for="order in orderList">
+          <tr class="table-row" :key="order.id">
             <td>
               <img :src="order.logoUrl" alt="">
             </td>
             <td>
               <div class="info-box">
-                <span class="title">{{ order.tokenName }}</span>
+                <span class="title">{{ order.nameCn }}</span>
                 <span class="text">{{ order.tokenSymbol }}</span>
               </div>
             </td>
-            <td>{{ convertDate(order.orderTime) }}</td>
+            <td class="mobile-hide">{{ convertDate(order.orderTime) }}</td>
             <td>{{ order.orderAmount }}枚</td>
-            <td>{{ order.lockTime }}个月</td>
-            <td>{{ order.interestRate * order.orderAmount }}枚</td>
+            <td class="mobile-hide">{{ order.lockTime }}个月</td>
+            <td class="mobile-hide">{{ order.interestRate * order.orderAmount * order.lockTime / 12 }}枚</td>
             <td>
               <div class="btn-box" v-if="order.status === 0">
                 <span @click="confirmOrder(order.id)">确认订单</span>
@@ -50,13 +86,14 @@
                 <span class="text">已取消</span>
               </div>
             </td>
-            <td>
+            <td class="mobile-hide">
               <template v-if="order.txHashList.length">
                 <a v-for="(txHash, index) in order.txHashList" :key="index" :href="'https://etherscan.io/tx/' + txHash" target="_blank">{{ getShortStr(txHash, 10) }}</a>
               </template>
               <span v-else>暂无交易</span>
             </td>
           </tr>
+          </template>
         </table>
       </div>
     </div>
@@ -120,6 +157,11 @@ export default {
     padding: 30px 20px 0 20px;
     background-color: #FFF;
     .title-box {
+      &.media-mobile {
+        .title {
+          font-size: 16px;
+        }
+      }
       color: #4A4A4A;
       margin-bottom: 25px;
       font-size: 0;
@@ -143,17 +185,27 @@ export default {
         font-family:PingFangSC-Medium;
         font-size: 14px;
         margin-right: 24px;
+        &.media-mobile {
+          margin-right: 10px;
+        }
       }
       .select {
-        display: inline-block;
+        display: inline-flex;
+        justify-content: space-around;
+        align-items: center;
         font-size: 14px;
+        width: 300px;
+        min-width: 200px;
+        max-width: calc(100% - 80px);
+        &.media-mobile {
+          width: 120px !important;
+          min-width: 140px;
+        }
         li {
+          cursor: pointer;
           &.cur {
             color: #F5A623;
           }
-          display: inline-block;
-          margin-right: 47px;
-          cursor: pointer;
         }
       }
     }
@@ -242,5 +294,10 @@ export default {
       }
     }
   }
+}
+img {
+  width: 20px !important;
+  height: 20px !important;
+  vertical-align: middle;
 }
 </style>
