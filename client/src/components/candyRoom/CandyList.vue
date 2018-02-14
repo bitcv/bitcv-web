@@ -9,6 +9,7 @@
         <span class="title">锁仓期限</span>
         <ul class="select">
           <li :class="{cur: inputLockTime===0}" @click="inputLockTime=0">全部</li>
+          <li :class="{cur: inputLockTime===1}" @click="inputLockTime=1">1个月</li>
           <li :class="{cur: inputLockTime===3}" @click="inputLockTime=3">3个月</li>
           <li :class="{cur: inputLockTime===6}" @click="inputLockTime=6">6个月</li>
           <li :class="{cur: inputLockTime===12}" @click="inputLockTime=12">12个月</li>
