@@ -25,7 +25,8 @@ class ProjectController extends Controller
         }
         extract($params);
 
-        $projModel = Model\Project::join('token', 'project.token_id', '=', 'token.id');
+        $projModel = Model\Project::join('token', 'project.token_id', '=', 'token.id')
+            ->where('status', 1);
         if ($keyword) {
             $projModel = $projModel
                 ->where('name_cn', 'like', "%$keyword%")
@@ -181,17 +182,17 @@ class ProjectController extends Controller
         $projData['reportList'] = $projReportList;
 
         $projDynamicList = Model\ProjSocial::join('social','proj_social.social_id','=','social.id')->where([['proj_id', $projId], ['status', 1]])
-            ->limit(4)->orderBy('proj_social.created_at','desc')->get()->toArray();
+            ->limit(10)->orderBy('proj_social.created_at','desc')->get()->toArray();
         $projData['dynamicList'] = $projDynamicList;
 
         $projPublicList = Model\ProjSocial::join('social','proj_social.social_id','=','social.id')->where([['proj_id', $projId], ['status', 1]])
             ->whereIn('social_id', [5])
-            ->limit(2)->orderBy('proj_social.created_at','desc')->get()->toArray();
+            ->limit(10)->orderBy('proj_social.created_at','desc')->get()->toArray();
         $projData['publicList'] = $projPublicList;
 
         // 获取社交链接信息
         $projSocialList = Model\ProjSocial::join('social', 'proj_social.social_id', '=', 'social.id')
-            ->where('proj_id', $projId)
+            ->where([['proj_id', $projId],['status', 0]])
             ->select('name', 'font_class', 'link_url')
             ->get()->toArray();
         $projData['socialList'] = $projSocialList;
@@ -213,6 +214,7 @@ class ProjectController extends Controller
 
         if ($type === 'view') {
             $projList = Model\Project::orderBy('view_times', 'desc')
+                ->where('status', 1)
                 ->select('id as proj_id', 'name_cn', 'view_times as count')->limit($count)
                 ->get()->toArray();
             return $this->output($projList);
@@ -221,9 +223,16 @@ class ProjectController extends Controller
             $focusList = Model\UserFocus::select('proj_id', DB::raw('COUNT(proj_id) as count'))
                 ->groupBy('proj_id')->orderBy('count', 'desc')->limit($count)
                 ->get()->toArray();
-            foreach ($focusList as &$focus) {
-                $project = Model\Project::find($focus['proj_id']);
-                $focus['name_cn'] = $project->name_cn;
+            foreach ($focusList as $index => &$focus) {
+                $project = Model\Project::where([
+                    ['id', $focus['proj_id']],
+                    ['status', 1],
+                ])->first();
+                if (!$project) {
+                    unset($focusList[$index]);
+                } else {
+                    $focus['name_cn'] = $project->name_cn;
+                }
             }
             return $this->output($focusList);
         }
@@ -232,13 +241,16 @@ class ProjectController extends Controller
     public function getProjTagList (Request $request) {
         $regionOptionList = [
             array('label' => '不限', 'value' => 0),
-            array('label' => '国内', 'value' => 1),
-            array('label' => '国外', 'value' => 2),
+            array('label' => '美国', 'value' => 1),
+            array('label' => '日韩', 'value' => 2),
+            array('label' => '欧洲', 'value' => 3),
+            array('label' => '东南亚', 'value' => 4),
+            array('label' => '其它地区', 'value' => 5),
         ];
         $buzOptionList = [
             array('label' => '不限', 'value' => 0),
             array('label' => '金融', 'value' => 1),
-            array('label' => '数字货币', 'value' => 2),
+            array('label' => '数字资产', 'value' => 2),
             array('label' => '娱乐', 'value' => 3),
             array('label' => '供应链管理', 'value' => 4),
             array('label' => '法律服务', 'value' => 5),
@@ -252,10 +264,10 @@ class ProjectController extends Controller
         ];
         $stageOptionList = [
             array('label' => '不限', 'value' => 0),
-            array('label' => '初创期', 'value' => 1),
-            array('label' => '成长发展期', 'value' => 2),
-            array('label' => '上市公司', 'value' => 3),
-            array('label' => '成熟期', 'value' => 4),
+            array('label' => '募资前', 'value' => 1),
+            array('label' => '募资中', 'value' => 2),
+            array('label' => '公开发行', 'value' => 3),
+            array('label' => '产品落地', 'value' => 4),
         ];
 
         return $this->output([

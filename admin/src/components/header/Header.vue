@@ -1,10 +1,12 @@
 <template>
   <div class="header container">
     <div class="logo">
-      <img src="/static/logo-white.png" alt="">
+      <a href="/">
+        <img src="/admin_static/img/logo.png" alt="">
+      </a>
     </div>
     <div class="info">
-      <!--<div class="account"><span>JunderKing</span></div>-->
+      <div class="account"><span>{{ mobile }}</span></div>
       <div class="signout" @click="signout"><span>退出登录</span></div>
     </div>
   </div>
@@ -14,14 +16,20 @@
 export default {
   data () {
     return {
-
+      mobile: ''
     }
+  },
+  mounted () {
+    this.mobile = localStorage.getItem('mobile')
   },
   methods: {
     signout () {
-      this.$http.post('/api/adminSignout', {}).then((res) => {
+      this.$http.post('/api/signout', {}).then((res) => {
         if (res.data.errcode === 0) {
-          this.$router.push('/signin')
+          localStorage.removeItem('userId')
+          localStorage.removeItem('mobile')
+          localStorage.removeItem('avatarUrl')
+          window.location.href = '/'
         }
       })
     }

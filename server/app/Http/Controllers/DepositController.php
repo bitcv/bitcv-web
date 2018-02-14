@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Models as Model;
 use Illuminate\Support\Facades\Cookie;
 use App\Utils\BaseUtil;
+use App\Utils\Auth;
 
 class DepositController extends Controller
 {
+
     public function getDepositBoxList (Request $request) {
 
         // 获取请求参数
@@ -22,7 +24,10 @@ class DepositController extends Controller
         }
         extract($params);
 
-        $whereArr = array(array('deposit_box.status', 1));
+        $whereArr = [
+            ['deposit_box.status', 1],
+            ['project.status', 1],
+        ];
 
         if ($lockTime) {
             $whereArr[] = array('lock_time', $lockTime);
@@ -34,7 +39,7 @@ class DepositController extends Controller
 
         $dataCount = $depositBoxModel->count();
         $offset = $perpage * ($pageno - 1);
-        $dataList = $depositBoxModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.logo_url', 'deposit_box.id', 'deposit_box.min_amount', 'deposit_box.lock_time', 'deposit_box.remain_amount', 'deposit_box.interest_rate', 'deposit_box.to_addr')
+        $dataList = $depositBoxModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.name_cn', 'project.logo_url', 'deposit_box.id', 'deposit_box.min_amount', 'deposit_box.lock_time', 'deposit_box.remain_amount', 'deposit_box.interest_rate', 'deposit_box.to_addr')
             ->offset($offset)->limit($perpage)->get()->toArray();
 
         return $this->output([
@@ -55,9 +60,10 @@ class DepositController extends Controller
             return $this->error(100);
         }
         extract($params);
-        //$userId = $_COOKIE['userId'];
-        // temp
-        $userId = 1;
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
 
         // 检查剩余额度是否充足
         $depositBoxData = Model\DepositBox::find($depositBoxId);
@@ -74,7 +80,7 @@ class DepositController extends Controller
             'user_id' => $userId,
             'deposit_box_id' => $depositBoxId,
             'order_amount' => $orderAmount,
-            'from_addr' => $fromAddr,
+            'from_addr' => strtolower($fromAddr),
             'to_addr' => $depositBoxData['to_addr'],
             'contract_addr' => $depositBoxData['contract_addr'],
             'status' => 0,
@@ -83,6 +89,39 @@ class DepositController extends Controller
         $orderData['id'] = $depositOrderModel->id;
 
         return $this->output($orderData);
+    }
+
+    public function getOrderDetail (Request $request) {
+
+        // 获取请求参数
+        $params = $this->validation($request, [
+            'depositOrderId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $depositOrderData = Model\DepositOrder::find($depositOrderId);
+        if (!$depositOrderData) {
+            return $this->error();
+        }
+
+        $depositBoxData = Model\DepositBox::find($depositOrderData['deposit_box_id']);
+        $depositOrderData['lockTime'] = $depositBoxData['lock_time'];
+        $depositOrderData['interestRate'] = $depositBoxData['interest_rate'];
+
+        $projId = $depositBoxData['proj_id'];
+        $projData = Model\Project::join('token', 'project.token_id', '=', 'token.id')
+            ->where('project.id', $projId)
+            ->select('logo_url', 'token.name as tokenName', 'token.symbol as tokenSymbol')
+            ->first();
+        if (!$projData) {
+            return $this->error();
+        }
+        $depositOrderData['projData'] = $projData->toArray();
+
+        return $this->output($depositOrderData);
     }
 
     public function getOrderTxRecordList (Request $request) {
@@ -107,7 +146,7 @@ class DepositController extends Controller
             'toAddr' => $depositOrderData->to_addr,
             'contractAddr' => $depositOrderData->contract_addr,
         );
-        $resJson = BaseUtil::curlPost('localhost:9999/api/getTxRecordList', $postData);
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/getTxRecordList', $postData);
         $resArr = json_decode($resJson, true);
         if (!$resArr || $resArr['errcode'] !== 0) {
             return $this->error();
@@ -122,8 +161,7 @@ class DepositController extends Controller
         // 获取请求参数
         $params = $this->validation($request, [
             'depositOrderId' => 'required|numeric',
-            'txRecordIdList' => 'required|array',
-            //'txRecordIdList' => 'required|string',
+            'txRecordIdList' => 'nullable|array',
         ]);
         if ($params === false) {
             return $this->error(100);
@@ -136,16 +174,18 @@ class DepositController extends Controller
             return $this->error(306);
         }
 
+        if ($txRecordIdList == null) {
+            return $this->error(309);
+        }
+
         $postData = array(
             'fromAddr' => $depositOrderData->from_addr,
             'toAddr' => $depositOrderData->to_addr,
             'contractAddr' => $depositOrderData->contract_addr,
-            //'orderAmount' => $depositOrderData->order_amount . '',
-            // temp
-            'orderAmount' => '10000',
+            'orderAmount' => $depositOrderData->order_amount . '',
             'txRecordIdList' => $txRecordIdList,
         );
-        $resJson = BaseUtil::curlPost('localhost:9999/api/confirmTx', $postData);
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/confirmTx', $postData);
         $resArr = json_decode($resJson, true);
         if (!$resArr || $resArr['errcode'] !== 0) {
             return $this->error(307);
@@ -181,13 +221,29 @@ class DepositController extends Controller
         }
         extract($params);
 
+        $depositOrderData = Model\DepositOrder::find($depositOrderId);
+        if (!$depositOrderData) {
+            return $this->error();
+        }
+
+        if ($depositOrderData->status !== 0) {
+            return $this->error();
+        }
+
+        Model\DepositOrder::where('id', $depositOrderId)->update(['status' => 2]);
+
+        $depositBoxId = $depositOrderData->deposit_box_id;
+        $orderAmount = $depositOrderData->order_amount;
+        Model\DepositBox::where('id', $depositBoxId)->increment('remain_amount', $orderAmount);
+
+        return $this->output();
     }
 
     public function getUserOrderList (Request $request) {
 
         // 获取请求参数
         $params = $this->validation($request, [
-            'status' => 'nullable|numeric',
+            'status' => 'nullable|string',
             'pageno' => 'required|numeric',
             'perpage' => 'required|numeric',
         ]);
@@ -195,14 +251,16 @@ class DepositController extends Controller
             return $this->error(100);
         }
         extract($params);
-        //$userId = $_COOKIE['userId'];
-        //temp
-        $userId = 1;
+
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
 
         $whereArr = array(array('user_id', $userId));
 
-        if ($status) {
-            $whereArr[] = array('status', $status);
+        if ($status !== null) {
+            $whereArr[] = array('deposit_order.status', $status);
         }
 
         $depositOrderModel = Model\DepositOrder::join('deposit_box', 'deposit_order.deposit_box_id', '=', 'deposit_box.id')
@@ -212,8 +270,16 @@ class DepositController extends Controller
 
         $dataCount = $depositOrderModel->count();
         $offset = $perpage * ($pageno - 1);
-        $depositOrderList = $depositOrderModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.logo_url', 'deposit_box.lock_time', 'deposit_box.interest_rate', 'deposit_order.id', 'deposit_order.created_at as orderTime', 'deposit_order.order_amount', 'deposit_order.status')
+        $depositOrderList = $depositOrderModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.name_cn', 'project.logo_url', 'deposit_box.lock_time', 'deposit_box.interest_rate', 'deposit_order.id', 'deposit_order.created_at as orderTime', 'deposit_order.order_amount', 'deposit_order.status')
             ->orderBy('deposit_order.created_at', 'desc')->offset($offset)->limit($perpage)->get()->toArray();
+
+        foreach ($depositOrderList as &$depositOrder) {
+            $depositOrderId = $depositOrder['id'];
+            $depositOrder['txHashList'] = Model\OrderTxRecord::where([
+                ['tx_type', 2],
+                ['target_id', $depositOrderId]
+            ])->pluck('tx_hash');
+        }
 
         return $this->output([
             'dataCount' => $dataCount,

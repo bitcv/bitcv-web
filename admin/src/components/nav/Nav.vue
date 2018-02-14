@@ -2,10 +2,12 @@
   <div class="nav container">
     <el-menu default-active="0" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
       <el-menu-item v-for="(item, index) in itemList" :index="index + ''" :key="index">
-        <a class="router" :href="item.url">
-          <i :class="item.icon"></i>
-          <span slot="title">{{ item.text }}</span>
-        </a>
+        <router-link :to="item.url" class="router">
+          <div>
+            <i :class="item.icon"></i>
+            <span slot="title">{{ item.text }}</span>
+          </div>
+        </router-link>
       </el-menu-item>
     </el-menu>
   </div>

@@ -23,11 +23,14 @@ Route::any('getProjTagList', 'ProjectController@getProjTagList');
 
 Route::any('getDepositBoxList', 'DepositController@getDepositBoxList');
 Route::any('addDepositOrder', 'DepositController@addDepositOrder');
+Route::any('getOrderDetail', 'DepositController@getOrderDetail');
+Route::any('cancelDepositOrder', 'DepositController@cancelDepositOrder');
 Route::any('getOrderTxRecordList', 'DepositController@getOrderTxRecordList');
 Route::any('confirmDepositTx', 'DepositController@confirmDepositTx');
 Route::any('getUserOrderList', 'DepositController@getUserOrderList');
 
 Route::any('addDepositBox', 'AdminController@addDepositBox');
+Route::any('delDepositBox', 'AdminController@delDepositBox');
 Route::any('getBoxTxRecordList', 'AdminController@getBoxTxRecordList');
 Route::any('confirmBoxTx', 'AdminController@confirmBoxTx');
 Route::any('getProjDepositBoxList', 'AdminController@getProjDepositBoxList');
@@ -54,6 +57,8 @@ Route::group(['middleware' => 'checkLogin'], function() {
 //超级管理员接口
 Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('addProject', 'AdminController@addProject');
+    Route::any('authProject', 'AdminController@authProject');
+    Route::any('clearProjAuth', 'AdminController@clearProjAuth');
     Route::any('delProject', 'AdminController@delProject');
     
     Route::any('addMedia', 'AdminController@addMedia');

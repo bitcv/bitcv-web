@@ -17,6 +17,9 @@ Route::group(['prefix'=>'admin'], function() {
         return view('admin');
     });
 });
+Route::any('/admin', function () {
+    return view('admin');
+});
 
 Route::pattern('path', '.+');
 Route::any('{path}',function($path) {
