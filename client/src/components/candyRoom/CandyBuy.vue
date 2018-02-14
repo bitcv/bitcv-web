@@ -67,6 +67,9 @@ export default {
   },
   methods: {
     toDepositOrder () {
+      if (this.inputAmount < this.depositBoxData.minAmount) {
+        return alert('下单数量必须大于起始额度')
+      }
       this.depositBoxData.orderAmount = this.inputAmount
       this.$router.push({
         path: '/candyRoom/candyOrder',
