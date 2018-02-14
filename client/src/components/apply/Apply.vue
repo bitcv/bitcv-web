@@ -4,8 +4,23 @@
     <template>
       <span class="prompt">已经展示的项目请在项目详情页面直接认领！</span>
       <form>
-        <input v-model="name_cn" type="text" placeholder="项目中文名">
-        <input v-model="name_en" type="text" placeholder="项目英文名">
+        <input v-model="formData.nameCn" type="text" placeholder="项目中文名" required>
+        <input v-model="formData.nameEn" type="text" placeholder="项目英文名" required>
+        <input v-model="formData.tokenName" type="text" placeholder="代币名称" required>
+        <input v-model="formData.tokenSymbol" type="text" placeholder="代币符号" required>
+        <el-form-item :label="select.label" v-for="(select, field) in selectList" :key="field">
+          <el-select v-model="formData[field]">
+            <el-option v-for="(option, index) in select.optionList" :key="option.value" v-if="index" :label="option.label" :value="option.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="融资阶段">
+          <el-select v-model="formData.fundStage">
+            <el-option label="保密" :value="0"></el-option>
+            <el-option label="未融资" :value="1"></el-option>
+            <el-option label="融资中" :value="2"></el-option>
+            <el-option label="已融资" :value="3"></el-option>
+          </el-select>
+        </el-form-item>
         <button @click.prevent="signin">创建项目</button>
       </form>
     </template>
@@ -16,19 +31,30 @@
 export default {
   data () {
     return {
-      name_cn: '',
-      name_en: ''
+      selectList: {},
+      formData: {
+        nameCn: '',
+        nameEn: '',
+        tokenName: '',
+        tokenSymbol: '',
+        region: '',
+        buzType: '',
+        stage: '',
+        fundStage: ''
+      }
     }
+  },
+  mounted () {
+    this.formData.projId = this.$route.params.id
+    this.$http.get('/api/getProjTagList').then((res) => {
+      if (res.data.errcode === 0) {
+        this.selectList = res.data.data
+      }
+    })
   },
   methods: {
     signin () {
-      if (this.name_cn.length === 0 || this.name_en.length === 0) {
-        return alert('请输入项目名称')
-      }
-      this.$http.post('/api/apply', {
-        name_cn: this.name_cn,
-        name_en: this.name_en
-      }).then(function (res) {
+      this.$http.post('/api/apply', this.formData).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
           location.href = '/admin'
