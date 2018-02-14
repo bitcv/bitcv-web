@@ -73,6 +73,9 @@ class DepositController extends Controller
         if ($depositBoxData['remain_amount'] < $orderAmount) {
             return $this->error(305);
         }
+        if ($orderAmount < $depositBoxData['min_amount']) {
+            return $this->error(403);
+        }
 
         // 创建订单
         Model\DepositBox::where('id', $depositBoxId)->decrement('remain_amount', $orderAmount);
@@ -102,9 +105,19 @@ class DepositController extends Controller
         }
         extract($params);
 
-        $depositOrderData = Model\DepositOrder::find($depositOrderId);
+        // 验证用户是否登录
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+
+        // 查找订单
+        $depositOrderData = Model\DepositOrder::where([
+            ['id', $depositOrderId],
+            ['user_id', $userId],
+        ])->first();
         if (!$depositOrderData) {
-            return $this->error();
+            return $this->error(401);
         }
 
         $depositBoxData = Model\DepositBox::find($depositOrderData['deposit_box_id']);
@@ -221,13 +234,23 @@ class DepositController extends Controller
         }
         extract($params);
 
-        $depositOrderData = Model\DepositOrder::find($depositOrderId);
+        // 验证用户是否登录
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+
+        // 查找订单
+        $depositOrderData = Model\DepositOrder::where([
+            ['id', $depositOrderId],
+            ['user_id', $userId],
+        ])->first();
         if (!$depositOrderData) {
-            return $this->error();
+            return $this->error(401);
         }
 
         if ($depositOrderData->status !== 0) {
-            return $this->error();
+            return $this->error(402);
         }
 
         Model\DepositOrder::where('id', $depositOrderId)->update(['status' => 2]);

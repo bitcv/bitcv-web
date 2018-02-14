@@ -107,14 +107,20 @@ export default {
     this.$http.post('/api/viewProject', {
       projId: projId
     })
+    this.updSubMenuIndex()
   },
   watch: {
     $route () {
+      this.updSubMenuIndex()
+    }
+  },
+  methods: {
+    updSubMenuIndex () {
       var path = this.$route.path
-      if (path.indexOf('dynamic') !== -1) {
-        this.current = 2
-      } else {
+      if (path.indexOf('/projDetail/info') !== -1) {
         this.current = 1
+      } else if (path.indexOf('/projDetail/dynamic') !== -1) {
+        this.current = 2
       }
     }
   },

@@ -108,6 +108,13 @@ export default {
       inputStatus: null
     }
   },
+  beforeCreate () {
+    var userId = localStorage.getItem('userId')
+    if (!userId) {
+      alert('请登录')
+      this.$router.push('/candyRoom/candyList')
+    }
+  },
   mounted () {
     this.updateData()
   },
