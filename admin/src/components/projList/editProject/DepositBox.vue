@@ -134,6 +134,9 @@ export default {
       projId: '',
       projData: '',
       lockTimeList: [{
+        label: '1个月',
+        value: 1
+      }, {
         label: '3个月',
         value: 3
       }, {
