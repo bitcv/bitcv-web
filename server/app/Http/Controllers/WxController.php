@@ -33,7 +33,6 @@ class WxController extends Controller
         extract($params);
 
         $wxUserData = [
-            'inviter_id' => $inviterId,
             'wx_account' => $wxAccount,
             'token_provider' => $tokenProvider,
             'token_symbol' => $tokenSymbol,
@@ -41,6 +40,10 @@ class WxController extends Controller
             'name' => $name,
             'token_addr' => $tokenAddr,
         ];
+
+        if ($inviterId) {
+            $wxUserData['inviter_id'] = $inviterId;
+        }
 
         if ($groupId) {
             $wxUserData['group_id'] = $groupId;
