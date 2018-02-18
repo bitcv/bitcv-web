@@ -2,6 +2,11 @@
 
 use Illuminate\Http\Request;
 
+Route::any('updWxUserInfo', 'WxController@updWxUserInfo');
+Route::any('addWxUser', 'WxController@addWxUser');
+Route::any('getWxGroupId', 'WxController@getWxGroupId');
+Route::any('wxLogin', 'WxController@wxLogin');
+
 Route::any('viewProject', 'UserController@viewProject');
 Route::any('signup', 'UserController@signup');
 Route::any('signin', 'UserController@signin');
