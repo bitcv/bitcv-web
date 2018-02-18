@@ -24,7 +24,7 @@ class WxController extends Controller
             'tokenProvider' => 'required|string',
             'tokenSymbol' => 'required|string',
             'job' => 'required|string',
-            'name' => 'required|string',
+            //'name' => 'required|string',
             'tokenAddr' => 'required|string',
         ]);
         if ($params === false) {
@@ -37,7 +37,7 @@ class WxController extends Controller
             'token_provider' => $tokenProvider,
             'token_symbol' => $tokenSymbol,
             'job' => $job,
-            'name' => $name,
+            //'name' => $name,
             'token_addr' => $tokenAddr,
         ];
 
