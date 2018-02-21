@@ -432,7 +432,8 @@ class AdminController extends Controller
         extract($params);
 
         $offset = $perpage * ($pageno - 1);
-        $projList = Model\Project::offset($offset)->limit($perpage)->get()->toArray();
+        //$projList = Model\Project::offset($offset)->limit($perpage)->get()->toArray();
+        $projList = Model\Project::get()->toArray();
         $dataCount = Model\Project::count();
 
         return $this->output([
