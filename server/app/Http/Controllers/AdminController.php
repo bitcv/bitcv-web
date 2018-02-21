@@ -711,7 +711,7 @@ class AdminController extends Controller
         $params = $this->validation($request, [
             'memberId' => 'required|numeric',
             'name' => 'required|string',
-            'photoUrl' => 'required|string',
+            'photoUrl' => 'nullable|string',
             'position' => 'required|string',
             'intro' => 'required|string',
         ]);
@@ -720,12 +720,17 @@ class AdminController extends Controller
         }
         extract($params);
 
-        Model\ProjMember::where('id', $memberId)->update([
+        $memberData = [
             'name' => $name,
-            'photo_url' => $photoUrl,
             'position' => $position,
             'intro' => $intro,
-        ]);
+        ];
+
+        if ($photoUrl) {
+            $memberData['photo_url'] = $photoUrl;
+        }
+
+        Model\ProjMember::where('id', $memberId)->update($memberData);
 
         return $this->output();
     }
