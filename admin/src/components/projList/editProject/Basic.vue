@@ -48,6 +48,7 @@
             <i class="el-icon-plus"></i>
             <img :src="formData.whitePaperUrl" alt="">
           </el-upload>
+          <a :href="formData.whitePaperUrl" target="_blank" style="color: red;">白皮书链接</a>
           <span>请上传项目白皮书 pdf 文件</span>
         </el-form-item>
         <el-form-item :label="select.label" v-for="(select, field) in selectList" :key="field" required>
