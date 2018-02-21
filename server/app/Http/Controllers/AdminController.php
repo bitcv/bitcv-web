@@ -1079,7 +1079,7 @@ class AdminController extends Controller
         $params = $this->validation($request, [
             'projId' => 'required|numeric',
             'name' => 'required|string',
-            'photoUrl' => 'required|string',
+            'photoUrl' => 'nullable|string',
             'company' => 'required|string',
             'intro' => 'required|string',
         ]);
@@ -1088,13 +1088,18 @@ class AdminController extends Controller
         }
         extract($params);
 
-        Model\ProjAdvisor::firstOrCreate([
+        $advisorData = [
             'proj_id' => $projId,
             'name' => $name,
-            'photo_url' => $photoUrl,
             'company' => $company,
             'intro' => $intro,
-        ]);
+        ];
+
+        if ($photoUrl) {
+            $advisorData['photo_url'] = $photoUrl;
+        }
+
+        Model\ProjAdvisor::firstOrCreate($advisorData);
 
         return $this->output();
     }
@@ -1103,7 +1108,7 @@ class AdminController extends Controller
         $params = $this->validation($request, [
             'advisorId' => 'required|numeric',
             'name' => 'required|string',
-            'photoUrl' => 'required|string',
+            'photoUrl' => 'nullable|string',
             'company' => 'required|string',
             'intro' => 'required|string',
         ]);
@@ -1112,12 +1117,17 @@ class AdminController extends Controller
         }
         extract($params);
 
-        Model\ProjAdvisor::where('id', $advisorId)->update([
+        $advisorData = [
             'name' => $name,
-            'photo_url' => $photoUrl,
             'company' => $company,
             'intro' => $intro,
-        ]);
+        ];
+
+        if ($photoUrl) {
+            $advisorData['photo_url'] = $photoUrl;
+        }
+
+        Model\ProjAdvisor::where('id', $advisorId)->update($advisorData);
 
         return $this->output();
     }
