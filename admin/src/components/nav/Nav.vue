@@ -49,6 +49,10 @@ export default {
               icon: 'el-icon-menu',
               url: '/admin/module',
               text: '运营工具管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/mediareport',
+              text: '媒体报道'
             }]
           // 项目管理员
           } else if (user['projId'] > 0) {
