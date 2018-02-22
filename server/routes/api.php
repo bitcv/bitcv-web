@@ -117,5 +117,8 @@ Route::group(['middleware' => 'checkProj'], function () {
     Route::any('delProjReport', 'AdminController@delProjReport');
     Route::any('updProjReport', 'AdminController@updProjReport');
 
+//    Route::any('delMediaReport','AdminController@delMediaReport');
+//    Route::any('getMediaReportList','AdminController@getMediaReportList');
+
 });
 

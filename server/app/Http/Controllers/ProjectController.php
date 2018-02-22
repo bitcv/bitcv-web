@@ -207,7 +207,7 @@ class ProjectController extends Controller
         $projPublicList = Model\CrawlerSocialNews::join('social','crawler_socialnews.social_id','=','social.id')
             ->where([['proj_id', $projId]])
             ->whereIn('social_id', [5])
-            ->limit(2)->orderBy('crawler_socialnews.created_at','desc')
+            ->limit(5)->orderBy('crawler_socialnews.created_at','desc')
             ->select('crawler_socialnews.created_at','crawler_socialnews.title','crawler_socialnews.refer_url')
             ->get()->toArray();
         $projData['publicList'] = $projPublicList;
