@@ -181,13 +181,25 @@ class ProjectController extends Controller
             ->limit(4)->get()->toArray();
         $projData['reportList'] = $projReportList;
 
-        $projDynamicList = Model\ProjSocial::join('social','proj_social.social_id','=','social.id')->where([['proj_id', $projId], ['status', 1]])
-            ->limit(4)->orderBy('proj_social.created_at','desc')->get()->toArray();
+        //$projDynamicList = Model\ProjSocial::join('social','proj_social.social_id','=','social.id')->where([['proj_id', $projId], ['status', 1]])
+        //    ->limit(4)->orderBy('proj_social.created_at','desc')->get()->toArray();
+        //$projData['dynamicList'] = $projDynamicList;
+
+        $projDynamicList = Model\CrawlerSocialNews::join('social','crawlersocialnews.social_id','=','social.id')
+            ->where([['proj_id', $projId]])
+            ->limit(4)->orderBy('crawlersocialnews.created_at','desc')->get()->toArray();
         $projData['dynamicList'] = $projDynamicList;
 
-        $projPublicList = Model\ProjSocial::join('social','proj_social.social_id','=','social.id')->where([['proj_id', $projId], ['status', 1]])
+        //$projPublicList = Model\ProjSocial::join('social','proj_social.social_id','=','social.id')
+        //    ->where([['proj_id', $projId], ['status', 1]])
+        //    ->whereIn('social_id', [5])
+        //    ->limit(2)->orderBy('proj_social.created_at','desc')->get()->toArray();
+        //$projData['publicList'] = $projPublicList;
+
+        $projPublicList = Model\CrawlerSocialNews::join('social','crawlersocialnews.social_id','=','social.id')
+            ->where([['proj_id', $projId]])
             ->whereIn('social_id', [5])
-            ->limit(2)->orderBy('proj_social.created_at','desc')->get()->toArray();
+            ->limit(2)->orderBy('crawlersocialnews.created_at','desc')->get()->toArray();
         $projData['publicList'] = $projPublicList;
 
         // 获取社交链接信息
