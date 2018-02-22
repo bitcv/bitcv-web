@@ -64,7 +64,9 @@ export default {
       this.showShare = true
       this.$nextTick(() => {
         html2canvas(document.querySelector('#shareCard'), {scale: 1}).then(canvas => {
-          document.querySelector('#shareCard').innerHTML = ''
+          document.querySelector('#shareBox').innerHTML = ''
+          // document.querySelector('#shareBox').appendChild(canvas)
+          // document.body.appendChild(canvas)
           var url = canvas.toDataURL()
           var newImg = document.createElement('img')
           newImg.src = url
