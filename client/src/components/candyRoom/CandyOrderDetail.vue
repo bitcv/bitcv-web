@@ -63,6 +63,13 @@ export default {
       orderData: {}
     }
   },
+  beforeCreate () {
+    var userId = localStorage.getItem('userId')
+    if (!userId) {
+      alert('请登录')
+      this.$router.push('/candyRoom/candyList')
+    }
+  },
   mounted () {
     // this.depositBoxData = this.$route.query
     this.$http.post('/api/getOrderDetail', {

@@ -9,6 +9,7 @@
         <span class="title">锁仓期限</span>
         <ul class="select">
           <li :class="{cur: inputLockTime===0}" @click="inputLockTime=0">全部</li>
+          <li :class="{cur: inputLockTime===1}" @click="inputLockTime=1">1个月</li>
           <li :class="{cur: inputLockTime===3}" @click="inputLockTime=3">3个月</li>
           <li :class="{cur: inputLockTime===6}" @click="inputLockTime=6">6个月</li>
           <li :class="{cur: inputLockTime===12}" @click="inputLockTime=12">12个月</li>
@@ -17,30 +18,35 @@
       <div class="table-box" v-if="depositBoxList.length">
         <table>
           <tr class="table-header">
-            <th>回报（每万枚）</th>
-            <th>锁仓期</th>
             <th colspan="2">项目</th>
-            <th>起始额度</th>
-            <th>剩余额度</th>
+            <th>回报（每万枚）</th>
+            <th class="mobile-hide">锁仓期</th>
+            <th class="mobile-hide">起始额度</th>
+            <th class="mobile-hide">剩余额度</th>
             <th></th>
           </tr>
           <tr class="table-row" v-for="depositBox in depositBoxList" :key="depositBox.id">
-            <td>{{ getInterest(10000, depositBox.interestRate, depositBox.lockTime) }}枚</td>
-            <td>{{ depositBox.lockTime }}个月</td>
             <td>
               <img :src="depositBox.logoUrl" alt="">
             </td>
             <td>
               <div class="info-box">
-                <span class="title">{{ depositBox.tokenName }}</span>
+                <span class="title">{{ depositBox.nameCn }}</span>
                 <span class="text">{{ depositBox.tokenSymbol }}</span>
               </div>
             </td>
-            <td>{{ depositBox.minAmount }}枚</td>
-            <td>{{ depositBox.remainAmount }}枚</td>
+            <td>
+              <div class="table-cell" :class="mediaClass()">
+                <span class="main">{{ getInterest(10000, depositBox.interestRate, depositBox.lockTime) }}枚</span>
+                <span class="footer">{{ depositBox.lockTime }}个月</span>
+              </div>
+            </td>
+            <td class="mobile-hide">{{ depositBox.lockTime }}个月</td>
+            <td class="mobile-hide">{{ depositBox.minAmount }}枚</td>
+            <td class="mobile-hide">{{ depositBox.remainAmount }}枚</td>
             <td>
               <div>
-                <span @click="toDeposit(depositBox)">立即抢购</span>
+                <span :class="mediaClass()" @click="toDeposit(depositBox)">立即抢购</span>
               </div>
             </td>
           </tr>
@@ -124,11 +130,14 @@ export default {
         margin-right: 24px;
       }
       .select {
-        display: inline-block;
+        display: inline-flex;
+        justify-content: space-around;
+        align-items: center;
         font-size: 14px;
+        width: 300px;
+        min-width: 200px;
+        max-width: calc(100% - 80px);
         li {
-          display: inline-block;
-          margin-right: 47px;
           cursor: pointer;
           &.cur {
             color: #F5A623;
@@ -162,15 +171,36 @@ export default {
           td {
             vertical-align: middle;
           }
-          td:nth-child(1) {
-            color: #FF6276;
-            font-size: 20px;
+          td:nth-child(3) {
+            .table-cell {
+              height: 40px;
+              vertical-align: top;
+              display: inline-flex;
+              flex-direction: column;
+              justify-content: space-around;
+              align-items: center;
+              font-size: 20px;
+              .main {
+                color: #FF6276;
+              }
+              .footer {
+                display: none;
+                font-size: 12px;
+                color: #4A4A4A;
+              }
+              &.media-mobile {
+                font-size: 16px;
+                .footer {
+                  display: inline;
+                }
+              }
+            }
           }
-          td:nth-child(2) {
+          td:nth-child(4) {
             color: #000;
             font-size: 14px;
           }
-          td:nth-child(3) {
+          td:nth-child(1) {
             text-align: right;
             img {
               width: 40px;
@@ -178,7 +208,7 @@ export default {
               margin-right: 10px;
             }
           }
-          td:nth-child(4) {
+          td:nth-child(2) {
             text-align: left;
             .info-box {
               vertical-align: top;
@@ -202,13 +232,17 @@ export default {
             span {
               cursor: pointer;
               display: inline-block;
-              width: 110px;
-              height: 28px;
+              padding: 0 15px;
               background: linear-gradient(#FF3E3E, #FF977B);
               color: #FFF;
               border-radius: 14px;
               text-align: center;
               line-height: 28px;
+              &.media-mobile {
+                font-size: 12px;
+                line-height: 24px;
+                padding: 0 10px;
+              }
             }
           }
         }

@@ -5,32 +5,32 @@
       >
       <span>抢购额度</span>
     </div>
-    <div class="title-box">
+    <div class="title-box" :class="mediaClass()">
       <span class="title">剩余额度</span>
       <span class="text">{{ depositBoxData.remainAmount }}</span>
     </div>
     <div class="content-area">
-      <div class="left-area">
+      <div class="left-area" :class="mediaClass()">
         <div class="row-box">
-          <span class="title">项目：</span>
+          <span class="left-title">项目：</span>
           <div class="content-box">
             <img :src="depositBoxData.logoUrl" alt="">
             <div class="info-box">
               <span class="title">{{ depositBoxData.tokenSymbol }}</span>
-              <span class="text">{{ depositBoxData.tokenName }}</span>
+              <span class="text">{{ depositBoxData.nameCn }}</span>
             </div>
           </div>
         </div>
-        <div class="row-box">
-          <span class="title">锁仓期：</span>
+        <div class="row-box" :class="mediaClass()">
+          <span class="left-title">锁仓期：</span>
           <span class="content">{{ depositBoxData.lockTime }}个月</span>
         </div>
         <div class="row-box">
-          <span class="title">起始额度：</span>
+          <span class="left-title">起始额度：</span>
           <span class="content">{{ depositBoxData.minAmount }}</span>
         </div>
       </div>
-      <div class="right-area">
+      <div class="right-area" :class="mediaClass()">
         <div class="top-row">
           <div class="input-box">
             <span class="title">充值数量</span>
@@ -46,7 +46,7 @@
         </div>
         <div class="bottom-row">
           <input v-model="inputAmount">
-          <span class="buy-btn" @click="toDepositOrder">抢购</span>
+          <span class="buy-btn" @click="toDepositOrder">去下单</span>
         </div>
       </div>
     </div>
@@ -67,6 +67,13 @@ export default {
   },
   methods: {
     toDepositOrder () {
+      var userId = localStorage.getItem('userId')
+      if (!userId) {
+        return alert('请先登录')
+      }
+      if (this.inputAmount < this.depositBoxData.minAmount) {
+        return alert('下单数量必须大于起始额度')
+      }
       this.depositBoxData.orderAmount = this.inputAmount
       this.$router.push({
         path: '/candyRoom/candyOrder',
@@ -93,16 +100,30 @@ export default {
     text-align: center;
     color: #FFF;
     font-size: 72px;
+    position: relative;
     .title {
       font-size: 24px;
     }
     margin: 43px 0 79px;
+    &.media-mobile {
+      margin: 20px 0 150px;
+      font-size: 36px;
+      .title {
+        position: absolute;
+        font-size: 14px;
+        top: 43px;
+        margin: auto;
+        left: 0;
+        right: 0;
+      }
+    }
   }
   .content-area {
     width: 100%;
     height: 320px;
     background-color: #FFF;
     font-size: 0;
+    position: relative;
     .left-area {
       width: 34%;
       height: 100%;
@@ -111,14 +132,26 @@ export default {
       justify-content: space-around;
       align-items: flex-start;
       font-size: 14px;
-      padding: 30px 0 30px 50px;
+      padding: 30px 0 30px 30px;
       border-right: 1px solid #FF6276;
       box-sizing: border-box;
       color: #4A4A4A;
+      &.media-mobile {
+        position: absolute;
+        left: 10%;
+        top: -120px;
+        width: 80%;
+        height: 170px;
+        background-color: #FFF;
+        box-sizing: border-box;
+        box-shadow: -4px 0px 23px 0px rgba(255, 98, 118, 0.25);
+        border: none;
+        border-radius: 4px ;
+      }
       .row-box {
-        .title {
+        .left-title {
           display: inline-block;
-          width: 86px;
+          width: 70px;
         }
         .content-box {
           display: inline-block;
@@ -209,11 +242,13 @@ export default {
       }
       .bottom-row {
         font-size: 0;
-        width: 100%;
+        width: 330px;
+        max-width: 90%;
+        margin: auto;
         text-align: center;
         input {
           display: inline-block;
-          width: 244px;
+          width: 70%;
           height: 40px;
           font-size: 24px;
           color: #4A4A4A;
@@ -226,7 +261,7 @@ export default {
         .buy-btn {
           display: inline-block;
           vertical-align: top;
-          width: 88px;
+          width: 30%;
           height: 40px;
           font-size: 16px;
           line-height: 40px;
@@ -235,6 +270,48 @@ export default {
           background: linear-gradient(#FF3E3E, #FF977B);
           border-radius: 0 28px 28px 0;
           cursor: pointer;
+        }
+      }
+      &.media-mobile {
+        box-sizing: border-box;
+        width: 100%;
+        .top-row {
+          margin-top: 10px;
+          height: 80px;
+          .title {
+            font-size: 16px;
+          }
+          input {
+            width: 120px;
+            font-size: 16px;
+          }
+        }
+        .arrow-box {
+          width: 60px;
+          .arrow {
+            font-size: 30px;
+          }
+        }
+        .output-box {
+          .title {
+
+          }
+          .output {
+            font-size: 16px;
+            width: 120px;
+          }
+        }
+        .bottom-row {
+          max-width: 80%;
+          input {
+            font-size: 18px;
+            height: 32px;
+          }
+          .buy-btn {
+            height: 32px;
+            font-size: 14px;
+            line-height: 32px;
+          }
         }
       }
     }

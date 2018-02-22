@@ -24,7 +24,10 @@ class DepositController extends Controller
         }
         extract($params);
 
-        $whereArr = array(array('deposit_box.status', 1));
+        $whereArr = [
+            ['deposit_box.status', 1],
+            ['project.status', 1],
+        ];
 
         if ($lockTime) {
             $whereArr[] = array('lock_time', $lockTime);
@@ -36,7 +39,7 @@ class DepositController extends Controller
 
         $dataCount = $depositBoxModel->count();
         $offset = $perpage * ($pageno - 1);
-        $dataList = $depositBoxModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.logo_url', 'deposit_box.id', 'deposit_box.min_amount', 'deposit_box.lock_time', 'deposit_box.remain_amount', 'deposit_box.interest_rate', 'deposit_box.to_addr')
+        $dataList = $depositBoxModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.name_cn', 'project.logo_url', 'deposit_box.id', 'deposit_box.min_amount', 'deposit_box.lock_time', 'deposit_box.remain_amount', 'deposit_box.interest_rate', 'deposit_box.to_addr')
             ->offset($offset)->limit($perpage)->get()->toArray();
 
         return $this->output([
@@ -70,6 +73,9 @@ class DepositController extends Controller
         if ($depositBoxData['remain_amount'] < $orderAmount) {
             return $this->error(305);
         }
+        if ($orderAmount < $depositBoxData['min_amount']) {
+            return $this->error(403);
+        }
 
         // 创建订单
         Model\DepositBox::where('id', $depositBoxId)->decrement('remain_amount', $orderAmount);
@@ -77,7 +83,7 @@ class DepositController extends Controller
             'user_id' => $userId,
             'deposit_box_id' => $depositBoxId,
             'order_amount' => $orderAmount,
-            'from_addr' => $fromAddr,
+            'from_addr' => strtolower($fromAddr),
             'to_addr' => $depositBoxData['to_addr'],
             'contract_addr' => $depositBoxData['contract_addr'],
             'status' => 0,
@@ -99,9 +105,19 @@ class DepositController extends Controller
         }
         extract($params);
 
-        $depositOrderData = Model\DepositOrder::find($depositOrderId);
+        // 验证用户是否登录
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+
+        // 查找订单
+        $depositOrderData = Model\DepositOrder::where([
+            ['id', $depositOrderId],
+            ['user_id', $userId],
+        ])->first();
         if (!$depositOrderData) {
-            return $this->error();
+            return $this->error(401);
         }
 
         $depositBoxData = Model\DepositBox::find($depositOrderData['deposit_box_id']);
@@ -218,13 +234,23 @@ class DepositController extends Controller
         }
         extract($params);
 
-        $depositOrderData = Model\DepositOrder::find($depositOrderId);
+        // 验证用户是否登录
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+
+        // 查找订单
+        $depositOrderData = Model\DepositOrder::where([
+            ['id', $depositOrderId],
+            ['user_id', $userId],
+        ])->first();
         if (!$depositOrderData) {
-            return $this->error();
+            return $this->error(401);
         }
 
         if ($depositOrderData->status !== 0) {
-            return $this->error();
+            return $this->error(402);
         }
 
         Model\DepositOrder::where('id', $depositOrderId)->update(['status' => 2]);
@@ -267,7 +293,7 @@ class DepositController extends Controller
 
         $dataCount = $depositOrderModel->count();
         $offset = $perpage * ($pageno - 1);
-        $depositOrderList = $depositOrderModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.logo_url', 'deposit_box.lock_time', 'deposit_box.interest_rate', 'deposit_order.id', 'deposit_order.created_at as orderTime', 'deposit_order.order_amount', 'deposit_order.status')
+        $depositOrderList = $depositOrderModel->select('token.name as tokenName', 'token.symbol as tokenSymbol', 'project.name_cn', 'project.logo_url', 'deposit_box.lock_time', 'deposit_box.interest_rate', 'deposit_order.id', 'deposit_order.created_at as orderTime', 'deposit_order.order_amount', 'deposit_order.status')
             ->orderBy('deposit_order.created_at', 'desc')->offset($offset)->limit($perpage)->get()->toArray();
 
         foreach ($depositOrderList as &$depositOrder) {

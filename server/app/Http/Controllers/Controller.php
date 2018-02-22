@@ -34,12 +34,16 @@ class Controller extends BaseController
         '301' => ['errcode' => 301, 'errmsg' => '项目不存在'],
         '302' => ['errcode' => 302, 'errmsg' => '社交ID不存在'],
         '303' => ['errcode' => 303, 'errmsg' => '媒体ID不存在'],
-        '304' => ['errcode' => 304, 'errmsg' => '糖果盒ID不存在'],
-        '305' => ['errcode' => 305, 'errmsg' => '糖果盒余额不足'],
+        '304' => ['errcode' => 304, 'errmsg' => '余币宝ID不存在'],
+        '305' => ['errcode' => 305, 'errmsg' => '余币宝余额不足'],
         '306' => ['errcode' => 306, 'errmsg' => '订单ID不存在'],
         '307' => ['errcode' => 307, 'errmsg' => '支付金额与订单金额不符'],
         '308' => ['errcode' => 308, 'errmsg' => '未填写合约地址'],
         '309' => ['errcode' => 309, 'errmsg' => '没有发现相关联的交易'],
+        // 余币宝相关错误码
+        '401' => ['errcode' => 401, 'errmsg' => '未找到订单'],
+        '402' => ['errcode' => 402, 'errmsg' => '无法取消该订单'],
+        '403' => ['errcode' => 403, 'errmsg' => '订单额度小于起始额度'],
     ];
 
     public function validation(Request $request, Array $rules)

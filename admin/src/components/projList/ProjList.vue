@@ -15,7 +15,7 @@
         </el-table-column>
         <el-table-column label="项目名称" prop="nameCn"></el-table-column>
         <el-table-column label="创建时间" prop="createdAt"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="235px">
           <template slot-scope="scope">
             <router-link :to="'/admin/editProject/' + scope.row.id">
               <el-button size="mini">编辑</el-button>

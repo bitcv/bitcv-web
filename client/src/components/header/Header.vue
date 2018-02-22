@@ -10,27 +10,25 @@
         <ul class="mobile-nav">
           <li v-for="(menu, index) in menuList" :key="index" :class="{ active : menuIndex === index }">
             <router-link :to="menu.url">
-              <span class="nav-text" @click="menuSwitch(index)">{{ menu.text }}</span>
+              <span class="nav-text" :class="mediaClass()" @click="menuSwitch(index)">{{ menu.text }}</span>
             </router-link>
           </li>
         </ul>
       </div>
       <div class="info-box" v-if="isOnline">
-        <img :src="avatarUrl" alt="" class="mobile-hide" v-on:click="dropdown">
+        <img :src="avatarUrl" alt="" v-on:click="dropdown">
         <ul class="nav-dropdown" v-bind:style="[displayStyles]">
           <li>
             <router-link class="nav-link" to="/candyRoom/myCandyOrder">订单</router-link>
           </li>
           <li>
-            <!--<router-link class="nav-link" to="/admin/project">设置</router-link>-->
             <a href="/admin/project" target="_blank">设置</a>
           </li>
           <li><a class="nav-link" @click="signout">注销</a></li>
         </ul>
         <span class="nickname mobile-hide">{{ mobile }}</span>
-        <!--<div class="signout btn mobile-btn" @click="signout"><span class="btn-text">退出登录</span></div>-->
       </div>
-      <div class="btn-box" v-else>
+      <div class="btn-box" :class="mediaClass()" v-else>
         <router-link to="/signin">
           <div class="signin btn mobile-btn"><span class="btn-text">登录</span></div>
         </router-link>
@@ -62,12 +60,7 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.path === '/') {
-      this.menuIndex = 0
-    }
-    if (this.$route.path === '/projList') {
-      this.menuIndex = 1
-    }
+    this.updMenuIndex()
 
     // getCookie
     var userId = localStorage.getItem('userId')
@@ -81,18 +74,24 @@ export default {
     }
   },
   watch: {
-    '$route' (to, from) {
-      if (this.$route.path === '/') {
-        this.menuIndex = 0
-      }
-      if (this.$route.path === '/projList') {
-        this.menuIndex = 1
-      }
+    '$route' () {
+      this.updMenuIndex()
     }
   },
   methods: {
     menuSwitch (index) {
       this.menuIndex = index
+    },
+    updMenuIndex () {
+      if (this.$route.path === '/') {
+        this.menuIndex = 0
+      } else if (this.$route.path.indexOf('/projList') === 0 || this.$route.path.indexOf('/projDetail') === 0) {
+        this.menuIndex = 1
+      } else if (this.$route.path.indexOf('/candyRoom') === 0) {
+        this.menuIndex = 2
+      } else if (this.$route.path.indexOf('/newlist') === 0 || this.$route.path.indexOf('/newdetail') === 0) {
+        this.menuIndex = 3
+      }
     },
     signout () {
       this.$http.post('/api/signout', {}).then((res) => {
@@ -151,6 +150,9 @@ export default {
             color: #4A4A4A;
           }
           .nav-text {
+            &.media-mobile {
+              font-size: 16px;
+            }
             font-size: 18px;
             line-height: 25px;
           }
@@ -158,6 +160,15 @@ export default {
       }
     }
     .btn-box {
+      &.media-mobile {
+        width: 120px;
+        .btn {
+          width: 45px;
+        }
+        .signup {
+          margin: 0 0 0 6px;
+        }
+      }
       .btn {
         display: inline-block;
         width: 65px;

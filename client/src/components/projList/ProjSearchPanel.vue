@@ -2,9 +2,9 @@
   <div class="proj-search-panel">
     <search :select-result="selectResult"></search>
     <div class="sort-container">
-      <div class="sort-row" v-for="(tagInfo, field) in projTagList" :key="tagInfo.field">
+      <div class="sort-row" :class="mediaClass()" v-for="(tagInfo, field) in projTagList" :key="tagInfo.field">
         <span class="title">{{ tagInfo.label }}</span>
-        <div class="tag-wrapper">
+        <div class="tag-wrapper" :class="mediaClass()">
            <span class="tag" :class="{ cur: selectResult[field] === tag.value }" @click="selectResult[field] = tag.value" v-for="tag in tagInfo.optionList" :key="tag.value">{{ tag.label }}</span>
         </div>
       </div>
@@ -68,6 +68,9 @@ export default {
     margin-top: 40px;
     border-bottom: 0.5px solid #979797;
     .sort-row {
+      &.media-mobile {
+        margin-bottom: 4px;
+      }
       display: flex;
       width: 100%;
       font-size: 0;
@@ -84,6 +87,13 @@ export default {
       }
       .tag-wrapper {
         overflow: hidden;
+        &.media-mobile {
+          .tag {
+            font-size: 12px;
+            line-height: 18px;
+            padding: 0 6px;
+          }
+        }
         .tag {
           float: left;
           display: inline-block;

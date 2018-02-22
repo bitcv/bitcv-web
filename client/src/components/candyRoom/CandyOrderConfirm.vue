@@ -4,7 +4,7 @@
       <span>订单详情</span>
     </div>
     <div class="content-area">
-      <div class="info-area">
+      <div class="info-area" :class="mediaClass()">
         <div v-if="orderData.projData" class="info-row">
           <span class="title">项目：</span>
           <div class="content-box">
@@ -29,37 +29,37 @@
             <span class="content">{{ getInterest(orderData.orderAmount, orderData.interestRate, orderData.lockTime) }}枚</span>
           </div>
         </div>
-        <div class="info-row">
-          <span class="title">接收地址：</span>
+        <div class="info-row addr">
+          <span class="title addr">接收地址：</span>
           <span class="content">{{ orderData.toAddr }}</span>
         </div>
-        <div class="info-row">
-          <span class="title">您的地址：</span>
+        <div class="info-row addr">
+          <span class="title addr">您的地址：</span>
           <span class="content">{{ orderData.fromAddr }}</span>
         </div>
-        <div class="status-row">
-          <span class="title">订单状态：</span>
-          <span class="content">等待确认</span>
-        </div>
-        <div class="qrcode"></div>
+        <!--<div class="status-row">-->
+          <!--<span class="title">订单状态：</span>-->
+          <!--<span class="content">等待确认</span>-->
+        <!--</div>-->
+        <div class="qrcode" :class="mediaClass()"></div>
       </div>
-      <div class="table-box" v-if="showConfirm">
+      <div class="table-box" :class="mediaClass()" v-if="showConfirm">
         <span class="title">以下为系统自动检测到的交易记录，请勾选此笔订单相关的交易记录进行确认！</span>
         <table>
           <tr>
             <th>充值数量</th>
-            <th>交易时间</th>
+            <th class="mobile-hide">交易时间</th>
             <th>交易哈希</th>
             <th>操作</th>
           </tr>
           <tr v-for="(record, index) in recordList" :key="index">
             <td>{{ record.txAmount }}</td>
-            <td>{{ record.txTime }}</td>
+            <td class="mobile-hide">{{ record.txTime }}</td>
             <td><a :href="'https://etherscan.io/tx/' + record.txHash" target="_blank">{{ getShortStr(record.txHash, 12) }}</a></td>
             <td><input @change="changeCheck($event, record.id)" type="checkbox"></td>
           </tr>
         </table>
-        <div class="btn default" @click="refreshTx">
+        <div class="btn default" :class="mediaClass()" @click="refreshTx">
           <span>刷新数据</span>
         </div>
         <div class="btn" @click="confirmTx">
@@ -71,7 +71,7 @@
           <input type="checkbox">
           <span>我已向目标接收地址充值<em>{{ orderData.orderAmount }}</em>枚</span>
         </div>
-        <div class="btn" @click="toOrderConfirm">
+        <div class="btn" :class="mediaClass()" @click="toOrderConfirm">
           <span>开始确认</span>
         </div>
       </div>
@@ -88,6 +88,13 @@ export default {
       recordIdList: [],
       orderData: {},
       showConfirm: false
+    }
+  },
+  beforeCreate () {
+    var userId = localStorage.getItem('userId')
+    if (!userId) {
+      alert('请登录')
+      this.$router.push('/candyRoom/candyList')
     }
   },
   mounted () {
@@ -170,12 +177,53 @@ export default {
     padding: 20px;
     .info-area {
       box-sizing: border-box;
-      width: 100%;
+      width: 80%;
       border-bottom: 1px solid #C2C2C2;
-      padding: 30px 0 30px 80px;
+      padding: 30px 0 30px;
       position: relative;
+      margin: auto;
+      &.media-mobile {
+        width: calc(100% + 30px);
+        margin: 0 -15px;
+        box-sizing: border-box;
+        .info-row {
+          font-size: 14px;
+          line-height: 20px;
+          &.addr {
+            background-color: #F2F2F2;
+          }
+          >span.title.addr {
+            display: block;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            line-height: 24px;
+            padding-top: 8px;
+          }
+          >.content {
+            display: block;
+            width: 100%;
+            text-align: center;
+          }
+          &:first-child {
+            margin-bottom: 10px;
+          }
+          &:nth-child(2) {
+            margin-bottom: 10px;
+          }
+          .title {
+            display: inline-block;
+            text-align: right;
+            width: 80px;
+          }
+          .info-item {
+            display: block;
+            margin-right: 5px;
+          }
+        }
+      }
       .info-row {
-        height: 46px;
+        min-height: 46px;
         font-size: 16px;
         color: #4A4A4A;
         &:first-child {
@@ -232,6 +280,9 @@ export default {
     .table-box {
       text-align: center;
       padding: 0 80px;
+      &.media-mobile {
+        padding: 0;
+      }
       .title {
         display: inline-block;
         font-size: 16px;
@@ -261,8 +312,14 @@ export default {
         line-height: 40px;
         cursor: pointer;
         margin-bottom: 10px;
+        &.media-mobile {
+          width: 140px !important;
+        }
         &.default {
           margin-right: 20px;
+        }
+        &.media-mobile.default {
+          margin-right: 0;
         }
       }
     }
@@ -296,6 +353,10 @@ export default {
         line-height: 40px;
         cursor: pointer;
         margin-bottom: 10px;
+        &.meida-mobile {
+          width: 100px;
+          height: 35px;
+        }
       }
     }
   }
@@ -305,6 +366,9 @@ export default {
     height: 150px;
     right: 110px;
     top: 80px;
+    &.media-mobile {
+      display: none;
+    }
   }
 }
 </style>

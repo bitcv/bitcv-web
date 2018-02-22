@@ -1,6 +1,6 @@
 <template>
   <div class="deposit-box">
-    <template v-if="projData.contractAddr">
+    <template v-if="projData.status && projData.contractAddr">
       <div class="header-btn-area">
         <el-button type="primary" icon="el-icon-plus" @click="showAdd">添加</el-button>
       </div>
@@ -99,7 +99,10 @@
         </div>
       </el-dialog>
     </template>
-    <div class="empty" v-else>请在基本信息页配置通证的ERC20智能合约地址</div>
+    <div v-else>
+      <div class="empty" v-if="!projData.contractAddr">请在基本信息页配置通证的ERC20智能合约地址</div>
+      <div class="empty" v-if="!projData.status">项目通过管理员审核后才能创建余币宝</div>
+    </div>
 
   </div>
 </template>
@@ -131,6 +134,9 @@ export default {
       projId: '',
       projData: '',
       lockTimeList: [{
+        label: '1个月',
+        value: 1
+      }, {
         label: '3个月',
         value: 3
       }, {
@@ -293,8 +299,9 @@ export default {
 <style lang="scss" scoped>
 .empty {
   width: 100%;
-  color: #FFCF81;
+  color: #F5A623;
   text-align: center;
+  line-height: 30px;
 }
 .link {
   &:hover {
