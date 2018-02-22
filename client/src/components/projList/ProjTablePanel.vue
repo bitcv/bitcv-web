@@ -1,6 +1,6 @@
 <template>
   <div class="proj-table-panel">
-    <h3 class="panel-title">共{{ projData.dataCount }}项</h3>
+    <h3 class="panel-title">共 {{ projData.dataCount }} 项</h3>
     <table class='info-table'>
       <tr class="info-header">
         <th>公司名称</th>
@@ -25,10 +25,13 @@
         <td class="mobile-hide"><span>{{ convertFundStage(project.fundStage) }}</span></td>
       </tr>
     </table>
+    <page-panel :page-count="pageCount" @changePage="changePage"></page-panel>
   </div>
 </template>
 
 <script>
+import PagePanel from '@/components/projList/PagePanel'
+
 export default {
   data () {
     return {
@@ -39,34 +42,46 @@ export default {
         }
       },
       focusUrl: '/static/img/focus@2x.png',
-      unfocusUrl: '/static/img/unfocus@2x.png'
+      unfocusUrl: '/static/img/unfocus@2x.png',
+      params: {
+        pageno: 1,
+        perpage: 10
+      }
     }
   },
   created () {
-    this.$root.eventHub.$on('updateProjList', this.updateProjList)
+    this.$root.eventHub.$on('searchProject', this.searchProject)
   },
   beforeDestroy () {
-    this.$root.eventHub.$off('updateProjList', this.updateProjList)
+    this.$root.eventHub.$off('searchProject', this.searchProject)
   },
   mounted () {
-    var that = this
-    var keyword = this.$route.query.keyword
-    this.$http.post('/api/getProjList', {
-      keyword: keyword,
-      pageno: 1,
-      perpage: 10
-    }).then(function (res) {
-      var resData = res.data
-      if (resData.errcode === 0) {
-        that.updateProjList(resData.data)
-      } else {
-        alert(resData.errmsg)
-      }
-    })
+    this.params.keyword = this.$route.query.keyword
+    this.updateProjList()
+  },
+  computed: {
+    pageCount () {
+      return Math.ceil(this.projData.dataCount / 10) || 0
+    }
   },
   methods: {
-    updateProjList: function (projData) {
-      this.projData = projData
+    changePage (pageno) {
+      this.params.pageno = pageno
+      this.updateProjList()
+    },
+    searchProject (params) {
+      params.pageno = 1
+      params.perpage = 10
+      this.params = params
+      this.updateProjList()
+    },
+    updateProjList: function () {
+      this.$http.post('/api/getProjList', this.params).then((res) => {
+        if (res.data.errcode === 0) {
+          this.projData = res.data.data
+          this.$root.eventHub.$emit('updateProjPage', this.projData.dataCount)
+        }
+      })
     },
     projNav: function (projId) {
       this.$router.push('projDetail/' + projId)
@@ -86,6 +101,9 @@ export default {
         }
       })
     }
+  },
+  components: {
+    PagePanel
   }
 }
 </script>

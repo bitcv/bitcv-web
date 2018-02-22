@@ -36,19 +36,9 @@ export default {
       if (this.$route.path !== '/projList') {
         return this.$router.push('/projList?keyword=' + this.keyword)
       }
-      var that = this
       var params = JSON.parse(JSON.stringify(this.selectResult))
       params.keyword = this.keyword
-      params.pageno = 1
-      params.perpage = 10
-      this.$http.post('/api/getProjList', params).then(function (res) {
-        var resData = res.data
-        if (resData.errcode === 0) {
-          that.$root.eventHub.$emit('updateProjList', resData.data)
-        } else {
-          alert(resData.errmsg)
-        }
-      })
+      this.$root.eventHub.$emit('searchProject', params)
     }
   }
 }

@@ -29,10 +29,12 @@ class ProjectController extends Controller
             ->where('status', 1);
         if ($keyword) {
             $projModel = $projModel
-                ->where('name_cn', 'like', "%$keyword%")
-                ->orWhere('name_en', 'like', "%$keyword%")
-                ->orWhere('token.name', 'like', "%$keyword%")
-                ->orWhere('token.symbol', 'like', "%$keyword%");
+                ->where(function ($query) use ($keyword) {
+                    $query->where('name_cn', 'like', "%$keyword%")
+                        ->orWhere('name_en', 'like', "%$keyword%")
+                        ->orWhere('token.name', 'like', "%$keyword%")
+                        ->orWhere('token.symbol', 'like', "%$keyword%");
+                });
         }
         if ($region) {
             $projModel = $projModel->where('region', $region);
