@@ -9,10 +9,10 @@
         </div>
       </div>
     </div>
-    <div class="btn-box">
-      <img src="/static/img/Triangle@2x.png" alt="">
-      <span>全部筛选项</span>
-    </div>
+    <!--<div class="btn-box">-->
+      <!--<img src="/static/img/Triangle@2x.png" alt="">-->
+      <!--<span>全部筛选项</span>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -66,7 +66,7 @@ export default {
   .sort-container {
     width: 100%;
     margin-top: 40px;
-    border-bottom: 0.5px solid #979797;
+    // border-bottom: 0.5px solid #979797;
     .sort-row {
       &.media-mobile {
         margin-bottom: 4px;

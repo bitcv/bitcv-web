@@ -10,7 +10,7 @@
       <div class="apply-btn-box">
         <a @click="toApply" class="btn btn-cy transition">立即创建项目</a>
       </div>
-      <!--<news-panel></news-panel>-->
+      <news-panel></news-panel>
     </div>
   </div>
 </template>

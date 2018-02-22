@@ -25,8 +25,7 @@ export default {
   },
   methods: {
     updateData () {
-      this.$http.post('/api/getUser', {
-      }).then((res) => {
+      this.$http.post('/api/getUser', {}).then((res) => {
         var resData = res.data
         if (resData.errcode === 0) {
           var user = resData.data
@@ -37,6 +36,10 @@ export default {
               icon: 'el-icon-menu',
               url: '/admin/project',
               text: '项目管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/depositBox',
+              text: '余币宝'
             }, {
               icon: 'el-icon-menu',
               url: '/admin/social',

@@ -77,7 +77,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 17px auto;
+      // margin: 17px auto;
       width: 50px;
       height: 50px;
       background-color: black;
