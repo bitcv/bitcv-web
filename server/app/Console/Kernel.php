@@ -90,6 +90,7 @@ class Kernel extends ConsoleKernel
 
 
 
+
     /**
      * Register the Closure based commands for the application.
      *
