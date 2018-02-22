@@ -1,9 +1,9 @@
 <template>
   <div class="proj-info">
-    <div v-if="showShare" class="share-container" @click="showShare = false">
-      <share :proj-detail="projDetail"></share>
+    <div id="shareBox" v-show="showShare" class="share-container" @click="showShare = false">
+      <share id="shareCard" :proj-detail="projDetail"></share>
     </div>
-    <div class="info-box">
+    <div id="infoBox" class="info-box">
       <img :src="projDetail.logoUrl" alt="">
       <div class="text-box">
         <div class="top-row">
@@ -39,7 +39,7 @@
         <i class="fab" :class="social.fontClass"></i>
       </a>
     </div>
-    <div class="share-box" @click="showShare = true">
+    <div class="share-box" @click="openShare">
       <span class="title">分享</span>
       <img src="/static/logo/share.png" alt="">
     </div>
@@ -48,6 +48,7 @@
 
 <script>
 import Share from '@/components/share/Share'
+import html2canvas from 'html2canvas'
 
 export default {
   props: {
@@ -59,6 +60,19 @@ export default {
     }
   },
   methods: {
+    openShare: function () {
+      this.showShare = true
+      this.$nextTick(() => {
+        html2canvas(document.querySelector('#shareCard'), {scale: 1}).then(canvas => {
+          document.querySelector('#shareCard').innerHTML = ''
+          var url = canvas.toDataURL()
+          var newImg = document.createElement('img')
+          newImg.src = url
+          newImg.class = 'share-img'
+          document.querySelector('#shareBox').appendChild(newImg)
+        })
+      })
+    },
     toggleFocus: function () {
       var userId = localStorage.getItem('userId')
       if (!userId) {
@@ -207,6 +221,9 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    .share-img {
+      width: 400px;
+    }
   }
 }
 </style>
