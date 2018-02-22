@@ -86,7 +86,45 @@ class Kernel extends ConsoleKernel
         }
     }
 
+    protected function projReportWeChat(){
 
+        $socialList = Model\ProjSocial::where('social_id', 5)->get()->toArray();
+
+        foreach ($socialList as $socialitem){
+            $keyword = trim(strrchr($socialitem['link_url'], '/'),'/');
+            $searchHtml = file_get_contents('http://weixin.sogou.com/weixin?type=1&s_from=input&query='.$keyword.'&ie=utf8');
+            $pattern = '/account_name_0" href="(.*?)"></ism';
+            preg_match_all($pattern,$searchHtml,$matches);
+
+            $url = $matches[1][0];
+            $url = str_replace("&amp;", "&", $url);
+            $listHtml = file_get_contents($url);
+
+            $pattern = '/var msgList = ({.*});/ism';
+            preg_match_all($pattern,$listHtml,$matches);
+            $json = $matches[1][0];
+            $results = json_decode($json,true);
+
+            foreach($results['list'] as $result){
+                $msg =  $result['app_msg_ext_info'];
+                $data['link_url'] = 'https://mp.weixin.qq.com'.str_replace('&amp;','&',$msg['content_url']);
+                $data['content'] = $msg['digest'];
+                $data['title'] = $msg['title'];
+                $data['banner_url'] = $msg['cover'];
+                $data['created_at'] = $result['comm_msg_info']['datetime'];
+
+                Model\CrawlerSocialNews::Create([
+                    'proj_id' => $socialitem['proj_id'],
+                    'social_id' => $socialitem['social_id'],
+                    'official_name' => $socialitem['link_url'],
+                    'title' => $data['title'],
+                    'logo_url' => $data['banner_url'],
+                    'created_at' => $data['created_at'],
+                    'refer_url' => $data['link_url'],
+                ]);
+            }
+        }
+    }
 
 
 
