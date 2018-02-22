@@ -25,9 +25,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-//        $schedule->call(function () {
-//            $this->projReportRobot();
-//        })->everyMinute();
+        $schedule->call(function () {
+            $this->projReportWeChat();
+        })->everyMinute();
     }
 
     protected function projReportRobot () {
@@ -85,6 +85,9 @@ class Kernel extends ConsoleKernel
             }
         }
     }
+
+
+
 
 
     /**
