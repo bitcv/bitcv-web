@@ -22,9 +22,9 @@
       <el-tab-pane label="媒体报道">
         <report></report>
       </el-tab-pane>
-      <el-tab-pane label="余币宝">
-        <deposit-box :click="index"></deposit-box>
-      </el-tab-pane>
+      <!--<el-tab-pane label="余币宝">-->
+        <!--<deposit-box :click="index"></deposit-box>-->
+      <!--</el-tab-pane>-->
     </el-tabs>
   </div>
 </template>

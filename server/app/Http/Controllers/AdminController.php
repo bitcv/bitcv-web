@@ -229,6 +229,47 @@ class AdminController extends Controller
         return $this->output(['dataList' => $depositBoxList]);
     }
 
+    public function getProjDepositOrderList (Request $request) {
+
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $depositOrderList = Model\DepositOrder::join('deposit_box', 'deposit_order.deposit_box_id', '=', 'deposit_box.id')
+            ->where('deposit_box.proj_id', $projId)
+            ->orderBy('deposit_order.created_at', 'desc')
+            ->get()->toArray();
+
+        return $this->output(['dataList' => $depositOrderList]);
+    }
+
+    public function getAdminDepositBoxList (Request $request) {
+
+        //$params = $this->validation($request, [
+            //'projId' => 'required|numeric',
+        //]);
+        //if ($params === false) {
+            //return $this->error(100);
+        //}
+        //extract($params);
+
+        //$depositBoxList = Model\DepositBox::where('proj_id', $projId)
+        $depositBoxList = Model\DepositBox::orderBy('created_at', 'desc')
+            ->get()->toArray();
+
+        return $this->output(['dataList' => $depositBoxList]);
+    }
+
+    public function getAdminDepositOrderList (Request $request) {
+        $depositOrderList = Model\DepositOrder::orderBy('created_at', 'desc')
+            ->get()->toArray();
+        return $this->output(['dataList' => $depositOrderList]);
+    }
+
     public function signin (Request $request) {
         $params = $this->validation($request, [
             'account' => 'required|string',
@@ -1146,31 +1187,23 @@ class AdminController extends Controller
         return $this->output();
     }
 
-//    public function delMediaReport(Request $request){
-//        $params = $this->validation($request, [
-//           'id' => 'required|numeric'
-//        ]);
-//        if($params === false){
-//            return $this->error(100);
-//        }
-//        extract($params);
-//
-//        Model\CrawlerSocialNews::where('id',$id)->delete();
-//
-//        return $this->output();
-//    }
-//
-//    public function getMediaReportList(Request $request){
-//        $params = $this->validation($request, [
-//            'id' => 'required|numeric'
-//        ]);
-//        if($params === false){
-//            return $this->error(100);
-//        }
-//        extract($params);
-//
-//        $projAdvisorList = Model\CrawlerSocialNews::where('proj_id', $projId)->get()->toArray();
-//
-//        return $this->output(['medisReportList' => $projAdvisorList]);
-//    }
+    public function delMediaReport(Request $request){
+        $params = $this->validation($request, [
+           'id' => 'required|numeric'
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\CrawlerSocialNews::where('id',$id)->delete();
+
+        return $this->output();
+    }
+
+    public function getMediaReportList(Request $request){
+        $projAdvisorList = Model\CrawlerSocialNews::get()->toArray();
+
+        return $this->output(['medisReportList' => $projAdvisorList]);
+    }
 }

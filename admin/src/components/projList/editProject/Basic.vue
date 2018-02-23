@@ -46,7 +46,7 @@
         <el-form-item label="项目白皮书" prop="whitePaperUrl" required>
           <el-upload class="upload-box" name="whitePaper" action="/api/uploadFile" :on-success="onWhitePaperSuccess" :show-file-list="false" style="display: inline-flex" accept="*.pdf">
             <i class="el-icon-plus"></i>
-            <img :src="formData.whitePaperUrl" alt="">
+            <img :src="formData.whitePaperUrl ? '/storage/static/pdf.jpg' : ''" alt="">
           </el-upload>
           <a :href="formData.whitePaperUrl" target="_blank" style="color: red;">白皮书链接</a>
           <span>请上传项目白皮书 pdf 文件</span>
@@ -197,7 +197,8 @@ export default {
     },
     onWhitePaperSuccess (res) {
       if (res.errcode === 0) {
-        this.formData.whitePaperUrl = '/storage/static/pdf.jpg'
+        this.formData.whitePaperUrl = res.data.url
+        //this.formData.whitePaperUrl = ''
       }
     },
     showTagInput () {

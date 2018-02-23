@@ -9,7 +9,9 @@ import EditProject from '@/components/projList/editProject/EditProject'
 import Signin from '@/components/signin/Signin'
 import Home from '@/components/home/Home'
 import Setting from '@/components/setting/Setting'
-import MediaReport from '@component/media/MediaReport'
+import DepositBox from '@/components/depositBox/DepositBox'
+import ProjDepositBox from '@/components/depositBox/projDepositBox'
+import MediaReport from '@/components/media/MediaReport'
 
 Vue.use(Router)
 
@@ -21,6 +23,12 @@ export default new Router({
     children: [{
       path: '/admin/project',
       component: ProjList
+    }, {
+      path: '/admin/depositBox',
+      component: DepositBox
+    }, {
+      path: '/admin/projDepositBox/:id',
+      component: ProjDepositBox
     }, {
       path: '/admin/social',
       component: Social
@@ -37,7 +45,7 @@ export default new Router({
       path: '/admin/editProject/:id',
       component: EditProject
     }, {
-      path: 'admin/mediareport',
+      path: '/admin/mediareport',
       component: MediaReport
     }]
   }, {

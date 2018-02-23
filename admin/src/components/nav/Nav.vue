@@ -48,14 +48,14 @@ export default {
               icon: 'el-icon-menu',
               url: '/admin/media',
               text: '媒体管理'
-            }, {
-              icon: 'el-icon-menu',
-              url: '/admin/module',
-              text: '运营工具管理'
+            // }, {
+              // icon: 'el-icon-menu',
+              // url: '/admin/module',
+              // text: '运营工具管理'
             }, {
               icon: 'el-icon-menu',
               url: '/admin/mediareport',
-              text: '媒体报道'
+              text: '项目动态'
             }]
           // 项目管理员
           } else if (user['projId'] > 0) {
@@ -64,6 +64,10 @@ export default {
               icon: 'el-icon-menu',
               url: '/admin/editProject/' + user['projId'],
               text: '项目信息'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/projDepositBox/' + user['projId'],
+              text: '余币宝'
             }]
           // 个人
           } else {
