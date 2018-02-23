@@ -112,9 +112,20 @@ export default {
         font-size: 9px;
         overflow: hidden;
         text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 8;
+        line-height: 14px;
+        max-height: 112px;
+        position: relative;
+        /*&:after {
+          content: '...';
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          background: #FFF;
+          // background: linear-gradient(to right, transparent, #fff 55%);
+        }*/
+        // display: -webkit-box;
+        // -webkit-box-orient: vertical;
+        // -webkit-line-clamp: 8;
       }
     }
     .more-info {
