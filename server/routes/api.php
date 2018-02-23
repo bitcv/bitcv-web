@@ -39,6 +39,7 @@ Route::any('delDepositBox', 'AdminController@delDepositBox');
 Route::any('getBoxTxRecordList', 'AdminController@getBoxTxRecordList');
 Route::any('confirmBoxTx', 'AdminController@confirmBoxTx');
 Route::any('getProjDepositBoxList', 'AdminController@getProjDepositBoxList');
+Route::any('getProjDepositOrderList', 'AdminController@getProjDepositOrderList');
 
 Route::any('adminSignin', 'AdminController@signin');
 Route::any('adminSignout', 'AdminController@signout');
@@ -75,6 +76,9 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('updSocial', 'AdminController@updSocial');
     Route::any('delSocial', 'AdminController@delSocial');
     Route::any('updSocial', 'AdminController@updSocial');
+
+    Route::any('getAdminDepositBoxList', 'AdminController@getAdminDepositBoxList');
+    Route::any('getAdminDepositOrderList', 'AdminController@getAdminDepositOrderList');
 });
 
 //项目管理员只能操作自己的projId

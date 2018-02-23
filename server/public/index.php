@@ -1,9 +1,9 @@
 <?php
 
-if ($_SERVER['REQUEST_URI'] == '' || $_SERVER['REQUEST_URI'] == '/') {
-    header('Location: https://bitcv.one');
-    exit;
-}
+//if ($_SERVER['REQUEST_URI'] == '' || $_SERVER['REQUEST_URI'] == '/') {
+    //header('Location: https://bitcv.one');
+    //exit;
+//}
 
 /**
  * Laravel - A PHP Framework For Web Artisans
