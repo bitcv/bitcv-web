@@ -63,7 +63,6 @@ export default {
   methods: {
     openShare: function () {
       this.showShare = true
-      return
       if (this.shareUrl) return
       this.$nextTick(() => {
         html2canvas(document.querySelector('#shareCard')).then(canvas => {
