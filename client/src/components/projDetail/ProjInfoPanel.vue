@@ -56,20 +56,23 @@ export default {
   },
   data () {
     return {
-      showShare: false
+      showShare: false,
+      shareUrl: ''
     }
   },
   methods: {
     openShare: function () {
       this.showShare = true
+      return
+      if (this.shareUrl) return
       this.$nextTick(() => {
-        html2canvas(document.querySelector('#shareCard'), {scale: 1}).then(canvas => {
+        html2canvas(document.querySelector('#shareCard')).then(canvas => {
           document.querySelector('#shareBox').innerHTML = ''
-          // document.querySelector('#shareBox').appendChild(canvas)
-          // document.body.appendChild(canvas)
           var url = canvas.toDataURL()
+          this.shareUrl = url
           var newImg = document.createElement('img')
           newImg.src = url
+          newImg.style.width = '90%'
           newImg.class = 'share-img'
           document.querySelector('#shareBox').appendChild(newImg)
         })
@@ -223,8 +226,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    .share-img {
-      width: 400px;
+    &>img {
+      width: 100%;
     }
   }
 }
