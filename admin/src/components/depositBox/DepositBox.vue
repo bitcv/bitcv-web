@@ -30,7 +30,7 @@
       <el-tab-pane label="订单列表">
         <el-table :data="depositOrderList">
           <el-table-column label="余币宝ID" prop="depositBoxId"></el-table-column>
-          <el-table-column label="用户ID" prop="userId"></el-table-column>
+          <el-table-column label="用户手机号" prop="mobile"></el-table-column>
           <el-table-column label="订单金额" prop="orderAmount"></el-table-column>
           <el-table-column label="支付地址">
             <template slot-scope="scope">

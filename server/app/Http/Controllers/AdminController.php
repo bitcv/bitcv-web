@@ -239,8 +239,15 @@ class AdminController extends Controller
         }
         extract($params);
 
-        $depositOrderList = Model\DepositOrder::join('deposit_box', 'deposit_order.deposit_box_id', '=', 'deposit_box.id')
+        //$depositOrderList = Model\DepositOrder::
+            //->join('deposit_box', 'deposit_order.deposit_box_id', '=', 'deposit_box.id')
+            //->where('deposit_box.proj_id', $projId)
+            //->orderBy('deposit_order.created_at', 'desc')
+            //->get()->toArray();
+        $depositOrderList = Model\DepositOrder::join('user', 'deposit_order.user_id', '=', 'user.id')
+            ->join('deposit_box', 'deposit_order.deposit_box_id', '=', 'deposit_box.id')
             ->where('deposit_box.proj_id', $projId)
+            ->select('user.mobile', 'deposit_order.id', 'deposit_order.deposit_box_id', 'deposit_order.order_amount', 'deposit_order.from_addr', 'deposit_order.to_addr', 'deposit_order.to_addr', 'deposit_order.contract_addr', 'deposit_order.status', 'deposit_order.created_at')
             ->orderBy('deposit_order.created_at', 'desc')
             ->get()->toArray();
 
@@ -265,7 +272,9 @@ class AdminController extends Controller
     }
 
     public function getAdminDepositOrderList (Request $request) {
-        $depositOrderList = Model\DepositOrder::orderBy('created_at', 'desc')
+        $depositOrderList = Model\DepositOrder::join('user', 'deposit_order.user_id', '=', 'user.id')
+            ->select('user.mobile', 'deposit_order.id', 'deposit_order.deposit_box_id', 'deposit_order.order_amount', 'deposit_order.from_addr', 'deposit_order.to_addr', 'deposit_order.to_addr', 'deposit_order.contract_addr', 'deposit_order.status', 'deposit_order.created_at')
+            ->orderBy('deposit_order.created_at', 'desc')
             ->get()->toArray();
         return $this->output(['dataList' => $depositOrderList]);
     }
