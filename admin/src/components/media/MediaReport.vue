@@ -79,7 +79,7 @@ export default {
     },
     delMediaReport (id){
       this.$http.post('/api/delMediaReport', {
-        mediaId: mediaId
+        Id: id
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '删除成功!' })

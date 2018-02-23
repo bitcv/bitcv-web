@@ -3,8 +3,10 @@
     <h3 class="panel-title">lianbi说</h3>
     <div class="list-container">
       <a class="item-container" v-for="(news, index) in newsList" :key="index" :href="news.url" target="_blank">
+        <router-link :to="{ path: 'newdetail/' + news.id}">
         <span class="text">{{ news.title }}</span>
-        <span class="time">{{ news.time }}</span>
+        <span class="time">{{ news.releaseTime }}</span>
+        </router-link>
       </a>
     </div>
   </div>
@@ -14,24 +16,21 @@
 export default {
   data () {
     return {
-      newsList: [{
-        title: 'BitCV - 区块链数字资产管理服务引擎',
-        url: 'https://www.bitcv.one/',
-        time: '2018-01-31 17:48:32'
-      }, {
-        title: '数字资产管理平台BitCVBitCV获千万级天使融资',
-        url: 'http://www.sohu.com/a/219786398_439726',
-        time: '2018-01-30 10:41'
-      }, {
-        title: '腾讯云加入Hyperledger超级账本项目，深度参与国际区块链生态建设',
-        url: 'http://www.xinhuanet.com/itown/2018-01/30/c_136935789.htm',
-        time: '2018-01-30 10:59:49'
-      }, {
-        title: '区块链新锐BitCV获千万级天使融资 或成数字资产管理平台开创者',
-        url: 'http://industry.caijing.com.cn/20180130/4401295.shtml',
-        time: '2018-01-30 10:52:27'
-      }]
+      newsList: []
     }
+  },
+  mounted () {
+    var that = this
+    this.$http.post('api/getNewsList', {
+      pageno: 1,
+      perpage: 10
+    }).then(function (res) {
+      var resdata = res.data
+      console.log(resdata)
+      if (resdata.errcode === 0) {
+        that.newsList = resdata.data
+      }
+    })
   }
 }
 </script>

@@ -1146,21 +1146,21 @@ class AdminController extends Controller
         return $this->output();
     }
 
-//    public function delMediaReport(Request $request){
-//        $params = $this->validation($request, [
-//           'id' => 'required|numeric'
-//        ]);
-//        if($params === false){
-//            return $this->error(100);
-//        }
-//        extract($params);
-//
-//        Model\CrawlerSocialNews::where('id',$id)->delete();
-//
-//        return $this->output();
-//    }
-//
-//    public function getMediaReportList(Request $request){
+    public function delMediaReport(Request $request){
+        $params = $this->validation($request, [
+           'id' => 'required|numeric'
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\CrawlerSocialNews::where('id',$id)->delete();
+
+        return $this->output();
+    }
+
+    public function getMediaReportList(Request $request){
 //        $params = $this->validation($request, [
 //            'id' => 'required|numeric'
 //        ]);
@@ -1168,9 +1168,9 @@ class AdminController extends Controller
 //            return $this->error(100);
 //        }
 //        extract($params);
-//
-//        $projAdvisorList = Model\CrawlerSocialNews::where('proj_id', $projId)->get()->toArray();
-//
-//        return $this->output(['medisReportList' => $projAdvisorList]);
-//    }
+
+        //$projAdvisorList = Model\CrawlerSocialNews::->get()->toArray();
+
+        //return $this->output(['medisReportList' => $projAdvisorList]);
+    }
 }
