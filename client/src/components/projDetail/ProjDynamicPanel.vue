@@ -36,7 +36,7 @@
                 <span class="dot"> </span>
                 <span>{{ notice.title }}</span>
               </div>
-              <span class="date">{{ notice.createdAt }}</span>
+              <span class="date">{{ notice.postTime }}</span>
             </a>
           </li>
         </ul>
@@ -53,7 +53,7 @@
               </div>
               <span class="content-text">{{ social.title }}</span>
               <div class="content-footer">
-                <span class="content-time">{{ social.createdAt }}</span>
+                <span class="content-time">{{ social.postTime }}</span>
                 <a :href="social.referUrl">查看原文</a>
               </div>
             </div>

@@ -3,38 +3,26 @@
     <!-- <div class="header-btn-area">
       <el-button type="primary" icon="el-icon-plus" @click="showAdd">添加</el-button>
     </div> -->
-    <el-table :data="mediaList">
+    <el-table :data="mediaReportList">
       <el-table-column label="媒体Logo">
         <template slot-scope="scope">
           <img class="table-image" :src="scope.row.logoUrl" alt="">
         </template>
       </el-table-column>
       <el-table-column label="项目ID">
-        <template slot-scope="scope">{{ scope.row.proj_id }}</template>
+        <template slot-scope="scope">{{ scope.row.projId }}</template>
       </el-table-column>
       <el-table-column label="社交ID">
-        <template slot-scope="scope">{{ scope.row.social_id }}</template>
-      </el-table-column>
-      <el-table-column label="主页">
-        <template slot-scope="scope">{{ scope.row.home_url }}</template>
-      </el-table-column>
-      <el-table-column label="引用链接">
-        <template slot-scope="scope">{{ scope.row.refer_url }}</template>
+        <template slot-scope="scope">{{ scope.row.socialId }}</template>
       </el-table-column>
       <el-table-column label="标题">
         <template slot-scope="scope">{{ scope.row.title }}</template>
       </el-table-column>
       <el-table-column label="名称">
-        <template slot-scope="scope">{{ scope.row.official_name }}</template>
-      </el-table-column>
-      <el-table-column label="LogoURL">
-        <template slot-scope="scope">{{ scope.row.logo_url }}</template>
-      </el-table-column>
-      <el-table-column label="内容">
-        <template slot-scope="scope">{{ scope.row.content }}</template>
+        <template slot-scope="scope">{{ scope.row.officialName }}</template>
       </el-table-column>
       <el-table-column label="发布时间">
-        <template slot-scope="scope">{{ scope.row.created_at }}</template>
+        <template slot-scope="scope">{{ scope.row.postTime }}</template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -53,13 +41,13 @@ export default {
     }
   },
   mounted () {
-      this.updateData()
+    this.updateData()
   },
   methods: {
-    updateData (){
+    updateData () {
       this.$http.get('/api/getMediaReportList').then((res) => {
         if (res.data.errcode === 0) {
-          this.mediaReportList = res.data.data.dataList
+          this.mediaReportList = res.data.data.medisReportList
         }
       })
     },
@@ -69,7 +57,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.delMedia(mediaId)
+        this.delMediaReport(id)
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -77,9 +65,9 @@ export default {
         })
       })
     },
-    delMediaReport (id){
+    delMediaReport (id) {
       this.$http.post('/api/delMediaReport', {
-        mediaId: mediaId
+        id: id
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '删除成功!' })

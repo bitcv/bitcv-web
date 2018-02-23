@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Models as Model;
+use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
 {
@@ -26,7 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $this->projReportWeChat();
+            $this->projReportWeibo();
         })->everyMinute();
     }
 
@@ -86,6 +87,84 @@ class Kernel extends ConsoleKernel
         }
     }
 
+
+    protected function projReportWeibo(){
+
+        $socialList = Model\ProjSocial::where('social_id', 6)->get()->toArray();
+        foreach ($socialList as $socialItem){
+            $keyword = trim(strrchr($socialItem['link_url'], '/'),'/');
+            $content = file_get_contents('http://s.weibo.com/weibo/'.$keyword.'?topnav=1&wvr=6&b=1');
+            //$content = file_get_contents("weibo.txt");
+            $pattern = "/STK.pageletM.view\((.*?)\)<\/script>/smi";
+            if(preg_match_all($pattern, $content, $result)) {
+                $list = $result[1];
+                foreach ($list as $item) {
+                    $str = $item;
+                    //  echo $item."\n";
+                    $obj = json_decode($str);
+                    if ($obj->pid == "pl_weibo_direct") {
+
+                        $html = $obj->html;
+                        $contentpattern = "/class=\"feed_action clearfix\">(.*?)<\!\-\-\/feed_detail\-\->/sim";
+                        if (preg_match_all($contentpattern, $html, $result)) {
+
+                            $weiboitem = array();
+                            foreach ($result[1] as $content) {
+                                $weiboitem = array();
+                                $pattern = "/<p class=\"comment_txt\".*?>(.*?)<\/p>/ism";
+                                if (preg_match_all($pattern, $content, $listitems)) {
+
+                                    $weiboitem['content'] = strip_tags($listitems[1][0]);
+                                    $weiboitem['content'] = str_replace("展开全文c", "", $weiboitem['content']);
+                                }
+                                $name_pattern = "/suda-data=\"key=tblog_search_weibo&value=weibo_ss_\d_[a-zA-Z0-9_]*icon\"\s+href=\"(.*?)\"\s+title=\"(.*?)\"(.*?)<img src=\"(.*?)\"\s+alt=\"(.*?)\"\s+width=\"50\"\s+height=\"50\"\s+class=\"W_face_radius\"/sim";
+                                //$name_pattern = "/suda-data=\"key=tblog_search_weibo&value=weibo_ss_\d_icon\"\s+href=\"(.*?)\"\s+title=\"(.*?)\"(.*?)<img src=\"(.*?)\"\s+alt=\"(.*?)\"\s+width=\"50\"\s+height=\"50\"\s+class=\"W_face_radius\"/sim";
+                                if (preg_match_all($name_pattern, $content, $nameitems)) {
+
+                                    $weiboitem['homeurl'] = $nameitems[1][0];
+                                    $weiboitem['name'] = $nameitems[2][0];
+                                    $weiboitem['logo'] = $nameitems[4][0];
+                                }
+
+                                //$linkpattern = "/title\s+\-\-\>\s+<a\s+href=\"(.*?)\"\s+target=\"_blank\"\s+title=\"(.*?)\"\s+date=\"(.*?)\"\s+class=\"W_textb\"\s+node-type=\"feed_list_item_date/sim";
+                                $linkpattern = "/title\s+\-\-\>\s+<a\s+href=\"(.*?)\"\s+target=\"_blank\"\s+title=\"(.*?)\"\s+date=\"(.*?)\"\s+[class=\"W_textb\"\s+]*node-type=\"feed_list_item_date/sim";
+
+                                if (preg_match_all($linkpattern, $content, $linkitems)) {
+
+                                    $weiboitem['url'] = $linkitems[1][0];
+                                    $weiboitem['date'] = $linkitems[2][0];
+
+                                }
+                                if (strpos($content, "fl_unfold") !== false) {
+                                    $actionpattern = "/action-type=\"fl_unfold\"\s+action-data=\"(.*?)\">/";
+                                    if (preg_match_all($actionpattern, $content, $actitems)) {
+
+                                        $weiboitem['unfold'] = $actitems[1][0];
+                                    }
+                                }
+
+//                                Model\CrawlerSocialNews::create([
+//                                    'proj_id' => $socialItem['proj_id'],
+//                                    'social_id' => $socialItem['social_id'],
+//                                    'official_name' => $weiboitem['name'],
+//                                    'title' => $weiboitem['content'],
+//                                    'logo_url' => $weiboitem['logo'],
+//                                    'refer_url' => $weiboitem['homeurl'],
+//                                    'created_at' => strtotime($weiboitem['date']),
+//                                ]);
+
+                                DB::insert('INSERT INTO crawler_socialnews (proj_id,social_id,official_name,title,logo_url,refer_url,post_time) VALUES (?,?,?,?,?,?,?)
+                    ON DUPLICATE KEY UPDATE post_time=VALUES(post_time)',[$socialItem['proj_id'],$socialItem['social_id'],$weiboitem['name'],$weiboitem['content'],$weiboitem['logo'],$weiboitem['homeurl'],$weiboitem['date']]);
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     protected function projReportWeChat(){
 
         $socialList = Model\ProjSocial::where('social_id', 5)->get()->toArray();
@@ -98,6 +177,7 @@ class Kernel extends ConsoleKernel
 
             $url = $matches[1][0];
             $url = str_replace("&amp;", "&", $url);
+            print_r($url);
             $listHtml = file_get_contents($url);
 
             $pattern = '/var msgList = ({.*});/ism';
@@ -113,15 +193,18 @@ class Kernel extends ConsoleKernel
                 $data['banner_url'] = $msg['cover'];
                 $data['created_at'] = $result['comm_msg_info']['datetime'];
 
-                Model\CrawlerSocialNews::Create([
-                    'proj_id' => $socialitem['proj_id'],
-                    'social_id' => $socialitem['social_id'],
-                    'official_name' => $socialitem['link_url'],
-                    'title' => $data['title'],
-                    'logo_url' => $data['banner_url'],
-                    'created_at' => $data['created_at'],
-                    'refer_url' => $data['link_url'],
-                ]);
+//                Model\CrawlerSocialNews::Create([
+//                    'proj_id' => $socialitem['proj_id'],
+//                    'social_id' => $socialitem['social_id'],
+//                    'official_name' => $socialitem['link_url'],
+//                    'title' => $data['title'],
+//                    'logo_url' => $data['banner_url'],
+//                    'created_at' => $data['created_at'],
+//                    'refer_url' => $data['link_url'],
+//                ]);
+                DB::insert('INSERT INTO crawler_socialnews (proj_id,social_id,official_name,title,logo_url,post_time,refer_url) VALUES (?,?,?,?,?,?,?)
+                    ON DUPLICATE KEY UPDATE post_time=VALUES(post_time)',[$socialitem['proj_id'],$socialitem['social_id'],$socialitem['link_url'],$data['title'],$data['banner_url'],date('Y-m-d H:i:s', $data['created_at']),$data['link_url']]);
+
             }
         }
     }

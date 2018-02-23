@@ -11,7 +11,7 @@ import Home from '@/components/home/Home'
 import Setting from '@/components/setting/Setting'
 import DepositBox from '@/components/depositBox/DepositBox'
 import ProjDepositBox from '@/components/depositBox/projDepositBox'
-// import MediaReport from '@component/media/MediaReport'
+import MediaReport from '@/components/media/MediaReport'
 
 Vue.use(Router)
 
@@ -44,6 +44,9 @@ export default new Router({
     }, {
       path: '/admin/editProject/:id',
       component: EditProject
+    }, {
+      path: '/admin/mediareport',
+      component: MediaReport
     }]
   }, {
     path: '/signin',

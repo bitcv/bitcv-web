@@ -191,7 +191,7 @@ class ProjectController extends Controller
         $projDynamicList = Model\CrawlerSocialNews::join('social','crawler_socialnews.social_id','=','social.id')
             ->where([['proj_id', $projId]])
             ->limit(4)->orderBy('crawler_socialnews.created_at','desc')
-            ->select('crawler_socialnews.created_at','crawler_socialnews.refer_url','crawler_socialnews.official_name','crawler_socialnews.title','crawler_socialnews.logo_url','social.font_class')
+            ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.refer_url','crawler_socialnews.official_name','crawler_socialnews.title','crawler_socialnews.logo_url','social.font_class')
             ->get()->toArray();
 
 //        $projDynamicList = Model\ProjSocial::join('social','proj_social.social_id','=','social.id')->where([['proj_id', $projId], ['status', 1]])
@@ -208,7 +208,7 @@ class ProjectController extends Controller
             ->where([['proj_id', $projId]])
             ->whereIn('social_id', [5])
             ->limit(5)->orderBy('crawler_socialnews.created_at','desc')
-            ->select('crawler_socialnews.created_at','crawler_socialnews.title','crawler_socialnews.refer_url')
+            ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.title','crawler_socialnews.refer_url')
             ->get()->toArray();
         $projData['publicList'] = $projPublicList;
 
