@@ -1161,16 +1161,8 @@ class AdminController extends Controller
     }
 
     public function getMediaReportList(Request $request){
-//        $params = $this->validation($request, [
-//            'id' => 'required|numeric'
-//        ]);
-//        if($params === false){
-//            return $this->error(100);
-//        }
-//        extract($params);
+        $projAdvisorList = Model\CrawlerSocialNews::get()->toArray();
 
-        //$projAdvisorList = Model\CrawlerSocialNews::->get()->toArray();
-
-        //return $this->output(['medisReportList' => $projAdvisorList]);
+        return $this->output(['medisReportList' => $projAdvisorList]);
     }
 }
