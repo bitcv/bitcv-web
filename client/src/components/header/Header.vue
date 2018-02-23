@@ -1,12 +1,12 @@
 <template>
   <div class="header">
     <div class="content">
-      <router-link to="/" class="middle-hide">
+      <router-link to="/">
         <div class="logo">
           <img src="/static/img/logo.png" alt="">
         </div>
       </router-link>
-      <div class="nav">
+      <div class="mobile-hide nav">
         <ul class="mobile-nav">
           <li v-for="(menu, index) in menuList" :key="index" :class="{ active : menuIndex === index }">
             <router-link :to="menu.url">
@@ -15,7 +15,7 @@
           </li>
         </ul>
       </div>
-      <div class="info-box" v-if="isOnline">
+      <div class="mobile-hide info-box" v-if="isOnline">
         <img :src="avatarUrl" alt="" v-on:click="dropdown">
         <ul class="nav-dropdown" v-bind:style="[displayStyles]">
           <li>
@@ -28,7 +28,7 @@
         </ul>
         <span class="nickname mobile-hide">{{ mobile }}</span>
       </div>
-      <div class="btn-box" :class="mediaClass()" v-else>
+      <div class="mobile-hide btn-box" :class="mediaClass()" v-else>
         <router-link to="/signin">
           <div class="signin btn mobile-btn"><span class="btn-text">登录</span></div>
         </router-link>
@@ -37,13 +37,21 @@
         </router-link>
       </div>
     </div>
+    <a href="javascript:;" class="btn-toggle middle-hide" @click="toggleSide"></a>
+    <popside v-model="sideShow" class="middle-hide"></popside>
   </div>
 </template>
 
 <script>
+import Popside from '@/components/popside/popside'
+
 export default {
+  components: {
+    Popside
+  },
   data () {
     return {
+      sideShow: false,
       isOnline: false,
       avatarUrl: '/static/img/avatar.png',
       mobile: 'yk_23723952234',
@@ -79,6 +87,9 @@ export default {
     }
   },
   methods: {
+    toggleSide () {
+      this.sideShow = !this.sideShow
+    },
     menuSwitch (index) {
       this.menuIndex = index
     },
@@ -250,12 +261,25 @@ export default {
       }
     }
   }
-  @media screen and (max-width: 750px) {
+  .btn-toggle {
+    display: inline-block;
+    float: right;
+    width: 80px;
+    height: 40px;
+    margin: 10px 20px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNTE5Mzc5ODI5MjkyIiBjbGFzcz0iaWNvbiIgc3R5bGU9IiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjE4MjcxIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwvc3R5bGU+PC9kZWZzPjxwYXRoIGQ9Ik0xNDIuMjIyMjIyIDE3MC42NjY2NjdtLTU2Ljg4ODg4OSAwYTU2Ljg4ODg4OSA1Ni44ODg4ODkgMCAxIDAgMTEzLjc3Nzc3OCAwIDU2Ljg4ODg4OSA1Ni44ODg4ODkgMCAxIDAtMTEzLjc3Nzc3OCAwWiIgZmlsbD0iI2Y1YTYyMyIgcC1pZD0iMTgyNzIiIGRhdGEtc3BtLWFuY2hvci1pZD0iYTMxM3guNzc4MTA2OS4wLmkyMyIgY2xhc3M9IiI+PC9wYXRoPjxwYXRoIGQ9Ik0zMTIuODg4ODg5IDExMy43Nzc3NzhoNjI1Ljc3Nzc3OHYxMTMuNzc3Nzc4SDMxMi44ODg4ODl6IiBmaWxsPSIjNGE0YTRhIiBwLWlkPSIxODI3MyIgZGF0YS1zcG0tYW5jaG9yLWlkPSJhMzEzeC43NzgxMDY5LjAuaTE2IiBjbGFzcz0ic2VsZWN0ZWQiPjwvcGF0aD48cGF0aCBkPSJNMTQyLjIyMjIyMiAzOTguMjIyMjIybS01Ni44ODg4ODkgMGE1Ni44ODg4ODkgNTYuODg4ODg5IDAgMSAwIDExMy43Nzc3NzggMCA1Ni44ODg4ODkgNTYuODg4ODg5IDAgMSAwLTExMy43Nzc3NzggMFoiIGZpbGw9IiNmNWE2MjMiIHAtaWQ9IjE4Mjc0IiBkYXRhLXNwbS1hbmNob3ItaWQ9ImEzMTN4Ljc3ODEwNjkuMC5pMjQiIGNsYXNzPSIiPjwvcGF0aD48cGF0aCBkPSJNMzEyLjg4ODg4OSAzNDEuMzMzMzMzaDYyNS43Nzc3Nzh2MTEzLjc3Nzc3OEgzMTIuODg4ODg5eiIgZmlsbD0iIzRhNGE0YSIgcC1pZD0iMTgyNzUiIGRhdGEtc3BtLWFuY2hvci1pZD0iYTMxM3guNzc4MTA2OS4wLmkxOSIgY2xhc3M9InNlbGVjdGVkIj48L3BhdGg+PHBhdGggZD0iTTE0Mi4yMjIyMjIgNjI1Ljc3Nzc3OG0tNTYuODg4ODg5IDBhNTYuODg4ODg5IDU2Ljg4ODg4OSAwIDEgMCAxMTMuNzc3Nzc4IDAgNTYuODg4ODg5IDU2Ljg4ODg4OSAwIDEgMC0xMTMuNzc3Nzc4IDBaIiBmaWxsPSIjZjVhNjIzIiBwLWlkPSIxODI3NiIgZGF0YS1zcG0tYW5jaG9yLWlkPSJhMzEzeC43NzgxMDY5LjAuaTI1IiBjbGFzcz0iIj48L3BhdGg+PHBhdGggZD0iTTMxMi44ODg4ODkgNTY4Ljg4ODg4OWg2MjUuNzc3Nzc4djExMy43Nzc3NzhIMzEyLjg4ODg4OXoiIGZpbGw9IiM0YTRhNGEiIHAtaWQ9IjE4Mjc3IiBkYXRhLXNwbS1hbmNob3ItaWQ9ImEzMTN4Ljc3ODEwNjkuMC5pMjEiIGNsYXNzPSJzZWxlY3RlZCI+PC9wYXRoPjxwYXRoIGQ9Ik0xNDIuMjIyMjIyIDg1My4zMzMzMzNtLTU2Ljg4ODg4OSAwYTU2Ljg4ODg4OSA1Ni44ODg4ODkgMCAxIDAgMTEzLjc3Nzc3OCAwIDU2Ljg4ODg4OSA1Ni44ODg4ODkgMCAxIDAtMTEzLjc3Nzc3OCAwWiIgZmlsbD0iI2Y1YTYyMyIgcC1pZD0iMTgyNzgiIGRhdGEtc3BtLWFuY2hvci1pZD0iYTMxM3guNzc4MTA2OS4wLmkyNiIgY2xhc3M9IiI+PC9wYXRoPjxwYXRoIGQ9Ik0zMTIuODg4ODg5IDc5Ni40NDQ0NDRoNjI1Ljc3Nzc3OHYxMTMuNzc3Nzc4SDMxMi44ODg4ODl6IiBmaWxsPSIjNGE0YTRhIiBwLWlkPSIxODI3OSIgZGF0YS1zcG0tYW5jaG9yLWlkPSJhMzEzeC43NzgxMDY5LjAuaTIyIiBjbGFzcz0ic2VsZWN0ZWQiPjwvcGF0aD48L3N2Zz4=);
+    background-size: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  @media screen and (min-width: 768px) {
     .middle-hide {
       display: none;
     }
   }
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 767px) {
     .mobile-hide {
       display: none;
     }
