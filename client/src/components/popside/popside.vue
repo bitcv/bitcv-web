@@ -2,12 +2,14 @@
   <div class="popside" :class="{'popside-show': show}">
     <div class="popside-mask" @click="toggle"></div>
     <div class="popside-container">
-      <router-link class="popside-avatar" to="/signin" @click.native="toggle">登录</router-link>
+      <router-link v-if="!isOnline" class="popside-avatar" to="/signin" @click.native="toggle">登录</router-link>
+      <img v-else class="popside-avatar" src="/static/img/avatar.png" alt="">
       <ul class="popside-nav">
         <router-link tag="li" active-class="active" exact to="/" @click.native="toggle"><a href="javascript:;">主页</a></router-link>
         <router-link tag="li" active-class="active" to="/projList" @click.native="toggle"><a href="javascript:;">发现</a></router-link>
         <router-link tag="li" active-class="active" to="/candyRoom" @click.native="toggle"><a href="javascript:;">余币宝</a></router-link>
         <router-link tag="li" active-class="active" to="/newlist" @click.native="toggle"><a href="javascript:;">资讯</a></router-link>
+        <router-link v-if="isOnline" tag="li" to="/" @click.native="signout"><a href="javascript:;">注销登录</a></router-link>
       </ul>
     </div>
   </div>
@@ -17,6 +19,10 @@
 export default {
   props: {
     value: {
+      type: Boolean,
+      default: false
+    },
+    isOnline: {
       type: Boolean,
       default: false
     }
@@ -36,6 +42,10 @@ export default {
   },
   methods: {
     toggle () {
+      this.$emit('input', !this.show)
+    },
+    signout () {
+      this.$emit('signout', !this.isOnline)
       this.$emit('input', !this.show)
     }
   }

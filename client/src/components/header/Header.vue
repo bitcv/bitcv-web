@@ -38,7 +38,7 @@
       </div>
     </div>
     <a href="javascript:;" class="btn-toggle middle-hide" @click="toggleSide"></a>
-    <popside v-model="sideShow" class="middle-hide"></popside>
+    <popside :isOnline="isOnline" @signout="signout" v-model="sideShow" class="middle-hide"></popside>
   </div>
 </template>
 
@@ -105,6 +105,7 @@ export default {
       }
     },
     signout () {
+      console.log('signout')
       this.$http.post('/api/signout', {}).then((res) => {
         if (res.data.errcode === 0) {
           localStorage.removeItem('userId')
