@@ -21,7 +21,10 @@ export default {
 }
 </script>
 
-<style lang="scss"> @import "./App.scss"; </style>
+<style lang="scss">
+  @import 'styles/index';
+  @import "./App.scss";
+</style>
 
 <style lang="scss" scoped>
 .main-container {
