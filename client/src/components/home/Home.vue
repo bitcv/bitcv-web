@@ -109,6 +109,7 @@ export default {
       text-align: center;
       line-height: 40px;
       border-radius: 0;
+      box-sizing: content-box;
     }
     .btn {
       border-radius: 0;
