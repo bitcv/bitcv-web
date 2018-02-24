@@ -4,6 +4,7 @@
       <el-button type="primary" icon="el-icon-plus" @click="showAdd">添加</el-button>
     </div>
     <el-table :data="socialList">
+      <el-table-column type="index"></el-table-column>
       <el-table-column label="社群Logo">
         <template slot-scope="scope">
           <i class="fab" :class="scope.row.fontClass"></i>
