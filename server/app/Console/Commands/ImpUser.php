@@ -47,9 +47,9 @@ class ImpUser extends Command
             'eos' => 154,
             'neo' => 158,
             'pxc' => 32,
-            'doge' => 1001,
-            'kcash' => 1002,
-            'icst' => 1003,
+            'doge' => 217,
+            'kcash' => 218,
+            'icst' => 219,
         ];
         $start = 0;
         $limit = 200;
