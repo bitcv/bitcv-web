@@ -9,11 +9,13 @@
           <img class="table-image" :src="scope.row.logoUrl" alt="">
         </template>
       </el-table-column>
-      <el-table-column label="项目ID">
-        <template slot-scope="scope">{{ scope.row.projId }}</template>
+      <el-table-column label="项目项目">
+        <template slot-scope="scope">{{ scope.row.nameCn }}</template>
       </el-table-column>
-      <el-table-column label="社交ID">
-        <template slot-scope="scope">{{ scope.row.socialId }}</template>
+      <el-table-column label="社交来源">
+        <template slot-scope="scope">
+          <i class="fab" :class="scope.row.fontClass"></i>
+        </template>
       </el-table-column>
       <el-table-column label="标题">
         <template slot-scope="scope">{{ scope.row.title }}</template>

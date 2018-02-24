@@ -68,7 +68,7 @@ export default {
       }).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
-          that.$router.push('/resetPwd')
+          that.$router.push('/resetPwd/' + this.mobile)
         } else {
           alert(resData.errmsg)
         }

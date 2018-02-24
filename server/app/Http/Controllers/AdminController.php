@@ -1161,7 +1161,9 @@ class AdminController extends Controller
     }
 
     public function getMediaReportList(Request $request){
-        $projAdvisorList = Model\CrawlerSocialNews::get()->toArray();
+        $projAdvisorList = Model\CrawlerSocialNews::join('project','crawler_socialnews.proj_id','=','project.id')
+            ->join('social','crawler_socialnews.social_id','=','social.id')
+            ->get()->toArray();
 
         return $this->output(['medisReportList' => $projAdvisorList]);
     }

@@ -78,7 +78,9 @@ Route::group(['middleware' => 'checkAdmin'], function () {
 
     Route::any('delMediaReport','AdminController@delMediaReport');
     Route::any('getMediaReportList','AdminController@getMediaReportList');
+
 });
+
 
 //项目管理员只能操作自己的projId
 Route::group(['middleware' => 'checkProj'], function () {

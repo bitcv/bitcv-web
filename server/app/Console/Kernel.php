@@ -27,8 +27,31 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $this->projReportWeibo();
+            $this->projReportWeChat();
         })->everyMinute();
+    }
+
+    protected function getIpList(){
+        $iplist = file_get_contents('proxy.html');
+        $pattern = "/tbody(.*)<\/tbody>/smi";
+        if(preg_match_all($pattern,$iplist,$result)){
+            $regip = "/td(.*?)<\/td>/smi";
+            if(preg_match_all($regip,$result[1][0],$ips)){
+                for($id = 8; $id < count($ips[0])/8 ; $id=$id+8){
+                    $y = $id + 1;
+                    $ipPort = self::cut("td>","<",$ips[0][$id]).":".self::cut("td>","<",$ips[0][$y]);
+                    //print_r(self::cut("td>","<",$ips[0][$id]).":".self::cut("td>","<",$ips[0][$y]));
+                    DB::insert('INSERT INTO proxy_ip (proxy_port) VALUES (?)
+                    ON DUPLICATE KEY UPDATE proxy_port=VALUES(proxy_port)',[$ipPort]);
+                }
+            }
+        }
+    }
+
+    function cut($begin,$end,$str){
+        $b = mb_strpos($str,$begin) + mb_strlen($begin);
+        $e = mb_strpos($str,$end) - $b;
+        return mb_substr($str,$b,$e);
     }
 
     protected function projReportRobot () {
@@ -168,48 +191,113 @@ class Kernel extends ConsoleKernel
     protected function projReportWeChat(){
 
         $socialList = Model\ProjSocial::where('social_id', 5)->get()->toArray();
+        $proxyList = Model\ProxyIp::get()->toArray();
 
         foreach ($socialList as $socialitem){
             $keyword = trim(strrchr($socialitem['link_url'], '/'),'/');
+            //$searchHtml = self::Crawler($keyword,0);
             $searchHtml = file_get_contents('http://weixin.sogou.com/weixin?type=1&s_from=input&query='.$keyword.'&ie=utf8');
             $pattern = '/account_name_0" href="(.*?)"></ism';
-            preg_match_all($pattern,$searchHtml,$matches);
+            if(preg_match_all($pattern,$searchHtml,$matches)) {
+                $url = $matches[1][0];
+                $url = str_replace("&amp;", "&", $url);
 
-            $url = $matches[1][0];
-            $url = str_replace("&amp;", "&", $url);
-            print_r($url);
-            $listHtml = file_get_contents($url);
+                //$listHtml = file_get_contents($url);
 
-            $pattern = '/var msgList = ({.*});/ism';
-            preg_match_all($pattern,$listHtml,$matches);
-            $json = $matches[1][0];
-            $results = json_decode($json,true);
+                $listHtml = self::CrawlerUrl($url, 1);
+                print_r($listHtml);
+                $pattern = '/var msgList = ({.*});/ism';
+                if(preg_match_all($pattern, $listHtml, $matches)) {
+                    $json = $matches[1][0];
+                    $results = json_decode($json, true);
 
-            foreach($results['list'] as $result){
-                $msg =  $result['app_msg_ext_info'];
-                $data['link_url'] = 'https://mp.weixin.qq.com'.str_replace('&amp;','&',$msg['content_url']);
-                $data['content'] = $msg['digest'];
-                $data['title'] = $msg['title'];
-                $data['banner_url'] = $msg['cover'];
-                $data['created_at'] = $result['comm_msg_info']['datetime'];
+                    foreach ($results['list'] as $result) {
+                        $msg = $result['app_msg_ext_info'];
+                        $data['link_url'] = 'https://mp.weixin.qq.com' . str_replace('&amp;', '&', $msg['content_url']);
+                        $data['content'] = $msg['digest'];
+                        $data['title'] = $msg['title'];
+                        $data['banner_url'] = $msg['cover'];
+                        $data['created_at'] = $result['comm_msg_info']['datetime'];
 
-//                Model\CrawlerSocialNews::Create([
-//                    'proj_id' => $socialitem['proj_id'],
-//                    'social_id' => $socialitem['social_id'],
-//                    'official_name' => $socialitem['link_url'],
-//                    'title' => $data['title'],
-//                    'logo_url' => $data['banner_url'],
-//                    'created_at' => $data['created_at'],
-//                    'refer_url' => $data['link_url'],
-//                ]);
-                DB::insert('INSERT INTO crawler_socialnews (proj_id,social_id,official_name,title,logo_url,post_time,refer_url) VALUES (?,?,?,?,?,?,?)
-                    ON DUPLICATE KEY UPDATE post_time=VALUES(post_time)',[$socialitem['proj_id'],$socialitem['social_id'],$socialitem['link_url'],$data['title'],$data['banner_url'],date('Y-m-d H:i:s', $data['created_at']),$data['link_url']]);
+                        DB::insert('INSERT INTO crawler_socialnews (proj_id,social_id,official_name,title,logo_url,post_time,refer_url) VALUES (?,?,?,?,?,?,?)
+                            ON DUPLICATE KEY UPDATE post_time=VALUES(post_time)', [$socialitem['proj_id'], $socialitem['social_id'], $socialitem['link_url'], $data['title'], $data['banner_url'], date('Y-m-d H:i:s', $data['created_at']), $data['link_url']]);
 
+                    }
+                }
             }
         }
     }
 
 
+    public function projReportWeiboHome(){
+
+        $socialList = Model\ProjSocial::where('social_id', 6)->first();
+
+        $content = file_get_contents('https://weibo.com/bitcv?refer_flag=1001030101_&is_hot=1');
+        print_r($content);
+        //$pattern = "/FM.view\((.*?)\)<\/script>/smi";
+        $pattern = "/Pl_Official_MyProfileFeed__20.*?(.*?)<\/script>/smi";
+        if(preg_match_all($pattern, $content, $result)){
+            $list = $result[1];
+            foreach($list as $item){
+                $str = $item;
+                $obj = json_decode($str);
+                $html =  $obj->html;
+                $weiboitem = array();
+                $pattern = "/node-type=\"feed_list_content\".*?>(.*?)<\/div>/ism";
+                $name_pattern = "/<img usercard=.*?>(.*?)/ism";
+                $linkpattern = "/<div class=\"WB_from S_txt2\">(.*?)suda-data=\"key=tblog_home_new&value=feed_time/ism";
+                if(preg_match_all($pattern,$html,$listitems) && preg_match_all($name_pattern,$html,$nameitems) && preg_match_all($linkpattern,$html,$linkitems))
+                {
+                    //print_r($listitems[1]);
+                    for ($id = 0; $id < count($listitems); $id++) {
+                        $data[$id]['content'] = $listitems[1][$id];
+                        $data[$id]['title'] = $listitems[1][$id];
+                        $data[$id]['banner_url'] = self::cut("src="," width",$nameitems[0][0]);
+                        $data[$id]['post_time'] = self::cut("title=","date",$linkitems[0][0]);
+
+                        Model\CrawlerSocialNews::Create([
+                            'proj_id' => $socialList['proj_id'],
+                            'social_id' => $socialList['social_id'],
+                            'title' => $data[$id]['title'],
+                            'logo_url' => $data[$id]['banner_url'],
+                            'created_at' => $data[$id]['post_time'],
+                            'refer_url' => $socialList['link_url'],
+                        ]);
+                    }
+                }
+            }
+        }
+    }
+
+    protected function  projReportFacebookHome()
+    {
+
+        $socialList = Model\ProjSocial::where('social_id', 2)->first();
+        $html = file_get_contents('https://www.facebook.com/BitCapitalVendor');
+        //https://www.facebook.com/BitCapitalVendor
+        $reg = "/class=\"_3-95\"(.*)<\/script>/smi";
+        //print_r($html);
+        if (preg_match_all($reg, $html, $result)) {
+            //$regContent = "/<p>(.*?)<\/p>/ism";
+            print_r($result);
+            $regContent = "/_2vxa _3-95.*?(.*?)<\/div>/smi";
+            //$regDate = "/data-utime=.*?(.*?)<\/abbr>/smi";
+            $regName = "/class=\"_hil\".*?(.*?)img/smi";
+            $reglogo = "/background-image.*?(.*?)background-position/smi";
+
+            if (preg_match_all($regContent, $result[0][0], $contentItem)
+                && preg_match_all($regName, $result[0][0], $nameItem) && preg_match_all($reglogo, $result[0][0], $logoItem)) {
+
+                for ($id = 0; $id < count($contentItem[1]); $id++) {
+                    $data[$id]['content'] = $contentItem[1][$id];
+                    $data[$id]['title'] = cut(">", "<span", $nameItem[1][$id]);
+                    $data[$id]['banner_url'] = cut("url(", ")", $logoItem[1][$id]);
+                    print_r($data[$id]);
+                }
+            }
+        }
+    }
 
 
     /**
@@ -221,5 +309,81 @@ class Kernel extends ConsoleKernel
     {
         require base_path('routes/console.php');
     }
+
+    protected function Crawler($keyword,$proxyid){
+
+        $proxyList = Model\ProxyIp::get()->toArray();
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "http://weixin.sogou.com/weixin?type=1&s_from=input&query='.$keyword.'&ie=utf8",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 100,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+            CURLOPT_PROXY => $proxyList[$proxyid]['proxy_port'],
+            CURLOPT_PROXYAUTH => CURLAUTH_BASIC,
+            //CURLOPT_PROXYUSERPWD => '45501:641735',
+            CURLOPT_USERAGENT => $this->UA(),
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        if ($err) {
+            echo "cURL Error #:" . $err;
+            $id = rand(0,count($proxyList));
+            print_r('url-sougou'.$id);
+            print_r($keyword);
+            $this->Crawler($keyword,$id);
+        }
+        curl_close($curl);
+        return $response;
+    }
+
+    protected function CrawlerUrl($url,$proxyid){
+
+        $proxyList = Model\ProxyIp::get()->toArray();
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 300,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+            CURLOPT_PROXY => $proxyList[$proxyid]['proxy_port'],
+            CURLOPT_PROXYAUTH => CURLAUTH_BASIC,
+            //CURLOPT_PROXYUSERPWD => '45501:641735',
+            CURLOPT_USERAGENT => $this->UA(),
+        ));
+        $response = curl_exec($curl);
+        print_r($response);
+        $err = curl_error($curl);
+        if ($err) {
+            echo "cURL Error #:" . $err;
+            $id = rand(0,count($proxyList));
+            print_r("url-wechat".$id);
+            $this->CrawlerUrl($url,$id);
+        }
+        curl_close($curl);
+        return $response;
+    }
+
+    private function UA()
+    {
+        $userAgent = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36',//Chrome
+            'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36',//win7 chrome
+            'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36',//360
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0',//firefox
+            //'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+        ];
+        return $userAgent[rand(0, 3)];
+    }
+
 }
 
