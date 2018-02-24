@@ -198,7 +198,6 @@ export default {
     onWhitePaperSuccess (res) {
       if (res.errcode === 0) {
         this.formData.whitePaperUrl = res.data.url
-        //this.formData.whitePaperUrl = ''
       }
     },
     showTagInput () {

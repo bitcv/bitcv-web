@@ -77,11 +77,17 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('delSocial', 'AdminController@delSocial');
     Route::any('updSocial', 'AdminController@updSocial');
 
-    Route::any('getAdminDepositBoxList', 'AdminController@getAdminDepositBoxList');
+    Route::any('getTokenList', 'AdminController@getTokenList');
+    Route::any('addToken', 'AdminController@addToken');
+    Route::any('updToken', 'AdminController@updToken');
+    Route::any('delToken', 'AdminController@delToken');
+    Route::any('updToken', 'AdminController@updToken');
+
     Route::any('getAdminDepositOrderList', 'AdminController@getAdminDepositOrderList');
     Route::any('delMediaReport','AdminController@delMediaReport');
     Route::any('getMediaReportList','AdminController@getMediaReportList');
 });
+    Route::any('getAdminDepositBoxList', 'AdminController@getAdminDepositBoxList');
 
 //项目管理员只能操作自己的projId
 Route::group(['middleware' => 'checkProj'], function () {

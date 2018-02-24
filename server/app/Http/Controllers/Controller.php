@@ -112,7 +112,9 @@ class Controller extends BaseController
             $newKey = preg_replace_callback('/([-_]+([a-z]{1}))/i', function($matches){
                 return strtoupper($matches[2]);
             }, $key);
-            $newArray[$newKey] = is_array($value) ? $this->arrayKeyToCamel($value) : $value;
+            // 去掉浮点数字符串小数点后多余的0
+            $newValue = is_numeric($value) && strpos($value, '.') !== false ? floatval($value) : $value;
+            $newArray[$newKey] = is_array($newValue) ? $this->arrayKeyToCamel($newValue) : $newValue;
         }
         return $newArray;
     }

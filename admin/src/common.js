@@ -41,6 +41,9 @@ exports.install = function (Vue, options) {
     }
   }
   Vue.prototype.getShortStr = function (string, num) {
+    if (string.length <= num) {
+      return string
+    }
     return string.substr(0, num) + '...' + string.substr(-1 * num)
   }
   Vue.prototype.convertOrderStatus = function (index) {

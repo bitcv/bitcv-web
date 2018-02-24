@@ -470,6 +470,81 @@ class AdminController extends Controller
         return $this->output();
     }
 
+    public function getTokenList (Request $request) {
+        $socialList = Model\Token::select('id', 'name', 'symbol', 'logo_url', 'price', 'contract_addr')->get()->toArray();
+
+        return $this->output(['dataList' => $socialList]);
+    }
+
+    public function addToken (Request $request) {
+        //获取请求参数
+        $params = $this->validation($request, [
+            'name' => 'nullable|string',
+            'symbol' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'contractAddr' => 'nullable|string',
+            'price' => 'nullable|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $tokenData = ['symbol' => $symbol];
+        if ($name) $tokenData['name'] = $name;
+        if ($logoUrl) $tokenData['logo_url'] = $logoUrl;
+        if ($contractAddr) $tokenData['contract_addr'] = $contractAddr;
+        if ($price) $tokenData['price'] = $price;
+
+        Model\Token::firstOrCreate($tokenData);
+
+        return $this->output();
+    }
+
+    public function updToken (Request $request) {
+        //获取请求参数
+        $params = $this->validation($request, [
+            'tokenId' => 'required|numeric',
+            'name' => 'nullable|string',
+            'symbol' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'contractAddr' => 'nullable|string',
+            'price' => 'nullable|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $tokenData = [];
+        if ($name) $tokenData['name'] = $name;
+        if ($symbol) $tokenData['symbol'] = $symbol;
+        if ($logoUrl) $tokenData['logo_url'] = $logoUrl;
+        if ($contractAddr) $tokenData['contract_addr'] = $contractAddr;
+        if ($price) $tokenData['price'] = $price;
+
+        Model\Token::where('id', $tokenId)->update($tokenData);
+
+        return $this->output();
+    }
+
+    public function delToken (Request $request) {
+        //获取请求参数
+        $params = $this->validation($request, [
+            'tokenId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Project::where('token_id', $tokenId)->update(['token_id' => 0]);
+
+        Model\Token::where('id', $tokenId)->delete();
+
+        return $this->output();
+    }
+
     public function getProjBasicList (Request $request) {
         //获取请求参数
         $params = $this->validation($request, [
