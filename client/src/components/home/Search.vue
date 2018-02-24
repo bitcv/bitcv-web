@@ -61,7 +61,7 @@ export default {
     img {
       width: 30px;
       height: 30px;
-      padding-left: 12px;
+      margin-left: 12px;
     }
     input {
       display: block;
@@ -81,6 +81,7 @@ export default {
   }
   .btn {
     flex: 0 0 auto;
+    padding: 0;
     width: 115px;
     height: 100%;
     border-radius: 0 23px 23px 0;

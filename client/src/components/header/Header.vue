@@ -183,6 +183,7 @@ export default {
       }
       .btn {
         display: inline-block;
+        padding: 0;
         width: 65px;
         height: 30px;
         border-radius: 4px;
@@ -275,6 +276,18 @@ export default {
     background-size: 100%;
     -webkit-tap-highlight-color: transparent;
   }
+  .mobile-nav {
+    a, a:focus, a:hover {
+      color: #8D8D8D;
+      text-decoration: none;
+    }
+
+    .active a,
+    .active a:focus,
+    .active a:hover {
+      color: #4A4A4A;
+    }
+  }
   @media screen and (min-width: 768px) {
     .middle-hide {
       display: none;
@@ -287,6 +300,7 @@ export default {
     .mobile-nav {
       li {
         margin-left: 20px !important;
+
       }
     }
     .content {
