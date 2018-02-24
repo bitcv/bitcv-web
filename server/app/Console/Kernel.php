@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
+        Commands\ImpUser::class,
     ];
 
     /**
@@ -218,7 +219,7 @@ class Kernel extends ConsoleKernel
      * @return void
      */
     protected function commands()
-    {
+    {        
         require base_path('routes/console.php');
     }
 }
