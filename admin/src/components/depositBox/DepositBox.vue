@@ -53,6 +53,7 @@
                 <el-form-item label="年化回报:" style="width: 50%;margin-right:0">{{ scope.row.interestRate }}</el-form-item>
                 <el-form-item label="总额度:" style="width: 50%;margin-right:0">{{ scope.row.totalAmount }}</el-form-item>
                 <el-form-item label="起始额度:" style="width: 50%;margin-right:0">{{ scope.row.minAmount }}</el-form-item>
+                <el-form-item label="剩余额度:" style="width: 50%;margin-right:0">{{ scope.row.remainAmount }}</el-form-item>
               </el-form>
             </template>
           </el-table-column>

@@ -7,7 +7,7 @@ class DictUtil
     // 命名规范 TableName_FieldName
 
     const Token_Protocol = [
-        '1' => 'PRC20',
+        '1' => 'ERC20',
         '2' => 'BTC',
         '3' => 'NEO',
         '4' => 'DOGE',
