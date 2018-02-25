@@ -4,6 +4,7 @@
       <el-button type="primary" icon="el-icon-plus" @click="showAdd">添加</el-button>
     </div>
     <el-table :data="mediaList">
+      <el-table-column type="index"></el-table-column>
       <el-table-column label="媒体Logo">
         <template slot-scope="scope">
           <img class="table-image" :src="scope.row.logoUrl" alt="">

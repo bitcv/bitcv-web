@@ -42,12 +42,16 @@ export default {
               text: '余币宝'
             }, {
               icon: 'el-icon-menu',
+              url: '/admin/token',
+              text: '通证配置'
+            }, {
+              icon: 'el-icon-menu',
               url: '/admin/social',
-              text: '社群管理'
+              text: '社群配置'
             }, {
               icon: 'el-icon-menu',
               url: '/admin/media',
-              text: '媒体管理'
+              text: '媒体配置'
             // }, {
               // icon: 'el-icon-menu',
               // url: '/admin/module',

@@ -22,15 +22,6 @@
       </span>
     </div>
     <div class="content">
-      <div class="info-area" id="Info">
-        <h3 class="panel-title">项目简介</h3>
-        <div class="image-box" v-if="projDetail.bannerUrl">
-          <img :src="projDetail.bannerUrl" alt="">
-        </div>
-        <div class="abstract">
-          <span>{{ projDetail.abstract }}</span>
-        </div>
-      </div>
       <div v-if="projDetail.memberList.length" class="team-area" id="Team">
         <el-carousel :interval="5000" arrow="always" height="390px">
           <el-carousel-item class="member" v-for="(member, index) in projDetail.memberList" :key="index">
@@ -39,10 +30,6 @@
             <span class="intro">{{ member.intro }}</span>
           </el-carousel-item>
         </el-carousel>
-      </div>
-      <div v-if="projDetail.eventList.length" class="event-area" id="Event">
-        <h3 class="panel-title">项目发展</h3>
-        <proj-time-line :proj-event="projDetail.eventList"></proj-time-line>
       </div>
       <div v-if="projDetail.advisorList.length" class="advisor-area" id="Advisor">
         <h3 class="panel-title center-title">项目顾问</h3>
@@ -57,6 +44,19 @@
             </li>
           </ul>
         </div>
+      </div>
+      <div class="info-area" id="Info">
+        <h3 class="panel-title">项目简介</h3>
+        <div class="image-box" v-if="projDetail.bannerUrl">
+          <img :src="projDetail.bannerUrl" alt="">
+        </div>
+        <div class="abstract">
+          <span>{{ projDetail.abstract }}</span>
+        </div>
+      </div>
+      <div v-if="projDetail.eventList.length" class="event-area" id="Event">
+        <h3 class="panel-title">项目发展</h3>
+        <proj-time-line :proj-event="projDetail.eventList"></proj-time-line>
       </div>
       <div v-if="projDetail.partnerList.length" class="partner-area" id="Partner">
         <h3 class="panel-title center-title">合作伙伴</h3>
