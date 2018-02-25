@@ -15,7 +15,7 @@
           <el-table-column type="index"></el-table-column>
           <el-table-column label="项目名称" prop="nameCn">
             <template slot-scope="scope">
-              <a class="link" :href="'/projDetail/info/' + scope.row.proj_id" target="_blank">{{ scope.row.nameCn }}</a>
+              <a class="link" :href="'/projDetail/info/' + scope.row.projId" target="_blank">{{ scope.row.nameCn }}</a>
             </template>
           </el-table-column>
           <el-table-column label="总额度" prop="totalAmount"></el-table-column>
@@ -58,6 +58,11 @@
             </template>
           </el-table-column>
           <el-table-column type="index"></el-table-column>
+          <el-table-column label="项目名称">
+            <template slot-scope="scope">
+              <a class="link" :href="'/projDetail/info/' + scope.row.projId" target="_blank">{{ scope.row.nameCn }}</a>
+            </template>
+          </el-table-column>
           <el-table-column label="用户手机号" prop="mobile"></el-table-column>
           <el-table-column label="订单金额" prop="orderAmount"></el-table-column>
           <el-table-column label="支付地址">
