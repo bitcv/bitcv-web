@@ -47,10 +47,12 @@ class UserController extends Controller
         }
 
         // 验证是否重复注册
+        /*
         $isExist = Model\User::where('mobile', $mobile)->count();
         if ($isExist) {
             return $this->error(201);
         }
+        */
 
         // 创建用户
         $userId = (new Model\User())->regUser($nation, $mobile, $passwd);

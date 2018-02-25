@@ -55,7 +55,7 @@ class ImpUser extends Command
         $limit = 200;
         $usermodel = new User();
         while (true) {
-            $rows = DB::table('mod_invite_2')->orderBy('id')->offset($start)->limit($limit)->get()->toArray();
+            $rows = DB::table('mod_invite_2')->where('id','>',24813)->orderBy('id')->offset($start)->limit($limit)->get()->toArray();
             if (empty($rows)) {
                 break;
             }
@@ -67,7 +67,7 @@ class ImpUser extends Command
                 if ($user) {
                     $uid = $user->id;
                 } else {
-                    $uid = $usermodel->regUser(86, $mobile, 'bitcv#2018224');
+                    $uid = $usermodel->regUser(86, $mobile, 'bitcv#2018224'.rand(10000000,99999999));
                 }
                 if (!$uid) {
                     echo "$mobile reg failed\n";

@@ -5,6 +5,7 @@ namespace App\Models;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Utils\Service;
+use Redis;
 
 class User extends Model
 {
@@ -32,12 +33,19 @@ class User extends Model
         if (!$user) {
             return false;
         }
+        $key = 'pass_err_'.$mobile;
+        //1分钟内密码尝试5次
+        if (Redis::get($key) > 5) {
+            return false;
+        }
         if (md5($pass) == $user['passwd']) { //更新老的加密方式
             $passwd = Service::getPwd($pass);
             self::where('mobile', $mobile)->update(['passwd'=>$passwd]);
         } else {
             $hash = $user['passwd'];
             if (!Service::checkPwd($pass, $hash)) {
+                Redis::incr($key);
+                Redis::expire($key, 60);
                 return false;
             }
         }
