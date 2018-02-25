@@ -9,9 +9,8 @@
           <el-input v-model="formData.nameEn" placeholder="请输入项目英文名"></el-input>
         </el-form-item>
         <el-form-item label="项目主页" prop="homeUrl">
-          <el-input v-model="formData.homeUrl" placeholder="请输入项目主页地址">
-            <template slot="prepend">http://</template>
-          </el-input>
+          <el-input v-model="formData.homeUrl" placeholder="请输入项目主页地址"></el-input>
+          <a :href="formData.homeUrl" target="_blank" v-if="formData.homeUrl" style="color:red">项目主页链接</a>
         </el-form-item>
         <el-form-item label="项目logo" prop="logoUrl" required>
           <el-upload class="upload-box" name="logo" action="/api/uploadFile" :on-success="onLogoSuccess" :show-file-list="false" style="display: inline-flex">
