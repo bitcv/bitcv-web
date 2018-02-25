@@ -67,7 +67,7 @@ class ImpUser extends Command
                 if ($user) {
                     $uid = $user->id;
                 } else {
-                    $uid = $usermodel->regUser(86, $mobile, 'bitcv#2018224'.rand(10000000,99999999));
+                    $uid = $usermodel->regUser(86, $mobile, 'bitcv#2018224'.microtime());
                 }
                 if (!$uid) {
                     echo "$mobile reg failed\n";
