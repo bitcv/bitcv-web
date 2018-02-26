@@ -34,7 +34,7 @@ class UserController extends Controller
         $params = $this->validation($request, [
             'mobile' => 'required|numeric',
             'passwd' => 'required|string',
-            'vcode' => 'required|numeric',
+            'vcode' => 'required|string',
             'nation' => 'nullable|numeric',
         ]);
         if ($params === false) {
