@@ -2,7 +2,7 @@
 <div class = "new-area">
   <a v-for="(news, index) in newList" :key="index">
   <div class = "new-table-panel">
-    <router-link :to="{ path: 'newdetail/' + news.id}">
+    <router-link :to="{ path: 'newsdetail/' + news.id}">
     <img :src="news.bannerUrl" alt="">
     <div class = "content">
       <span class="content-title">{{news.title}}</span>
