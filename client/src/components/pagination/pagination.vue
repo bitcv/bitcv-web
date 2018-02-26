@@ -156,7 +156,7 @@ export default {
   & > li > a:hover,
   & > li > span:focus,
   & > li > span:hover {
-    color: lighten($primary-color, 10%);
+    color: $primary-color;
   }
 
   & > .active > a,
@@ -165,8 +165,8 @@ export default {
   & > .active > span,
   & > .active > span:focus,
   & > .active > span:hover {
-    background-color: lighten($primary-color, 15%);
-    border-color: lighten($primary-color, 15%);
+    background-color: $primary-color;
+    border-color: $primary-color;
   }
 
   & > .disabled > a,
