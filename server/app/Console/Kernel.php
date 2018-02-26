@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $this->projReportWeChat();
+            $this->projReportWeiboHome();
         })->everyMinute();
     }
 
@@ -40,7 +40,6 @@ class Kernel extends ConsoleKernel
                 for($id = 8; $id < count($ips[0])/8 ; $id=$id+8){
                     $y = $id + 1;
                     $ipPort = self::cut("td>","<",$ips[0][$id]).":".self::cut("td>","<",$ips[0][$y]);
-                    //print_r(self::cut("td>","<",$ips[0][$id]).":".self::cut("td>","<",$ips[0][$y]));
                     DB::insert('INSERT INTO proxy_ip (proxy_port) VALUES (?)
                     ON DUPLICATE KEY UPDATE proxy_port=VALUES(proxy_port)',[$ipPort]);
                 }
@@ -166,16 +165,6 @@ class Kernel extends ConsoleKernel
                                     }
                                 }
 
-//                                Model\CrawlerSocialNews::create([
-//                                    'proj_id' => $socialItem['proj_id'],
-//                                    'social_id' => $socialItem['social_id'],
-//                                    'official_name' => $weiboitem['name'],
-//                                    'title' => $weiboitem['content'],
-//                                    'logo_url' => $weiboitem['logo'],
-//                                    'refer_url' => $weiboitem['homeurl'],
-//                                    'created_at' => strtotime($weiboitem['date']),
-//                                ]);
-
                                 DB::insert('INSERT INTO crawler_socialnews (proj_id,social_id,official_name,title,logo_url,refer_url,post_time) VALUES (?,?,?,?,?,?,?)
                     ON DUPLICATE KEY UPDATE post_time=VALUES(post_time)',[$socialItem['proj_id'],$socialItem['social_id'],$weiboitem['name'],$weiboitem['content'],$weiboitem['logo'],$weiboitem['homeurl'],$weiboitem['date']]);
 
@@ -195,15 +184,12 @@ class Kernel extends ConsoleKernel
 
         foreach ($socialList as $socialitem){
             $keyword = trim(strrchr($socialitem['link_url'], '/'),'/');
-            //$searchHtml = self::Crawler($keyword,0);
             $searchHtml = file_get_contents('http://weixin.sogou.com/weixin?type=1&s_from=input&query='.$keyword.'&ie=utf8');
             $pattern = '/account_name_0" href="(.*?)"></ism';
+
             if(preg_match_all($pattern,$searchHtml,$matches)) {
                 $url = $matches[1][0];
                 $url = str_replace("&amp;", "&", $url);
-
-                //$listHtml = file_get_contents($url);
-
                 $listHtml = self::CrawlerUrl($url, 1);
                 print_r($listHtml);
                 $pattern = '/var msgList = ({.*});/ism';
@@ -228,20 +214,23 @@ class Kernel extends ConsoleKernel
         }
     }
 
-
     public function projReportWeiboHome(){
 
         $socialList = Model\ProjSocial::where('social_id', 6)->first();
 
-        $content = file_get_contents('https://weibo.com/bitcv?refer_flag=1001030101_&is_hot=1');
-        print_r($content);
+        //$content = file_get_contents(__DIR__ . "/weibo.html");
+        //$content = self::CrawlerUrl('https://weibo.com/bitcv?profile_ftype=1&is_all=1#_0',0);
+        //print_r($content);
+        $content = $this->weiBoCurl("https://weibo.com/bitcv?profile_ftype=1&is_all=1");
         //$pattern = "/FM.view\((.*?)\)<\/script>/smi";
+        //print_r($content);
         $pattern = "/Pl_Official_MyProfileFeed__20.*?(.*?)<\/script>/smi";
         if(preg_match_all($pattern, $content, $result)){
             $list = $result[1];
             foreach($list as $item){
                 $str = $item;
                 $obj = json_decode($str);
+                print_r($obj);
                 $html =  $obj->html;
                 $weiboitem = array();
                 $pattern = "/node-type=\"feed_list_content\".*?>(.*?)<\/div>/ism";
@@ -249,13 +238,12 @@ class Kernel extends ConsoleKernel
                 $linkpattern = "/<div class=\"WB_from S_txt2\">(.*?)suda-data=\"key=tblog_home_new&value=feed_time/ism";
                 if(preg_match_all($pattern,$html,$listitems) && preg_match_all($name_pattern,$html,$nameitems) && preg_match_all($linkpattern,$html,$linkitems))
                 {
-                    //print_r($listitems[1]);
                     for ($id = 0; $id < count($listitems); $id++) {
                         $data[$id]['content'] = $listitems[1][$id];
                         $data[$id]['title'] = $listitems[1][$id];
                         $data[$id]['banner_url'] = self::cut("src="," width",$nameitems[0][0]);
                         $data[$id]['post_time'] = self::cut("title=","date",$linkitems[0][0]);
-
+                        print_r($data[$id]);
                         Model\CrawlerSocialNews::Create([
                             'proj_id' => $socialList['proj_id'],
                             'social_id' => $socialList['social_id'],
@@ -270,9 +258,45 @@ class Kernel extends ConsoleKernel
         }
     }
 
+    protected function Curl(){
+
+        $ch = curl_init();
+
+        curl_setopt($ch,CURLOPT_URL,"https://weibo.com/bitcv?profile_ftype=1&is_all=1#_0");
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch,CURLOPT_HEADER,0);
+        // 3. 执行并获取HTML文档内容
+        $output = curl_exec($ch);
+        $err = curl_error($ch);
+        print_r($output);
+        if($output === FALSE ){
+            echo "CURL Error:".curl_error($ch);
+        }
+        // 4. 释放curl句柄
+        curl_close($ch);
+    }
+
+    protected function weiBoCurl($url){
+
+        $curlObj = curl_init();
+        curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($curlObj, CURLOPT_HEADER, 0);
+        curl_setopt($curlObj, CURLOPT_URL, $url);
+        //curl_setopt($curlObj, CURLOPT_COOKIEFILE, './cookie.txt');
+        //curl_setopt($curlObj, CURLOPT_COOKIEJAR, './cookie.txt');
+        curl_setopt($curlObj, CURLOPT_COOKIE, 'TC-Page-G0=b05711a62e11e2c666cc954f2ef362fb; SUB=_2AkMtz-Ppf8NxqwJRmP4Rz2zkZY5_zAvEieKbkxIyJRMxHRl-yj9jqlEntRB6Bk_NBoqbm0-fsRxfzgOi9DUseKjp6bH_; SUBP=0033WrSXqPxfM72-Ws9jqgMF55529P9D9Whp22-9s1yfYi_ArQwMlw1g');
+        curl_setopt($curlObj, CURLOPT_HTTPHEADER, array(
+            "Content-type: application/json; charset=utf-8",
+        ));
+        $result = curl_exec($curlObj);
+        curl_close($curlObj);
+        return $result;
+
+    }
+
     protected function  projReportFacebookHome()
     {
-
         $socialList = Model\ProjSocial::where('social_id', 2)->first();
         $html = file_get_contents('https://www.facebook.com/BitCapitalVendor');
         //https://www.facebook.com/BitCapitalVendor
@@ -280,7 +304,7 @@ class Kernel extends ConsoleKernel
         //print_r($html);
         if (preg_match_all($reg, $html, $result)) {
             //$regContent = "/<p>(.*?)<\/p>/ism";
-            print_r($result);
+            //print_r($result);
             $regContent = "/_2vxa _3-95.*?(.*?)<\/div>/smi";
             //$regDate = "/data-utime=.*?(.*?)<\/abbr>/smi";
             $regName = "/class=\"_hil\".*?(.*?)img/smi";
@@ -298,7 +322,6 @@ class Kernel extends ConsoleKernel
             }
         }
     }
-
 
     /**
      * Register the Closure based commands for the application.
@@ -355,23 +378,123 @@ class Kernel extends ConsoleKernel
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "GET",
             CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
-            CURLOPT_PROXY => $proxyList[$proxyid]['proxy_port'],
+            CURLOPT_PROXY => '118.120.223.52:8118',
             CURLOPT_PROXYAUTH => CURLAUTH_BASIC,
             //CURLOPT_PROXYUSERPWD => '45501:641735',
             CURLOPT_USERAGENT => $this->UA(),
         ));
+        //$proxyList[$proxyid]['proxy_port']
         $response = curl_exec($curl);
-        print_r($response);
+        //print_r($response);
         $err = curl_error($curl);
         if ($err) {
             echo "cURL Error #:" . $err;
-            $id = rand(0,count($proxyList));
+            $id = rand(0,count($proxyList)-1);
             print_r("url-wechat".$id);
-            $this->CrawlerUrl($url,$id);
+            //return $this->CrawlerUrl($url,$id);
         }
         curl_close($curl);
         return $response;
     }
+
+    protected function getArticleList(){
+
+        $json = '{\'article\': [{\'abstract\': \'BCV空投活动总结，感谢您的参与！\',
+   \'author\': \'BCV首席活动官\',
+   \'content_url\': \'http://mp.weixin.qq.com/s?timestamp=1519486422&src=3&ver=1&signature=BHOc88QzWhx2EBFVDsUNT2QZA0MvX0wlZoMKVN043T3y44sG*0uZ4cL72-YzOqX-YQOaDqKovM1mk*pi4OmF18d8NlobvOUBHtD6eQ*hU61POwThVwEib1IWUWaKj57SCCnre4QA0uESJnuory*3Ge1X*xtS6ai-QT8v4nItk8s=\',
+   \'copyright_stat\': 11,
+   \'cover\': \'http://mmbiz.qpic.cn/mmbiz_jpg/mznpASOIM15ibNDrUnsHv8jWopFXYAMFcB333g0aDe2NDYktibf5OALEyWBUzuXPyYVyQL97IsTyQU1riaZh5KzmA/0?wx_fmt=jpeg\',
+   \'datetime\': 1519192683,
+   \'fileid\': 100000036,
+   \'main\': 1,
+   \'send_id\': 1000000005,
+   \'source_url\': \'https://bitcv.one/\',
+   \'title\': \'「总结」BCV空投活动总结\',
+   \'type\': \'49\'},
+  {\'abstract\': \'项目周报第三期，内含彩蛋\',
+   \'author\': \'BitCV小秘书\',
+   \'content_url\': \'http://mp.weixin.qq.com/s?timestamp=1519486422&src=3&ver=1&signature=BHOc88QzWhx2EBFVDsUNT2QZA0MvX0wlZoMKVN043T3y44sG*0uZ4cL72-YzOqX-YQOaDqKovM1mk*pi4OmF13mAnas8GrAWAHTjqcvZVYmpmtgv2sa0386lOEm-KTcgAZwzfVTIaobELc5Un3KSWFnj2PsI6D6LsA3NtTyNE-8=\',
+   \'copyright_stat\': 11,
+   \'cover\': \'http://mmbiz.qpic.cn/mmbiz_jpg/mznpASOIM15AoibxREqwN8ekNWqLyTibvCkfyfFYFQiawefhApuSC5VCcJGRphNoS0U4jvd5MeibocObtNFv9Puxyg/0?wx_fmt=jpeg\',
+   \'datetime\': 1518671819,
+   \'fileid\': 100000032,
+   \'main\': 1,
+   \'send_id\': 1000000004,
+   \'source_url\': \'http://t.cn/RRiadYN\',
+   \'title\': \'Bit Captial Vendor项目周报（第三期），文中有彩蛋\',
+   \'type\': \'49\'},
+  {\'abstract\': \'imToken、Kcash支持BCV\',
+   \'author\': \'BitCV小秘书\',
+   \'content_url\': \'http://mp.weixin.qq.com/s?timestamp=1519486422&src=3&ver=1&signature=BHOc88QzWhx2EBFVDsUNT2QZA0MvX0wlZoMKVN043T3y44sG*0uZ4cL72-YzOqX-YQOaDqKovM1mk*pi4OmF15Q4CWPuNPPHRJZHe*5vQl-FwGtWDHwccbqgmTWsNmB49Bm2PM9Xp-*wB-6olbPxBvysIPxdBM6eqFtp8u8e5JY=\',
+   \'copyright_stat\': 11,
+   \'cover\': \'http://mmbiz.qpic.cn/mmbiz_jpg/mznpASOIM1435WyTv9y1en81CCr5ncMv1Lhiaulu1CfUhPAoH4O9PrtALIBb5YMqDnVjpicWkHTvGicZMA6ce8dRA/0?wx_fmt=jpeg\',
+   \'datetime\': 1518437053,
+   \'fileid\': 100000019,
+   \'main\': 1,
+   \'send_id\': 1000000003,
+   \'source_url\': \'https://bitcv.one/\',
+   \'title\': \'公告：关于imToken、Kcash支持BCV的通知\',
+   \'type\': \'49\'},
+  {\'abstract\': \'区块链+资管，做一件踏踏实实落地的事\',
+   \'author\': \'鱼串串\',
+   \'content_url\': \'http://mp.weixin.qq.com/s?timestamp=1519486422&src=3&ver=1&signature=BHOc88QzWhx2EBFVDsUNT2QZA0MvX0wlZoMKVN043T3y44sG*0uZ4cL72-YzOqX-YQOaDqKovM1mk*pi4OmF15Q4CWPuNPPHRJZHe*5vQl*b2yVcZMZTUosJT0zdZlYHih7adMHIsD-cFOllDh-T8k5MuglG4gmR0GJZLEkUbKw=\',
+   \'copyright_stat\': 101,
+   \'cover\': \'http://mmbiz.qpic.cn/mmbiz_jpg/mznpASOIM14GPl8ibvdQaDgzzWCk8FPQPYiahsnL8GgnmFJr5lJic0laSIrmicbTKe8Ickv4Mhia0CuwkDqwrXf0YkQ/0?wx_fmt=jpeg\',
+   \'datetime\': 1518437053,
+   \'fileid\': 100000022,
+   \'main\': 0,
+   \'send_id\': 1000000003,
+   \'source_url\': \'https://bitcv.one/\',
+   \'title\': \'BitCV：你的数字资产管理平台\',
+   \'type\': \'49\'},
+  {\'abstract\': \'我们欢迎每一位激情上进有想法的志同道合者\',
+   \'author\': \'BitCV小秘书\',
+   \'content_url\': \'http://mp.weixin.qq.com/s?timestamp=1519486422&src=3&ver=1&signature=BHOc88QzWhx2EBFVDsUNT2QZA0MvX0wlZoMKVN043T3y44sG*0uZ4cL72-YzOqX-YQOaDqKovM1mk*pi4OmF15Q4CWPuNPPHRJZHe*5vQl-dM*ba5GMtnhGZ-7DMvc5WCUXB12hv8dZkWAiRjkmoq40CgnTuaR0rmgt76DIsJDk=\',
+   \'copyright_stat\': 100,
+   \'cover\': \'http://mmbiz.qpic.cn/mmbiz_jpg/mznpASOIM14GPl8ibvdQaDgzzWCk8FPQPqic1iciadBQkn6RICKbCIKdyfHOSVthCksseauhkvlaNRbjicpeLVwVM1g/0?wx_fmt=jpeg\',
+   \'datetime\': 1518437053,
+   \'fileid\': 100000025,
+   \'main\': 0,
+   \'send_id\': 1000000003,
+   \'source_url\': \'\',
+   \'title\': \'邀请：BitCV招募天使志愿者\',
+   \'type\': \'49\'},
+  {\'abstract\': \'BitCapitalVendor第二期项目周报，请您查收！\',
+   \'author\': \'BitCV小秘书\',
+   \'content_url\': \'http://mp.weixin.qq.com/s?timestamp=1519486422&src=3&ver=1&signature=BHOc88QzWhx2EBFVDsUNT2QZA0MvX0wlZoMKVN043T3y44sG*0uZ4cL72-YzOqX-YQOaDqKovM1mk*pi4OmF19Ou8MrSl0WVUfsYhmzB7n1QJm8EVgikMRZN0fVPxiqNDH5HpqaMdGI*GombDQh4QLIBCB9tRrKSPRkzh9efOuQ=\',
+   \'copyright_stat\': 11,
+   \'cover\': \'http://mmbiz.qpic.cn/mmbiz_jpg/mznpASOIM14BL3fjickK13HjTicuJNAQ6n2KM5Uamf59A0ZzjIxRKdOloxws9lf4KftpcicciaNBHNbiaD1GD1QpdIA/0?wx_fmt=jpeg\',
+   \'datetime\': 1518276353,
+   \'fileid\': 100000011,
+   \'main\': 1,
+   \'send_id\': 1000000002,
+   \'source_url\': \'https://bitcv.one/\',
+   \'title\': \'BitCapitalVendor项目周报（第二期）\',
+   \'type\': \'49\'},
+  {\'abstract\': \'BitCV最新项目进展\',
+   \'author\': \'BitCV小秘书\',
+   \'content_url\': \'http://mp.weixin.qq.com/s?timestamp=1519486422&src=3&ver=1&signature=BHOc88QzWhx2EBFVDsUNT2QZA0MvX0wlZoMKVN043T3y44sG*0uZ4cL72-YzOqX-YQOaDqKovM1mk*pi4OmF1z3Hao9G1BaW14vMOBaQKUpmtsvGsQF-DmdVsGDWO7VGivgLL7pSfjKJUWH8KMt2wAnV9zBwN7WWFbY5BNzwrus=\',
+   \'copyright_stat\': 11,
+   \'cover\': \'http://mmbiz.qpic.cn/mmbiz_jpg/mznpASOIM17gyrLq6WaMRxkItKVLLGUs2bTy9KN6JfcFB8Qzrjxr0ibfqjI8VAr2WnbeicdeBuqWEzpdqKaf10DQ/0?wx_fmt=jpeg\',
+   \'datetime\': 1517668597,
+   \'fileid\': 100000008,
+   \'main\': 1,
+   \'send_id\': 1000000001,
+   \'source_url\': \'https://bitcv.one/\',
+   \'title\': \'BitCV项目进度周报\',
+   \'type\': \'49\'}],
+ \'gzh\': {\'authentication\': \'BitCV项目信息发布\',
+  \'headimage\': \'http://wx.qlogo.cn/mmhead/Q3auHgzwzM6ePcDTcFBDS9rOybOsCFfJMSTBIPV67l4OskaB2FLM9A/0\',
+  \'introduction\': \'BitCV项目信息发布\',
+  \'wechat_id\': \'bitcv002\',
+  \'wechat_name\': \'BitCVOfficial\'}}';
+
+
+        print_r(json_decode($json,true));
+
+
+    }
+
 
     private function UA()
     {
