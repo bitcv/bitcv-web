@@ -13,3 +13,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 pageage-lock.json
+config/index.js

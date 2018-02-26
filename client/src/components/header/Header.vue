@@ -67,19 +67,15 @@ export default {
       }
     }
   },
+  created () {
+    this.$root.eventHub.$on('checkLoginStatus', this.checkLoginStatus)
+  },
+  beforeDestroy () {
+    this.$root.eventHub.$off('checkLoginStatus', this.checkLoginStatus)
+  },
   mounted () {
-    this.updMenuIndex()
-
-    // getCookie
-    var userId = localStorage.getItem('userId')
-    if (userId) {
-      this.isOnline = true
-      this.mobile = localStorage.getItem('mobile')
-      var avatarUrl = localStorage.getItem('avatarUrl')
-      if (avatarUrl) {
-        this.avatarUrl = avatarUrl
-      }
-    }
+    // this.updMenuIndex()
+    this.checkLoginStatus()
   },
   watch: {
     '$route' () {
@@ -87,6 +83,18 @@ export default {
     }
   },
   methods: {
+    checkLoginStatus () {
+      // getCookie
+      var userId = localStorage.getItem('userId')
+      if (userId) {
+        this.isOnline = true
+        this.mobile = localStorage.getItem('mobile')
+        var avatarUrl = localStorage.getItem('avatarUrl')
+        if (avatarUrl) {
+          this.avatarUrl = avatarUrl
+        }
+      }
+    },
     toggleSide () {
       this.sideShow = !this.sideShow
     },

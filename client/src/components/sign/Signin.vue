@@ -56,8 +56,8 @@ export default {
           localStorage.setItem('userId', resData.data.userId)
           localStorage.setItem('mobile', resData.data.mobile)
           localStorage.setItem('avatarUrl', resData.data.avatarUrl)
+          that.$root.eventHub.$emit('checkLoginStatus')
           that.$router.push('/')
-          that.$router.go(0)
         } else {
           alert(resData.errmsg)
         }

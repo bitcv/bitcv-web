@@ -7,7 +7,8 @@ use App\Models as Model;
 use Illuminate\Support\Facades\Cookie;
 use App\Utils\Service;
 use App\Utils\Auth;
-use Redis;
+//use Redis;
+use Illuminate\Support\Facades\Redis;
 use App\Utils\SMS;
 
 class UserController extends Controller
