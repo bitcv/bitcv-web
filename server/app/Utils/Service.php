@@ -8,6 +8,39 @@ use Illuminate\Support\Facades\Redis;
 
 class Service {
 
+    //调试日志和系统日志分开
+    private static $loggers = array();
+    public static function log($msg, $file = 'debug') {
+        if (empty(self::$loggers[$file])) {
+            self::$loggers[$file] = new \Illuminate\Log\Writer(new \Monolog\Logger($file));
+            self::$loggers[$file]->useFiles(storage_path()."/logs/{$file}.log");
+        }
+        return self::$loggers[$file]->info($msg);
+        //不能改写默认日志，会同时写2个文件
+        //Log::useFiles(storage_path()."/logs/{$file}.log");
+    }
+
+    //中美手机号格式校验
+    public static function checkMobile($mobile, $nation = 86) {
+        $nation = strlen($mobile) == 11 ? 86 : 1;
+        $data = ['mobile' => $mobile];
+        $reg = $nation == 86 ? 'regex:/^1[35789]\d{9}$/' : 'regex:/^\d{8,10}$/';
+        $v = Validator::make($data, ['mobile' => $reg]);
+        if ($v->fails()) {
+            return false;
+        }
+        return true;
+    }
+
+    //获取加密密码
+    public static function getPwd($pass) {
+        return password_hash($pass.env('PASS_SALT'), PASSWORD_DEFAULT);
+    }
+    //校验密码
+    public static function checkPwd($pass, $hash) {
+        return password_verify($pass.env('PASS_SALT'), $hash);
+    }
+
     //生成随机码
     public static function genRandChars($len = 6) { 
         //$chars = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ023456789'; 
@@ -38,10 +71,6 @@ class Service {
         if (!($type && $id && $vcode)) {
             return array('err' => 1, 'msg' => 'no vcode');
         }
-//for test 上线删除
-if ($vcode == env('SMS_TEST_VCODE')) {
-    return array('err' => 0);
-}
         if (0 != strcasecmp($vcode, Redis::get("{$type}_{$id}"))) {
             return array('err' => 2, 'msg' => 'vilidation code is invalid');
         }

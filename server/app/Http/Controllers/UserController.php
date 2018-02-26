@@ -7,18 +7,24 @@ use App\Models as Model;
 use Illuminate\Support\Facades\Cookie;
 use App\Utils\Service;
 use App\Utils\Auth;
-use Redis;
+//use Redis;
+use Illuminate\Support\Facades\Redis;
+use App\Utils\SMS;
 
 class UserController extends Controller
 {
 
     //获取验证码
-    public function vcode($mobile) {
+    public function vcode($mobile, $nation = 86) {
         $ret = Service::getVcode('reg', $mobile);
         if ($ret['err'] > 0) {
             $this->error(100);
         }
-        Service::sms($mobile, '【BitCV】您的验证码为'.$ret['data']);
+        if (strlen($mobile) == 11) {
+            Service::sms($mobile, '【BitCV】您的验证码为'.$ret['data']);
+        } else {
+            SMS::sendVcode($mobile, $ret['data'], $nation);
+        }
         return $this->output();
     }
 
@@ -28,7 +34,8 @@ class UserController extends Controller
         $params = $this->validation($request, [
             'mobile' => 'required|numeric',
             'passwd' => 'required|string',
-            'vcode' => 'required|numeric',
+            'vcode' => 'required|string',
+            'nation' => 'nullable|numeric',
         ]);
         if ($params === false) {
             return $this->error(100);
@@ -41,17 +48,25 @@ class UserController extends Controller
         }
 
         // 验证是否重复注册
+        /*
         $isExist = Model\User::where('mobile', $mobile)->count();
         if ($isExist) {
             return $this->error(201);
         }
+        */
 
         // 创建用户
+        $userId = (new Model\User())->regUser($nation, $mobile, $passwd);
+        if (!$userId) {
+            return $this->error(201);
+        }
+        /*
         $userModel = Model\User::create([
             'mobile' => $mobile,
-            'passwd' => md5($passwd)
+            'passwd' => Service::getPwd($passwd)
         ]);
         $userId = $userModel->id;
+        */
 
         return $this->output(['userId' => $userId]);
     }
@@ -68,8 +83,11 @@ class UserController extends Controller
         }
         extract($params);
 
+        $userData = (new Model\User())->loginUser($mobile, $passwd);
+        /*
         $md5Passwd = md5($passwd);
         $userData = Model\User::where([['mobile', $mobile], ['passwd', $md5Passwd]])->first();
+        */
         if (!$userData) {
             return $this->error(202);
         }
@@ -190,12 +208,13 @@ class UserController extends Controller
     public function getVcode(Request $request){
         $params = $this->validation($request,[
             'mobile' => 'required|numeric',
+            'nation' => 'nullable|numeric'
         ]);
         if($params === false){
             return $this->error(100);
         }
         extract($params);
-        return self::vcode($mobile);
+        return self::vcode($mobile, $nation);
     }
 
     public function checkVcode(Request $request){

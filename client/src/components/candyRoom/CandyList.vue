@@ -161,6 +161,7 @@ export default {
             color: #9B9B9B;
             font-size: 14px;
             line-height: 54px;
+            text-align: center;
             border-top: 1px solid #E4E4E4;
           }
         }

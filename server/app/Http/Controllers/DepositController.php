@@ -60,6 +60,12 @@ class DepositController extends Controller
             return $this->error(100);
         }
         extract($params);
+
+        // 正则匹配fromAddr
+        if (strpos($fromAddr, '0x') !== 0 || strlen($fromAddr) !== 42) {
+            return $this->error(100);
+        }
+
         $userId = Auth::getUserId();
         if (!$userId) {
             return $this->error(207);

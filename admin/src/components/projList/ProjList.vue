@@ -7,13 +7,17 @@
         </router-link>
       </div>
       <el-table :data="projList">
-        <el-table-column label="项目ID" prop="id" width="150px"></el-table-column>
+        <el-table-column type="index"></el-table-column>
         <el-table-column label="项目logo">
           <template slot-scope="scope">
             <img class="table-image" :src="scope.row.logoUrl" alt="">
           </template>
         </el-table-column>
-        <el-table-column label="项目名称" prop="nameCn"></el-table-column>
+        <el-table-column label="项目名称">
+          <template slot-scope="scope">
+            <a class="link" :href="'/projDetail/info/' + scope.row.id" target="_blank">{{ scope.row.nameCn }}</a>
+          </template>
+        </el-table-column>
         <el-table-column label="创建时间" prop="createdAt"></el-table-column>
         <el-table-column label="操作" width="235px">
           <template slot-scope="scope">
@@ -26,6 +30,10 @@
           </template>
         </el-table-column>
       </el-table>
+
+    <!--Pagination-->
+    <el-pagination class="footer-page-box" @size-change="onSizeChange" @current-change="onCurChange" :current-page="pageno" :page-sizes="[10, 20, 30, 40]" :page-size="perpage" layout="total, sizes, prev, pager, next, jumper" :total="dataCount">
+    </el-pagination>
     </div>
   </div>
 </template>
@@ -34,7 +42,10 @@
 export default {
   data () {
     return {
-      projList: []
+      projList: [],
+      pageno: 1,
+      perpage: 10,
+      dataCount: 0
     }
   },
   mounted () {
@@ -43,12 +54,13 @@ export default {
   methods: {
     updateData () {
       this.$http.post('/api/getProjBasicList', {
-        pageno: 1,
-        perpage: 30
+        pageno: this.pageno,
+        perpage: this.perpage
       }).then((res) => {
         var resData = res.data
         if (resData.errcode === 0) {
           this.projList = resData.data.dataList
+          this.dataCount = resData.data.dataCount
         }
       })
     },
@@ -95,6 +107,14 @@ export default {
           this.updateData()
         }
       })
+    },
+    onSizeChange (perpage) {
+      this.perpage = perpage
+      this.updateData()
+    },
+    onCurChange (pageno) {
+      this.pageno = pageno
+      this.updateData()
     }
   }
 }

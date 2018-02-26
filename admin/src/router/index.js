@@ -9,7 +9,10 @@ import EditProject from '@/components/projList/editProject/EditProject'
 import Signin from '@/components/signin/Signin'
 import Home from '@/components/home/Home'
 import Setting from '@/components/setting/Setting'
+import DepositBox from '@/components/depositBox/DepositBox'
+import ProjDepositBox from '@/components/depositBox/projDepositBox'
 import MediaReport from '@/components/media/MediaReport'
+import Token from '@/components/token/Token'
 
 Vue.use(Router)
 
@@ -21,6 +24,15 @@ export default new Router({
     children: [{
       path: '/admin/project',
       component: ProjList
+    }, {
+      path: '/admin/depositBox',
+      component: DepositBox
+    }, {
+      path: '/admin/projDepositBox/:id',
+      component: ProjDepositBox
+    }, {
+      path: '/admin/token',
+      component: Token
     }, {
       path: '/admin/social',
       component: Social

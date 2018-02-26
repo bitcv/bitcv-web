@@ -1,6 +1,6 @@
 <template>
   <div class="news-panel">
-    <h3 class="panel-title">lianbi说</h3>
+    <h3 class="panel-title">资讯</h3>
     <div class="list-container">
       <a class="item-container" v-for="(news, index) in newsList" :key="index" :href="news.url" target="_blank">
         <router-link :to="{ path: 'newdetail/' + news.id}">

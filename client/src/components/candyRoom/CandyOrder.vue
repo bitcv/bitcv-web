@@ -61,8 +61,7 @@ export default {
   },
   methods: {
     submitOrder () {
-      if (!this.inputFromAddr) {
-        console.log(this.depositBoxData.orderAmount)
+      if (this.inputFromAddr.indexOf('0x') !== 0 || this.inputFromAddr.length !== 42 || this.inputFromAddr === this.depositBoxData.toAddr) {
         return alert('请输入正确的支付钱包地址')
       }
       this.$http.post('/api/addDepositOrder', {

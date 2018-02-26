@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models as Model;
 use Illuminate\Support\Facades\DB;
 use App\Utils\BaseUtil;
+use App\Utils\DictUtil;
 
 class AdminController extends Controller
 {
@@ -229,6 +230,84 @@ class AdminController extends Controller
         return $this->output(['dataList' => $depositBoxList]);
     }
 
+    public function getProjDepositOrderList (Request $request) {
+
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        //$depositOrderList = Model\DepositOrder::
+            //->join('deposit_box', 'deposit_order.deposit_box_id', '=', 'deposit_box.id')
+            //->where('deposit_box.proj_id', $projId)
+            //->orderBy('deposit_order.created_at', 'desc')
+            //->get()->toArray();
+        $depositOrderList = Model\DepositOrder::join('user', 'deposit_order.user_id', '=', 'user.id')
+            ->join('deposit_box', 'deposit_order.deposit_box_id', '=', 'deposit_box.id')
+            ->where('deposit_box.proj_id', $projId)
+            ->select('user.mobile', 'deposit_order.id', 'deposit_order.deposit_box_id', 'deposit_order.order_amount', 'deposit_order.from_addr', 'deposit_order.to_addr', 'deposit_order.to_addr', 'deposit_order.contract_addr', 'deposit_order.status', 'deposit_order.created_at')
+            ->orderBy('deposit_order.created_at', 'desc')
+            ->get()->toArray();
+
+        return $this->output(['dataList' => $depositOrderList]);
+    }
+
+    public function getAdminDepositBoxList (Request $request) {
+        $params = $this->validation($request, [
+            'perpage' => 'required|numeric',
+            'pageno' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $depositBoxModel = Model\DepositBox::join('project', 'deposit_box.proj_id', '=', 'project.id');
+        $dataCount = $depositBoxModel->count();
+        $dataList = $depositBoxModel
+            ->select('deposit_box.id', 'deposit_box.proj_id', 'deposit_box.total_amount', 'deposit_box.min_amount', 'deposit_box.remain_amount', 'deposit_box.lock_time', 'deposit_box.interest_rate', 'deposit_box.from_addr', 'deposit_box.to_addr', 'deposit_box.contract_addr', 'deposit_box.status', 'project.name_cn')
+            ->orderBy('deposit_box.created_at', 'desc')
+            ->offset($offset)->limit($perpage)
+            ->get()->toArray();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $dataList,
+            'statusDict' => DictUtil::DepositBox_Status,
+        ]);
+    }
+
+    public function getAdminDepositOrderList (Request $request) {
+        $params = $this->validation($request, [
+            'perpage' => 'required|numeric',
+            'pageno' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $depositOrderModel = Model\DepositOrder::join('user', 'deposit_order.user_id', '=', 'user.id')
+            ->join('deposit_box', 'deposit_order.deposit_box_id', '=', 'deposit_box.id')
+            ->join('project', 'deposit_box.proj_id', '=', 'project.id')
+            ->select('deposit_order.id', 'deposit_order.deposit_box_id', 'deposit_order.order_amount', 'deposit_order.from_addr', 'deposit_order.to_addr', 'deposit_order.to_addr', 'deposit_order.contract_addr', 'deposit_order.status', 'deposit_order.created_at', 'deposit_box.proj_id', 'deposit_box.total_amount', 'deposit_box.min_amount', 'deposit_box.remain_amount', 'deposit_box.lock_time', 'deposit_box.interest_rate', 'project.name_cn', 'user.mobile');
+        $dataCount = $depositOrderModel->count();
+        $dataList = $depositOrderModel
+            ->orderBy('deposit_order.created_at', 'desc')
+            ->offset($offset)->limit($perpage)
+            ->get()->toArray();
+            return $this->output([
+                'dataCount' => $dataCount,
+                'dataList' => $dataList,
+                'statusDict' => DictUtil::DepositOrder_Status,
+            ]);
+    }
+
     public function signin (Request $request) {
         $params = $this->validation($request, [
             'account' => 'required|string',
@@ -420,6 +499,102 @@ class AdminController extends Controller
         return $this->output();
     }
 
+    public function getTokenList (Request $request) {
+
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) return $this->error(100);
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $tokenModel = Model\Token::select('id', 'name', 'symbol', 'logo_url', 'price', 'protocol', 'contract_addr');
+        $dataCount = $tokenModel->count();
+        $dataList = $tokenModel->offset($offset)
+            ->limit($perpage)
+            ->get()->toArray();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $dataList,
+            'statusDict' => DictUtil::Token_Protocol,
+        ]);
+    }
+
+    public function addToken (Request $request) {
+        //获取请求参数
+        $params = $this->validation($request, [
+            'name' => 'nullable|string',
+            'symbol' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'contractAddr' => 'nullable|string',
+            'protocol' => 'nullable|numeric',
+            'price' => 'nullable|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $tokenData = ['symbol' => $symbol];
+        if ($name) $tokenData['name'] = $name;
+        if ($logoUrl) $tokenData['logo_url'] = $logoUrl;
+        if ($contractAddr) $tokenData['contract_addr'] = $contractAddr;
+        if ($protocol) $tokenData['protocol'] = $protocol;
+        if ($price) $tokenData['price'] = $price;
+
+        Model\Token::firstOrCreate($tokenData);
+
+        return $this->output();
+    }
+
+    public function updToken (Request $request) {
+        //获取请求参数
+        $params = $this->validation($request, [
+            'tokenId' => 'required|numeric',
+            'name' => 'nullable|string',
+            'symbol' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'contractAddr' => 'nullable|string',
+            'protocol' => 'nullable|numeric',
+            'price' => 'nullable|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $tokenData = [];
+        if ($name) $tokenData['name'] = $name;
+        if ($symbol) $tokenData['symbol'] = $symbol;
+        if ($logoUrl) $tokenData['logo_url'] = $logoUrl;
+        if ($protocol) $tokenData['protocol'] = $protocol;
+        if ($contractAddr) $tokenData['contract_addr'] = $contractAddr;
+        if ($price) $tokenData['price'] = $price;
+
+        Model\Token::where('id', $tokenId)->update($tokenData);
+
+        return $this->output();
+    }
+
+    public function delToken (Request $request) {
+        //获取请求参数
+        $params = $this->validation($request, [
+            'tokenId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Project::where('token_id', $tokenId)->update(['token_id' => 0]);
+
+        Model\Token::where('id', $tokenId)->delete();
+
+        return $this->output();
+    }
+
     public function getProjBasicList (Request $request) {
         //获取请求参数
         $params = $this->validation($request, [
@@ -432,8 +607,7 @@ class AdminController extends Controller
         extract($params);
 
         $offset = $perpage * ($pageno - 1);
-        //$projList = Model\Project::offset($offset)->limit($perpage)->get()->toArray();
-        $projList = Model\Project::get()->toArray();
+        $projList = Model\Project::offset($offset)->limit($perpage)->get()->toArray();
         $dataCount = Model\Project::count();
 
         return $this->output([
