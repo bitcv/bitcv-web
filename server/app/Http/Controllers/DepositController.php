@@ -133,7 +133,7 @@ class DepositController extends Controller
         $projId = $depositBoxData['proj_id'];
         $projData = Model\Project::join('token', 'project.token_id', '=', 'token.id')
             ->where('project.id', $projId)
-            ->select('logo_url', 'token.name as tokenName', 'token.symbol as tokenSymbol')
+            ->select('project.logo_url', 'token.name as tokenName', 'token.symbol as tokenSymbol')
             ->first();
         if (!$projData) {
             return $this->error();
