@@ -1,5 +1,5 @@
 <template>
-  <div class="candy-room">
+  <div class="container">
     <router-view></router-view>
   </div>
 </template>

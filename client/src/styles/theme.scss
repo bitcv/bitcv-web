@@ -21,9 +21,6 @@
 }
 
 /* button */
-.btn-outline {
-  background-color: transparent;
-}
 .btn-primary {
   background-color: $primary-color;
   border-color: $primary-color;
@@ -65,10 +62,10 @@
   }
 
   &.btn-default {
-    color: $gray;
+    color: $gray-dark;
 
     &:hover, &:focus {
-      color: #fff;
+      color: $gray-darker;
       background-color: transparent;
     }
   }

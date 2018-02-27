@@ -1,4 +1,5 @@
 <template>
+  <div class="container">
     <div class="resetpwd">
     <h3 class="panel-title center-title">重设密码</h3>
     <form>
@@ -7,6 +8,7 @@
         <button @click.prevent="resetPwd">确定</button>
       </form>
     </div>
+  </div>
 </template>
 <script>
 export default {
@@ -44,6 +46,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .resetpwd {
+  margin: 0 auto;
   box-sizing: border-box;
   width: 530px;
   background-color: #FFF;

@@ -1,29 +1,31 @@
 <template>
-  <div class="signin">
-    <h3 class="panel-title center-title">项目申请</h3>
-    <template>
-      <span class="prompt">已经展示的项目请在项目详情页面直接认领！</span>
-      <form>
-        <input v-model="formData.nameCn" type="text" placeholder="项目中文名" required>
-        <input v-model="formData.nameEn" type="text" placeholder="项目英文名" required>
-        <input v-model="formData.tokenName" type="text" placeholder="代币名称" required>
-        <input v-model="formData.tokenSymbol" type="text" placeholder="代币符号" required>
-        <el-form-item :label="select.label" v-for="(select, field) in selectList" :key="field">
-          <el-select v-model="formData[field]">
-            <el-option v-for="(option, index) in select.optionList" :key="option.value" v-if="index" :label="option.label" :value="option.value"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="融资阶段">
-          <el-select v-model="formData.fundStage">
-            <el-option label="保密" :value="0"></el-option>
-            <el-option label="未融资" :value="1"></el-option>
-            <el-option label="融资中" :value="2"></el-option>
-            <el-option label="已融资" :value="3"></el-option>
-          </el-select>
-        </el-form-item>
-        <button @click.prevent="signin">创建项目</button>
-      </form>
-    </template>
+  <div class="container">
+    <div class="signin">
+      <h3 class="panel-title center-title">项目申请</h3>
+      <!-- <template> -->
+        <span class="prompt">已经展示的项目请在项目详情页面直接认领！</span>
+        <form>
+          <input v-model="formData.nameCn" type="text" placeholder="项目中文名" required>
+          <input v-model="formData.nameEn" type="text" placeholder="项目英文名" required>
+          <input v-model="formData.tokenName" type="text" placeholder="代币名称" required>
+          <input v-model="formData.tokenSymbol" type="text" placeholder="代币符号" required>
+          <el-form-item :label="select.label" v-for="(select, field) in selectList" :key="field">
+            <el-select v-model="formData[field]">
+              <el-option v-for="(option, index) in select.optionList" :key="option.value" v-if="index" :label="option.label" :value="option.value"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="融资阶段">
+            <el-select v-model="formData.fundStage">
+              <el-option label="保密" :value="0"></el-option>
+              <el-option label="未融资" :value="1"></el-option>
+              <el-option label="融资中" :value="2"></el-option>
+              <el-option label="已融资" :value="3"></el-option>
+            </el-select>
+          </el-form-item>
+          <button @click.prevent="signin">创建项目</button>
+        </form>
+      <!-- </template> -->
+    </div>
   </div>
 </template>
 
@@ -77,7 +79,7 @@ export default {
   background-color: #FFF;
   padding: 20px;
   position: relative;
-  margin: 0 10px;
+  margin: 0 auto;
   font-size: 0;
   .panel-title {
     font-size: 30px;
@@ -122,6 +124,7 @@ export default {
     height: 220px;
     margin-bottom: 25px;
     input {
+      margin-top: -1px;
       display: block;
       box-sizing: border-box;
       width: 426px;
@@ -135,6 +138,7 @@ export default {
       }
     }
     button {
+      margin-top: 10px;
       width: 426px;
       height: 50px;
       width: 100%;

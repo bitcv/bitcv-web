@@ -1,15 +1,17 @@
 <template>
-  <div class="findpwd">
-    <h3 class = "panel-title center-title">找回密码</h3>
-      <form>
-      <input v-model="mobile" type="text" placeholder="请输入你的手机号码">
-      <div class = smspanel>
-      <input class = "sms" v-model="vcode" type="text" placeholder="短信验证码" >
-      <el-button :disabled="disableSms" class="sms-btn" :class="{disabled : disableSms}" type="primary" @click="getVcode">发送验证码<span v-show="timerId"> ({{ countDown }}s)</span></el-button>
-      <!-- <span class = "smscode" @click="getVcode">发送短信验证码</span> -->
-      </div>
-      <button @click.prevent="findPwd">找回密码</button>
-      </form>
+  <div class="container">
+    <div class="findpwd">
+      <h3 class = "panel-title center-title">找回密码</h3>
+        <form>
+        <input v-model="mobile" type="text" placeholder="请输入你的手机号码">
+        <div class = smspanel>
+        <input class = "sms" v-model="vcode" type="text" placeholder="短信验证码" >
+        <el-button :disabled="disableSms" class="sms-btn" :class="{disabled : disableSms}" type="primary" @click="getVcode">发送验证码<span v-show="timerId"> ({{ countDown }}s)</span></el-button>
+        <!-- <span class = "smscode" @click="getVcode">发送短信验证码</span> -->
+        </div>
+        <button @click.prevent="findPwd">找回密码</button>
+        </form>
+    </div>
   </div>
 </template>
 <script>
@@ -83,6 +85,7 @@ export default {
 .findpwd {
   box-sizing: border-box;
   width: 530px;
+  margin: 0 auto;
   background-color: #FFF;
   padding: 20px;
   position: relative;

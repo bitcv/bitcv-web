@@ -1,6 +1,6 @@
 <template>
   <div>
-    <poptips v-model="showTips" message="提示：本次服务费由平台承担" style="top:60px;"></poptips>
+    <poptips v-model="showTips" message="提示：本次服务费由平台承担" style="top:51px;"></poptips>
 
     <div class="container">
       <p><br></p>
@@ -49,11 +49,17 @@
 </template>
 
 <script>
-import Poptips from '@/components/poptips/poptips'
+import {mapState} from 'vuex'
+import Poptips from '@/components/poptips'
 
 export default {
   components: {
     Poptips
+  },
+  computed: {
+    ...mapState({
+      id: state => state.route.params.id
+    })
   },
   data () {
     return {

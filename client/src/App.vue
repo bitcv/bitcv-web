@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-header v-if="visible"></v-header>
+    <v-header v-if="visible" :has-token="hasToken" @signout="signout"></v-header>
     <div class="main-container">
       <router-view/>
     </div>
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapMutations} from 'vuex'
 import Header from '@/components/header/header'
 import Footer from '@/components/footer/Footer'
 
@@ -21,10 +21,32 @@ export default {
   },
   computed: {
     ...mapState({
-      path: state => state.route.path
+      path: state => state.route.path,
+      userInfo: state => state.userInfo
     }),
     visible () {
       return this.path !== '/share'
+    },
+    hasToken () {
+      if (this.userInfo) {
+        return Object.keys(this.userInfo).length > 0
+      }
+
+      return false
+    }
+  },
+  watch: {
+    hasToken (val) {
+      if (!val) {
+        this.$router.push('/signin')
+      }
+    }
+  },
+  methods: {
+    ...mapMutations(['cleanUserInfo']),
+    signout () {
+      this.cleanUserInfo()
+      // this.$router.push('/')
     }
   }
 }

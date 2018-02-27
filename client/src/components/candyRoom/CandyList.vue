@@ -7,7 +7,7 @@
       </div>
       <div class="filter-box">
         <span class="title">锁仓期限</span>
-        <ul class="select">
+        <ul class="select list-unstyled">
           <li :class="{cur: inputLockTime===0}" @click="inputLockTime=0">全部</li>
           <li :class="{cur: inputLockTime===1}" @click="inputLockTime=1">1个月</li>
           <li :class="{cur: inputLockTime===3}" @click="inputLockTime=3">3个月</li>

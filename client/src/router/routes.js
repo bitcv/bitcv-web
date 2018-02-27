@@ -13,6 +13,21 @@ export default [{
   path: '/discover',
   component: getViews('discover/discover')
 }, {
+  path: '/discover/detail/:id',
+  component: getViews('discover/detail')
+}, {
+  // 钱包
+  path: '/wallet',
+  component: getViews('user/wallet')
+}, {
+  // 体现
+  path: '/wallet/withdraw/:id',
+  component: getViews('user/withdraw')
+}, {
+  // 钱包记录
+  path: '/wallet/records',
+  component: getViews('user/records')
+}, {
   path: '/projList',
   component: getComponent('projList/ProjList')
 }, {
@@ -73,14 +88,8 @@ export default [{
   component: getComponent('news/NewList')
 }, {
   path: '/newDetail/:id',
-  component: getComponent('news/NewDetail')
+  component: getComponent('news/newDetail')
 }, {
   path: '/apply',
   component: getComponent('apply/Apply')
-}, {
-  path: '/address',
-  component: getViews('user/address')
-}, {
-  path: '/records',
-  component: getViews('user/records')
 }]

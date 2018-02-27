@@ -1,16 +1,18 @@
 <template>
-  <div class="signup">
-    <h3 class="panel-title center-title">欢迎注册 BCV</h3>
-      <!--<span class="prompt">链币会员可直接使用会员名登录</span>-->
-      <form>
-        <input v-model="mobile" type="text" placeholder="手机号">
-        <div class = smspanel>
-        <input class = "sms-input" v-model="vcode" type="text" placeholder="短信验证码" >
-        <el-button :disabled="disableSms" class="sms-btn" :class="{disabled : disableSms}" type="primary" @click="getVcode">发送验证码<span v-show="timerId"> ({{ countDown }}s)</span></el-button>
-        </div>
-        <input v-model="passwd" type="password" placeholder="密码">
-        <button class="signup-btn" @click.prevent="signup">注册</button>
-      </form>
+  <div class="container">
+    <div class="signup">
+      <h3 class="panel-title center-title">欢迎注册 BCV</h3>
+        <!--<span class="prompt">链币会员可直接使用会员名登录</span>-->
+        <form>
+          <input v-model="mobile" type="text" placeholder="手机号">
+          <div class = smspanel>
+          <input class = "sms-input" v-model="vcode" type="text" placeholder="短信验证码" >
+          <el-button :disabled="disableSms" class="sms-btn" :class="{disabled : disableSms}" type="primary" @click="getVcode">发送验证码<span v-show="timerId"> ({{ countDown }}s)</span></el-button>
+          </div>
+          <input v-model="passwd" type="password" placeholder="密码">
+          <button class="signup-btn" @click.prevent="signup">注册</button>
+        </form>
+    </div>
   </div>
 </template>
 
@@ -98,7 +100,7 @@ export default {
   box-sizing: border-box;
   padding: 20px;
   position: relative;
-  margin: 0 10px;
+  margin: 0 auto;
   font-size: 0;
   .panel-title {
     font-size: 30px;

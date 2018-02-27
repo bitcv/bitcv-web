@@ -29,6 +29,7 @@ export default {
 <style lang="scss" scoped>
 .new-list{
   width: 1200px;
+  margin: 0 auto;
   //max-width: 100%;
   display: flex;
   justify-content: space-between;

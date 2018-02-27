@@ -1,34 +1,38 @@
 <template>
-  <div class="signin">
-    <h3 class="panel-title center-title">登录</h3>
-    <!--<div class="nav">-->
-      <!--<span class="passwd" :class="{active : curIndex === 0}" @click="curIndex = 0">密码登录</span>-->
-      <!--<span class="qrcode" :class="{active : curIndex === 1}" @click="curIndex = 1">扫码登录</span>-->
-    <!--</div>-->
-    <template v-if="curIndex === 0">
-      <!--<span class="prompt">lianbi会员可直接使用会员名登录</span>-->
-      <form>
-        <input v-model="mobile" type="text" placeholder="手机号">
-        <input v-model="passwd" type="password" placeholder="登录密码">
-        <button @click.prevent="signin">登录</button>
-      </form>
-      <div class="btn-area">
-        <router-link to="findPwd">
-          <a>忘记密码</a>
-        </router-link>
-        <router-link to="signup">
-          <a>注册会员</a>
-        </router-link>
+  <div class="container">
+    <div class="signin">
+      <h3 class="panel-title center-title">登录</h3>
+      <!--<div class="nav">-->
+        <!--<span class="passwd" :class="{active : curIndex === 0}" @click="curIndex = 0">密码登录</span>-->
+        <!--<span class="qrcode" :class="{active : curIndex === 1}" @click="curIndex = 1">扫码登录</span>-->
+      <!--</div>-->
+      <template v-if="curIndex === 0">
+        <!--<span class="prompt">lianbi会员可直接使用会员名登录</span>-->
+        <form>
+          <input v-model="mobile" type="text" placeholder="手机号">
+          <input v-model="passwd" type="password" placeholder="登录密码">
+          <button @click.prevent="signin">登录</button>
+        </form>
+        <div class="btn-area">
+          <router-link to="findPwd">
+            <a>忘记密码</a>
+          </router-link>
+          <router-link to="signup">
+            <a>注册会员</a>
+          </router-link>
+        </div>
+      </template>
+      <div class="qrcode-area" v-else>
+        <img src="/static/img/logo.png" alt="">
+        <span>打开<em>微信</em>扫一扫</span>
       </div>
-    </template>
-    <div class="qrcode-area" v-else>
-      <img src="/static/img/logo.png" alt="">
-      <span>打开<em>微信</em>扫一扫</span>
     </div>
   </div>
 </template>
 
 <script>
+import {mapMutations} from 'vuex'
+
 export default {
   data () {
     return {
@@ -38,6 +42,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['updateUserInfo']),
     signin () {
       var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
       if (!mobileReg.test(this.mobile)) {
@@ -53,10 +58,11 @@ export default {
       }).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
-          localStorage.setItem('userId', resData.data.userId)
-          localStorage.setItem('mobile', resData.data.mobile)
-          localStorage.setItem('avatarUrl', resData.data.avatarUrl)
-          that.$root.eventHub.$emit('checkLoginStatus')
+          // localStorage.setItem('userId', resData.data.userId)
+          // localStorage.setItem('mobile', resData.data.mobile)
+          // localStorage.setItem('avatarUrl', resData.data.avatarUrl)
+          // that.$root.eventHub.$emit('checkLoginStatus')
+          that.updateUserInfo(resData.data)
           that.$router.push('/')
         } else {
           alert(resData.errmsg)
@@ -77,7 +83,7 @@ export default {
   background-color: #FFF;
   padding: 20px;
   position: relative;
-  margin: 0 10px;
+  margin: 0 auto;
   font-size: 0;
   .panel-title {
     font-size: 30px;

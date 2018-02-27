@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row" style="margin-bottom:20px">
       <div class="col-md-8">
-        <search-bar v-model="keywords"></search-bar>
+        <search-bar v-model="keywords" @submit="onSearch"></search-bar>
       </div>
     </div>
     <div class="row">
@@ -10,42 +10,36 @@
         <div class="panel panel-custom">
           <div class="panel-body filter-list">
             <dl class="dl-horizontal">
-              <dt>地区</dt>
+              <dt>{{ region.label }}</dt>
               <dd>
-                <a href="javascript:;" class="active">不限</a>
-                <a href="javascript:;">美国</a>
-                <a href="javascript:;">日韩</a>
-                <a href="javascript:;">欧洲</a>
-                <a href="javascript:;">东南亚</a>
-                <a href="javascript:;">其他地区</a>
+                <a href="javascript:;"
+                  v-for="item in region.optionList"
+                  :key="item.value"
+                  :class="{active: region.default == item.value}"
+                  @click="onFilterClick(region, item.value)"
+                >{{ item.label }}</a>
               </dd>
             </dl>
             <dl class="dl-horizontal">
-              <dt>行业</dt>
+              <dt>{{ buzType.label }}</dt>
               <dd>
-                <a href="javascript:;" class="active">不限</a>
-                <a href="javascript:;">金融</a>
-                <a href="javascript:;">数字资产</a>
-                <a href="javascript:;">娱乐</a>
-                <a href="javascript:;">供应链管理</a>
-                <a href="javascript:;">法律服务</a>
-                <a href="javascript:;">医疗</a>
-                <a href="javascript:;">能源服务</a>
-                <a href="javascript:;">公益</a>
-                <a href="javascript:;">农业</a>
-                <a href="javascript:;">社交</a>
-                <a href="javascript:;">物联网</a>
-                <a href="javascript:;">其他</a>
+                <a href="javascript:;"
+                  v-for="item in buzType.optionList"
+                  :key="item.value"
+                  :class="{active: buzType.default == item.value}"
+                  @click="onFilterClick(buzType, item.value)"
+                >{{ item.label }}</a>
               </dd>
             </dl>
             <dl class="dl-horizontal">
-              <dt>阶段</dt>
+              <dt>{{ stage.label }}</dt>
               <dd>
-                <a href="javascript:;" class="active">不限</a>
-                <a href="javascript:;">募资前</a>
-                <a href="javascript:;">募资中</a>
-                <a href="javascript:;">公开发行</a>
-                <a href="javascript:;">产品落地</a>
+                <a href="javascript:;"
+                  v-for="item in stage.optionList"
+                  :key="item.value"
+                  :class="{active: stage.default == item.value}"
+                  @click="onFilterClick(stage, item.value)"
+                >{{ item.label }}</a>
               </dd>
             </dl>
           </div>
@@ -62,125 +56,21 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr v-for="item in list" :key="item.id">
                 <td class="text-center">
-                  <a href="javascript:;" class="text-dark" title="收藏"><i class="icon-bcv icon-heart"></i></a>
+                  <a href="javascript:;" class="text-dark" :title="['关注', '取消关注'][item.focusStatus]" @click="handleFav(item)">
+                    <i class="icon-bcv" :class="{'icon-heart': item.focusStatus == 0, 'icon-heart-fill': item.focusStatus == 1}"></i>
+                  </a>
                 </td>
                 <td>
-                  <img src="https://placehold.it/30x30" class="img-rounded">
-                  <span>币威_BitCV</span>
+                  <router-link :to="`/discover/detail/${item.id}`">
+                    <img :src="item.logoUrl" class="img-rounded" width="30">
+                    <span>{{ item.nameCn }}</span>
+                  </router-link>
                 </td>
-                <td><span class="text-primary">BCV</span></td>
-                <td>金融</td>
-                <td><span class="text-primary">已融资</span></td>
-              </tr>
-              <tr>
-                <td class="text-center">
-                  <a href="javascript:;" class="text-dark" title="收藏"><i class="icon-bcv icon-heart"></i></a>
-                </td>
-                <td>
-                  <img src="https://placehold.it/30x30" class="img-rounded">
-                  <span>币威_BitCV</span>
-                </td>
-                <td><span class="text-primary">BCV</span></td>
-                <td>金融</td>
-                <td><span class="text-primary">已融资</span></td>
-              </tr>
-              <tr>
-                <td class="text-center">
-                  <a href="javascript:;" class="text-dark" title="收藏"><i class="icon-bcv icon-heart"></i></a>
-                </td>
-                <td>
-                  <img src="https://placehold.it/30x30" class="img-rounded">
-                  <span>币威_BitCV</span>
-                </td>
-                <td><span class="text-primary">BCV</span></td>
-                <td>金融</td>
-                <td><span class="text-primary">已融资</span></td>
-              </tr>
-              <tr>
-                <td class="text-center">
-                  <a href="javascript:;" class="text-dark" title="收藏"><i class="icon-bcv icon-heart"></i></a>
-                </td>
-                <td>
-                  <img src="https://placehold.it/30x30" class="img-rounded">
-                  <span>币威_BitCV</span>
-                </td>
-                <td><span class="text-primary">BCV</span></td>
-                <td>金融</td>
-                <td><span class="text-primary">已融资</span></td>
-              </tr>
-              <tr>
-                <td class="text-center">
-                  <a href="javascript:;" class="text-dark" title="收藏"><i class="icon-bcv icon-heart"></i></a>
-                </td>
-                <td>
-                  <img src="https://placehold.it/30x30" class="img-rounded">
-                  <span>币威_BitCV</span>
-                </td>
-                <td><span class="text-primary">BCV</span></td>
-                <td>金融</td>
-                <td><span class="text-primary">已融资</span></td>
-              </tr>
-              <tr>
-                <td class="text-center">
-                  <a href="javascript:;" class="text-dark" title="收藏"><i class="icon-bcv icon-heart"></i></a>
-                </td>
-                <td>
-                  <img src="https://placehold.it/30x30" class="img-rounded">
-                  <span>币威_BitCV</span>
-                </td>
-                <td><span class="text-primary">BCV</span></td>
-                <td>金融</td>
-                <td><span class="text-primary">已融资</span></td>
-              </tr>
-              <tr>
-                <td class="text-center">
-                  <a href="javascript:;" class="text-dark" title="收藏"><i class="icon-bcv icon-heart"></i></a>
-                </td>
-                <td>
-                  <img src="https://placehold.it/30x30" class="img-rounded">
-                  <span>币威_BitCV</span>
-                </td>
-                <td><span class="text-primary">BCV</span></td>
-                <td>金融</td>
-                <td><span class="text-primary">已融资</span></td>
-              </tr>
-              <tr>
-                <td class="text-center">
-                  <a href="javascript:;" class="text-dark" title="收藏"><i class="icon-bcv icon-heart"></i></a>
-                </td>
-                <td>
-                  <img src="https://placehold.it/30x30" class="img-rounded">
-                  <span>币威_BitCV</span>
-                </td>
-                <td><span class="text-primary">BCV</span></td>
-                <td>金融</td>
-                <td><span class="text-primary">已融资</span></td>
-              </tr>
-              <tr>
-                <td class="text-center">
-                  <a href="javascript:;" class="text-dark" title="收藏"><i class="icon-bcv icon-heart"></i></a>
-                </td>
-                <td>
-                  <img src="https://placehold.it/30x30" class="img-rounded">
-                  <span>币威_BitCV</span>
-                </td>
-                <td><span class="text-primary">BCV</span></td>
-                <td>金融</td>
-                <td><span class="text-primary">已融资</span></td>
-              </tr>
-              <tr>
-                <td class="text-center">
-                  <a href="javascript:;" class="text-dark" title="收藏"><i class="icon-bcv icon-heart"></i></a>
-                </td>
-                <td>
-                  <img src="https://placehold.it/30x30" class="img-rounded">
-                  <span>币威_BitCV</span>
-                </td>
-                <td><span class="text-primary">BCV</span></td>
-                <td>金融</td>
-                <td><span class="text-primary">已融资</span></td>
+                <td><span class="text-primary">{{ item.tokenSymbol }}</span></td>
+                <td>{{ item.buzType | buzType }}</td>
+                <td><span class="text-primary">{{ item.fundStage | fundStage }}</span></td>
               </tr>
             </tbody>
           </table>
@@ -191,98 +81,26 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="panel panel-custom text-darker">
+        <div class="panel panel-custom text-darker" style="min-height:200px;">
           <div class="panel-heading">
             <h4 class="panel-title">关注TOP10</h4>
           </div>
           <div class="list-group list-counter">
-            <a class="list-group-item" href="javascript:;">
-              <span>币威</span>
-              <span class="count">12</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>LITEX</span>
-              <span class="count">10</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>智能链</span>
-              <span class="count">8</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>未来版权</span>
-              <span class="count">6</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>Stox</span>
-              <span class="count">4</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>币威</span>
-              <span class="count">12</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>LITEX</span>
-              <span class="count">10</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>智能链</span>
-              <span class="count">8</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>未来版权</span>
-              <span class="count">6</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>Stox</span>
-              <span class="count">4</span>
-            </a>
+            <router-link class="list-group-item" v-for="item in focusList" :to="`/discover/detail/${item.projId}`" :key="item.projId">
+              <span>{{ item.nameCn }}</span>
+              <span class="count">{{ item.count }}</span>
+            </router-link>
           </div>
         </div>
-        <div class="panel panel-custom text-darker">
+        <div class="panel panel-custom text-darker" style="min-height:200px;">
           <div class="panel-heading">
             <h4 class="panel-title">浏览TOP10</h4>
           </div>
           <div class="list-group list-counter">
-            <a class="list-group-item" href="javascript:;">
-              <span>币威</span>
-              <span class="count">12</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>LITEX</span>
-              <span class="count">10</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>智能链</span>
-              <span class="count">8</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>未来版权</span>
-              <span class="count">6</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>Stox</span>
-              <span class="count">4</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>币威</span>
-              <span class="count">12</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>LITEX</span>
-              <span class="count">10</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>智能链</span>
-              <span class="count">8</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>未来版权</span>
-              <span class="count">6</span>
-            </a>
-            <a class="list-group-item" href="javascript:;">
-              <span>Stox</span>
-              <span class="count">4</span>
-            </a>
+            <router-link class="list-group-item" v-for="item in viewList" :to="`/discover/detail/${item.projId}`" :key="item.projId">
+              <span>{{ item.nameCn }}</span>
+              <span class="count">{{ item.count }}</span>
+            </router-link>
           </div>
         </div>
       </div>
@@ -291,8 +109,10 @@
 </template>
 
 <script>
-import SearchBar from '@/components/search-bar/search-bar'
-import Pagination from '@/components/pagination/pagination'
+import {mapState, mapActions} from 'vuex'
+import SearchBar from '@/components/search-bar'
+import Pagination from '@/components/pagination'
+import {getBuzType, getFundStage} from '@/utils/utils'
 
 export default {
   components: {
@@ -302,13 +122,116 @@ export default {
   data () {
     return {
       keywords: '',
-      total: 85,
+      buzType: {},
+      region: {},
+      stage: {},
+      total: 0,
+      list: [],
+      focusList: [],
+      viewList: [],
       currentPage: 1
     }
   },
+  computed: {
+    ...mapState({
+      query: state => state.route.query
+    })
+  },
+  filters: {
+    buzType: getBuzType,
+    fundStage: getFundStage
+  },
+  watch: {
+    query: {
+      handler ({q}) {
+        if (q) {
+          this.keywords = q
+          this.onSearch()
+        }
+      },
+      immediate: true,
+      deep: true
+    }
+  },
+  created () {
+    this.getFilterParams()
+      .then((data = {}) => {
+        const {
+          stage = {},
+          region = {},
+          buzType = {}
+        } = data
+
+        this.buzType = buzType
+        this.region = region
+        this.stage = stage
+      })
+
+    // 关注top10
+    this.getTop10({type: 'focus', count: 10})
+      .then((data = []) => (this.focusList = data))
+
+    // 浏览top10
+    this.getTop10({type: 'view', count: 10})
+      .then((data = []) => (this.viewList = data))
+  },
+  mounted () {
+    if (!this.list.length) {
+      this.handleFilter()
+    }
+  },
   methods: {
+    ...mapActions([
+      'getTop10',
+      'getProList',
+      'updateFocus',
+      'getFilterParams'
+    ]),
+    // 翻页
     onPageClick (page) {
       this.currentPage = page
+      this.handleFilter()
+    },
+    // 筛选
+    onFilterClick (o, v) {
+      o.default = v
+      this.onSearch()
+      this.handleFilter()
+    },
+    // 搜索
+    onSearch () {
+      this.currentPage = 1
+      this.handleFilter()
+    },
+    getParams () {
+      return {
+        perpage: 10,
+        keyword: this.keywords,
+        pageno: this.currentPage,
+        stage: this.stage.default || 0,
+        region: this.region.default || 0,
+        buzType: this.buzType.default || 0
+      }
+    },
+    // 加载数据
+    handleFilter () {
+      this.getProList(this.getParams())
+        .then((data = {}) => {
+          const {
+            dataCount = 0,
+            projList = []
+          } = data
+
+          this.total = dataCount
+          this.list = projList
+        })
+    },
+    // 关注|取消关注
+    handleFav (item) {
+      this.updateFocus({projId: item.id})
+        .then(data => {
+          this.$set(item, 'focusStatus', item.focusStatus === 0 ? 1 : 0)
+        })
     }
   }
 }
@@ -354,7 +277,6 @@ export default {
   padding-top: 12px;
   padding-bottom: 12px;
   font-weight: normal;
-  // line-height: 30px;
 }
 .table > tbody > tr > td {
   vertical-align: middle;

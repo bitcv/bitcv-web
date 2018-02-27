@@ -1,7 +1,7 @@
 <template>
   <div class="top-list-panel">
     <h3 class="panel-title">{{ listData.title }}</h3>
-    <ul class="list-container">
+    <ul class="list-container list-unstyled">
       <li class="list-item" v-for="(project, index) in projList" :key="project.projId">
         <router-link :to="{ path: 'projDetail/' + project.projId}">
           <span class="index">{{ index + 1 }}</span>
