@@ -2,38 +2,32 @@
   <div class="popside" :class="{'popside-show': show}">
     <div class="popside-mask" @click="toggle"></div>
     <div class="popside-container">
-      <router-link v-if="!token" class="popside-avatar hidden-sm" to="/signin" @click.native="toggle">登录</router-link>
+      <router-link v-if="!hasToken" class="popside-avatar hidden-sm" to="/signin" @click.native="toggle">登录</router-link>
       <img v-else class="popside-avatar" src="/static/img/avatar.png">
       <ul class="nav navbar-nav popside-nav">
         <router-link tag="li" active-class="active" exact to="/" @click.native="toggle"><a href="javascript:;">主页</a></router-link>
         <router-link tag="li" active-class="active" to="/discover" @click.native="toggle"><a href="javascript:;">发现</a></router-link>
         <router-link tag="li" active-class="active" to="/candyRoom" @click.native="toggle"><a href="javascript:;">余币宝</a></router-link>
-        <router-link tag="li" active-class="active" to="/newlist" @click.native="toggle"><a href="javascript:;">资讯</a></router-link>
-        <router-link v-if="token" tag="li" to="/" @click.native="signout"><a href="javascript:;">注销登录</a></router-link>
+        <!-- <router-link tag="li" active-class="active" to="/newlist" @click.native="toggle"><a href="javascript:;">资讯</a></router-link> -->
+        <li v-if="hasToken" class="hidden-md hidden-lg"><a href="javascript:;" @click.native="signout">注销登录</a></li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
-
 export default {
   props: {
     value: {
       type: Boolean,
       default: false
-    }
+    },
+    hasToken: Boolean
   },
   data () {
     return {
       show: false
     }
-  },
-  computed: {
-    ...mapState({
-      token: state => state.token
-    })
   },
   watch: {
     value: {
@@ -136,7 +130,7 @@ export default {
 
 @media (min-width: 992px) {
   .popside-nav.navbar-nav {
-    margin-left: 20%;
+    margin-left: 25%;
 
     > li {
       > a {

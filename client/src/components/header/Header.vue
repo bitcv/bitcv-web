@@ -13,9 +13,17 @@
         <router-link to="/" class="navbar-brand"><img src="/static/img/logo.png" alt="BitCV" height="30"></router-link>
       </div>
 
-      <popside v-model="showSide"></popside>
+      <popside v-model="showSide" :has-token="hasToken" @signout="$emit('signout')"></popside>
 
-      <div class="navbar-right hidden-sm hidden-xs">
+      <div v-if="hasToken" class="dropdown navbar-right hidden-sm hidden-xs" :class="{open: showDropdown}" @mouseenter="showDropdown = true" @mouseleave="showDropdown = false">
+        <!-- <button type="button" class="btn navbar-btn btn-default btn-outline" @click="$emit('signout')">注销登录</button> -->
+        <a href="javascrip:;" class="dropdown-toggle"><img src="/static/img/avatar.png" class="img-circle"></a>
+        <ul class="dropdown-menu">
+          <li><router-link to="/wallet">我的钱包</router-link></li>
+          <li><a href="javascript:;" @click="$emit('signout')">注销登录</a></li>
+        </ul>
+      </div>
+      <div v-else class="navbar-right hidden-sm hidden-xs">
         <router-link class="btn navbar-btn btn-default btn-outline" to="/signup">注册</router-link>
         <span>&nbsp;&nbsp;</span>
         <router-link class="btn navbar-btn btn-default btn-outline" to="/signin">登录</router-link>
@@ -31,20 +39,30 @@ export default {
   components: {
     Popside
   },
+  props: {
+    hasToken: Boolean
+  },
   data () {
     return {
-      showSide: false
+      showSide: false,
+      showDropdown: false
     }
   },
   methods: {
     navbarToggle () {
       this.showSide = !this.showSide
     }
+  },
+  mounted () {
+    this.showSide = false
+    this.showDropdown = false
   }
 }
 </script>
 
 <style lang="scss">
+@import '~@/styles/variables';
+
 .navbar-inverse {
   background-color: #656565;
   border-color: #666;
@@ -79,6 +97,25 @@ export default {
 
     > img {
       display: block;
+    }
+  }
+
+  .dropdown-toggle {
+    display: block;
+    padding: 5px;
+
+    > img {
+      width: 40px;
+      height: 40px;
+      display: block;
+    }
+  }
+
+  .btn-outline {
+    color: $gray;
+
+    &:hover, &:focus {
+      color: #fff;
     }
   }
 }
