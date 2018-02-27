@@ -2,27 +2,25 @@
   <div class="popside" :class="{'popside-show': show}">
     <div class="popside-mask" @click="toggle"></div>
     <div class="popside-container">
-      <router-link v-if="!isOnline" class="popside-avatar" to="/signin" @click.native="toggle">登录</router-link>
-      <img v-else class="popside-avatar" src="/static/img/avatar.png" alt="">
-      <ul class="popside-nav">
+      <router-link v-if="!token" class="popside-avatar hidden-sm" to="/signin" @click.native="toggle">登录</router-link>
+      <img v-else class="popside-avatar" src="/static/img/avatar.png">
+      <ul class="nav navbar-nav popside-nav">
         <router-link tag="li" active-class="active" exact to="/" @click.native="toggle"><a href="javascript:;">主页</a></router-link>
-        <router-link tag="li" active-class="active" to="/projList" @click.native="toggle"><a href="javascript:;">发现</a></router-link>
+        <router-link tag="li" active-class="active" to="/discover" @click.native="toggle"><a href="javascript:;">发现</a></router-link>
         <router-link tag="li" active-class="active" to="/candyRoom" @click.native="toggle"><a href="javascript:;">余币宝</a></router-link>
         <router-link tag="li" active-class="active" to="/newlist" @click.native="toggle"><a href="javascript:;">资讯</a></router-link>
-        <router-link v-if="isOnline" tag="li" to="/" @click.native="signout"><a href="javascript:;">注销登录</a></router-link>
+        <router-link v-if="token" tag="li" to="/" @click.native="signout"><a href="javascript:;">注销登录</a></router-link>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 export default {
   props: {
     value: {
-      type: Boolean,
-      default: false
-    },
-    isOnline: {
       type: Boolean,
       default: false
     }
@@ -31,6 +29,11 @@ export default {
     return {
       show: false
     }
+  },
+  computed: {
+    ...mapState({
+      token: state => state.token
+    })
   },
   watch: {
     value: {
@@ -45,14 +48,21 @@ export default {
       this.$emit('input', !this.show)
     },
     signout () {
-      this.$emit('signout', !this.isOnline)
-      this.$emit('input', !this.show)
+      this.$emit('signout')
+      this.toggle()
     }
   }
 }
 </script>
 
 <style lang="scss">
+@import '~@/styles/variables';
+
+.popside-avatar {
+  display: none;
+}
+
+@media (max-width: 991px) {
   .popside-mask, .popside-container {
     position: fixed;
     right: 0;
@@ -106,6 +116,7 @@ export default {
 
       > a {
         display: block;
+        padding: 0;
 
         font-size: 16px;
         line-height: 46px;
@@ -121,4 +132,33 @@ export default {
       }
     }
   }
+}
+
+@media (min-width: 992px) {
+  .popside-nav.navbar-nav {
+    margin-left: 20%;
+
+    > li {
+      > a {
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-bottom: 13px;
+        font-size: 16px;
+        border-bottom: 2px solid transparent;
+      }
+
+      & + li {
+        margin-left: 30px;
+      }
+
+      &.active > a,
+      &.active > a:hover,
+      &.active > a:focus {
+        color: $primary-color;
+        background-color: transparent;
+        border-bottom-color: $primary-color;
+      }
+    }
+  }
+}
 </style>

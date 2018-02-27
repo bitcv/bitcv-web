@@ -5,10 +5,11 @@ $gray: #ccc;
 $gray-dark: #999;
 $gray-darker: #666;
 $black-light: #4a4a4a;
-$primary-color: #f58427;
+// $primary-color: #f58427;
+$primary-color: #fdb76e;
 
 /* navbar */
 $navbar-background-color: #656565;
 
 /* btn */
-$btn-primary-color: $primary-color;
+$btn-primary-color: lighten($primary-color, 10%);
