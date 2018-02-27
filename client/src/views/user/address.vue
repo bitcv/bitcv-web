@@ -10,13 +10,13 @@
       <div class="row">
         <div class="col-md-6 col-md-offset-3">
           <form class="form-horizontal">
-            <div class="form-group">
+            <div class="form-group no-corner">
               <label class="control-label col-md-4">收款地址:</label>
               <div class="col-md-8">
                 <input type="text" class="form-control">
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group no-corner">
               <label class="control-label col-md-4">输入手机号:</label>
               <div class="col-md-8">
                 <div class="input-group">
@@ -27,7 +27,7 @@
                 </div>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group no-corner">
               <label class="control-label col-md-4">输入手机验证码:</label>
               <div class="col-md-8">
                 <input type="text" class="form-control">

@@ -12,25 +12,20 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-         target: 'http://www.kingco.com',
-        // pathRewrite: {
-        //   '^/api': ''
-        // },
-        //target: 'http://192.168.31.252:8888',
-        // changeOrigin: true
+        target: 'http://www.kingco.com',
+        pathRewrite: {
+          '^/api': ''
+        }
       },
       '/storage': {
-         target: 'http://www.kingco.com',
-        // pathRewrite: {
-        //   '^/storage': ''
-        // },
-        //target: 'http://192.168.31.252:8888',
-        // changeOrigin: true
+        target: 'http://www.kingco.com',
+        pathRewrite: {
+          '^/storage': ''
+        }
       }
     },
 
     // Various Dev Server settings
-
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
@@ -63,12 +58,11 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../../server/resources/views/index.blade.php'),
-    //index: path.resolve(__dirname, '../../server/public/index.html'),
+    index: path.resolve(__dirname, '../../server/resources/views/admin.blade.php'),
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../../server/public'),
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: 'admin_static',
     assetsPublicPath: '/',
 
     /**

@@ -1,38 +1,47 @@
 <template>
   <div id="app">
-    <v-header v-if="$route.path!=='/share'"></v-header>
+    <v-header v-if="visible"></v-header>
     <div class="main-container">
       <router-view/>
     </div>
-    <v-footer v-if="$route.path!=='/share'"></v-footer>
+    <v-footer v-if="visible"></v-footer>
   </div>
 </template>
 
 <script>
-import Header from '@/components/header/Header.vue'
-import Footer from '@/components/footer/Footer.vue'
+import {mapState} from 'vuex'
+import Header from '@/components/header/header'
+import Footer from '@/components/footer/Footer'
 
 export default {
   name: 'App',
   components: {
     vHeader: Header,
     vFooter: Footer
+  },
+  computed: {
+    ...mapState({
+      path: state => state.route.path
+    }),
+    visible () {
+      return this.path !== '/share'
+    }
   }
 }
 </script>
 
 <style lang="scss">
   @import 'styles/index';
-  @import "./App.scss";
+  // @import "./App.scss";
 </style>
 
 <style lang="scss" scoped>
 .main-container {
-  background-color: #F2F2F2;
   margin: 40px 0 76px;
-  display: flex;
-  justify-content: center;
-  overflow: hidden;
-  min-height: calc(100vh - 418px);
+  // display: flex;
+  // justify-content: center;
+  // overflow: hidden;
+  // min-height: calc(100vh - 418px);
+  // background-color: #F2F2F2;
 }
 </style>

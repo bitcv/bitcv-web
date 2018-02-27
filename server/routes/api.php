@@ -51,6 +51,9 @@ Route::any('getplist/{p?}{chid?}','ProjectController@getPList');
 
 Route::any('getNewsList','NewsController@getNewsList');
 Route::any('getNewsDetail/{id?}','NewsController@getNewsDetail');
+Route::any('getWeChatList','NewsController@getWeChatList');
+Route::any('articleLists','NewsController@articleList');
+//Route::any('articleList','NewsController@articleList');
 
 //获取自己的登录信息
 Route::post('getUser', 'AdminController@getUser');

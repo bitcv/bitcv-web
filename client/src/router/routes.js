@@ -8,7 +8,10 @@ function getViews (path) {
 
 export default [{
   path: '/',
-  component: getComponent('home/Home')
+  component: getViews('home/home')
+}, {
+  path: '/discover',
+  component: getViews('discover/discover')
 }, {
   path: '/projList',
   component: getComponent('projList/ProjList')

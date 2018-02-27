@@ -1335,10 +1335,24 @@ class AdminController extends Controller
     }
 
     public function getMediaReportList(Request $request){
-        $projAdvisorList = Model\CrawlerSocialNews::join('project','crawler_socialnews.proj_id','=','project.id')
-            ->join('social','crawler_socialnews.social_id','=','social.id')
-            ->get()->toArray();
+        $params = $this->validation($request, [
+            'perpage' => 'required|numeric',
+            'pageno' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $offset = $perpage * ($pageno - 1);
 
-        return $this->output(['medisReportList' => $projAdvisorList]);
+        $projAdvisor = Model\CrawlerSocialNews::join('project','crawler_socialnews.proj_id','=','project.id')
+            ->join('social','crawler_socialnews.social_id','=','social.id');
+        $projAdvisorList = $projAdvisor->offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = $projAdvisor->count();
+
+        return $this->output([
+            'medisReportList' => $projAdvisorList,
+            'dataCount' => $dataCount,
+        ]);
     }
 }

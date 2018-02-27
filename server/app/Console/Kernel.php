@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $this->projReportWeiboHome();
+            $this->facebookCurl("https://www.baidu.com");
         })->everyMinute();
     }
 
@@ -397,7 +397,6 @@ class Kernel extends ConsoleKernel
         return $response;
     }
 
-
     private function UA()
     {
         $userAgent = [
@@ -410,5 +409,186 @@ class Kernel extends ConsoleKernel
         return $userAgent[rand(0, 3)];
     }
 
+
+    protected function Facebook(){
+
+        $socialList = Model\ProjSocial::where('social_id', 6)->get()->toArray();
+        foreach ($socialList as $socialtem) {
+
+            //$allContents = file_get_contents("bitcap.html");
+            $allContents = file_get_contents($socialtem['link_url']);
+            $patt = "/<body(.*?)<\/script>/smi";
+            if (preg_match_all($patt, $allContents, $result)) {
+
+                $portContent = $result[0][0];
+                $patter = "/head(.*?)<\/script>/smi";
+                if (preg_match_all($patter, $portContent, $result)) {
+                    $allhtml = $result[0][0];
+
+                    $pattern = "/class=\"_4-u2 _3xaf _3-95 _4-u8\"(.*)<\/div>/smi";
+                    if (preg_match_all($pattern, $allhtml, $result)) {
+                        $res = $result[0][0];
+                    }
+                    $res = $result[0][0];
+
+                    $patContent = "/<p>(.*?)<\/p>/ism";
+                    $patDate = "/data-utime=.*?(.*?)<\/abbr>/smi";
+                    $patName = "/<span class=\"fwn\s+fcg\".*?>(.*?)<\/span>/smi";
+                    $patlogo = "/_38vo\".*?>(.*?)<\/div>/smi";
+
+                    if (preg_match_all($patContent, $res, $contentItem) && preg_match_all($patDate, $res, $dateItem)
+                        && preg_match_all($patName, $res, $nameItem) && preg_match_all($patlogo, $res, $logoItem)) {
+
+                        for ($id = 0; $id < count($contentItem[1]); $id++) {
+                            $data[$id]['content'] = $contentItem[1][$id];
+                            $data[$id]['title'] = $nameItem[1][$id];
+                            $data[$id]['logo'] = str_replace('src=', 'alt', cut('src=', 'alt', $logoItem[0][$id]));
+                            $data[$id]['date'] = cut("data-utime=\"", "\" data-shorten", $dateItem[0][$id]);
+
+                            DB::insert('INSERT INTO crawler_socialnews (proj_id,social_id,official_name,title,logo_url,post_time,refer_url) VALUES (?,?,?,?,?,?,?)
+                            ON DUPLICATE KEY UPDATE post_time=VALUES(post_time)', [$socialtem['proj_id'], $socialtem['social_id'], $socialtem['link_url'], $data[$id]['title'], $data[$id]['logo'], date('Y-m-d H:i:s', $data[$id]['date']), $socialtem['link_url']]);
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    protected function Weibo(){
+
+        $socialList = Model\ProjSocial::where('social_id', 6)->get()->toArray();
+        foreach ($socialList as $socialtem) {
+            //$content = $this->weiCurl("https://weibo.com/bitcv?profile_ftype=1&is_all=1");
+            $content = $this->weiCurl($socialtem['link_url']);
+            $pattern = "/FM.view\((.*?)\)<\/script>/smi";
+            if (preg_match_all($pattern, $content, $result)) {
+                $list = $result[1];
+                //print_r($result[1]);
+                foreach ($list as $item) {
+                    $str = $item;
+                    $obj = json_decode($str);
+                    $arrayobj = $this->object_array($obj);
+
+                    if ($arrayobj['domid'] == "Pl_Official_MyProfileFeed__20") {
+                        $html = $obj->html;
+                        $weiboitem = array();
+                        $pattern = "/node-type=\"feed_list_content\".*?>(.*?)<\/div>/ism";
+                        $name_pattern = "/<img usercard=.*?>(.*?)/ism";
+                        $linkpattern = "/<div class=\"WB_from S_txt2\">(.*?)suda-data=\"key=tblog_home_new&value=feed_time/ism";
+
+                        if (preg_match_all($pattern, $html, $listitems) && preg_match_all($name_pattern, $html, $nameitems) && preg_match_all($linkpattern, $html, $linkitems)) {
+                            for ($id = 0; $id < count($listitems[1]); $id++) {
+                                $data[$id]['content'] = $listitems[1][$id];
+                                $data[$id]['title'] = $listitems[1][$id];
+                                $data[$id]['banner_url'] = self::cut("src=", " width", $nameitems[0][0]);
+                                $data[$id]['post_time'] = self::cut("title=", "date", $linkitems[0][0]);
+                                //print_r($data[$id]);
+
+                                DB::insert('INSERT INTO crawler_socialnews (proj_id,social_id,official_name,title,logo_url,post_time,refer_url) VALUES (?,?,?,?,?,?,?)
+                            ON DUPLICATE KEY UPDATE post_time=VALUES(post_time)', [$socialtem['proj_id'], $socialtem['social_id'], $socialtem['link_url'], $data[$id]['title'], $data[$id]['banner_url'], date('Y-m-d H:i:s', $data[$id]['post_time']), $socialtem['link_url']]);
+
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function object_array($array) {
+        if(is_object($array)) {
+            $array = (array)$array;
+        } if(is_array($array)) {
+            foreach($array as $key=>$value) {
+                $array[$key] = $this->object_array($value);
+            }
+        }
+        return $array;
+    }
+
+    function weiCurl($url){
+
+        $curlObj = curl_init();
+        curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($curlObj, CURLOPT_HEADER, 0);
+        curl_setopt($curlObj, CURLOPT_URL, $url);
+        //curl_setopt($curlObj, CURLOPT_COOKIEFILE, './cookie.txt');
+        //curl_setopt($curlObj, CURLOPT_COOKIEJAR, './cookie.txt');
+        curl_setopt($curlObj, CURLOPT_COOKIE, 'TC-Page-G0=b05711a62e11e2c666cc954f2ef362fb; SUB=_2AkMtz-Ppf8NxqwJRmP4Rz2zkZY5_zAvEieKbkxIyJRMxHRl-yj9jqlEntRB6Bk_NBoqbm0-fsRxfzgOi9DUseKjp6bH_; SUBP=0033WrSXqPxfM72-Ws9jqgMF55529P9D9Whp22-9s1yfYi_ArQwMlw1g');
+        curl_setopt($curlObj, CURLOPT_HTTPHEADER, array(
+            "Content-type: application/json; charset=utf-8",
+        ));
+        $result = curl_exec($curlObj);
+        curl_close($curlObj);
+        return $result;
+
+    }
+
+    protected function curlFacebook(){
+        //$socialList = Model\ProjSocial::where('social_id', 6)->get()->toArray();
+        //foreach ($socialList as $socialtem) {
+
+        //$allContents = file_get_contents("https://www.facebook.com/BitCapitalVendor");
+        $allContents = $this->facebookCurl("https://www.facebook.com/BitCapitalVendor");
+        $patt = "/<body(.*?)<\/script>/smi";
+        if (preg_match_all($patt, $allContents, $result)) {
+            $portContent = $result[0][0];
+            $patter = "/head(.*?)<\/script>/smi";
+            if (preg_match_all($patter, $portContent, $result)) {
+                $allhtml = $result[0][0];
+                $pattern = "/class=\"_4-u2 _3xaf _3-95 _4-u8\"(.*)<\/div>/smi";
+                if (preg_match_all($pattern, $allhtml, $result)) {
+                    $res = $result[0][0];
+                }
+                $res = $result[0][0];
+                $patContent = "/<p>(.*?)<\/p>/ism";
+                $patDate = "/data-utime=.*?(.*?)<\/abbr>/smi";
+                $patName = "/<span class=\"fwn\s+fcg\".*?>(.*?)<\/span>/smi";
+                $patlogo = "/_38vo\".*?>(.*?)<\/div>/smi";
+
+                if (preg_match_all($patContent, $res, $contentItem) && preg_match_all($patDate, $res, $dateItem)
+                    && preg_match_all($patName, $res, $nameItem) && preg_match_all($patlogo, $res, $logoItem)) {
+
+                    for ($id = 0; $id < count($contentItem[1]); $id++) {
+                        $data[$id]['content'] = $contentItem[1][$id];
+                        $data[$id]['title'] = $nameItem[1][$id];
+                        $data[$id]['logo'] = str_replace('src=', 'alt', cut('src=', 'alt', $logoItem[0][$id]));
+                        $data[$id]['date'] = self::cut("data-utime=\"", "\" data-shorten", $dateItem[0][$id]);
+                        //print_r($data[$id]);
+                        DB::insert('INSERT INTO crawler_socialnews (proj_id,social_id,official_name,title,logo_url,post_time,refer_url) VALUES (?,?,?,?,?,?,?)
+                            ON DUPLICATE KEY UPDATE post_time=VALUES(post_time)', [$socialtem['proj_id'], $socialtem['social_id'], $socialtem['link_url'], $data[$id]['title'], $data[$id]['logo'], date('Y-m-d H:i:s', $data[$id]['date']), $socialtem['link_url']]);
+
+                    }
+                }
+            }
+        }
+        // }
+    }
+
+    function facebookCurl($url){
+
+        $UserAgent = 'Mozilla/5.0 (Windows; U; Windows NT 5.2) Gecko/2008070208 Firefox/3.0.1';
+//        $curl = curl_init();
+//        curl_setopt($curl, CURLOPT_URL, $url);
+//        curl_setopt($curl, CURLOPT_USERAGENT, $UserAgent);
+//        $data = curl_exec($curl);
+//        curl_close($curl);
+//        return $data;
+        $UserAgent = 'Mozilla/5.0 (Windows; U; Windows NT 5.2) Gecko/2008070208 Firefox/3.0.1';
+        $curlObj = curl_init();
+        curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($curlObj, CURLOPT_HEADER, 0);
+        curl_setopt($curlObj, CURLOPT_URL, $url);
+        curl_setopt($curlObj, CURLOPT_USERAGENT, $UserAgent);
+        $result = curl_exec($curlObj);
+        curl_close($curlObj);
+        return $result;
+    }
+
+    
 }
 

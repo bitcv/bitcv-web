@@ -10,6 +10,15 @@
 .text-darker {
   color: $gray-darker;
 }
+.text-primary {
+  color: $primary-color;
+}
+.text-ellipsis {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* button */
 .btn-outline {
@@ -41,18 +50,52 @@
     border-color: lighten($gray, 5%);
   }
 }
+.btn-outline {
+  &, &:hover, &:focus {
+    background-color: transparent;
+  }
 
-/* form */
-.form-control {
-  border-radius: 0;
+  &.btn-primary {
+    color: $primary-color;
 
-  &:focus {
-    border-color: lighten($primary-color, 15%);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba($primary-color,.6)
+    &:hover, &:focus {
+      color: darken($primary-color, 10%);
+      background-color: transparent;
+    }
+  }
+
+  &.btn-default {
+    color: $gray;
+
+    &:hover, &:focus {
+      color: #fff;
+      background-color: transparent;
+    }
+  }
+
+  &.active {
+    background-color: transparent;
+    box-shadow: none;
   }
 }
-.input-group-btn .btn {
+.btn-nocorner {
   border-radius: 0;
+}
+
+/* form */
+.form-control:focus {
+  border-color: lighten($primary-color, 15%);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba($primary-color,.6)
+}
+.form-group.no-corner,
+.input-group.no-corner {
+  .form-control {
+    border-radius: 0;
+  }
+
+  .input-group-btn .btn {
+    border-radius: 0;
+  }
 }
 
 
@@ -63,5 +106,14 @@
     & > tr  > th {
       border-bottom: 5px solid #eee;
     }
+  }
+}
+
+/* panel */
+.panel-custom {
+  border-radius: 0;
+
+  > .panel-heading {
+    border-radius: 0;
   }
 }
