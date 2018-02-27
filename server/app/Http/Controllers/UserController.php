@@ -232,6 +232,7 @@ class UserController extends Controller
         }
         return $this->output();
     }
+
     public function resetPwd(Request $request){
         $params = $this->validation($request,[
             'mobile' =>'required|numeric',
@@ -253,5 +254,122 @@ class UserController extends Controller
         }
 
         return $this->output();
+    }
+
+    public function getUserAsset (Request $request) {
+        $params = $this->validation($request,[
+            'pageno' =>'required|numeric',
+            'perpage' =>'required|numeric',
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+
+        $userAssetModel = Model\UserAsset::join('token', 'user_asset.token_id', '=', 'token.id')
+            ->where('user_asset.id', $userId)
+            ->select('token.logo_url', 'token.symbol', 'token.price', 'user_asset.amount', 'user_asset.id');
+        $dataCount = $userAssetModel->count();
+        $offset = $perpage * ($pageno - 1);
+        $dataList = $userAssetModel->offset($offset)->limit($perpage)->get()->toArray();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $dataList,
+        ]);
+    }
+
+    public function getUserWallet (Request $request) {
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+        $userWalletList = Model\UserWallet::where('user_id', $userId)->get()->toArray();
+
+        return $this->output([
+            'dataList' => $userWalletList,
+        ]);
+    }
+
+    public function withdraw (Request $request) {
+        $params = $this->validation($request,[
+            'assetId' =>'required|numeric',
+            'walletAddr' => 'required|string',
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+
+        // 获取用户ID
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+
+        // 获取用户资产
+        $userAssetData = Model\UserAsset::join('token', 'user_asset.token_id', '=', 'token.id')
+            ->select('user_asset.amount', 'token.symbol', 'token.protocol')
+            ->where([['user_id', $userId], ['id', $assetId]])->first();
+        if ($userAssetData == null) {
+            return $this->error(208);
+        }
+        $tokenProtocol = $userAssetData->protocol;
+        $tokenSymbol = $userAssetData->symbol;
+        $amount = $userAssetData->amount;
+        if ($tokenProtocol !== 'ERC20') {
+            return $this->error(103);
+        }
+
+        // 保存用户钱包地址
+        Model\UserAddr::firstOrCreate([
+            'user_id' => $userId,
+            'token_protocol' => $protocol,
+            'addr' => $walletAddr,
+        ]);
+
+        // 调用接口提现
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/withdraw', [
+            'toAddr' => $walletAddr,
+            'amount' => $amount,
+            'tokenSymbol' => $tokenSymbol,
+        ]);
+        
+        $resArr = json_decode($resJson, true);
+        if (!$resArr || $resArr['errcode'] !== 0) {
+            return $this->error(307);
+        }
+
+        return $this->output();
+    }
+
+    public function getUserTxRecord (Request $request) {
+        $params = $this->validation($request,[
+            'papeno' =>'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+
+        // 获取用户ID
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/getTransferRecord', [
+            'toAddr' => $walletAddr,
+            'amount' => $amount,
+            'tokenSymbol' => $tokenSymbol,
+        ]);
+        
+        $resArr = json_decode($resJson, true);
+        if (!$resArr || $resArr['errcode'] !== 0) {
+            return $this->error(307);
+        }
     }
 }

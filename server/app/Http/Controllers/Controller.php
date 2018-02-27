@@ -21,6 +21,7 @@ class Controller extends BaseController
         '100' => ['errcode' => 100, 'errmsg' => '参数错误'],
         '101' => ['errcode' => 101, 'errmsg' => '未知错误'],
         '102' => ['errcode' => 102, 'errmsg' => '无权限'],
+        '103' => ['errcode' => 102, 'errmsg' => '暂未开通'],
         '110' => ['errcode' => 110, 'errmsg' => '文件名称错误'],
         // 用户错误码
         '201' => ['errcode' => 201, 'errmsg' => '用户名已注册'],
@@ -30,6 +31,7 @@ class Controller extends BaseController
         '205' => ['errcode' => 205, 'errmsg' => '密码格式不正确'],
         '206' => ['errcode' => 206, 'errmsg' => '验证码错误'],
         '207' => ['errcode' => 207, 'errmsg' => '未登录'],
+        '208' => ['errcode' => 208, 'errmsg' => '未找到相关资产'],
         // 项目错误码
         '301' => ['errcode' => 301, 'errmsg' => '项目不存在'],
         '302' => ['errcode' => 302, 'errmsg' => '社交ID不存在'],
