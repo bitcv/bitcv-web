@@ -79,8 +79,12 @@ class NewsController extends Controller{
             $data['post_time'] = substr($data['post_time'],0,10).str_replace("-",":",substr($data['post_time'],10));
             //return $data['post_time'];
             $projSocial = Model\ProjSocial::where([['link_url', $data['link_url']], ['social_id', 5]])->first();
-
-            DB::insert('insert into crawler_socialnews (proj_id, social_id,official_name,title,logo_url,refer_url,post_time) values (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE post_time=VALUES(post_time)', [$projSocial['proj_id'], $projSocial['social_id'],$projSocial['link_url'],$data['title'],$data['banner_url'],$data['refer_url'], $data['post_time']]);
+            $crawlerNews = Model\CrawlerSocialNews::where([['title', $data['title']]])->first();
+            if($crawlerNews){
+                Model\CrawlerSocialNews::where('title',$crawlerNews['title'])->update(['refer_url' => $data['refer_url']]);
+            }else{
+                DB::insert('insert into crawler_socialnews (proj_id, social_id,official_name,title,logo_url,refer_url,post_time) values (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE post_time=VALUES(post_time)', [$projSocial['proj_id'], $projSocial['social_id'],$projSocial['link_url'],$data['title'],$data['banner_url'],$data['refer_url'], $data['post_time']]);
+            }
 
         }
     }

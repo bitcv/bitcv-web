@@ -245,103 +245,44 @@
           <div v-if="activeName == 'dynamic'" class="tab-content">
             <div id="media" class="panel-body">
               <h4 class="sub-title">媒体报道</h4>
-              <div class="sub-content">
+              <div class="sub-content" :href="report.bannerUrl" target="_blank" v-for="(report, index) in info.reportList" :key="index">
                 <div class="media">
                   <div class="media-left">
-                    <img src="https://placehold.it/160x100" class="media-object" width="160">
+                    <img :src="report.logoUrl" alt="" class="media-object" width="160">
                   </div>
                   <div class="media-body">
-                    <p class="media-heading">区块链新锐BitCV获千万级天使融资</p>
-                    <p class="text-darker">数字资产管理数字资产管理数字资产管理数字资产管理数字资产管理数字资产管理数字资产管理数字资产管理数字资产管理</p>
+                    <p class="media-heading">{{report.title }}</p>
+                    <p class="text-darker" v-html="report.content"></p>
                     <p class="text-darker text-right">
-                      <span>亿欧网</span>
-                      <span class="text-dark">2018-01-30 10:00</span>
-                    </p>
-                  </div>
-                </div>
-                <div class="media">
-                  <div class="media-left">
-                    <img src="https://placehold.it/160x100" class="media-object" width="160">
-                  </div>
-                  <div class="media-body">
-                    <p class="media-heading">区块链新锐BitCV获千万级天使融资</p>
-                    <p class="text-darker">数字资产管理数字资产管理数字资产管理数字资产管理数字资产管理数字资产管理数字资产管理数字资产管理数字资产管理</p>
-                    <p class="text-darker text-right">
-                      <span>亿欧网</span>
-                      <span class="text-dark">2018-01-30 10:00</span>
+                      <span>{{ report.name }}</span>
+                      <span class="text-dark">{{ report.releaseTime}}</span>
                     </p>
                   </div>
                 </div>
               </div>
             </div>
-            <div id="offical" class="panel-body">
+            <div id="offical" class="panel-body" v-if="info.publicList && info.publicList.length">
               <h4 class="sub-title">官方公告</h4>
               <div class="sub-content">
                 <ul class="list-unstyled notice-list">
-                  <li class="clearfix">
-                    <span class="date">2018-02-21 13:58</span>
-                    <p class="content">[总结] BCV空投活动总结</p>
-                  </li>
-                  <li class="clearfix">
-                    <span class="date">2018-02-21 13:58</span>
-                    <p class="content">[总结] BCV空投活动总结</p>
-                  </li>
-                  <li class="clearfix">
-                    <span class="date">2018-02-21 13:58</span>
-                    <p class="content">[总结] BCV空投活动总结</p>
-                  </li>
-                  <li class="clearfix">
-                    <span class="date">2018-02-21 13:58</span>
-                    <p class="content">[总结] BCV空投活动总结</p>
-                  </li>
-                  <li class="clearfix">
-                    <span class="date">2018-02-21 13:58</span>
-                    <p class="content">[总结] BCV空投活动总结</p>
+                  <li class="clearfix" v-for="(notice, index) in info.publicList" :key="index">
+                    <span class="date">{{ notice.postTime | formatDate }}</span>
+                    <p class="content"><span v-html="notice.title"></span></p>
                   </li>
                 </ul>
               </div>
             </div>
-            <div id="community" class="panel-body">
+            <div id="community" class="panel-body" v-if="info.dynamicList && info.dynamicList.length">
               <h4 class="sub-title">社区发布</h4>
               <div class="sub-content community">
-                <div class="media">
+                <div class="media" v-for="(social, index) in info.dynamicList" :key="index">
                   <div class="media-left">
-                    <img src="https://placehold.it/40x40" class="media-object" width="40">
+                    <img :src="social.logoUrl" alt="" class="media-object" width="40">
                   </div>
                   <div class="media-body text-darker">
-                    <p class="media-heading">渡惊鹭mask</p>
-                    <p class="small text-dark">2月25日 11:21 来自 微博</p>
-                    <p class="content">大过年就好好过年撕什么撕？领个BCV糖果。<a href="#" class="more">查看原文</a></p>
-                  </div>
-                </div>
-                <div class="media">
-                  <div class="media-left">
-                    <img src="https://placehold.it/40x40" class="media-object" width="40">
-                  </div>
-                  <div class="media-body text-darker">
-                    <p class="media-heading">渡惊鹭mask</p>
-                    <p class="small text-dark">2月25日 11:21 来自 微博</p>
-                    <p class="content">大过年就好好过年撕什么撕？领个BCV糖果。<a href="#" class="more">查看原文</a></p>
-                  </div>
-                </div>
-                <div class="media">
-                  <div class="media-left">
-                    <img src="https://placehold.it/40x40" class="media-object" width="40">
-                  </div>
-                  <div class="media-body text-darker">
-                    <p class="media-heading">渡惊鹭mask</p>
-                    <p class="small text-dark">2月25日 11:21 来自 微博</p>
-                    <p class="content">大过年就好好过年撕什么撕？领个BCV糖果。<a href="#" class="more">查看原文</a></p>
-                  </div>
-                </div>
-                <div class="media">
-                  <div class="media-left">
-                    <img src="https://placehold.it/40x40" class="media-object" width="40">
-                  </div>
-                  <div class="media-body text-darker">
-                    <p class="media-heading">渡惊鹭mask</p>
-                    <p class="small text-dark">2月25日 11:21 来自 微博</p>
-                    <p class="content">大过年就好好过年撕什么撕？领个BCV糖果。<a href="#" class="more">查看原文</a></p>
+                    <p class="media-heading">{{ social.officialName }}</p>
+                    <p class="small text-dark">{{ social.postTime }} 来自 {{ social.name }}</p>
+                    <p class="content"><span v-html="social.title"></span><a :href="social.referUrl" class="more">查看原文</a></p>
                   </div>
                 </div>
               </div>
@@ -368,7 +309,7 @@
 <script>
 import {mapState, mapActions} from 'vuex'
 import {swiper, swiperSlide} from 'vue-awesome-swiper'
-
+import {formatDate} from '@/utils/utils'
 export default {
   components: {
     swiper,
@@ -383,6 +324,12 @@ export default {
       }
     }
   },
+  filters: {
+    formatDate (time) {
+      let date = new Date(time)
+      return formatDate(date, 'yyyy-MM-dd')
+    }
+  },
   computed: {
     ...mapState({
       proId: state => state.route.params.id
@@ -395,11 +342,9 @@ export default {
         companyAddr,
         companyEmail
       } = this.info
-
       if (companyAddr && companyEmail) {
         return `${companyEmail} ${companyAddr}`
       }
-
       return ''
     }
   },
@@ -430,21 +375,17 @@ export default {
 
 <style lang="scss" scoped>
 @import '~@/styles/variables';
-
 .span-group {
   margin-top: 15px;
   margin-bottom: 15px;
-
   > span {
     display: inline-block;
     vertical-align: middle;
-
     & + span {
       margin-left: 10px;
     }
   }
 }
-
 .tab-bar {
   .tab-item {
     display: inline-block;
@@ -453,11 +394,9 @@ export default {
     padding-bottom: 15px;
     color: $gray-dark;
     border-bottom: 2px solid transparent;
-
     &:hover {
       color: $primary-color;
     }
-
     &.active {
       color: $primary-color;
       border-color: $primary-color;
@@ -466,15 +405,12 @@ export default {
 }
 .component-wrapper {
   background-color: #fff;
-
   > .outer {
     margin: 0;
-
     > .col {
       padding: 0;
     }
   }
-
   .nav-tabs {
     > li {
       > a {
@@ -484,37 +420,31 @@ export default {
         border: none;
         border-radius: 0;
         border-bottom: 2px solid transparent;
-
         &:hover, &:focus {
           color: $primary-color;
           background-color: transparent;
         }
       }
-
       &.active > a {
         color: $black-light;
         border-bottom-color: $primary-color;
       }
     }
   }
-
   .sub-title {
     margin-bottom: 15px;
   }
-
   .swiper-slide {
     figure {
       img {
         width: 120px;
         height: 120px;
       }
-
       figcaption {
         font-size: 16px;
         margin: 20px 0;
       }
     }
-
     .desc {
       font-size: 14px;
       text-align: left;
@@ -522,7 +452,6 @@ export default {
       color: $gray-dark;
     }
   }
-
   .swiper-button-prev, .swiper-button-next {
     background-image: none;
     width: 30px;
@@ -534,7 +463,6 @@ export default {
     color: #fff;
     background-color: $gray;
     border-radius: 50%;
-
     &:hover {
       background-color: $primary-color;
     }
@@ -545,18 +473,15 @@ export default {
   .swiper-button-next {
     right: 20px;
   }
-
   .adviser-list {
     .thumbnail {
       border-radius: 0;
-
       > img,
       > .avatar-span {
         width: 100px;
         height: 100px;
         margin: 15px auto 10px;
       }
-
       .avatar-span {
         position: relative;
         display: block;
@@ -568,30 +493,25 @@ export default {
         background-color: $gray-light;
         border-radius: 50%;
       }
-
       .caption > p {
         margin: 0;
       }
     }
   }
-
   .partner-list {
     margin-left: -5px;
     margin-right: -5px;
-
     > .col {
       position: relative;
       padding-left: 5px;
       padding-right: 5px;
       padding-bottom: 80px;
       margin-bottom: 10px;
-
       img {
         max-width: 100%;
         max-height: 100%;
       }
     }
-
     .partner-item {
       display: flex;
       position: absolute;
@@ -605,12 +525,10 @@ export default {
     }
   }
 }
-
 .timelime {
   position: relative;
   padding-top: 20px;
   overflow: hidden;
-
   &:before {
     content: '';
     position: absolute;
@@ -620,7 +538,6 @@ export default {
     bottom: 10px;
     background-color: $gray;
   }
-
   .timelime-item {
     .label {
       display: block;
@@ -633,25 +550,21 @@ export default {
       color: $primary-color;
       text-align: right;
     }
-
     .time-list {
       position: relative;
       margin-top: 10px;
       margin-bottom: 20px;
       list-style-type: none;
       padding-left: 0;
-
       .item {
         padding-left: 180px;
         color: $gray-dark;
-
         .time {
           position: absolute;
           width: 140px;
           white-space: nowrap;
           left: 0;
           text-align: right;
-
           &:after {
             content: '';
             position: absolute;
@@ -669,17 +582,14 @@ export default {
     }
   }
 }
-
 .notice-list {
   li {
     line-height: 2;
-
     > .date {
       float: right;
       width: 120px;
       color: $gray-dark;
     }
-
     .content {
       margin-right: 120px;
       color: $gray-darker;
@@ -689,30 +599,24 @@ export default {
     }
   }
 }
-
 .community .media {
   border-bottom: 1px dashed $gray-light;
-
   .content {
     margin-top: 15px;
-
     > a.more {
       float: right;
       color: $primary-color;
     }
   }
 }
-
 @media (min-width: 992px) {
   .component-wrapper {
     > .outer {
       display: flex;
       flex-direction: row;
-
       > .col {
         position: relative;
         float: none;
-
         &:first-child:after {
           content: '';
           position: absolute;
@@ -724,28 +628,23 @@ export default {
         }
       }
     }
-
     .sub-content {
       padding-left: 20px;
     }
-
     .swiper-slide {
       figure {
         img {
           width: 150px;
           height: 150px;
         }
-
         figcaption {
           font-size: 18px;
         }
       }
-
       .desc {
         font-size: 16px;
       }
     }
-
     .swiper-button-prev {
       left: 50px;
     }

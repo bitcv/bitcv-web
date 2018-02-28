@@ -66,28 +66,14 @@
 <script>
 import ProjTimeLine from '@/components/projDetail/ProjTimeLine'
 export default {
+  props: {
+    projDetail: Object
+  },
   data () {
     return {
       activeIndex: 1,
-      projDetail: {}
+      noticeList: []
     }
-  },
-  mounted () {
-    // 获取项目信息
-    var projId = this.$route.params.id
-    console.log('projId:' + projId)
-    var that = this
-    this.$http.post('/api/getProjDetail', {
-      projId: projId
-    }).then(function (res) {
-      var resData = res.data
-      if (resData.errcode === 0) {
-        that.projDetail = resData.data
-        console.log(that.projDetail)
-      } else {
-        alert(resData.errmsg)
-      }
-    })
   },
   components: {
     ProjTimeLine
