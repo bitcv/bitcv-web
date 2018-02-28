@@ -457,7 +457,7 @@ class UserController extends Controller
 
     private function updateUserAsset ($userId) {
         // 获取用户进行中的交易记录
-        $recordIdArr = Model\UserTransferRecord::where('user_id', $userId)->pluck('record_id');
+        $recordIdArr = Model\UserTransferRecord::where([['user_id', $userId], ['status', 1]])->pluck('record_id');
         if ($recordIdArr == null) {
             return true;
         }
