@@ -58,7 +58,7 @@
             <tbody>
               <tr v-for="item in list" :key="item.id">
                 <td class="text-center">
-                  <a href="javascript:;" class="text-dark" :title="['关注', '取消关注'][item.focusStatus]" @click="handleFav(item)">
+                  <a href="javascript:;" :style="item.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" :title="['关注', '取消关注'][item.focusStatus]" @click="handleFav(item)">
                     <i class="icon-bcv" :class="{'icon-heart': item.focusStatus == 0, 'icon-heart-fill': item.focusStatus == 1}"></i>
                   </a>
                 </td>

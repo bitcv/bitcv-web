@@ -1,5 +1,23 @@
 <template>
   <div class="container">
+    <div id="shareBox" v-show="showShare" class="share-container" @click="showShare = false">
+      <share id="shareCard" :proj-detail="info"></share>
+    </div>
+    <!-- <div id="infoBox" class="info-box">
+      <img :src="info.logoUrl" alt="">
+      <div class="text-box">
+        <div class="top-row">
+          <span class="name-cn">{{ info.nameCn }}</span>
+          <span class="name-en">({{ info.nameEn }})</span>
+        </div>
+        <div class="bottom-row">
+          <span class="text-title">项目简称：</span>
+          <span class="text">{{ info.tokenName }}</span>
+          <span class="text-title">项目符号：</span>
+          <span class="text">{{ info.tokenSymbol }}</span>
+        </div>
+      </div>
+    </div> -->
     <div class="panel panel-custom">
       <div class="panel-body" style="padding:15px 30px 0;">
         <div class="row">
@@ -29,12 +47,12 @@
               <ul class="list-unstyled text-dark">
                 <li>
                   <p>{{ ['关注', '取消关注'][info.focusStatus] }}&nbsp;&nbsp;&nbsp;
-                    <a href="javascript:;" class="text-dark" @click="handleFocus">
+                    <a href="javascript:;" :style="info.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" @click="handleFocus">
                       <span class="icon-bcv" :class="{'icon-heart': info.focusStatus == 0, 'icon-heart-fill': info.focusStatus == 1}"></span>
                     </a>
                   </p>
                 </li>
-                <li><p>分享&nbsp;&nbsp;&nbsp;<a href="javascript:;"><span class="icon-bcv icon-share"></span></a></p></li>
+                <li><p>分享&nbsp;&nbsp;&nbsp;<a href="javascript:;" @click="openShare"><span class="icon-bcv icon-share"></span></a></p></li>
                 <li><p>关注：<span class="text-black fnum">{{ info.focusNum }}</span></p></li>
                 <li><p>浏览：<span class="text-black">{{ info.viewTimes }}</span></p></li>
               </ul>
@@ -57,10 +75,6 @@
                 <span class="icon-bcv" :class="'icon-'+item.name"></span>
               </a>
             </li>
-            <!--<li><a href="#" target="_blank"><span class="icon-bcv icon-github"></span></a></li>
-            <li><a href="#" target="_blank"><span class="icon-bcv icon-facebook"></span></a></li>
-            <li><a href="#" target="_blank"><span class="icon-bcv icon-telegram"></span></a></li>
-            <li><a href="#" target="_blank"><span class="icon-bcv icon-twitter"></span></a></li>-->
           </ul>
         </div>
       </div>
@@ -100,24 +114,6 @@
                       <p class="desc">{{ item.intro}}</p>
                     </div>
                   </swiper-slide>
-                  <!--<swiper-slide>
-                    <div class="text-center">
-                      <figure>
-                        <p><img class="img-circle" src="https://placehold.it/100x100"></p>
-                        <figcaption>伍星</figcaption>
-                      </figure>
-                      <p class="desc">清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员</p>
-                    </div>
-                  </swiper-slide>
-                  <swiper-slide>
-                    <div class="text-center">
-                      <figure>
-                        <p><img class="img-circle" src="https://placehold.it/100x100"></p>
-                        <figcaption>伍星</figcaption>
-                      </figure>
-                      <p class="desc">清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员</p>
-                    </div>
-                  </swiper-slide>-->
                   <div class="swiper-button-prev" slot="button-prev" @click="swiperPrev"><span class="icon-bcv icon-arrow-left"></span></div>
                   <div class="swiper-button-next" slot="button-next" @click="swiperNext"><span class="icon-bcv icon-arrow-right"></span></div>
                 </swiper>
@@ -162,75 +158,6 @@
                       </li>
                     </ul>
                   </div>
-                  <!--<div class="timelime-item">
-                    <p class="label">2018年第三季度</p>
-                    <ul class="time-list">
-                      <li class="item">
-                        <p class="time">08月31日</p>
-                        <p class="content">资管链整体上线启动运营</p>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="timelime-item">
-                    <p class="label">2018年第二季度</p>
-                    <ul class="time-list">
-                      <li class="item">
-                        <p class="time">04月25日</p>
-                        <p class="content">链评测投入运营</p>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="timelime-item">
-                    <p class="label">2018年第一季度</p>
-                    <ul class="time-list">
-                      <li class="item">
-                        <p class="time">03月01日</p>
-                        <p class="content">链服务投入运营</p>
-                      </li>
-                      <li class="item">
-                        <p class="time">02月20日</p>
-                        <p class="content">投融SaaS测试运行</p>
-                      </li>
-                      <li class="item">
-                        <p class="time">02月01日</p>
-                        <p class="content">财经通开始运营</p>
-                      </li>
-                      <li class="item">
-                        <p class="time">01月15日</p>
-                        <p class="content">第一版产品原型Demo完成，白皮书V1.1完成</p>
-                      </li>
-                      <li class="item">
-                        <p class="time">01月05日</p>
-                        <p class="content">启动天使轮融资</p>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="timelime-item">
-                    <p class="label">2017年第四季度</p>
-                    <ul class="time-list">
-                      <li class="item">
-                        <p class="time">12月01日</p>
-                        <p class="content">项目白皮书第一版完成，正式启动项目开发</p>
-                      </li>
-                      <li class="item">
-                        <p class="time">11月01日</p>
-                        <p class="content">项目初始原型与产品架构设计与规划完成</p>
-                      </li>
-                      <li class="item">
-                        <p class="time">10月01日</p>
-                        <p class="content">初始团队构建完成</p>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="timelime-item">
-                    <p class="label">2017年第三季度</p>
-                    <ul class="time-list">
-                      <li class="item">
-                        <p class="time">09月01日</p>
-                        <p class="content">项目初始规划启动</p>
-                      </li>
-                    </ul>
-                  </div>-->
                 </div>
               </div>
             </div><!-- /#develop -->
@@ -315,10 +242,17 @@
 import {mapState, mapActions} from 'vuex'
 import {swiper, swiperSlide} from 'vue-awesome-swiper'
 import {formatDate} from '@/utils/utils'
+import Share from '@/components/share/Share'
+import html2canvas from 'html2canvas'
+
 export default {
+  props: {
+    projDetail: Object
+  },
   components: {
     swiper,
-    swiperSlide
+    swiperSlide,
+    Share
   },
   data () {
     return {
@@ -326,7 +260,9 @@ export default {
       activeName: 'info',
       swiperOption: {
         autoplay: true
-      }
+      },
+      showShare: false,
+      shareUrl: ''
     }
   },
   filters: {
@@ -378,7 +314,37 @@ export default {
         })
       var tempnum = $('.fnum').text()
       var num = this.info.focusStatus === 0 ? parseInt(tempnum) + 1 : parseInt(tempnum) - 1
-      $('.fnum').text(num)
+      $(".fnum").text(num)
+    },
+    openShare: function () {
+      this.showShare = true
+      if (this.shareUrl) return
+      this.$nextTick(() => {
+        html2canvas(document.querySelector('#shareCard')).then(canvas => {
+          document.querySelector('#shareBox').innerHTML = ''
+          var url = canvas.toDataURL()
+          this.shareUrl = url
+          var newImg = document.createElement('img')
+          newImg.src = url
+          newImg.style.width = '90%'
+          newImg.class = 'share-img'
+          document.querySelector('#shareBox').appendChild(newImg)
+        })
+      })
+    },
+    toggleFocus: function () {
+      var userId = localStorage.getItem('userId')
+      if (!userId) {
+        return alert('请登录')
+      }
+      this.$http.post('/api/toggleFocus', {
+        projId: this.projDetail.id
+      }).then((res) => {
+        var resData = res.data
+        if (resData.errcode === 0) {
+          this.projDetail.focusStatus = resData.data.status
+        }
+      })
     }
   }
 }
@@ -679,4 +645,37 @@ export default {
   border-radius: 50%;
   margin: 0 auto;
 }
+.share-box {
+    height: 46px;
+    display: flex;
+    position: absolute;
+    right: 40px;
+    bottom: 0;
+    align-items: center;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000;
+    cursor: pointer;
+    img {
+      width: 23px;
+      height: 23px;
+      margin: 0 5px;
+    }
+  }
+  .share-container {
+    width: 400px;
+    position: fixed;
+    z-index: 10;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &>img {
+      width: 100%;
+    }
+  }
 </style>
