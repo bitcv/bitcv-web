@@ -5,8 +5,8 @@
         <div class="col-xs-6 text-center">
           <div class="text-darker">
             <span>总资产 (CNY) ≈ </span>
-            <span class="text-primary" style="font-size:48px">6987</span>
-            <span class="text-primary">.57</span>
+            <span class="text-primary" style="font-size:48px">{{ totalAssetArr[0] }}</span>
+            <span class="text-primary">.{{ totalAssetArr[1] }}</span>
           </div>
         </div>
         <div class="col-xs-6 text-right" style="padding-top:30px;">
@@ -26,80 +26,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0.126200 ≈ <span class="text-dark small">7982.61</span></td>
-          <td>可提取</td>
-          <td><button class="btn btn-text btn-sm" @click="onItemClick">立即提取</button></td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0.126200 ≈ <span class="text-dark small">7982.61</span></td>
-          <td>可提取</td>
-          <td><button class="btn btn-text btn-sm">立即提取</button></td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0.126200 ≈ <span class="text-dark small">7982.61</span></td>
-          <td>可提取</td>
-          <td><button class="btn btn-text btn-sm">立即提取</button></td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0.126200 ≈ <span class="text-dark small">7982.61</span></td>
-          <td>可提取</td>
-          <td><button class="btn btn-text btn-sm">立即提取</button></td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0.126200 ≈ <span class="text-dark small">7982.61</span></td>
-          <td>可提取</td>
-          <td><button class="btn btn-text btn-sm">立即提取</button></td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0.126200 ≈ <span class="text-dark small">7982.61</span></td>
-          <td>可提取</td>
-          <td><button class="btn btn-text btn-sm">立即提取</button></td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0.126200 ≈ <span class="text-dark small">7982.61</span></td>
-          <td>可提取</td>
-          <td><button class="btn btn-text btn-sm" disabled>立即提取</button></td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0.126200 ≈ <span class="text-dark small">7982.61</span></td>
-          <td>可提取</td>
-          <td><button class="btn btn-text btn-sm" disabled>立即提取</button></td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0.126200 ≈ <span class="text-dark small">7982.61</span></td>
-          <td>可提取</td>
-          <td>-</td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0.126200 ≈ <span class="text-dark small">7982.61</span></td>
-          <td>可提取</td>
-          <td>-</td>
+        <tr v-for="item in dataList" :key="item.id">
+          <td>{{ item.symbol }}</td>
+          <td>{{ item.price }}</td>
+          <td>{{ item.amount }} ≈ <span class="text-dark small">{{ item.amount * item.price }}</span></td>
+          <td v-if="protocolDict[item.protocol] === 'ERC20'">{{ statusDict[item.status] }}</td>
+          <td v-else>稍后提取</td>
+          <td v-if="statusDict[item.status] === '可提取'"><button class="btn btn-text btn-sm" @click="toWithdraw(item)">立即提取</button></td>
+          <td v-else>-</td>
         </tr>
       </tbody>
     </table>
     <div class="text-right">
-      <pagination :total="total" :current-page="currentPage" @onPageClick="onPageClick"></pagination>
+      <pagination :total="dataCount" :current-page="pageno" @onPageClick="onPageClick"></pagination>
     </div>
   </div>
 </template>
@@ -114,15 +53,59 @@ export default {
   data () {
     return {
       total: 85,
-      currentPage: 1
+      currentPage: 1,
+      perpage: 10,
+      pageno: 1,
+      dataCount: 0,
+      dataList: [],
+      protocolDict: {},
+      statusDict: {}
+    }
+  },
+  mounted () {
+    this.updateData()
+  },
+  computed: {
+    totalAssetArr () {
+      var totalAsset = 0
+      this.dataList.forEach(item => {
+        totalAsset += item.amount * item.price
+      })
+      return totalAsset.toString().split('.')
     }
   },
   methods: {
-    onPageClick (page) {
-      this.currentPage = page
+    updateData () {
+      this.$http.post('/api/getUserAsset', {
+        perpage: 10,
+        pageno: 1
+      }).then(res => {
+        if (res.data.errcode === 0) {
+          this.dataCount = res.data.data.dataCount
+          this.dataList = res.data.data.dataList
+          this.protocolDict = res.data.data.protocolDict
+          this.statusDict = res.data.data.statusDict
+        }
+      })
     },
-    onItemClick (item) {
-      this.$router.push('/wallet/withdraw/1')
+    onPageClick (pageno) {
+      this.pageno = pageno
+    },
+    toWithdraw (item) {
+      if (item.walletAddr) {
+        this.$http.post('/api/withdraw', {
+          assetId: item.id
+        }).then(res => {
+          if (res.data.errcode === 0) {
+            alert('提交成功')
+            this.updateData()
+          } else {
+            alert(res.data.errmsg)
+          }
+        })
+      } else {
+        this.$router.push('/wallet/withdraw/' + item.id)
+      }
     }
   }
 }

@@ -13,6 +13,12 @@ class DictUtil
         '4' => 'DOGE',
     ];
 
+    const UserAsset_Status = [
+        '1' => '可提取',
+        '2' => '转账中',
+        '3' => '已提取',
+    ];
+
     const DepositBox_Status = [
         '0' => '待付款',
         '1' => '进行中',

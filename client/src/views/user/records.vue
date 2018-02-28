@@ -15,59 +15,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0xce9eeb...fb03f29</td>
-          <td>2018-02-23 19:08:49</td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0xce9eeb...fb03f29</td>
-          <td>2018-02-23 19:08:49</td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0xce9eeb...fb03f29</td>
-          <td>2018-02-23 19:08:49</td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0xce9eeb...fb03f29</td>
-          <td>2018-02-23 19:08:49</td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0xce9eeb...fb03f29</td>
-          <td>2018-02-23 19:08:49</td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0xce9eeb...fb03f29</td>
-          <td>2018-02-23 19:08:49</td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0xce9eeb...fb03f29</td>
-          <td>2018-02-23 19:08:49</td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0xce9eeb...fb03f29</td>
-          <td>2018-02-23 19:08:49</td>
-        </tr>
-        <tr>
-          <td>BTC</td>
-          <td>0.126200</td>
-          <td>0xce9eeb...fb03f29</td>
-          <td>2018-02-23 19:08:49</td>
+        <tr v-for="item in recordList" :key="item.id">
+          <td>{{ item.symbol }}</td>
+          <td>{{ item.amount }}</td>
+          <td>{{ item.tx_hash }}</td>
+          <td>{{ item.tx_time }}</td>
         </tr>
       </tbody>
     </table>
@@ -87,12 +39,30 @@ export default {
   data () {
     return {
       total: 85,
-      currentPage: 1
+      currentPage: 1,
+      perpage: 10,
+      pageno: 1,
+      dataCount: 0,
+      recordList: []
     }
   },
+  mounted () {
+    this.updateData()
+  },
   methods: {
-    onPageClick (page) {
-      this.currentPage = page
+    updateData () {
+      this.$http.post('/api/getUserTransferRecord', {
+        perpage: this.perpage,
+        pageno: this.pageno
+      }).then(res => {
+        if (res.data.errcode === 0) {
+          this.dataCount = res.data.data.dataCount
+          this.recordList = res.data.data.dataList
+        }
+      })
+    },
+    onPageClick (pageno) {
+      this.pageno = pageno
     }
   }
 }
