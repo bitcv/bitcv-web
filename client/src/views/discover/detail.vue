@@ -378,7 +378,7 @@ export default {
         })
       var tempnum = $('.fnum').text()
       var num = this.info.focusStatus === 0 ? parseInt(tempnum) + 1 : parseInt(tempnum) - 1
-      $(".fnum").text(num)
+      $('.fnum').text(num)
     }
   }
 }
