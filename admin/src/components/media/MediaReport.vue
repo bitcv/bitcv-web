@@ -9,11 +9,13 @@
           <img class="table-image" :src="scope.row.logoUrl" alt="">
         </template>
       </el-table-column>
-      <el-table-column label="项目ID">
-        <template slot-scope="scope">{{ scope.row.projId }}</template>
+      <el-table-column label="项目项目">
+        <template slot-scope="scope">{{ scope.row.nameCn }}</template>
       </el-table-column>
-      <el-table-column label="社交ID">
-        <template slot-scope="scope">{{ scope.row.socialId }}</template>
+      <el-table-column label="社交来源">
+        <template slot-scope="scope">
+          <i class="fab" :class="scope.row.fontClass"></i>
+        </template>
       </el-table-column>
       <el-table-column label="标题">
         <template slot-scope="scope">{{ scope.row.title }}</template>
@@ -31,13 +33,19 @@
         </template>
       </el-table-column>
     </el-table>
+    <!--Pagination-->
+    <el-pagination class="footer-page-box" @size-change="onSizeChange" @current-change="onCurChange" :current-page="pageno" :page-sizes="[10, 20, 30, 40]" :page-size="perpage" layout="total, sizes, prev, pager, next, jumper" :total="dataCount">
+    </el-pagination>
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
-      mediaReportList: []
+      mediaReportList: [],
+      pageno: 1,
+      perpage: 10,
+      dataCount: 0
     }
   },
   mounted () {
@@ -45,9 +53,13 @@ export default {
   },
   methods: {
     updateData () {
-      this.$http.get('/api/getMediaReportList').then((res) => {
+      this.$http.get('/api/getMediaReportList', {
+        pageno: this.pageno,
+        perpage: this.perpage
+      }).then((res) => {
         if (res.data.errcode === 0) {
           this.mediaReportList = res.data.data.medisReportList
+          this.dataCount = res.data.data.dataCount
         }
       })
     },
@@ -74,6 +86,14 @@ export default {
           this.updateData()
         }
       })
+    },
+    onSizeChange (perpage) {
+      this.perpage = perpage
+      this.updateData()
+    },
+    onCurChange (pageno) {
+      this.pageno = pageno
+      this.updateData()
     }
   }
 }

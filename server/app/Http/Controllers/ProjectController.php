@@ -179,35 +179,24 @@ class ProjectController extends Controller
         // 获取媒体报道信息
         $projReportList = Model\ProjReport::join('media', 'proj_report.media_id', '=', 'media.id')
             ->where('proj_id', $projId)
-            ->select('name', 'logo_url', 'link_url', 'title')
+            ->limit(5)->orderBy('proj_report.release_time','desc')
+            ->select('name', 'logo_url', 'link_url', 'title','content','release_time','banner_url')
             ->limit(4)->get()->toArray();
         $projData['reportList'] = $projReportList;
 
-
-        //$projDynamicList = Model\ProjSocial::join('social','proj_social.social_id','=','social.id')->where([['proj_id', $projId], ['status', 1]])
-        //    ->limit(4)->orderBy('proj_social.created_at','desc')->get()->toArray();
-        //$projData['dynamicList'] = $projDynamicList;
-
         $projDynamicList = Model\CrawlerSocialNews::join('social','crawler_socialnews.social_id','=','social.id')
             ->where([['proj_id', $projId]])
-            ->limit(4)->orderBy('crawler_socialnews.created_at','desc')
-            ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.refer_url','crawler_socialnews.official_name','crawler_socialnews.title','crawler_socialnews.logo_url','social.font_class')
+            ->whereIn('social_id', [2,3,5,6])
+            ->limit(4)->orderBy('crawler_socialnews.post_time','desc')
+            ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.refer_url','crawler_socialnews.official_name','crawler_socialnews.title','crawler_socialnews.logo_url','social.font_class','social.name')
             ->get()->toArray();
 
-//        $projDynamicList = Model\ProjSocial::join('social','proj_social.social_id','=','social.id')->where([['proj_id', $projId], ['status', 1]])
-//            ->limit(10)->orderBy('proj_social.created_at','desc')->get()->toArray();
         $projData['dynamicList'] = $projDynamicList;
-
-        //$projPublicList = Model\ProjSocial::join('social','proj_social.social_id','=','social.id')
-        //    ->where([['proj_id', $projId], ['status', 1]])
-        //    ->whereIn('social_id', [5])
-        //    ->limit(2)->orderBy('proj_social.created_at','desc')->get()->toArray();
-        //$projData['publicList'] = $projPublicList;
 
         $projPublicList = Model\CrawlerSocialNews::join('social','crawler_socialnews.social_id','=','social.id')
             ->where([['proj_id', $projId]])
             ->whereIn('social_id', [5])
-            ->limit(5)->orderBy('crawler_socialnews.created_at','desc')
+            ->limit(5)->orderBy('crawler_socialnews.post_time','desc')
             ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.title','crawler_socialnews.refer_url')
             ->get()->toArray();
         $projData['publicList'] = $projPublicList;

@@ -44,6 +44,7 @@ class Controller extends BaseController
         '307' => ['errcode' => 307, 'errmsg' => '支付金额与订单金额不符'],
         '308' => ['errcode' => 308, 'errmsg' => '未填写合约地址'],
         '309' => ['errcode' => 309, 'errmsg' => '没有发现相关联的交易'],
+        '310' => ['errcode' => 310, 'errmsg' => '资讯不存在'],
         // 余币宝相关错误码
         '401' => ['errcode' => 401, 'errmsg' => '未找到订单'],
         '402' => ['errcode' => 402, 'errmsg' => '无法取消该订单'],

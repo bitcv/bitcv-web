@@ -30,9 +30,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command("crawl:data weibo")->everyMinute()->withoutOverlapping();
-        $schedule->command("crawl:data wechat")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:data facebook")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:data twitter")->everyMinute()->withoutOverlapping();
     }
     
+
 
     /**
      * Register the Closure based commands for the application.
@@ -45,5 +47,6 @@ class Kernel extends ConsoleKernel
     }
 
 }
+
 
 

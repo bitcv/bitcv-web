@@ -3,7 +3,7 @@
     <h3 class="panel-title">资讯</h3>
     <div class="list-container">
       <a class="item-container" v-for="(news, index) in newsList" :key="index" :href="news.url" target="_blank">
-        <router-link :to="{ path: 'newdetail/' + news.id}">
+        <router-link :to="{ path: 'newsdetail/' + news.id}">
         <span class="text">{{ news.title }}</span>
         <span class="time">{{ news.releaseTime }}</span>
         </router-link>

@@ -27,7 +27,7 @@
       </thead>
       <tbody>
         <tr v-for="item in dataList" :key="item.id">
-          <td>{{ item.symbol }}</td>
+          <td><img :src="item.logoUrl" class="img-circle" style="max-width: 40px;max-height: 40px;"/>&nbsp;&nbsp;{{ item.symbol }}</td>
           <td>{{ item.price }}</td>
           <td>{{ item.amount }} ≈ <span class="text-dark small">{{ item.amount * item.price }}</span></td>
           <td v-if="protocolDict[item.protocol] === 'ERC20'">{{ statusDict[item.status] }}</td>

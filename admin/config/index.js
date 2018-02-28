@@ -12,13 +12,13 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://www.kingco.com/api',
+        target: 'http://www.kingco.com',
         pathRewrite: {
           '^/api': ''
         }
       },
       '/storage': {
-        target: 'http://www.kingco.com/storage',
+        target: 'http://www.kingco.com',
         pathRewrite: {
           '^/storage': ''
         }

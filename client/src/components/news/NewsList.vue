@@ -1,7 +1,7 @@
 <template>
   <div class = "new-list">
     <div class="main-panel">
-      <new-table-panel></new-table-panel>
+      <news-table-panel></news-table-panel>
     </div>
     <div class="aside-panel">
       <top-list-panel v-for="item in topList" :key="item.type" :list-data="item"></top-list-panel>
@@ -10,7 +10,7 @@
 </template>
 <script>
 import TopListPanel from '@/components/projList/TopListPanel'
-import NewTablePanel from '@/components/news/NewTablePanel'
+import NewsTablePanel from '@/components/news/NewsTablePanel'
 export default {
   data () {
     return {
@@ -22,7 +22,7 @@ export default {
   },
   components: {
     TopListPanel,
-    NewTablePanel
+    NewsTablePanel
   }
 }
 </script>

@@ -34,7 +34,6 @@
 
 <script>
 import Popside from '@/components/popside/popside'
-
 export default {
   components: {
     Popside
@@ -62,23 +61,19 @@ export default {
 
 <style lang="scss">
 @import '~@/styles/variables';
-
 .navbar-inverse {
   background-color: #656565;
   border-color: #666;
-
   .navbar-toggle {
     padding: 7px 10px;
     padding-left: 15px;
     margin-top: 5px;
     margin-bottom: 5px;
     border-color: transparent;
-
     .icon-bar {
       position: relative;
       width: 24px;
       height: 3px;
-
       &:before {
         position: absolute;
         content: '';
@@ -90,30 +85,24 @@ export default {
       }
     }
   }
-
   .navbar-brand {
     padding-top: 10px;
     padding-bottom: 10px;
-
     > img {
       display: block;
     }
   }
-
   .dropdown-toggle {
     display: block;
     padding: 5px;
-
     > img {
       width: 40px;
       height: 40px;
       display: block;
     }
   }
-
   .btn-outline {
     color: $gray;
-
     &:hover, &:focus {
       color: #fff;
     }

@@ -3,10 +3,10 @@
     <div class="resetpwd">
     <h3 class="panel-title center-title">重设密码</h3>
     <form>
-        <input v-model="passwd" type="password" placeholder="请输入新的密码">
-        <input v-model="repasswd" type="password" placeholder="请再次输入新的密码">
-        <button @click.prevent="resetPwd">确定</button>
-      </form>
+      <input v-model="passwd" type="password" placeholder="请输入新的密码">
+      <input v-model="repasswd" type="password" placeholder="请再次输入新的密码">
+      <button @click.prevent="resetPwd">确定</button>
+    </form>
     </div>
   </div>
 </template>

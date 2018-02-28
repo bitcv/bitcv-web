@@ -84,11 +84,11 @@ export default [{
   path: '/resetpwd/:mobile',
   component: getComponent('sign/ResetPwd')
 }, {
-  path: '/newList',
-  component: getComponent('news/NewList')
+  path: '/newslist',
+  component: getComponent('news/NewsList')
 }, {
-  path: '/newDetail/:id',
-  component: getComponent('news/newDetail')
+  path: '/newsdetail/:id',
+  component: getComponent('news/NewsDetail')
 }, {
   path: '/apply',
   component: getComponent('apply/Apply')
