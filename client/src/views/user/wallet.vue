@@ -19,7 +19,7 @@
       <thead class="shadow-thead">
         <tr>
           <th>币种</th>
-          <th>最新价</th>
+          <th>参考价</th>
           <th>数量</th>
           <th>状态</th>
           <th style="width:120px">操作</th>
