@@ -10,6 +10,6 @@ export default new Vuex.Store({
   mutations,
   state: {
     // 保存用户登录状态
-    token: null
+    userInfo: null
   }
 })

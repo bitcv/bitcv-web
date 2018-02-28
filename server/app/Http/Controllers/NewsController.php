@@ -56,23 +56,32 @@ class NewsController extends Controller{
     }
 
     public function articleList(Request $request){
-
-        $condition = $request->all();
-        //file_put_contents('./log.log',var_export($condition,true));
-        $result = var_export($condition,true);
-        $data = json_decode($result['data'],true);
+        $params = $this->validation($request, [
+            'linkUrl' => 'required|string',
+            'data' => 'required|array',
+        ]);
+        $requestData = $request->all();
+        $linkUrl = $requestData['linkUrl'];
+        $data = $requestData['data'];
+        $dataArr = json_decode($data, true);
+        $data = json_decode($requestData['data'],true);
         $articleList = $data['article'];
 
         for($id = 0; $id < count($data['article']); $id++){
             $article = $articleList[$id];
-            $data['link_url'] = $result['linkUrl'];
+            $data['link_url'] = $requestData['linkUrl'];
             $data['refer_url'] = $article['content_url'];
             $data['content'] = $article['abstract'];
             $data['official_name'] = $article['author'];
             $data['title'] = $article['title'];
             $data['banner_url'] = $article['cover'];
             $data['post_time'] = date('Y-m-d H-i-s', $article['datetime']);
-            DB::table('crawler_socialnews')->where('link_url',$data['link_url'])->update(['refer_url'=>$data['refer_url']]);
+            $data['post_time'] = substr($data['post_time'],0,10).str_replace("-",":",substr($data['post_time'],10));
+            //return $data['post_time'];
+            $projSocial = Model\ProjSocial::where([['link_url', $data['link_url']], ['social_id', 5]])->first();
+
+            DB::insert('insert into crawler_socialnews (proj_id, social_id,official_name,title,logo_url,refer_url,post_time) values (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE post_time=VALUES(post_time)', [$projSocial['proj_id'], $projSocial['social_id'],$projSocial['link_url'],$data['title'],$data['banner_url'],$data['refer_url'], $data['post_time']]);
+
         }
     }
 

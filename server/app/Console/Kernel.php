@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $this->facebookCurl("https://www.baidu.com");
+            $this->Facebook();
         })->everyMinute();
     }
 
@@ -412,7 +412,12 @@ class Kernel extends ConsoleKernel
 
     protected function Facebook(){
 
-        $socialList = Model\ProjSocial::where('social_id', 6)->get()->toArray();
+        $socialList = Model\ProjSocial::join('project','project.id','=','proj_social.proj_id')
+            ->where('proj_social.social_id', 6)
+            ->where('project.status',1)
+            ->first();
+
+        return $socialList;
         foreach ($socialList as $socialtem) {
 
             //$allContents = file_get_contents("bitcap.html");
@@ -587,6 +592,49 @@ class Kernel extends ConsoleKernel
         $result = curl_exec($curlObj);
         curl_close($curlObj);
         return $result;
+    }
+
+
+    protected function FacebookH(){
+        $socialList = Model\ProjSocial::where('social_id', 2)->get()->toArray();
+        print_r($socialList);
+        foreach ($socialList as $socialtem) {
+
+            //$allContents = file_get_contents("https://www.facebook.com/BitCapitalVendor");
+            $allContents = $this->facebookCurl($socialtem['link_url']);
+            $patt = "/<body(.*?)<\/script>/smi";
+            if (preg_match_all($patt, $allContents, $result)) {
+                $portContent = $result[0][0];
+                $patter = "/head(.*?)<\/script>/smi";
+                if (preg_match_all($patter, $portContent, $result)) {
+                    $allhtml = $result[0][0];
+                    $pattern = "/class=\"_4-u2 _3xaf _3-95 _4-u8\"(.*)<\/div>/smi";
+                    if (preg_match_all($pattern, $allhtml, $result)) {
+                        $res = $result[0][0];
+
+                        $patContent = "/<p>(.*?)<\/p>/ism";
+                        $patDate = "/data-utime=.*?(.*?)<\/abbr>/smi";
+                        $patName = "/<span class=\"fwn\s+fcg\".*?>(.*?)<\/span>/smi";
+                        $patlogo = "/_38vo\".*?>(.*?)<\/div>/smi";
+
+                        if (preg_match_all($patContent, $res, $contentItem) && preg_match_all($patDate, $res, $dateItem)
+                            && preg_match_all($patName, $res, $nameItem) && preg_match_all($patlogo, $res, $logoItem)) {
+
+                            for ($id = 0; $id < count($contentItem[1]) - 1; $id++) {
+                                $data[$id]['content'] = $contentItem[1][$id];
+                                $data[$id]['title'] = self::cut("nf\">","</a>",$nameItem[0][$id]);
+                                $data[$id]['logo'] = str_replace('src=', 'alt', self::cut('src=', 'alt', $logoItem[0][$id]));
+                                $data[$id]['post_time'] =(int)(self::cut("data-utime=\"", "\" data-shorten", $dateItem[0][$id]));
+                                print_r($data[$id]);
+                                DB::insert('INSERT INTO crawler_socialnews (proj_id,social_id,official_name,title,logo_url,post_time,refer_url) VALUES (?,?,?,?,?,?,?)
+                           ON DUPLICATE KEY UPDATE post_time=VALUES(post_time)', [$socialtem['proj_id'], $socialtem['social_id'], $data[$id]['title'],$data[$id]['content'], $data[$id]['logo'], date('Y-m-d H:i:s', $data[$id]['post_time']), $socialtem['link_url']]);
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     
