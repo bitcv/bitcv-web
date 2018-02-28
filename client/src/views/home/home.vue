@@ -75,7 +75,7 @@
         <p style="margin-bottom:20px;">
           <router-link to="/apply" class="btn btn-primary btn-block btn-outline btn-lg btn-nocorner" style="line-height:2;">立即创建项目</router-link>
         </p>
-        <div class="panel panel-custom text-darker" style="min-height:150px;">
+        <!--<div class="panel panel-custom text-darker" style="min-height:150px;">
           <div class="panel-heading">
             <h4 class="panel-title">lianbi说</h4>
           </div>
@@ -85,7 +85,7 @@
               <p class="list-group-item-text text-right text-dark">{{ item.releaseTime }}</p>
             </router-link>
           </ul>
-        </div>
+        </div>-->
       </div>
     </div>
   </div>
@@ -199,9 +199,12 @@ export default {
   padding-top: 12px;
   padding-bottom: 12px;
   font-weight: normal;
+  border-bottom: 1px solid #eee;
+  color: #ccc;
 }
 .table > tbody > tr > td {
   vertical-align: middle;
+  border-color: #eee;
 }
 
 .recommend {

@@ -16,8 +16,7 @@
             </div>
             <p class="span-group">
               <span class="text-dark">标签</span>
-              <span>数字管理</span>
-              <span>SaaS</span>
+              <span v-for="(item, index) in info.tagList" :key="index">{{ item }}</span>
             </p>
           </div>
           <div class="col-md-6 md-mg-t">
@@ -36,7 +35,7 @@
                   </p>
                 </li>
                 <li><p>分享&nbsp;&nbsp;&nbsp;<a href="javascript:;"><span class="icon-bcv icon-share"></span></a></p></li>
-                <li><p>关注：<span class="text-black">{{ info.focusNum }}</span></p></li>
+                <li><p>关注：<span class="text-black fnum">{{ info.focusNum }}</span></p></li>
                 <li><p>浏览：<span class="text-black">{{ info.viewTimes }}</span></p></li>
               </ul>
             </div>
@@ -53,11 +52,15 @@
         <div class="col-md-6 text-right hidden-xs hidden-sm">
           <ul class="list-inline text-darker">
             <li class="text-dark">社区</li>
-            <li><a href="#" target="_blank"><span class="icon-bcv icon-weibo"></span></a></li>
-            <li><a href="#" target="_blank"><span class="icon-bcv icon-github"></span></a></li>
+            <li v-for="(item, index) in info.socialList" :key="index">
+              <a :href="item.linkUrl" target="_blank">
+                <span class="icon-bcv" :class="'icon-'+item.name"></span>
+              </a>
+            </li>
+            <!--<li><a href="#" target="_blank"><span class="icon-bcv icon-github"></span></a></li>
             <li><a href="#" target="_blank"><span class="icon-bcv icon-facebook"></span></a></li>
             <li><a href="#" target="_blank"><span class="icon-bcv icon-telegram"></span></a></li>
-            <li><a href="#" target="_blank"><span class="icon-bcv icon-twitter"></span></a></li>
+            <li><a href="#" target="_blank"><span class="icon-bcv icon-twitter"></span></a></li>-->
           </ul>
         </div>
       </div>
@@ -66,10 +69,10 @@
       <div class="row">
         <div class="col-md-8">
           <ul v-if="activeName == 'info'" class="nav nav-tabs">
-            <li><a href="#info">项目信息</a></li>
-            <li><a href="#team">团队信息</a></li>
-            <li><a href="#develop">项目发展</a></li>
-            <li><a href="#partner">合作伙伴</a></li>
+            <li><a href="#info" onclick="javascript:$(this).css('border-color','#fdb76e').parent().siblings().children('li a').css('border-color','')">项目信息</a></li>
+            <li><a href="#team" onclick="javascript:$(this).css('border-color','#fdb76e').parent().siblings().children('li a').css('border-color','')">团队信息</a></li>
+            <li><a href="#develop" onclick="javascript:$(this).css('border-color','#fdb76e').parent().siblings().children('li a').css('border-color','')">项目发展</a></li>
+            <li><a href="#partner" onclick="javascript:$(this).css('border-color','#fdb76e').parent().siblings().children('li a').css('border-color','')">合作伙伴</a></li>
           </ul>
           <ul v-if="activeName == 'dynamic'" class="nav nav-tabs">
             <li><a href="#media">媒体报道</a></li>
@@ -84,18 +87,20 @@
             <div id="info" class="panel-body">
               <div class="sub-content">
                 <swiper :options="swiperOption" ref="swiper">
-                  <swiper-slide>
+                  <swiper-slide v-for="(item, index) in info.memberList" :key="index">
                     <div class="text-center">
                       <figure>
                         <p>
-                          <img class="img-circle" src="https://placehold.it/100x100">
+                          <!--<img class="img-circle" src="https://placehold.it/100x100">-->
+                          <img v-if="item.photoUrl" :src="item.photoUrl" class="img-circle">
+                          <span v-else class="avatar-span">{{ item.name ? item.name.substr(0, 1) : '' }}</span>
                         </p>
-                        <figcaption>伍星</figcaption>
+                        <figcaption>{{ item.name }}</figcaption>
                       </figure>
-                      <p class="desc">清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员</p>
+                      <p class="desc">{{ item.intro}}</p>
                     </div>
                   </swiper-slide>
-                  <swiper-slide>
+                  <!--<swiper-slide>
                     <div class="text-center">
                       <figure>
                         <p><img class="img-circle" src="https://placehold.it/100x100"></p>
@@ -112,7 +117,7 @@
                       </figure>
                       <p class="desc">清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员清华大学五道口金融学院全球创业领袖班学员。2004年毕业于北京工商大学，和第六届自组织理事团队核心成员</p>
                     </div>
-                  </swiper-slide>
+                  </swiper-slide>-->
                   <div class="swiper-button-prev" slot="button-prev" @click="swiperPrev"><span class="icon-bcv icon-arrow-left"></span></div>
                   <div class="swiper-button-next" slot="button-next" @click="swiperNext"><span class="icon-bcv icon-arrow-right"></span></div>
                 </swiper>
@@ -140,7 +145,7 @@
               <div class="sub-content">
                 <article class="text-darker">
                   <p v-if="info.bannerUrl"><img :src="info.bannerUrl"></p>
-                  <p>info.abstract</p>
+                  <p>{{ info.abstract }}</p>
                 </article>
               </div>
             </div><!-- /#team -->
@@ -148,16 +153,16 @@
               <h4 class="sub-title">项目发展</h4>
               <div class="sub-content">
                 <div class="timelime">
-                  <div class="timelime-item">
-                    <p class="label">2019年第一季度</p>
+                  <div class="timelime-item" v-for="(item, index) in info.eventList" :key="index">
+                    <p class="label">{{ item.eventKey }}</p>
                     <ul class="time-list">
-                      <li class="item">
-                        <p class="time">03月01日</p>
-                        <p class="content">资管生态建立完成</p>
+                      <li class="item" v-for="(item2,i) in item.eventNode" :key="i">
+                        <p class="time">{{ item2.time}}</p>
+                        <p class="content">{{ item2.title}}</p>
                       </li>
                     </ul>
                   </div>
-                  <div class="timelime-item">
+                  <!--<div class="timelime-item">
                     <p class="label">2018年第三季度</p>
                     <ul class="time-list">
                       <li class="item">
@@ -225,7 +230,7 @@
                         <p class="content">项目初始规划启动</p>
                       </li>
                     </ul>
-                  </div>
+                  </div>-->
                 </div>
               </div>
             </div><!-- /#develop -->
@@ -352,7 +357,10 @@ export default {
     this.fetch()
   },
   methods: {
-    ...mapActions(['getProDetail']),
+  ...mapActions([
+          'getProDetail',
+          'updateFocus'
+      ]),
     swiperPrev () {
       this.swiper.slidePrev()
     },
@@ -368,9 +376,13 @@ export default {
         .then(data => {
           this.$set(this.info, 'focusStatus', this.info.focusStatus === 0 ? 1 : 0)
         })
+          var tempnum = $('.fnum').text();
+          var num = this.info.focusStatus === 0 ? parseInt(tempnum) + 1 : parseInt(tempnum) - 1 ;
+          $(".fnum").text(num);
     }
   }
 }
+
 </script>
 
 <style lang="scss" scoped>
@@ -652,5 +664,19 @@ export default {
       right: 50px;
     }
   }
+}
+.avatar-span {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  display: block;
+  line-height: 150px;
+  font-size: 30px;
+  color: #666;
+  text-align: center;
+  text-transform: uppercase;
+  background-color: #e5e5e5;
+  border-radius: 50%;
+  margin: 0 auto;
 }
 </style>
