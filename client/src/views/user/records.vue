@@ -18,8 +18,8 @@
         <tr v-for="item in recordList" :key="item.id">
           <td>{{ item.symbol }}</td>
           <td>{{ item.amount }}</td>
-          <td>{{ item.tx_hash }}</td>
-          <td>{{ item.tx_time }}</td>
+          <td>{{ item.txHash }}</td>
+          <td>{{ item.txTime }}</td>
         </tr>
       </tbody>
     </table>
