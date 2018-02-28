@@ -24,6 +24,7 @@
                 <el-form-item label="锁仓期">{{ props.row.lockTime }}个月</el-form-item>
                 <el-form-item label="总回报">{{ props.row.interestRate * props.row.orderAmount * props.row.lockTime / 12 }}枚</el-form-item>
                 <el-form-item label="交易哈希">{{ props.row.txHash }}</el-form-item>
+                <el-form-item label="下单时间">{{ convertDate(props.row.orderTime) }}</el-form-item>
               </el-form>
             </template>
           </el-table-column>

@@ -10,7 +10,7 @@
 
 <script>
 import {mapState, mapMutations} from 'vuex'
-import Header from '@/components/header/header'
+import Header from '@/components/header/Header'
 import Footer from '@/components/footer/Footer'
 
 export default {

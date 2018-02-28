@@ -14,6 +14,12 @@ Route::any('signout', 'UserController@signout');
 Route::any('getVcode','UserController@getVcode');
 Route::any('checkVcode','UserController@checkVcode');
 Route::any('resetPwd','UserController@resetPwd');
+Route::any('getUserAsset','UserController@getUserAsset');
+Route::any('getUserWallet','UserController@getUserWallet');
+Route::any('getUserTransferRecord','UserController@getUserTransferRecord');
+Route::any('withdraw','UserController@withdraw');
+Route::any('addUserWallet','UserController@addUserWallet');
+
 //Route::group(['middleware' => 'checkLogin'], function () {
 Route::any('getUserInfo', 'UserController@getUserInfo');
 Route::any('updateUserInfo', 'UserController@updateUserInfo');

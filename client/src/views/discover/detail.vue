@@ -357,10 +357,10 @@ export default {
     this.fetch()
   },
   methods: {
-  ...mapActions([
-          'getProDetail',
-          'updateFocus'
-      ]),
+    ...mapActions([
+      'getProDetail',
+      'updateFocus'
+    ]),
     swiperPrev () {
       this.swiper.slidePrev()
     },
@@ -376,9 +376,9 @@ export default {
         .then(data => {
           this.$set(this.info, 'focusStatus', this.info.focusStatus === 0 ? 1 : 0)
         })
-          var tempnum = $('.fnum').text();
-          var num = this.info.focusStatus === 0 ? parseInt(tempnum) + 1 : parseInt(tempnum) - 1 ;
-          $(".fnum").text(num);
+      var tempnum = $('.fnum').text()
+      var num = this.info.focusStatus === 0 ? parseInt(tempnum) + 1 : parseInt(tempnum) - 1
+      $(".fnum").text(num)
     }
   }
 }

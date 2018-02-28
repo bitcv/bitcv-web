@@ -5,7 +5,7 @@ namespace App\Models;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Utils\Service;
-use Redis;
+use Illuminate\Support\Facades\Redis;
 
 class User extends Model
 {

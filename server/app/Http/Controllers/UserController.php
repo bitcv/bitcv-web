@@ -10,6 +10,8 @@ use App\Utils\Auth;
 //use Redis;
 use Illuminate\Support\Facades\Redis;
 use App\Utils\SMS;
+use App\Utils\DictUtil;
+use App\Utils\BaseUtil;
 
 class UserController extends Controller
 {
@@ -232,6 +234,7 @@ class UserController extends Controller
         }
         return $this->output();
     }
+
     public function resetPwd(Request $request){
         $params = $this->validation($request,[
             'mobile' =>'required|numeric',
@@ -254,4 +257,252 @@ class UserController extends Controller
 
         return $this->output();
     }
+
+    public function getUserAsset (Request $request) {
+        $params = $this->validation($request, [
+            'pageno' =>'required|numeric',
+            'perpage' =>'required|numeric',
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+
+        // 更新用户转账记录
+        $this->updateUserAsset($userId);
+
+        $userAssetModel = Model\UserAsset::join('token', 'user_asset.token_id', '=', 'token.id')
+            ->where('user_asset.user_id', $userId)
+            ->select('token.logo_url', 'token.protocol', 'token.symbol', 'token.price', 'user_asset.amount', 'user_asset.id', 'user_asset.status');
+        $dataCount = $userAssetModel->count();
+        $offset = $perpage * ($pageno - 1);
+        $dataList = $userAssetModel->offset($offset)->limit($perpage)->get()->toArray();
+
+        // 获取钱包地址
+        foreach ($dataList as &$data) {
+            $walletData = Model\UserWallet::where([['user_id', $userId], ['token_protocol', $data['protocol']]])
+                ->select('addr')->first();
+            if ($walletData == null) {
+                $data['walletAddr'] = '';
+            } else {
+                $data['walletAddr'] = $walletData['addr'];
+            }
+        }
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $dataList,
+            'protocolDict' => DictUtil::Token_Protocol,
+            'statusDict' => DictUtil::UserAsset_Status,
+        ]);
+    }
+
+    public function getUserWallet (Request $request) {
+
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+
+        // 
+        $userWalletList = Model\UserWallet::where('user_id', $userId)->get()->toArray();
+
+        return $this->output([
+            'dataList' => $userWalletList,
+        ]);
+    }
+
+    public function addUserWallet (Request $request) {
+        $params = $this->validation($request,[
+            'tokenProtocol' => 'required|string',
+            'walletAddr' => 'required|string',
+            'mobile' => 'required|string',
+            'vcode' => 'required|string',
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        // 验证钱包地址
+        $walletAddr = strtolower($walletAddr);
+        if (!preg_match('/^0x[0-9a-f]{40}$/', $walletAddr)) {
+            return $this->error(100);
+        }
+        // 获取用户ID
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+        // 验证验证码
+        $ret = Service::checkVCode('reg', $mobile, $vcode);
+        if (false && $ret['err'] > 0) {
+            return $this->error(206);
+        }
+        // 添加用户钱包地址
+        Model\UserWallet::create([
+            'user_id' => $userId,
+            'token_protocol' => $tokenProtocol,
+            'addr' => $walletAddr,
+        ]);
+
+        return $this->output();
+    }
+
+    public function withdraw (Request $request) {
+        $params = $this->validation($request,[
+            'assetId' =>'required|numeric',
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+
+        extract($params);
+
+        // 获取用户ID
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+
+        // 获取用户资产
+        $userAssetData = Model\UserAsset::join('token', 'user_asset.token_id', '=', 'token.id')
+            ->select('user_asset.amount', 'token.id as tokenId', 'token.symbol', 'token.protocol')
+            ->where([['user_asset.user_id', $userId], ['user_asset.id', $assetId], ['user_asset.status', 1]])->first();
+        if ($userAssetData == null) {
+            return $this->error(208);
+        }
+        $tokenId = $userAssetData->tokenId;
+        $tokenProtocol = $userAssetData->protocol;
+        $tokenSymbol = $userAssetData->symbol;
+        $amount = $userAssetData->amount;
+        if ($tokenProtocol != 1) {
+            return $this->error(103);
+        }
+
+        // 获取用户钱包地址
+        $userWalletData = Model\UserWallet::where([['user_id', $userId], ['token_protocol', $tokenProtocol]])
+            ->first();
+        if ($userWalletData == null) {
+            return $this->error(209);
+        }
+        $walletAddr = $userWalletData['addr'];
+
+        // 调用提现接口
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/withdraw', [
+            'toAddr' => $walletAddr,
+            'amount' => $amount,
+            'tokenSymbol' => $tokenSymbol,
+        ]);
+        
+        $resArr = json_decode($resJson, true);
+        if (!$resArr || $resArr['errcode'] !== 0) {
+            return $this->error(104);
+        }
+
+        // 添加用户提现记录
+        $transferRecordId = $resArr['data']['transferRecordId'];
+        Model\UserTransferRecord::create([
+            'user_id' => $userId,
+            'record_id' => $transferRecordId,
+            'asset_id' => $assetId,
+            'token_id' => $tokenId,
+            'amount' => $amount,
+            'status' => 1,
+        ]);
+
+        // 更改用户资产状态
+        Model\UserAsset::where('id', $assetId)->update(['status' => 2]);
+
+        return $this->output();
+    }
+
+    public function getUserTransferRecord (Request $request) {
+        $params = $this->validation($request,[
+            'pageno' =>'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+
+        // 获取用户ID
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+
+        // 更新用户转账记录
+        $this->updateUserAsset($userId);
+
+        // 获取用户转账记录
+        $recordModel = Model\UserTransferRecord::from('user_transfer_record as a')
+            ->join('token as b', 'a.token_id', '=', 'b.id')
+            ->where([['user_id', $userId], ['status', 2]]);
+        $dataCount = $recordModel->count();
+        $offset = $perpage * ($pageno - 1);
+        $dataList = $recordModel->select('a.id', 'a.amount', 'a.tx_hash', 'a.tx_time', 'a.status', 'b.logo_url', 'b.symbol')
+            ->offset($offset)->limit($perpage)->get()->toArray();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $dataList,
+        ]);
+    }
+
+    private function updateUserAsset ($userId) {
+        // 获取用户进行中的交易记录
+        $recordIdArr = Model\UserTransferRecord::where([['user_id', $userId], ['status', 1]])->pluck('record_id');
+        if ($recordIdArr == null) {
+            return true;
+        }
+
+        // 获取用户最新交易
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/getUserTransferRecord', [
+            'recordIdArr' => $recordIdArr,
+        ]);
+
+        $resArr = json_decode($resJson, true);
+        if (!$resArr || $resArr['errcode'] !== 0) {
+            return $this->error(104);
+        }
+
+        $recordList = $resArr['data']['dataList'];
+        foreach ($recordList as $record) {
+            // 转账成功
+            if ($record['status'] == 4) {
+                // 更新用户转账记录
+                $recordModel = Model\UserTransferRecord::where('record_id', $record['id'])->first();
+                $assetId = $recordModel->asset_id;
+                $recordModel->tx_hash = $record['txHash'];
+                $recordModel->tx_time = $record['finishTime'];
+                $recordModel->status = 2;
+                $recordModel->save();
+                // 更新用户资产
+                $assetModel = Model\UserAsset::find($assetId);
+                $assetModel->status = 3;
+                $assetModel->amount = $assetModel->amount - $record['actualAmount'];
+                $assetModel->save();
+            }
+            if ($record['status'] == 5) {
+                // 更新用户转账记录
+                $recordModel = Model\UserTransferRecord::where('record_id', $record['id'])->first();
+                $assetId = $recordModel->asset_id;
+                $recordModel->status = 3;
+                $recordModel->save();
+                // 更新用户资产
+                $assetModel = Model\UserAsset::find($assetId);
+                $assetModel->status = 4;
+                $assetModel->save();
+            }
+        }
+
+        return true;
+    }
 }
+        
