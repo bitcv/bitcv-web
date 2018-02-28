@@ -29,7 +29,7 @@
         <tr v-for="item in dataList" :key="item.id">
           <td><img :src="item.logoUrl" class="img-circle" style="max-width: 40px;max-height: 40px;"/>&nbsp;&nbsp;{{ item.symbol }}</td>
           <td>{{ item.price }}</td>
-          <td>{{ item.amount }} ≈ <span class="text-dark small">{{ item.amount * item.price }}</span></td>
+          <td>{{ item.amount }} ≈ <span class="text-dark small">{{ parseInt(item.amount * item.price * 10000) / 10000 }}</span></td>
           <!--<td v-if="protocolDict[item.protocol] === 'ERC20'">{{ statusDict[item.status] }}</td>-->
           <!--<td v-else>稍后提取</td>-->
           <td >稍后提取</td>
