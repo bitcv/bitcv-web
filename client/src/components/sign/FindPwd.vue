@@ -9,6 +9,7 @@
         <el-button :disabled="disableSms" class="sms-btn" :class="{disabled : disableSms}" type="primary" @click="getVcode">发送验证码<span v-show="timerId"> ({{ countDown }}s)</span></el-button>
         <!-- <span class = "smscode" @click="getVcode">发送短信验证码</span> -->
         </div>
+        <input v-model="passwd" type="password" placeholder="请输入新的密码">
         <button @click.prevent="findPwd">找回密码</button>
         </form>
     </div>
@@ -22,7 +23,8 @@ export default {
       vcode: '',
       timerId: '',
       disableSms: false,
-      countDown: 60
+      countDown: 60,
+      passwd: ''
     }
   },
   methods: {
@@ -63,14 +65,18 @@ export default {
       if (!this.vcode) {
         return alert('验证码不能为空')
       }
+      if (this.passwd.length < 6) {
+        return alert('密码长度至少需要6位')
+      }
       var that = this
-      this.$http.post('/api/checkVcode', {
+      this.$http.post('/api/resetPwd', {
         mobile: this.mobile,
-        vcode: this.vcode
+        vcode: this.vcode,
+        passwd: this.passwd
       }).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
-          that.$router.push('/resetPwd/' + this.mobile)
+          that.$router.push('/signin')
         } else {
           alert(resData.errmsg)
         }
