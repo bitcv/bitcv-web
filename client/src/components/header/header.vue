@@ -22,7 +22,7 @@
       <div class="dropdown navbar-right" :class="{open: showDropdown}" @mouseenter="onMouseenter" @mouseleave="onMouseleave">
         <a v-if="hasToken" href="javascrip:;" class="dropdown-toggle"><img :src="avatar" class="img-circle"></a>
         <ul v-if="hasToken" class="dropdown-menu">
-          <li><router-link to="/wallet/user" @click.native="dimissMenu">我的资产</router-link></li>
+          <li><router-link to="/wallet?code=user" @click.native="dimissMenu">我的资产</router-link></li>
           <li><a href="javascript:;" @click="$emit('signout')">注销登录</a></li>
         </ul>
         <ul v-else class="dropdown-menu hidden-md hidden-lg">
@@ -44,13 +44,9 @@
 
 <script>
 import {mapState} from 'vuex'
-import Popside from '@/components/popside'
 import ClickOutside from '@/directives/click-outside'
 
 export default {
-  components: {
-    Popside
-  },
   props: {
     hasToken: Boolean
   },
