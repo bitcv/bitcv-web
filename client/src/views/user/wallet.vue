@@ -30,10 +30,10 @@
           <td><img :src="item.logoUrl" class="img-circle" style="max-width: 40px;max-height: 40px;"/>&nbsp;&nbsp;{{ item.symbol }}</td>
           <td>{{ item.price }}</td>
           <td>{{ item.amount }} ≈ <span class="text-dark small">{{ parseInt(item.amount * item.price * 10000) / 10000 }}</span></td>
-          <td v-if="item.symbol === 'BCV' && code==='bcvadmin'">{{ statusDict[item.status] }}</td>
+          <td v-if="item.symbol === 'BCV' && query.code==='bcvadmin'">{{ statusDict[item.status] }}</td>
           <td v-else>稍后提取</td>
           <!--<td >稍后提取</td>-->
-          <td v-if="item.symbol === 'BCV' && code==='bcvadmin' && statusDict[item.status] === '可提取'"><button class="btn btn-text btn-sm" @click="toWithdraw(item)">立即提取</button></td>
+          <td v-if="item.symbol === 'BCV' && query.code==='bcvadmin' && statusDict[item.status] === '可提取'"><button class="btn btn-text btn-sm" @click="toWithdraw(item)">立即提取</button></td>
           <td v-else>-</td>
         </tr>
       </tbody>
@@ -69,7 +69,7 @@ export default {
   },
   computed: {
     ...mapState({
-      code: state => state.route.params.code
+      query: state => state.route.query
     }),
     totalAssetArr () {
       return this.dataList.reduce((prev, curr) => curr.amount * curr.price + prev, 0).toString().split('.')
