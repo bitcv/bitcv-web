@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="findpwd">
-      <h3 class = "panel-title center-title">找回密码</h3>
+      <h3 class = "panel-title center-title">重置密码</h3>
         <form>
         <input v-model="mobile" type="text" placeholder="请输入你的手机号码">
         <div class = smspanel>
