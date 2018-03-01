@@ -43,7 +43,30 @@ axios.interceptors.response.use(
   }
 )
 
+const getToken = () => {
+  const userInfo = store.state.userInfo
+
+  return userInfo && Object.keys(userInfo).length > 0
+}
+
+// 同步缓存中的用户信息
 store.commit('updateUserInfo')
+
+// 登录拦截
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(route => route.meta && route.meta.requiresAuth)) { // 需要校验登录信息
+    const hasToken = getToken()
+
+    if (hasToken) { // 有token
+      next()
+    } else { // 没有token
+      // 跳转到登录页
+      next('/signin')
+    }
+  }
+
+  next()
+})
 
 /* eslint-disable no-new */
 new Vue({

@@ -20,15 +20,24 @@ export default [{
 }, {
   // 钱包
   path: '/wallet',
-  component: getViews('user/wallet')
+  component: getViews('user/wallet'),
+  meta: {
+    requiresAuth: true
+  }
 }, {
   // 提现
   path: '/wallet/withdraw/:id',
-  component: getViews('user/withdraw')
+  component: getViews('user/withdraw'),
+  meta: {
+    requiresAuth: true
+  }
 }, {
   // 钱包记录
   path: '/wallet/records',
-  component: getViews('user/records')
+  component: getViews('user/records'),
+  meta: {
+    requiresAuth: true
+  }
 }, {
   // 余币宝
   path: '/candyRoom',
@@ -41,19 +50,33 @@ export default [{
   }, {
     path: 'candyBuy',
     component: getComponent('candyRoom/CandyBuy'),
-    props: true
+    meta: {
+      requiresAuth: true
+    }
   }, {
     path: 'candyOrder',
-    component: getComponent('candyRoom/CandyOrder')
+    component: getComponent('candyRoom/CandyOrder'),
+    meta: {
+      requiresAuth: true
+    }
   }, {
     path: 'candyOrderDetail/:id',
-    component: getComponent('candyRoom/CandyOrderDetail')
+    component: getComponent('candyRoom/CandyOrderDetail'),
+    meta: {
+      requiresAuth: true
+    }
   }, {
     path: 'candyOrderConfirm/:id',
-    component: getComponent('candyRoom/CandyOrderConfirm')
+    component: getComponent('candyRoom/CandyOrderConfirm'),
+    meta: {
+      requiresAuth: true
+    }
   }, {
     path: 'myCandyOrder',
-    component: getComponent('candyRoom/MyCandyOrder')
+    component: getComponent('candyRoom/MyCandyOrder'),
+    meta: {
+      requiresAuth: true
+    }
   }]
 }, {
   // 创建项目
@@ -82,4 +105,8 @@ export default [{
 }, {
   path: '/resetpwd/:mobile',
   component: getComponent('sign/ResetPwd')
+}, {
+  // 404
+  path: '*',
+  redirect: '/'
 }]
