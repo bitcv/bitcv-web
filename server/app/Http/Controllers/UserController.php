@@ -73,7 +73,6 @@ class UserController extends Controller
     }
 
     public function signin (Request $request) {
-
         // 获取请求参数
         $params = $this->validation($request, [
             'mobile' => 'required|numeric',

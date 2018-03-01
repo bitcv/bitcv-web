@@ -10,7 +10,7 @@
         <!--<span class="prompt">lianbi会员可直接使用会员名登录</span>-->
         <form>
           <input v-model="mobile" type="text" placeholder="手机号">
-          <input v-model="passwd" type="password" placeholder="登录密码">
+          <input v-model="passwd" type="password" placeholder="登录密码" @keyup.enter="signin">
           <button @click.prevent="signin">登录</button>
         </form>
         <div class="btn-area">
