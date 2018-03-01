@@ -156,7 +156,7 @@ export default {
         name: this.inputName,
         symbol: this.inputSymbol,
         logoUrl: this.inputLogoUrl,
-        price: this.inputPrice,
+        price: this.inputPrice + '',
         protocol: this.inputProtocol,
         contractAddr: this.inputContractAddr
       }).then((res) => {
@@ -174,7 +174,7 @@ export default {
         symbol: this.inputSymbol,
         logoUrl: this.inputLogoUrl,
         protocol: this.inputProtocol,
-        price: this.inputPrice,
+        price: this.inputPrice + '',
         contractAddr: this.inputContractAddr
       }).then((res) => {
         if (res.data.errcode === 0) {

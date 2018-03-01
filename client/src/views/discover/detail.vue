@@ -230,7 +230,7 @@
                   <div class="media-body text-darker">
                     <p class="media-heading">{{ social.officialName }}</p>
                     <p class="small text-dark">{{ social.postTime }} 来自 {{ social.name }}</p>
-                    <p class="content"><span v-html="social.title"></span><a :href="social.referUrl" class="more">查看原文</a></p>
+                    <p class="content"><span v-html="social.title"></span><a :href="social.referUrl" target="_blank" class="more">查看原文</a></p>
                   </div>
                 </div>
               </div>
