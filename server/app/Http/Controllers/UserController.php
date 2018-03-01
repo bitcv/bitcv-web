@@ -238,11 +238,16 @@ class UserController extends Controller
     public function resetPwd(Request $request){
         $params = $this->validation($request,[
             'mobile' => 'required|numeric',
-            'vcode' => 'required|numeric',
+            'vcode' => 'required|string',
             'passwd' =>'required|string',
+            'nation' => 'nullable|numeric',
         ]);
         if($params === false){
             return $this->error(100);
+        }
+
+        if (!$nation) {
+            $nation = 86;
         }
 
         $ret = Service::checkVCode('reg', $mobile, $vcode);
@@ -252,7 +257,10 @@ class UserController extends Controller
         if (strlen($passwd) < 6) {
             return $this->error(205);
         }
-        $flag = Model\User::where('mobile', $mobile)->update(['passwd' => $passwd]);
+
+        $passwd = Service::getPwd($passwd);
+
+        $flag = Model\User::where([['nation', $nation], ['mobile', $mobile]])->update(['passwd' => $passwd]);
         if ($flag === 0) {
             return $this->error(203);
         }
