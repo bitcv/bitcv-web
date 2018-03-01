@@ -25,7 +25,7 @@
               <label class="control-label col-md-4">输入手机号:</label>
               <div class="col-md-8">
                 <div class="input-group">
-                  <input type="text" class="form-control" v-model="mobile">
+                  <input disabled type="text" class="form-control" :value="userInfo.mobile">
                   <span class="input-group-btn">
                     <button :disabled="disableSms" type="button" class="btn btn-gray-light" @click="getVcode">
                       <span v-if="disableSms"> 请等待({{ countDown }}s)</span>
@@ -63,13 +63,15 @@ export default {
   computed: {
     ...mapState({
       id: state => state.route.params.id
+    }),
+    ...mapState({
+      userInfo: state => state.userInfo
     })
   },
   data () {
     return {
       showTips: true,
       walletAddr: '',
-      mobile: '',
       vcode: '',
       timerId: '',
       disableSms: false,
@@ -78,10 +80,6 @@ export default {
   },
   methods: {
     getVcode () {
-      var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
-      if (!mobileReg.test(this.mobile)) {
-        return alert('请填写正确手机号')
-      }
       this.disableSms = true
       this.timerId = setInterval(() => {
         if (this.countDown <= 1) {
@@ -94,7 +92,7 @@ export default {
         }
       }, 1000)
       this.$http.post('/api/getVcode', {
-        mobile: this.mobile
+        mobile: this.userInfo.mobile
       }).then(res => {
         if (res.data.errcode === 0) {
         } else {
@@ -105,17 +103,12 @@ export default {
       })
     },
     onSubmit () {
-      var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
-      if (!mobileReg.test(this.mobile)) {
-        return alert('请填写正确手机号')
-      }
-      console.log(this.walletAddr)
       if (!/^0x[0-9a-f]{40}/i.test(this.walletAddr)) {
         return alert('请填写正确的收币钱包地址')
       }
       // 创建钱包
       this.$http.post('/api/addUserWallet', {
-        mobile: this.mobile,
+        mobile: this.userInfo.mobile,
         vcode: this.vcode,
         tokenProtocol: '1',
         walletAddr: this.walletAddr

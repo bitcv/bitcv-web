@@ -353,6 +353,11 @@ class UserController extends Controller
         if (!$userId) {
             return $this->error(207);
         }
+        // 验证手机号和用户ID是否一致
+        $isExist = Model\User::where([['id', $userId], ['mobile', $mobile]])->count();
+        if (!$isExist) {
+            return $this->error(100);
+        }
         // 验证验证码
         $ret = Service::checkVCode('reg', $mobile, $vcode);
         if (false && $ret['err'] > 0) {
