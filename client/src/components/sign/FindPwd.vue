@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="findpwd">
-      <h3 class = "panel-title center-title">找回密码</h3>
+      <h3 class = "panel-title center-title">重置密码</h3>
         <form>
         <input v-model="mobile" type="text" placeholder="请输入你的手机号码">
         <div class = smspanel>
@@ -58,7 +58,7 @@ export default {
       })
     },
     findPwd () {
-      var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
+      var mobileReg = new RegExp(/^0?(13|14|15|16|17|18)[0-9]{9}$/)
       if (!mobileReg.test(this.mobile)) {
         return alert('请填写正确手机号')
       }

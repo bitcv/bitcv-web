@@ -1,15 +1,15 @@
 <template>
   <ul class="pagination">
-    <li :class="{disabled: currentPage == 1}">
-      <span v-if="currentPage == 1"><slot name="prev"><span class="icon-bcv icon-arrow-left"></span></slot></span>
+    <li :class="{disabled: prevDisabled}">
+      <span v-if="prevDisabled"><slot name="prev"><span class="icon-bcv icon-arrow-left"></span></slot></span>
       <a v-else href="javascript:;" @click="handlePrev"><slot name="prev"><span class="icon-bcv icon-arrow-left"></span></slot></a>
     </li>
     <li v-for="(item, index) in pageList" :class="item.cls" :key="index">
       <span v-if="item.disabled" v-html="item.html"></span>
       <a v-else href="javascript:;" @click="handleJump(item.html)" v-html="item.html"></a>
     </li>
-    <li :class="{disabled: currentPage == pageCount}">
-      <span v-if="currentPage == pageCount"><slot name="next"><span class="icon-bcv icon-arrow-right"></span></slot></span>
+    <li :class="{disabled: nextDisabled}">
+      <span v-if="nextDisabled"><slot name="next"><span class="icon-bcv icon-arrow-right"></span></slot></span>
       <a v-else href="javascript:;" @click="handleNext"><slot name="next"><span class="icon-bcv icon-arrow-right"></span></slot></a>
     </li>
   </ul>
@@ -45,6 +45,12 @@ export default {
   computed: {
     pageCount () {
       return Math.ceil(this.total / this.pageSize)
+    },
+    prevDisabled () {
+      return this.pageCount === 0 || this.currentPage === 1
+    },
+    nextDisabled () {
+      return this.pageCount === 0 || this.currentPage === this.pageCount
     },
     pageList () {
       let {currentPage, maxPage, pageCount, hellipText} = this

@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     updateData () {
-      this.$http.get('/api/getMediaReportList', {
+      this.$http.post('/api/getMediaReportList', {
         pageno: this.pageno,
         perpage: this.perpage
       }).then((res) => {
