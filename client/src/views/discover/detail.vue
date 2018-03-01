@@ -38,23 +38,39 @@
             </p>
           </div>
           <div class="col-md-6 md-mg-t">
-            <div class="col-xs-8">
+            <div class="col-xs-6 col-md-8">
               <p><a :href="info.homeUrl" class="btn btn-default btn-outline btn-sm" target="_blank" style="width:80px;">项目主页</a></p>
               <div style="height: 20px;"></div>
               <p><a :href="info.whitePaperUrl" class="btn btn-default btn-outline btn-sm" target="_blank" style="width:80px;">白皮书</a></p>
             </div>
-            <div class="col-xs-4">
+            <div class="col-xs-6 col-md-4">
               <ul class="list-unstyled text-dark">
                 <li>
-                  <p>{{ ['关注', '取消关注'][info.focusStatus] }}&nbsp;&nbsp;&nbsp;
+                  <p>
+                    <span class="fixed-label">{{ ['关注', '取消关注'][info.focusStatus] }}&nbsp;&nbsp;</span>
                     <a href="javascript:;" :style="info.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" @click="handleFocus">
                       <span class="icon-bcv" :class="{'icon-heart': info.focusStatus == 0, 'icon-heart-fill': info.focusStatus == 1}"></span>
                     </a>
                   </p>
                 </li>
-                <li><p>分享&nbsp;&nbsp;&nbsp;<a href="javascript:;" @click="openShare"><span class="icon-bcv icon-share"></span></a></p></li>
-                <li><p>关注：<span class="text-black fnum">{{ info.focusNum }}</span></p></li>
-                <li><p>浏览：<span class="text-black">{{ info.viewTimes }}</span></p></li>
+                <li>
+                  <p>
+                    <span class="fixed-label">分享&nbsp;&nbsp;</span>
+                    <a href="javascript:;" @click="openShare"><span class="icon-bcv icon-share"></span></a>
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <span class="fixed-label">关注：</span>
+                    <span class="text-black fnum">{{ info.focusNum }}</span>
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    <span class="fixed-label">浏览：</span>
+                    <span class="text-black">{{ info.viewTimes }}</span>
+                  </p>
+                </li>
               </ul>
             </div>
           </div>
@@ -83,15 +99,14 @@
       <div class="row">
         <div class="col-md-8">
           <ul v-if="activeName == 'info'" class="nav nav-tabs">
-            <li><a href="#info" onclick="javascript:$(this).css('border-color','#fdb76e').parent().siblings().children('li a').css('border-color','')">项目信息</a></li>
-            <li><a href="#team" onclick="javascript:$(this).css('border-color','#fdb76e').parent().siblings().children('li a').css('border-color','')">团队信息</a></li>
-            <li><a href="#develop" onclick="javascript:$(this).css('border-color','#fdb76e').parent().siblings().children('li a').css('border-color','')">项目发展</a></li>
-            <li><a href="#partner" onclick="javascript:$(this).css('border-color','#fdb76e').parent().siblings().children('li a').css('border-color','')">合作伙伴</a></li>
+            <li v-for="(item, index) in infoList" :class="{active: item.active}" :key="index">
+              <a :href="item.target" @click="onTabItemClick(infoList, item)">{{ item.text }}</a>
+            </li>
           </ul>
           <ul v-if="activeName == 'dynamic'" class="nav nav-tabs">
-            <li><a href="#media">媒体报道</a></li>
-            <li><a href="#offical">官方公告</a></li>
-            <li><a href="#community">社区发布</a></li>
+            <li v-for="(item, index) in dynamicList" :class="{active: item.active}" :key="index">
+              <a :href="item.target" @click="onTabItemClick(dynamicList, item)">{{ item.text }}</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -105,7 +120,6 @@
                     <div class="text-center">
                       <figure>
                         <p>
-                          <!--<img class="img-circle" src="https://placehold.it/100x100">-->
                           <img v-if="item.photoUrl" :src="item.photoUrl" class="img-circle">
                           <span v-else class="avatar-span">{{ item.name ? item.name.substr(0, 1) : '' }}</span>
                         </p>
@@ -120,18 +134,20 @@
               </div>
             </div><!-- /#info -->
             <div id="team" class="panel-body">
-              <h4 class="sub-title">项目顾问</h4>
-              <div class="sub-content">
-                <div class="row adviser-list">
-                  <div class="col-xs-6 col-sm-4 col-md-3" v-for="(item, index) in info.advisorList" :key="index">
-                    <div class="thumbnail text-center">
-                      <img v-if="item.photoUrl" :src="item.photoUrl" class="img-circle">
-                      <span v-else class="avatar-span">{{ item.name ? item.name.substr(0, 1) : '' }}</span>
-                      <div class="caption">
-                        <p class="text-darker">
-                          <span>{{ item.name }}</span><br>
-                          <small class="text-dark">{{ item.intro }}</small>
-                        </p>
+              <div v-if="info.advisorList && info.advisorList.length">
+                <h4 class="sub-title">项目顾问</h4>
+                <div class="sub-content">
+                  <div class="row adviser-list">
+                    <div class="col-xs-6 col-sm-4 col-md-3" v-for="(item, index) in info.advisorList" :key="index">
+                      <div class="thumbnail text-center">
+                        <div class="img img-circle" v-if="item.photoUrl" :style="{backgroundImage: `url(${item.photoUrl})`}"></div>
+                        <span v-else class="avatar-span">{{ item.name ? item.name.substr(0, 1) : '' }}</span>
+                        <div class="caption">
+                          <div class="text-darker">
+                            <span>{{ item.name }}</span><br>
+                            <p class="text-ellipsis text-dark" style="margin:0;"><small>{{ item.intro }}</small></p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -145,7 +161,7 @@
                 </article>
               </div>
             </div><!-- /#team -->
-            <div id="develop" class="panel-body">
+            <div id="develop" class="panel-body" v-if="info.eventList && info.eventList.length">
               <h4 class="sub-title">项目发展</h4>
               <div class="sub-content">
                 <div class="timelime">
@@ -161,7 +177,7 @@
                 </div>
               </div>
             </div><!-- /#develop -->
-            <div id="partner" class="panel-body">
+            <div id="partner" class="panel-body" v-if="info.partnerList && info.partnerList.length">
               <h4 class="sub-title">合作伙伴</h4>
               <div class="sub-content">
                 <div class="row partner-list">
@@ -262,7 +278,18 @@ export default {
         autoplay: true
       },
       showShare: false,
-      shareUrl: ''
+      shareUrl: '',
+      infoList: [
+        {text: '项目信息', target: '#info', active: true},
+        {text: '团队信息', target: '#team', active: false},
+        {text: '项目发展', target: '#develop', active: false},
+        {text: '合作伙伴', target: '#partner', active: false}
+      ],
+      dynamicList: [
+        {text: '媒体报道', target: '#media', active: true},
+        {text: '官方发布', target: '#offical', active: false},
+        {text: '社区发布', target: '#community', active: false}
+      ]
     }
   },
   filters: {
@@ -303,6 +330,13 @@ export default {
     swiperNext () {
       this.swiper.slideNext()
     },
+    onTabItemClick (list, item) {
+      list.map(item => {
+        item.active = false
+      })
+
+      item.active = true
+    },
     fetch () {
       this.getProDetail({projId: this.proId})
         .then((data = {}) => (this.info = data))
@@ -310,11 +344,14 @@ export default {
     handleFocus () {
       this.updateFocus({projId: this.proId})
         .then(data => {
+          // 修改关注状态
           this.$set(this.info, 'focusStatus', this.info.focusStatus === 0 ? 1 : 0)
+
+          // 修改关注数量
+          let {focusNum} = this.info
+
+          this.$set(this.info, focusNum, this.info.focusStatus === 0 ? focusNum + 1 : focusNum - 1)
         })
-      var tempnum = $('.fnum').text()
-      var num = this.info.focusStatus === 0 ? parseInt(tempnum) + 1 : parseInt(tempnum) - 1
-      $(".fnum").text(num)
     },
     openShare: function () {
       this.showShare = true
@@ -348,7 +385,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -380,6 +416,12 @@ export default {
       border-color: $primary-color;
     }
   }
+}
+.fixed-label {
+  display: inline-block;
+  vertical-align: middle;
+  width: 80px;
+  text-align: right;
 }
 .component-wrapper {
   background-color: #fff;
@@ -454,7 +496,12 @@ export default {
   .adviser-list {
     .thumbnail {
       border-radius: 0;
-      > img,
+      > .img {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+      }
+      > .img,
       > .avatar-span {
         width: 100px;
         height: 100px;

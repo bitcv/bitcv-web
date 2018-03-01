@@ -2,7 +2,7 @@
   <div class="footer">
     <div class="content">
       <div class="name">
-        <img src="/static/img/logo.png" alt="">
+        <img src="/static/img/logo.png" alt="BitCV">
       </div>
       <div class="icon-box">
         <a :href="social.url" target="_blank" v-for="(social, index) in socialList" :key="index">
