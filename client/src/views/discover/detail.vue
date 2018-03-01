@@ -114,6 +114,17 @@
         <div class="col-md-8 col">
           <div v-if="activeName == 'info'" class="tab-content">
             <div id="info" class="panel-body">
+              <h4 class="sub-title">项目简介</h4>
+              <div class="sub-content">
+                <p>{{ info.shortDesc }}</p>
+                <article class="text-darker">
+                  <p v-if="info.bannerUrl"><img :src="info.bannerUrl" style="max-width:100%"></p>
+                  <p>{{ info.abstract }}</p>
+                </article>
+              </div>
+            </div><!-- /#info -->
+            <div id="team" class="panel-body">
+              <h4 class="sub-title">团队成员</h4>
               <div class="sub-content">
                 <swiper :options="swiperOption" ref="swiper">
                   <swiper-slide v-for="(item, index) in info.memberList" :key="index">
@@ -132,8 +143,6 @@
                   <div class="swiper-button-next" slot="button-next" @click="swiperNext"><span class="icon-bcv icon-arrow-right"></span></div>
                 </swiper>
               </div>
-            </div><!-- /#info -->
-            <div id="team" class="panel-body">
               <div v-if="info.advisorList && info.advisorList.length">
                 <h4 class="sub-title">项目顾问</h4>
                 <div class="sub-content">
@@ -152,13 +161,6 @@
                     </div>
                   </div>
                 </div>
-              </div>
-              <h4 class="sub-title">项目简介</h4>
-              <div class="sub-content">
-                <article class="text-darker">
-                  <p v-if="info.bannerUrl"><img :src="info.bannerUrl"></p>
-                  <p>{{ info.abstract }}</p>
-                </article>
               </div>
             </div><!-- /#team -->
             <div id="develop" class="panel-body" v-if="info.eventList && info.eventList.length">

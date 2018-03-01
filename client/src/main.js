@@ -16,7 +16,6 @@ Vue.use(common)
 require('es6-promise').polyfill()
 Vue.use(ElementUI)
 
-Vue.axios = axios
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
