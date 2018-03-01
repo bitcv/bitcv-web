@@ -350,7 +350,7 @@ export default {
           // 修改关注数量
           let {focusNum} = this.info
 
-          this.$set(this.info, focusNum, this.info.focusStatus === 0 ? focusNum + 1 : focusNum - 1)
+          this.$set(this.info, 'focusNum', this.info.focusStatus === 0 ? focusNum - 1 : focusNum + 1)
         })
     },
     openShare: function () {
