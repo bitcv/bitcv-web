@@ -13,7 +13,7 @@
           </div>
         </div>
 
-        <h4 class="section-title">发现新公司</h4>
+        <h4 class="section-title">发现新项目</h4>
         <div class="figure-group">
           <div class="row">
             <div class="col-md-2 col-xs-4" v-for="item in disList" :key="item.id">

@@ -22,7 +22,7 @@
       <div class="dropdown navbar-right" :class="{open: showDropdown}" @mouseenter="onMouseenter" @mouseleave="onMouseleave">
         <a v-if="hasToken" href="javascrip:;" class="dropdown-toggle"><img :src="avatar" class="img-circle"></a>
         <ul v-if="hasToken" class="dropdown-menu">
-          <li><router-link to="/wallet" @click.native="dimissMenu">我的资产</router-link></li>
+          <li><router-link to="/wallet/user" @click.native="dimissMenu">我的资产</router-link></li>
           <li><a href="javascript:;" @click="$emit('signout')">注销登录</a></li>
         </ul>
         <ul v-else class="dropdown-menu hidden-md hidden-lg">
