@@ -31,7 +31,6 @@ class UserController extends Controller
     }
 
     public function signup (Request $request) {
-
         // 获取请求参数
         $params = $this->validation($request, [
             'mobile' => 'required|numeric',
@@ -338,15 +337,25 @@ class UserController extends Controller
             return $this->error(100);
         }
         extract($params);
-        // 验证钱包地址
+        // 正则校验钱包地址
         $walletAddr = strtolower($walletAddr);
         if (!preg_match('/^0x[0-9a-f]{40}$/', $walletAddr)) {
             return $this->error(100);
+        }
+        // 验证钱包地址是否重复
+        $isExist = Model\UserWallet::where('addr', $walletAddr)->count();
+        if ($isExist) {
+            return $this->error(210);
         }
         // 获取用户ID
         $userId = Auth::getUserId();
         if (!$userId) {
             return $this->error(207);
+        }
+        // 验证手机号和用户ID是否一致
+        $isExist = Model\User::where([['id', $userId], ['mobile', $mobile]])->count();
+        if (!$isExist) {
+            return $this->error(100);
         }
         // 验证验证码
         $ret = Service::checkVCode('reg', $mobile, $vcode);

@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import axios from 'axios'
 
 const handleErr = (msg) => {
   alert(msg)
@@ -20,38 +20,41 @@ const resolveResponse = ({errcode, data, errmsg = ''}) => {
   }
 }
 
+const post = (url, params) => {
+  return axios.post(url, params).then(res => resolveResponse(res.data))
+}
+
 // 获取项目列表
 export const getProList = (store, params) => {
-  return Vue.axios.post('/api/getProjList', params)
-    .then(res => resolveResponse(res.data))
+  return post('/api/getProjList', params)
 }
 
 // 获取项目详情
 export const getProDetail = (store, params) => {
-  return Vue.axios.post('/api/getProjDetail', params)
-    .then(res => resolveResponse(res.data))
+  return post('/api/getProjDetail', params)
 }
 
 // 获取资讯列表
 export const getNewsList = (store, params) => {
-  return Vue.axios.post('/api/getNewsList', params)
-    .then(res => resolveResponse(res.data))
+  return post('/api/getNewsList', params)
 }
 
 // 获取筛选条件
 export const getFilterParams = (store, params) => {
-  return Vue.axios.post('/api/getProjTagList', params)
-    .then(res => resolveResponse(res.data))
+  return post('/api/getProjTagList', params)
 }
 
 // 获取TOP10
 export const getTop10 = (store, params) => {
-  return Vue.axios.post('/api/getProjTopList', params)
-    .then(res => resolveResponse(res.data))
+  return post('/api/getProjTopList', params)
 }
 
 // 关注|取消关注
 export const updateFocus = (store, params) => {
-  return Vue.axios.post('/api/toggleFocus', params)
-    .then(res => resolveResponse(res.data))
+  return post('/api/toggleFocus', params)
+}
+
+// 获取余币宝计划列表
+export const getCandyList = (store, params) => {
+  return post('/api/getDepositBoxList', params)
 }

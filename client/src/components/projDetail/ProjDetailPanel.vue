@@ -22,6 +22,16 @@
       </span>
     </div>
     <div class="content">
+      <div class="info-area" id="Info">
+        <h3 class="panel-title">项目简介</h3>
+        {{ projDetail.short_desc }}
+        <div class="image-box" v-if="projDetail.bannerUrl">
+          <img :src="projDetail.bannerUrl" alt="">
+        </div>
+        <div class="abstract">
+          <span>{{ projDetail.abstract }}</span>
+        </div>
+      </div>
       <div v-if="projDetail.memberList.length" class="team-area" id="Team">
         <el-carousel :interval="5000" arrow="always" height="390px">
           <el-carousel-item class="member" v-for="(member, index) in projDetail.memberList" :key="index">
@@ -43,15 +53,6 @@
               </div>
             </li>
           </ul>
-        </div>
-      </div>
-      <div class="info-area" id="Info">
-        <h3 class="panel-title">项目简介</h3>
-        <div class="image-box" v-if="projDetail.bannerUrl">
-          <img :src="projDetail.bannerUrl" alt="">
-        </div>
-        <div class="abstract">
-          <span>{{ projDetail.abstract }}</span>
         </div>
       </div>
       <div v-if="projDetail.eventList.length" class="event-area" id="Event">

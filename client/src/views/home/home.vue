@@ -13,13 +13,13 @@
           </div>
         </div>
 
-        <h4 class="section-title">发现新公司</h4>
+        <h4 class="section-title">发现新项目</h4>
         <div class="figure-group">
           <div class="row">
             <div class="col-md-2 col-xs-4" v-for="item in disList" :key="item.id">
               <router-link class="figure" :to="`/discover/detail/${item.id}`">
                 <img class="img-rounded" :src="item.logoUrl">
-                <span class="caption">{{ item.tokenSymbol }}</span>
+                <p class="caption text-ellipsis">{{ item.tokenSymbol }}</p>
               </router-link>
             </div>
           </div>
@@ -32,7 +32,7 @@
               <tr class="text-dark">
                 <th style="width:50px;">&nbsp;</th>
                 <th>公司名称</th>
-                <th>代币符号</th>
+                <th>通证符号</th>
                 <th>所属行业</th>
                 <th style="width:100px">融资状态</th>
               </tr>
@@ -189,6 +189,7 @@ export default {
     > .caption {
       display: block;
       margin-top: 10px;
+      margin-bottom: 0;
       line-height: 1;
       color: $black-light;
     }

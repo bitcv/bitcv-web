@@ -50,7 +50,7 @@
               <tr class="text-dark">
                 <th style="width:50px;">&nbsp;</th>
                 <th>公司名称</th>
-                <th>代币符号</th>
+                <th>通证符号</th>
                 <th>所属行业</th>
                 <th style="width:100px">融资状态</th>
               </tr>
@@ -69,7 +69,7 @@
                   </router-link>
                 </td>
                 <td><span class="text-primary">{{ item.tokenSymbol }}</span></td>
-                <td>{{ item.buzType | buzType }}</td>
+                <td>{{ (item.buzType - 1) | buzType }}</td>
                 <td><span class="text-primary">{{ item.fundStage | fundStage }}</span></td>
               </tr>
             </tbody>

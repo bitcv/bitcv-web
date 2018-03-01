@@ -1,16 +1,36 @@
 <template>
-  <div class="container">
+  <div class="container signup-container">
     <div class="findpwd">
       <h3 class = "panel-title center-title">重置密码</h3>
         <form>
-        <input v-model="mobile" type="text" placeholder="请输入你的手机号码">
-        <div class = smspanel>
-        <input class = "sms" v-model="vcode" type="text" placeholder="短信验证码" >
-        <el-button :disabled="disableSms" class="sms-btn" :class="{disabled : disableSms}" type="primary" @click="getVcode">发送验证码<span v-show="timerId"> ({{ countDown }}s)</span></el-button>
-        <!-- <span class = "smscode" @click="getVcode">发送短信验证码</span> -->
-        </div>
-        <input v-model="passwd" type="password" placeholder="请输入新的密码">
-        <button @click.prevent="findPwd">找回密码</button>
+          <template>
+            <div class="row" style="margin: 0;">
+              <div class="col-xs-4" style="padding:0;">
+                <el-select class='phone-suffix' v-model="selected" placeholder="请选择">
+                  <el-option value="65">新加坡 (+65)</el-option>
+                  <el-option value="1">美国 (+1)</el-option>
+                  <el-option value="61">澳大利亚 (+61)</el-option>
+                  <el-option value="81">日本 (+81)</el-option>
+                  <el-option value="82">韩国 (+82)</el-option>
+                  <el-option value="86">中国 (+86)</el-option>
+                  <el-option value="852">香港  (SAR) (+852)</el-option>
+                  <el-option value="853">澳门 (+853)</el-option>
+                  <el-option value="856">老挝 (+856)</el-option>
+                  <el-option value="886">台湾 (+886)</el-option>
+                </el-select>
+              </div>
+              <div class="col-xs-8" style="padding:0;">
+                <input v-model="mobile" type="text" placeholder="请输入你的手机号码" style="width:100%;">
+              </div>
+            </div>
+          </template>
+          <div class = smspanel>
+            <input class = "sms" v-model="vcode" type="text" placeholder="短信验证码" >
+            <el-button :disabled="disableSms" class="sms-btn" :class="{disabled : disableSms}" type="primary" @click="getVcode">发送验证码<span v-show="timerId"> ({{ countDown }}s)</span></el-button>
+            <!-- <span class = "smscode" @click="getVcode">发送短信验证码</span> -->
+          </div>
+          <input v-model="passwd" type="password" placeholder="请输入新的密码">
+          <button @click.prevent="findPwd">找回密码</button>
         </form>
     </div>
   </div>
@@ -24,7 +44,8 @@ export default {
       timerId: '',
       disableSms: false,
       countDown: 60,
-      passwd: ''
+      passwd: '',
+      selected: 65
     }
   },
   methods: {
@@ -59,6 +80,9 @@ export default {
     },
     findPwd () {
       var mobileReg = new RegExp(/^0?(13|14|15|16|17|18)[0-9]{9}$/)
+      if (!this.selected) {
+        return alert('请选择手机国家号')
+      }
       if (!mobileReg.test(this.mobile)) {
         return alert('请填写正确手机号')
       }
@@ -72,7 +96,8 @@ export default {
       this.$http.post('/api/resetPwd', {
         mobile: this.mobile,
         vcode: this.vcode,
-        passwd: this.passwd
+        passwd: this.passwd,
+        nation: this.selected
       }).then(function (res) {
         var resData = res.data
         if (resData.errcode === 0) {
@@ -87,7 +112,8 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+.signup-container {
 .findpwd {
   box-sizing: border-box;
   width: 530px;
@@ -158,7 +184,7 @@ export default {
     }
     .sms {
       height: 50px;
-      width: 273px;
+      width: 275px;
     }
     button {
       width: 426px;
@@ -179,6 +205,28 @@ export default {
     >a {
       margin-left: 38px;
     }
+  }
+}
+.row{
+  width:100%;max-width:426px;
+  .col{width:50%;float:left;}
+}
+.phone-suffix .el-input__inner{
+  height:50px;
+}
+  .el-select .el-input {
+    .el-input__inner {
+      width: 100%;
+      border-radius: 0;
+      border-right-width: 0;
+    }
+
+    &.is-focus {
+      .el-input__inner {
+        border-right-width: 1px;
+      }
+    }
+
   }
 }
 </style>

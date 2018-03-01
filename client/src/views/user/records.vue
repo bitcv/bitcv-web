@@ -18,7 +18,7 @@
         <tr v-for="item in recordList" :key="item.id">
           <td>{{ item.symbol }}</td>
           <td>{{ item.amount }}</td>
-          <td>{{ item.txHash }}</td>
+          <td><a :href="'https://etherscan.io/tx/' + item.txHash" target="_blank">{{ item.txHash }}</a></td>
           <td>{{ item.txTime }}</td>
         </tr>
       </tbody>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import Pagination from '@/components/pagination/pagination'
+import Pagination from '@/components/pagination'
 
 export default {
   components: {

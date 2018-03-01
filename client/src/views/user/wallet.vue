@@ -6,7 +6,7 @@
           <div class="text-darker">
             <span>总资产 (CNY) ≈ </span>
             <span class="text-primary" style="font-size:48px">{{ totalAssetArr[0] }}</span>
-            <span class="text-primary">.{{ totalAssetArr[1] }}</span>
+            <span class="text-primary">.{{ totalAssetArr[1] || '00' }}</span>
           </div>
         </div>
         <div class="col-xs-6 text-right" style="padding-top:30px;">
@@ -30,10 +30,10 @@
           <td><img :src="item.logoUrl" class="img-circle" style="max-width: 40px;max-height: 40px;"/>&nbsp;&nbsp;{{ item.symbol }}</td>
           <td>{{ item.price }}</td>
           <td>{{ item.amount }} ≈ <span class="text-dark small">{{ parseInt(item.amount * item.price * 10000) / 10000 }}</span></td>
-          <td v-if="protocolDict[item.protocol] === 'ERC20'">{{ statusDict[item.status] }}</td>
+          <td v-if="item.symbol === 'BCV'">{{ statusDict[item.status] }}</td>
           <td v-else>稍后提取</td>
           <!--<td >稍后提取</td>-->
-          <td v-if="statusDict[item.status] === '可提取'"><button class="btn btn-text btn-sm" @click="toWithdraw(item)">立即提取</button></td>
+          <td v-if="item.symbol === 'BCV' && statusDict[item.status] === '可提取'"><button class="btn btn-text btn-sm" @click="toWithdraw(item)">立即提取</button></td>
           <td v-else>-</td>
         </tr>
       </tbody>
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import Pagination from '@/components/pagination/pagination'
+import Pagination from '@/components/pagination'
 
 export default {
   components: {
@@ -68,11 +68,7 @@ export default {
   },
   computed: {
     totalAssetArr () {
-      var totalAsset = 0
-      this.dataList.forEach(item => {
-        totalAsset += item.amount * item.price
-      })
-      return totalAsset.toString().split('.')
+      return this.dataList.reduce((prev, curr) => curr.amount * curr.price + prev, 0).toString().split('.')
     }
   },
   methods: {

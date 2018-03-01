@@ -10,67 +10,89 @@ export default [{
   path: '/',
   component: getViews('home/home')
 }, {
+  // 发现
   path: '/discover',
   component: getViews('discover/discover')
 }, {
+  // 项目详情
   path: '/discover/detail/:id',
   component: getViews('discover/detail')
 }, {
   // 钱包
   path: '/wallet',
-  component: getViews('user/wallet')
+  component: getViews('user/wallet'),
+  meta: {
+    requiresAuth: true
+  }
 }, {
-  // 体现
+  // 提现
   path: '/wallet/withdraw/:id',
-  component: getViews('user/withdraw')
+  component: getViews('user/withdraw'),
+  meta: {
+    requiresAuth: true
+  }
 }, {
   // 钱包记录
   path: '/wallet/records',
-  component: getViews('user/records')
+  component: getViews('user/records'),
+  meta: {
+    requiresAuth: true
+  }
 }, {
-  path: '/projList',
-  component: getComponent('projList/ProjList')
-}, {
+  // 余币宝
   path: '/candyRoom',
   redirect: '/candyRoom/candyList',
   component: getComponent('candyRoom/CandyRoom'),
   children: [{
     path: 'candyList',
-    component: getComponent('candyRoom/CandyList')
+    // component: getComponent('candyRoom/CandyList')
+    component: getViews('candy/list')
   }, {
     path: 'candyBuy',
     component: getComponent('candyRoom/CandyBuy'),
-    props: true
+    meta: {
+      requiresAuth: true
+    }
   }, {
     path: 'candyOrder',
-    component: getComponent('candyRoom/CandyOrder')
+    component: getComponent('candyRoom/CandyOrder'),
+    meta: {
+      requiresAuth: true
+    }
   }, {
     path: 'candyOrderDetail/:id',
-    component: getComponent('candyRoom/CandyOrderDetail')
+    component: getComponent('candyRoom/CandyOrderDetail'),
+    meta: {
+      requiresAuth: true
+    }
   }, {
     path: 'candyOrderConfirm/:id',
-    component: getComponent('candyRoom/CandyOrderConfirm')
+    component: getComponent('candyRoom/CandyOrderConfirm'),
+    meta: {
+      requiresAuth: true
+    }
   }, {
     path: 'myCandyOrder',
-    component: getComponent('candyRoom/MyCandyOrder')
+    component: getComponent('candyRoom/MyCandyOrder'),
+    meta: {
+      requiresAuth: true
+    }
   }]
 }, {
-  path: '/projDetail/:id',
-  component: getComponent('projDetail/ProjDetail'),
-  redirect: '/projDetail/info/:id',
-  children: [{
-    path: '/projDetail/info/:id',
-    component: getComponent('projDetail/ProjDetailPanel')
-  }, {
-    path: '/projDetail/dynamic/:id',
-    component: getComponent('projDetail/ProjDynamicPanel')
-  }]
+  // 创建项目
+  path: '/apply',
+  component: getComponent('apply/Apply'),
+  meta: {
+    requiresAuth: true
+  }
 }, {
-  path: '/signin',
-  component: getComponent('sign/Signin')
-}, {
+  // 注册
   path: '/signup',
   component: getComponent('sign/Signup')
+}, {
+  // 登录
+  path: '/signin',
+  component: getComponent('sign/Signin')
 }, {
   path: '/share',
   component: getComponent('share/Share')
@@ -84,12 +106,7 @@ export default [{
   path: '/resetpwd/:mobile',
   component: getComponent('sign/ResetPwd')
 }, {
-  path: '/newslist',
-  component: getComponent('news/NewsList')
-}, {
-  path: '/newsdetail/:id',
-  component: getComponent('news/NewsDetail')
-}, {
-  path: '/apply',
-  component: getComponent('apply/Apply')
+  // 404
+  path: '*',
+  redirect: '/'
 }]
