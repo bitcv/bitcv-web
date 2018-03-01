@@ -120,7 +120,7 @@ export default {
             assetId: this.$route.params.id
           }).then(res => {
             if (res.data.errcode === 0) {
-              this.$router.push('/wallet?code=bcvadmin')
+              this.$router.push('/wallet')
             } else {
               alert(res.data.errmsg)
             }
@@ -131,7 +131,7 @@ export default {
       })
     },
     onCancel () {
-      this.$router.push('/wallet?code=bcvadmin')
+      this.$router.push('/wallet')
     }
   }
 }
