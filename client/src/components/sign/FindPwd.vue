@@ -16,6 +16,7 @@
                   <el-option value="852">香港  (SAR) (+852)</el-option>
                   <el-option value="853">澳门 (+853)</el-option>
                   <el-option value="856">老挝 (+856)</el-option>
+                  <el-option value="886">台湾 (+886)</el-option>
                 </el-select>
               </div>
               <div class="col-xs-8" style="padding:0;">
