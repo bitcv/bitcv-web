@@ -1,7 +1,7 @@
 <template>
   <form class="search-bar" @submit="onSubmit">
     <div class="input-group input-group-lg">
-      <input type="text" v-model="keywords" class="form-control" placeholder="币名称、符号、项目名称" @input="onInput">
+      <input type="text" v-model="keywords" class="form-control" placeholder="通证名称、符号、项目名称" @input="onInput">
       <span class="icon-bcv icon-search"></span>
       <span class="input-group-btn">
         <button type="button" class="btn btn-primary" @click="onSubmit">搜索</button>
