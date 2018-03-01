@@ -6,7 +6,7 @@
           <div class="text-darker">
             <span>总资产 (CNY) ≈ </span>
             <span class="text-primary" style="font-size:48px">{{ totalAssetArr[0] }}</span>
-            <span class="text-primary">.{{ totalAssetArr[1] }}</span>
+            <span class="text-primary">.{{ totalAssetArr[1] || '00' }}</span>
           </div>
         </div>
         <div class="col-xs-6 text-right" style="padding-top:30px;">
@@ -46,7 +46,7 @@
 
 <script>
 import {mapState} from 'vuex'
-import Pagination from '@/components/pagination/pagination'
+import Pagination from '@/components/pagination'
 
 export default {
   components: {
@@ -72,11 +72,7 @@ export default {
       code: state => state.route.params.code
     }),
     totalAssetArr () {
-      var totalAsset = 0
-      this.dataList.forEach(item => {
-        totalAsset += item.amount * item.price
-      })
-      return totalAsset.toString().split('.')
+      return this.dataList.reduce((prev, curr) => curr.amount * curr.price + prev, 0).toString().split('.')
     }
   },
   methods: {
