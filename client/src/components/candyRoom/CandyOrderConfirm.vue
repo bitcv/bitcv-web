@@ -90,13 +90,6 @@ export default {
       showConfirm: false
     }
   },
-  beforeCreate () {
-    var userId = localStorage.getItem('userId')
-    if (!userId) {
-      alert('请登录')
-      this.$router.push('/candyRoom/candyList')
-    }
-  },
   mounted () {
     this.$http.post('/api/getOrderDetail', {
       depositOrderId: this.$route.params.id
