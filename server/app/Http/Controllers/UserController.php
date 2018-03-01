@@ -245,6 +245,7 @@ class UserController extends Controller
         if($params === false){
             return $this->error(100);
         }
+        extract($params);
 
         if (!$nation) {
             $nation = 86;
