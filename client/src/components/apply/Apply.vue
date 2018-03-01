@@ -7,8 +7,8 @@
         <form>
           <input v-model="formData.nameCn" type="text" placeholder="项目中文名" required>
           <input v-model="formData.nameEn" type="text" placeholder="项目英文名" required>
-          <input v-model="formData.tokenName" type="text" placeholder="代币名称" required>
-          <input v-model="formData.tokenSymbol" type="text" placeholder="代币符号" required>
+          <input v-model="formData.tokenName" type="text" placeholder="通证名称" required>
+          <input v-model="formData.tokenSymbol" type="text" placeholder="通证符号" required>
           <el-form-item :label="select.label" v-for="(select, field) in selectList" :key="field">
             <el-select v-model="formData[field]">
               <el-option v-for="(option, index) in select.optionList" :key="option.value" v-if="index" :label="option.label" :value="option.value"></el-option>

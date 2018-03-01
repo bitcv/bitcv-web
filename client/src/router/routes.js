@@ -17,7 +17,7 @@ export default [{
   component: getViews('discover/detail')
 }, {
   // 钱包
-  path: '/wallet',
+  path: '/wallet/:code',
   component: getViews('user/wallet')
 }, {
   // 体现
