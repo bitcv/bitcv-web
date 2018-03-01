@@ -29,7 +29,7 @@
                   <span class="input-group-btn">
                     <button :disabled="disableSms" type="button" class="btn btn-gray-light" @click="getVcode">
                       <span v-if="disableSms"> 请等待({{ countDown }}s)</span>
-                      <span v-else="">获取验证码</span>
+                      <span v-else>获取验证码</span>
                     </button>
                   </span>
                 </div>
