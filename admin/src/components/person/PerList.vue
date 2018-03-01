@@ -93,8 +93,8 @@ export default {
       this.mediaId = perData.id
       this.inputName = perData.name
       this.inputLogoUrl = perData.logoUrl
-      this.inputPosition = perData.inputPosition
-      this.inputIntro = perData.inputIntro
+      this.inputPosition = perData.position
+      this.inputIntro = perData.intro
       this.showDialog = true
     },
     onLogoSuccess (res) {
