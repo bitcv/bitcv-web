@@ -482,7 +482,7 @@ class UserController extends Controller
                 $recordModel = Model\UserTransferRecord::where('record_id', $record['id'])->first();
                 $assetId = $recordModel->asset_id;
                 $recordModel->tx_hash = $record['txHash'];
-                $recordModel->tx_time = $record['finishTime'];
+                $recordModel->tx_time = $record['txTime'];
                 $recordModel->status = 2;
                 $recordModel->save();
                 // 更新用户资产

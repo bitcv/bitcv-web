@@ -558,7 +558,7 @@ class AdminController extends Controller
             'logoUrl' => 'nullable|string',
             'contractAddr' => 'nullable|string',
             'protocol' => 'nullable|numeric',
-            'price' => 'nullable|numeric'
+            'price' => 'nullable|string'
         ]);
         if ($params === false) {
             return $this->error(100);

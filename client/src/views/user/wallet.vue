@@ -19,7 +19,7 @@
       <thead class="shadow-thead">
         <tr>
           <th>币种</th>
-          <th>最新价</th>
+          <th>参考价</th>
           <th>数量</th>
           <th>状态</th>
           <th style="width:120px">操作</th>
@@ -29,9 +29,10 @@
         <tr v-for="item in dataList" :key="item.id">
           <td><img :src="item.logoUrl" class="img-circle" style="max-width: 40px;max-height: 40px;"/>&nbsp;&nbsp;{{ item.symbol }}</td>
           <td>{{ item.price }}</td>
-          <td>{{ item.amount }} ≈ <span class="text-dark small">{{ item.amount * item.price }}</span></td>
-          <td v-if="protocolDict[item.protocol] === 'ERC20'">{{ statusDict[item.status] }}</td>
-          <td v-else>稍后提取</td>
+          <td>{{ item.amount }} ≈ <span class="text-dark small">{{ parseInt(item.amount * item.price * 10000) / 10000 }}</span></td>
+          <!--<td v-if="protocolDict[item.protocol] === 'ERC20'">{{ statusDict[item.status] }}</td>-->
+          <!--<td v-else>稍后提取</td>-->
+          <td >稍后提取</td>
           <td v-if="statusDict[item.status] === '可提取'"><button class="btn btn-text btn-sm" @click="toWithdraw(item)">立即提取</button></td>
           <td v-else>-</td>
         </tr>

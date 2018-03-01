@@ -19,7 +19,7 @@
         <!-- <button type="button" class="btn navbar-btn btn-default btn-outline" @click="$emit('signout')">注销登录</button> -->
         <a href="javascrip:;" class="dropdown-toggle"><img src="/static/img/avatar.png" class="img-circle"></a>
         <ul class="dropdown-menu">
-          <li><router-link to="/wallet">我的钱包</router-link></li>
+          <li><router-link to="/wallet">我的资产</router-link></li>
           <li><a href="javascript:;" @click="$emit('signout')">注销登录</a></li>
         </ul>
       </div>

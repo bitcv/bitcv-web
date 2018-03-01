@@ -18,13 +18,13 @@
         <tr v-for="item in recordList" :key="item.id">
           <td>{{ item.symbol }}</td>
           <td>{{ item.amount }}</td>
-          <td>{{ item.tx_hash }}</td>
-          <td>{{ item.tx_time }}</td>
+          <td>{{ item.txHash }}</td>
+          <td>{{ item.txTime }}</td>
         </tr>
       </tbody>
     </table>
     <div class="text-right">
-      <pagination :total="total" :current-page="currentPage" @onPageClick="onPageClick"></pagination>
+      <pagination :total="dataCount" :current-page="pageno" @onPageClick="onPageClick"></pagination>
     </div>
   </div>
 </template>
@@ -38,7 +38,6 @@ export default {
   },
   data () {
     return {
-      total: 85,
       currentPage: 1,
       perpage: 10,
       pageno: 1,
