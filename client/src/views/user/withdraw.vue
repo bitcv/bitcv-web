@@ -3,7 +3,7 @@
     <div class="poptips" :class="{'poptips-show': showTips}">
       <div class="container">
         <i class="icon poptips-icon"></i>
-        <span>提示：本次服务费由平台承担</span>
+        <span>提示：本次矿工费由币威平台承担</span>
       </div>
     </div>
 
@@ -27,7 +27,10 @@
                 <div class="input-group">
                   <input type="text" class="form-control" v-model="mobile">
                   <span class="input-group-btn">
-                    <button type="button" class="btn btn-gray-light" @click="getVcode">获取验证码<span v-show="timerId"> ({{ countDown }}s)</span></button>
+                    <button :disabled="disableSms" type="button" class="btn btn-gray-light" @click="getVcode">
+                      <span v-if="disableSms"> 请等待({{ countDown }}s)</span>
+                      <span v-else="">获取验证码</span>
+                    </button>
                   </span>
                 </div>
               </div>
@@ -124,7 +127,7 @@ export default {
             assetId: this.$route.params.id
           }).then(res => {
             if (res.data.errcode === 0) {
-              this.$router.push('/wallet')
+              this.$router.push('/wallet?code=bcvadmin')
             } else {
               alert(res.data.errmsg)
             }
@@ -135,7 +138,7 @@ export default {
       })
     },
     onCancel () {
-      this.$router.push('/wallet')
+      this.$router.push('/wallet?code=bcvadmin')
     }
   }
 }
