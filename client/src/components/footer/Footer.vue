@@ -6,7 +6,7 @@
       </div>
       <div class="icon-box">
         <a :href="social.url" target="_blank" v-for="(social, index) in socialList" :key="index">
-          <i class=" fab" :class="social.fontClass"></i>
+          <i class="icon-bcv" :class="social.fontClass"></i>
         </a>
       </div>
       <div class="bottom">
@@ -22,19 +22,19 @@ export default {
     return {
       socialList: [{
         url: 'https://weibo.com/bitcv',
-        fontClass: 'fa-weibo'
+        fontClass: 'icon-weibo'
       }, {
         url: 'https://www.facebook.com/groups/1301707606641533/',
-        fontClass: 'fa-facebook'
+        fontClass: 'icon-facebook'
       }, {
         url: 'https://github.com/bitcv',
-        fontClass: 'fa-github'
+        fontClass: 'icon-github'
       }, {
         url: 'https://t.me/bcvtoken',
-        fontClass: 'fa-telegram-plane'
+        fontClass: 'icon-telegram'
       }, {
         url: 'https://twitter.com/BCVofficial',
-        fontClass: 'fa-twitter'
+        fontClass: 'icon-twitter'
       }]
     }
   }
@@ -63,8 +63,10 @@ export default {
       justify-content: space-around;
       flex-wrap: no-wrap;
       a {
-        font-size: 28px;
         color: #9B9B9B;
+        > .icon-bcv {
+          font-size: 26px;
+        }
         &:hover {
           color: #F5A623;
         }

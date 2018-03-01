@@ -17,7 +17,7 @@ export default [{
   component: getViews('discover/detail')
 }, {
   // 钱包
-  path: '/wallet/:code',
+  path: '/wallet',
   component: getViews('user/wallet')
 }, {
   // 体现
@@ -36,7 +36,8 @@ export default [{
   component: getComponent('candyRoom/CandyRoom'),
   children: [{
     path: 'candyList',
-    component: getComponent('candyRoom/CandyList')
+    // component: getComponent('candyRoom/CandyList')
+    component: getViews('candy/list')
   }, {
     path: 'candyBuy',
     component: getComponent('candyRoom/CandyBuy'),
