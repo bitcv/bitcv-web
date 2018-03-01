@@ -12,19 +12,19 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-         target: 'http://www.kingco.com',
+        target: 'http://www.kingco.com',
         // pathRewrite: {
         //   '^/api': ''
         // },
-        //target: 'http://192.168.31.252:8888',
+        target: 'http://0.0.0.0:8888',
         // changeOrigin: true
       },
       '/storage': {
-         target: 'http://www.kingco.com',
+        //target: 'http://www.kingco.com',
         // pathRewrite: {
         //   '^/storage': ''
         // },
-        //target: 'http://192.168.31.252:8888',
+        target: 'http://0.0.0.0:8888',
         // changeOrigin: true
       }
     },
