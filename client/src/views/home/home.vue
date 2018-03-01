@@ -19,7 +19,7 @@
             <div class="col-md-2 col-xs-4" v-for="item in disList" :key="item.id">
               <router-link class="figure" :to="`/discover/detail/${item.id}`">
                 <img class="img-rounded" :src="item.logoUrl">
-                <span class="caption">{{ item.tokenSymbol }}</span>
+                <p class="caption text-ellipsis">{{ item.tokenSymbol }}</p>
               </router-link>
             </div>
           </div>
@@ -189,6 +189,7 @@ export default {
     > .caption {
       display: block;
       margin-top: 10px;
+      margin-bottom: 0;
       line-height: 1;
       color: $black-light;
     }

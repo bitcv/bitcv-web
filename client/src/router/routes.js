@@ -36,7 +36,8 @@ export default [{
   component: getComponent('candyRoom/CandyRoom'),
   children: [{
     path: 'candyList',
-    component: getComponent('candyRoom/CandyList')
+    // component: getComponent('candyRoom/CandyList')
+    component: getViews('candy/list')
   }, {
     path: 'candyBuy',
     component: getComponent('candyRoom/CandyBuy'),
