@@ -60,6 +60,12 @@ Route::any('getNewsDetail/{id?}','NewsController@getNewsDetail');
 Route::any('getWeChatList','NewsController@getWeChatList');
 Route::any('articleLists','NewsController@articleList');
 
+
+Route::any('getExchangeList','AdminController@getExchangeList');
+Route::any('delExchange','AdminController@delExchange');
+Route::any('addExchange','AdminController@addExchange');
+Route::any('updExchange','AdminController@updExchange');
+
 //Route::any('articleList','NewsController@articleList');
 
 //获取自己的登录信息

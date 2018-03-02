@@ -1499,4 +1499,79 @@ class AdminController extends Controller
         return $this->output();
     }
 
+    public function getExchangeList(Request $request){
+
+        $exchangeList = Model\Exchange::select('id', 'name', 'logo_url','home_url','intro')->get()->toArray();
+        return $this->output(['exchangeList' => $exchangeList]);
+    }
+
+    public function delExchange(Request $request){
+
+        //获取请求参数
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Exchange::where('id', $mediaId)->delete();
+
+        return $this->output();
+    }
+
+    public function addExchange(Request $request){
+        //获取请求参数
+        $params = $this->validation($request, [
+            'name' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'homeUrl' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $perData = [
+            'name' => $name,
+            'logo_url' => $logoUrl,
+            'home_url' => $homeUrl,
+            'intro' => $intro,
+        ];
+
+        Model\Exchange::firstOrCreate($perData);
+
+        return $this->output();
+
+    }
+
+    public function updExchange(Request $request){
+        //获取请求参数
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric',
+            'name' => 'nullable|string',
+            'logoUrl' => 'nullable|string',
+            'homeUrl' => 'nullable|string',
+            'intro' => 'nullable|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $exchangeData = [
+            'name' => $name,
+            'logo_url' => $logoUrl,
+            'home_url' => $homeUrl,
+            'intro' => $intro,
+        ];
+
+        Model\Exchange::where('id', $mediaId)->update($exchangeData);
+
+        return $this->output();
+
+    }
+
 }

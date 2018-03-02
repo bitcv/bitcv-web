@@ -15,6 +15,7 @@ import MediaReport from '@/components/media/MediaReport'
 import Token from '@/components/token/Token'
 import PerList from '@/components/person/PerList'
 import InstituList from '@/components/institution/InstituList'
+import ExchangeList from '@/components/exchange/ExchanList'
 
 Vue.use(Router)
 
@@ -59,6 +60,9 @@ export default new Router({
     }, {
       path: '/admin/institution',
       component: InstituList
+    }, {
+      path: '/admin/exchange',
+      component: ExchangeList
     }]
   }, {
     path: '/signin',
