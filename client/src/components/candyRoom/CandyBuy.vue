@@ -67,10 +67,6 @@ export default {
   },
   methods: {
     toDepositOrder () {
-      var userId = localStorage.getItem('userId')
-      if (!userId) {
-        return alert('请先登录')
-      }
       if (parseInt(this.inputAmount) < parseInt(this.depositBoxData.minAmount)) {
         return alert('下单数量必须大于起始额度')
       }
