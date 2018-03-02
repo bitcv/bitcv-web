@@ -1,51 +1,47 @@
 <template>
-  <div class="container buying">
+  <div class="container buying-address">
 
     <!-- 路径导航 -->
     <ol class="breadcrumb">
       <li class="active">
         <router-link :to="{path: '/candyRoom/candyList'}">余币宝</router-link>
       </li>
-      <li>抢购额度</li>
+      <li>地址设置</li>
     </ol>
 
     <!-- 币威 -->
-    <div class="row bitcv">
-      <div class="col-xs-3 col-md-3">
-        <img src="/static/logo/bcv.png" alt="BitCV" height="60">
-        <!-- <img :src="bitcv.logoUrl" alt="BitCV" height="60"> -->
-        <b>币威</b>
-        <span>_BitCV</span>
-      </div>
-      <div class="col-xs-3 col-md-3">
-        <b>{{bitcv.remainAmount}}</b>
-        <p>剩余额度</p>
-      </div>
-      <div class="col-xs-3 col-md-3">
-        <b>{{bitcv.minAmount}}</b>
-        <p>起始额度</p>
-      </div>
-      <div class="col-xs-3 col-md-3">
-        <b>{{bitcv.lockTime}}<span>个月</span></b>
-        <p>锁仓期</p>
+    <div class="bitcv">
+      <h4>抢购详情</h4>
+      <div class="row">
+        <div class="col-md-5">
+          充值数量：<b>{{bitcv.number}}</b>枚
+        </div>
+
+        <div class="col-md-5">
+          <b>{{bitcv.lockTime}}</b>
+          个月后回报
+          <b>{{bitcv.money}}</b>
+          枚
+        </div>
       </div>
     </div>
 
     <!-- 内容 -->
     <div class="content">
-      <div class="form-inline row buying-form">
-        <div class="form-group col-md-4" :class="numberError">
-           <label for="number">您要充值的数量？</label>
-          <input type="number" class="form-control" id="number" placeholder="请输入" min="1" v-model="form.number">
-          <span v-if="numberError">请填写充值数量</span>
+      <div>
+        <h4>充值接收地址</h4>
+        <div>
+          <p>343443dsdsfdfdsdsfdf</p>
+          <p>此地址为项目方与平台共同认可的资金存管地址，回报已入账，请放心充值</p>
         </div>
-        <div class="col-md-2">-></div>
-        <div class="form-group col-md-4" :class="moneyError">
-           <label for="money">余币宝回报</label>
-          <input type="number" class="form-control" id="money" placeholder="请输入" min="1" v-model="form.money">
-          <span v-if="moneyError">请填写余币宝回报</span>
+      </div>
+      <div class="buying-address-form">
+        <div class="form-group" :class="addressError">
+           <label for="address">您的支出地址</label>
+          <input type="text" class="form-control" id="address" placeholder="请输入支出地址" v-model="form.address">
+          <span v-if="addressError">请填写余币宝回报</span>
         </div>
-        <div class="col-md-10 buying-form-submit">
+        <div class="col-md-10 buying-address-form-submit">
           <button class="btn btn-warning" @click="handleSubmit">立即下单</button>
         </div>
       </div>
@@ -59,11 +55,9 @@ export default {
     return {
       bitcv: {},
       form: {
-        number: '',
-        money: ''
+        address: ''
       },
-      numberError: '',
-      moneyError: ''
+      addressError: ''
     }
   },
   created () {
@@ -75,24 +69,18 @@ export default {
     },
     handleSubmit () {
       this.numberError = ''
-      this.moneyError = ''
+      this.addressError = ''
       if (!this.form.number) {
         this.numberError = 'has-error'
         return
       }
-      if (!this.form.money) {
-        this.moneyError = 'has-error'
+      if (!this.form.address) {
+        this.addressError = 'has-error'
         return
       }
       if (this.form.number && this.form.money) {
-        this.$router.push({
-          path: '/candyRoom/candyAddress',
-          query: {
-            number: this.form.number,
-            money: this.form.money,
-            lockTime: this.bitcv.lockTime
-          }
-        })
+        // this.numberError = ''
+        // this.moneyError = ''
       }
     }
   }
@@ -101,7 +89,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '~@/styles/variables';
-.buying{
+.buying-address{
   .row{
     margin: 0;
   }
@@ -151,10 +139,10 @@ export default {
       text-align: center;
       line-height: 90px;
     }
-    .buying-label{
+    .buying-address-label{
       margin-bottom: 15px;
     }
-    .buying-form{
+    .buying-address-form{
       label{
         font-weight: normal;
         color: #7d7d7d;
@@ -171,7 +159,7 @@ export default {
         color: #a94442;
       }
     }
-    .buying-form-submit{
+    .buying-address-form-submit{
       margin-top:30px;
       button{
         padding: 15px 35px;
