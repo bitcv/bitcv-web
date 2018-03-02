@@ -44,10 +44,8 @@ export default {
   methods: {
     ...mapMutations(['updateUserInfo']),
     signin () {
-      if (this.mobile.length < 7) {
-        return alert('请填写正确的手机号')
-      }
-      if (this.mobile.length > 11) {
+      var mobileReg = new RegExp(/^\d{7,11}$/)
+      if (!mobileReg.test(this.mobile)) {
         return alert('请填写正确的手机号')
       }
       if (this.passwd.length < 6) {
