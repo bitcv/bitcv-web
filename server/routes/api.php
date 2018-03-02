@@ -61,11 +61,6 @@ Route::any('getWeChatList','NewsController@getWeChatList');
 Route::any('articleLists','NewsController@articleList');
 
 
-Route::any('getExchangeList','AdminController@getExchangeList');
-Route::any('delExchange','AdminController@delExchange');
-Route::any('addExchange','AdminController@addExchange');
-Route::any('updExchange','AdminController@updExchange');
-
 //Route::any('articleList','NewsController@articleList');
 
 //获取自己的登录信息
@@ -112,6 +107,11 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('delPerson','AdminController@delPerson');
     Route::any('addPerson','AdminController@addPerson');
     Route::any('updPerson','AdminController@updPerson');
+
+    Route::any('getExchangeList','AdminController@getExchangeList');
+    Route::any('delExchange','AdminController@delExchange');
+    Route::any('addExchange','AdminController@addExchange');
+    Route::any('updExchange','AdminController@updExchange');
 
 });
     Route::any('getAdminDepositBoxList', 'AdminController@getAdminDepositBoxList');
