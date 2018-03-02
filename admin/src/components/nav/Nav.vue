@@ -68,6 +68,10 @@ export default {
               icon: 'el-icon-menu',
               url: '/admin/institution',
               text: '机构管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/exchange',
+              text: '交易所管理'
             }]
           // 项目管理员
           } else if (user['projId'] > 0) {
