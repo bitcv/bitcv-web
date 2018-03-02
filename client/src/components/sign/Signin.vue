@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="signin">
-      <h3 class="panel-title center-title">登录</h3>
+      <h2 class="panel-title center-title" style="text-align: center;font-size: 23px;margin-bottom: 50px;">登录</h2>
       <!--<div class="nav">-->
         <!--<span class="passwd" :class="{active : curIndex === 0}" @click="curIndex = 0">密码登录</span>-->
         <!--<span class="qrcode" :class="{active : curIndex === 1}" @click="curIndex = 1">扫码登录</span>-->
@@ -9,16 +9,16 @@
       <template v-if="curIndex === 0">
         <!--<span class="prompt">lianbi会员可直接使用会员名登录</span>-->
         <form>
-          <input v-model="mobile" type="text" placeholder="手机号">
-          <input v-model="passwd" type="password" placeholder="登录密码">
-          <button @click.prevent="signin">登录</button>
+          <input v-model="mobile" type="text" placeholder="请输入手机号">
+          <input v-model="passwd" type="password" placeholder="请输入密码">
+          <button @click.prevent="signin">立即登录</button>
         </form>
         <div class="btn-area">
           <router-link to="findPwd">
-            <a>忘记密码</a>
+            <a style="float: left">忘记密码?</a>
           </router-link>
           <router-link to="signup">
-            <a>注册会员</a>
+            <a style="float: right;">注册</a>
           </router-link>
         </div>
       </template>
@@ -133,26 +133,32 @@ export default {
       width: 426px;
       width: 100%;
       height: 50px;
-      border: 1px solid #4A4A4A;
+      border: 1px solid #ddd;
+      border-radius:2px;
       padding: 0 20px;
       font-size: 14px;
       &:focus {
         border: 1px solid #FFCF81;
       }
     }
+    input::-webkit-input-placeholder {
+      color: #ddd;
+    }
     button {
       width: 426px;
       height: 50px;
       width: 100%;
       text-align: center;
-      color: #FFCF81;
+      color: #fff;
       font-size: 18px;
       line-height: 25px;
-      background-color: #000;
+      background-color: #ff8b13;
+      border-color: #ff8b13;
+      border-radius: 2px;
     }
   }
   .btn-area {
-    position: absolute;
+    /*position: absolute;*/
     right: 52px;
     bottom: 33px;
     font-size: 14px;
@@ -185,6 +191,10 @@ export default {
       }
       margin-bottom: 10px;
     }
+  }
+  .btn-area a {
+    color: #bbb;
+    cursor: pointer;
   }
 }
 </style>

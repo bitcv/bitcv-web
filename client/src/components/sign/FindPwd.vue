@@ -1,7 +1,7 @@
 <template>
   <div class="container signup-container">
     <div class="findpwd">
-      <h3 class = "panel-title center-title">重置密码</h3>
+      <h2 class="panel-title center-title" style="text-align: center;font-size: 23px;margin-bottom: 50px;">重置密码</h2>
         <form>
           <template>
             <div class="row" style="margin: 0;">
@@ -17,6 +17,63 @@
                   <el-option value="853">澳门 (+853)</el-option>
                   <el-option value="856">老挝 (+856)</el-option>
                   <el-option value="886">台湾 (+886)</el-option>
+                  <el-option value="93">阿富汗 (+93)</el-option>
+                  <el-option value="355">阿尔巴尼亚 (+355)</el-option>
+                  <el-option value="213">阿尔及利亚 (+213)</el-option>
+                  <el-option value="684">美属萨摩亚 (+684)</el-option>
+                  <el-option value="376">安道尔 (+376)</el-option>
+                  <el-option value="244">安哥拉 (+244)</el-option>
+                  <el-option value="1264">安圭拉 (+1264)</el-option>
+                  <el-option value="672">南极洲 (+672)</el-option>
+                  <el-option value="1268">安提瓜和巴布达 (+1268)</el-option>
+                  <el-option value="54">阿根廷 (+54)</el-option>
+                  <el-option value="374">亚美尼亚 (+374)</el-option>
+                  <el-option value="297">阿鲁巴 (+297)</el-option>
+                  <el-option value="61">澳大利亚 (+61)</el-option>
+                  <el-option value="43">奥地利 (+43)</el-option>
+                  <el-option value="994">阿塞拜疆 (+994)</el-option>
+                  <el-option value="973">巴林 (+973)</el-option>
+                  <el-option value="880">孟加拉国 (+880)</el-option>
+                  <el-option value="1246">巴巴多斯 (+1246)</el-option>
+                  <el-option value="375">白俄罗斯 (+375)</el-option>
+                  <el-option value="32">比利时 (+32)</el-option>
+                  <el-option value="501">伯利兹 (+501)</el-option>
+                  <el-option value="229">贝宁 (+229)</el-option>
+                  <el-option value="1441">百慕大 (+1441)</el-option>
+                  <el-option value="975">不丹 (+975)</el-option>
+                  <el-option value="591">玻利维亚 (+591)</el-option>
+                  <el-option value="387">波黑 (+387)</el-option>
+                  <el-option value="267">博茨瓦纳 (+267)</el-option>
+                  <el-option value="55">巴西 (+55)</el-option>
+                  <el-option value="1284">英属维尔京群岛 (+1284)</el-option>
+                  <el-option value="673">文莱 (+673)</el-option>
+                  <el-option value="359">保加利亚 (+359)</el-option>
+                  <el-option value="226">布基纳法索 (+226)</el-option>
+                  <el-option value="95">缅甸 (+95)</el-option>
+                  <el-option value="257">布隆迪 (+257)</el-option>
+                  <el-option value="855">柬埔寨 (+855)</el-option>
+                  <el-option value="237">喀麦隆 (+237)</el-option>
+                  <el-option value="1">加拿大 (+1)</el-option>
+                  <el-option value="238">佛得角 (+238)</el-option>
+                  <el-option value="1345">开曼群岛 (+1345)</el-option>
+                  <el-option value="236">中非 (+236)</el-option>
+                  <el-option value="235">乍得 (+235)</el-option>
+                  <el-option value="56">智利 (+56)</el-option>
+                  <el-option value="61">圣诞岛 (+61)</el-option>
+                  <el-option value="61">科科斯（基林）群岛 (+61)</el-option>
+                  <el-option value="57">哥伦比亚 (+57)</el-option>
+                  <el-option value="269">科摩罗 (+269)</el-option>
+                  <el-option value="243">刚果（金） (+243)</el-option>
+                  <el-option value="242">刚果（布） (+242)</el-option>
+                  <el-option value="682">库克群岛 (+682)</el-option>
+                  <el-option value="506">哥斯达黎加 (+506)</el-option>
+                  <el-option value="225">科特迪瓦 (+225)</el-option>
+                  <el-option value="385">克罗地亚 (+385)</el-option>
+                  <el-option value="53">古巴 (+53)</el-option>
+                  <el-option value="420">捷克 (+420)</el-option>
+                  <el-option value="45">丹麦 (+45)</el-option>
+                  <el-option value="253">吉布提 (+253)</el-option>
+                  <el-option value="1767">多米尼克 (+1767)</el-option>
                 </el-select>
               </div>
               <div class="col-xs-8" style="padding:0;">
@@ -25,7 +82,8 @@
             </div>
           </template>
           <div class = smspanel>
-            <input class = "sms" v-model="vcode" type="text" placeholder="短信验证码" >
+            <input class = "sms" v-model="vcode" type="text" style="border-right-width: 0" placeholder="请输入验证码" >
+            <div class="floatboder"></div>
             <el-button :disabled="disableSms" class="sms-btn" :class="{disabled : disableSms}" type="primary" @click="getVcode">发送验证码<span v-show="timerId"> ({{ countDown }}s)</span></el-button>
             <!-- <span class = "smscode" @click="getVcode">发送短信验证码</span> -->
           </div>
@@ -139,12 +197,16 @@ export default {
       box-sizing: border-box;
       width: 426px;
       height: 50px;
-      border: 1px solid #4A4A4A;
+      border: 1px solid #ddd;
       padding: 0 20px;
       font-size: 14px;
+      border-radius:2px;
       &:focus {
         border: 1px solid #FFCF81;
       }
+    }
+    input::-webkit-input-placeholder {
+      color: #ddd;
     }
     .smspanel{
       display: flex;
@@ -153,16 +215,16 @@ export default {
       .sms-btn {
         display: block;
         box-sizing: border-box;
-        width: 145px;
+        width: 150px;
         height: 50px;
-        border: 1px solid #4A4A4A;
+        border: 1px solid #ddd;
         border-radius: 0;
-        margin-left: 5px;
         text-align: center;
         color: #FFCF81;
         font-size: 16px;
         line-height: 25px;
-        background-color: #000;
+        background-color: #fff;
+        border-left-width: 0;
         padding: 0;
         &.disabled {
           background-color: #909399;
@@ -190,10 +252,12 @@ export default {
       width: 426px;
       height: 50px;
       text-align: center;
-      color: #FFCF81;
+      color: #fff;
+      border-radius: 2px;
       font-size: 18px;
       line-height: 25px;
-      background-color: #000;
+      background-color: #ff8b13;
+      border-color: #ff8b13;
     }
   }
   .btn-area {
@@ -227,6 +291,11 @@ export default {
       }
     }
 
+  }
+  .floatboder {
+    border-right: 2px solid #eee;
+    height: 30px;
+    margin-top: 10px;
   }
 }
 </style>
