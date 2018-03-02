@@ -44,7 +44,7 @@ export default {
   methods: {
     ...mapMutations(['updateUserInfo']),
     signin () {
-      var mobileReg = new RegExp(/^0?(13|14|15|16|17|18)[0-9]{9}$/)
+      var mobileReg = new RegExp(/^\d{7,11}$/)
       if (!mobileReg.test(this.mobile)) {
         return alert('请填写正确的手机号')
       }

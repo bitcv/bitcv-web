@@ -1355,4 +1355,223 @@ class AdminController extends Controller
             'dataCount' => $dataCount,
         ]);
     }
+
+    public function getInstituList(Request $request){
+
+        $instituList = Model\Institution::select('id', 'name', 'logo_url','home_url')->get()->toArray();
+        return $this->output(['instituList' => $instituList]);
+    }
+
+    public function delInstitu(Request $request){
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric'
+        ]);
+        if($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Institution::where('id',$mediaId)->delete();
+
+        return $this->output();
+    }
+
+
+    public function addInstitu(Request $request){
+
+        //获取请求参数
+        $params = $this->validation($request, [
+            'name' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'homeUrl' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $instituData = [
+            'name' => $name,
+            'logo_url' => $logoUrl,
+            'home_url' => $homeUrl,
+        ];
+
+        Model\Institution::firstOrCreate($instituData);
+
+        return $this->output();
+    }
+
+    public function updInstitu(Request $request){
+        //获取请求参数
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric',
+            'name' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'homeUrl' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $mediaData = [
+            'name' => $name,
+            'logo_url' => $logoUrl,
+            'home_url' => $homeUrl,
+        ];
+
+        Model\Institution::where('id', $mediaId)->update($mediaData);
+
+        return $this->output();
+
+    }
+
+    public function getPerList(Request $request){
+        $perList = Model\Person::select('id', 'name', 'logo_url','position','intro')->get()->toArray();
+        return $this->output(['perList' => $perList]);
+    }
+
+    public function delPerson(Request $request){
+
+        //获取请求参数
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Person::where('id', $mediaId)->delete();
+
+        return $this->output();
+    }
+
+    public function updPerson(Request $request){
+        //获取请求参数
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric',
+            'name' => 'nullable|string',
+            'logoUrl' => 'nullable|string',
+            'position' => 'nullable|string',
+            'intro' => 'nullable|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $mediaData = [
+            'name' => $name,
+            'logo_url' => $logoUrl,
+            'position' => $position,
+            'intro' => $intro,
+        ];
+
+        Model\Person::where('id', $mediaId)->update($mediaData);
+
+        return $this->output();
+    }
+
+    public function addPerson(Request $request){
+
+        //获取请求参数
+        $params = $this->validation($request, [
+            'name' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'position' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $perData = [
+            'name' => $name,
+            'logo_url' => $logoUrl,
+            'position' => $position,
+            'intro' => $intro,
+        ];
+
+        Model\Person::firstOrCreate($perData);
+
+        return $this->output();
+    }
+
+    public function getExchangeList(Request $request){
+
+        $exchangeList = Model\Exchange::select('id', 'name', 'logo_url','home_url','intro')->get()->toArray();
+        return $this->output(['exchangeList' => $exchangeList]);
+    }
+
+    public function delExchange(Request $request){
+
+        //获取请求参数
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Exchange::where('id', $mediaId)->delete();
+
+        return $this->output();
+    }
+
+    public function addExchange(Request $request){
+        //获取请求参数
+        $params = $this->validation($request, [
+            'name' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'homeUrl' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $perData = [
+            'name' => $name,
+            'logo_url' => $logoUrl,
+            'home_url' => $homeUrl,
+            'intro' => $intro,
+        ];
+
+        Model\Exchange::firstOrCreate($perData);
+
+        return $this->output();
+
+    }
+
+    public function updExchange(Request $request){
+        //获取请求参数
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric',
+            'name' => 'nullable|string',
+            'logoUrl' => 'nullable|string',
+            'homeUrl' => 'nullable|string',
+            'intro' => 'nullable|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $exchangeData = [
+            'name' => $name,
+            'logo_url' => $logoUrl,
+            'home_url' => $homeUrl,
+            'intro' => $intro,
+        ];
+
+        Model\Exchange::where('id', $mediaId)->update($exchangeData);
+
+        return $this->output();
+
+    }
+
 }

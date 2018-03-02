@@ -19,6 +19,12 @@
       <el-tab-pane label="合作机构">
         <partner></partner>
       </el-tab-pane>
+      <el-tab-pane label="投资机构">
+        <partner></partner>
+      </el-tab-pane>
+      <el-tab-pane label="交易所">
+        <partner></partner>
+      </el-tab-pane>
       <el-tab-pane label="媒体报道">
         <report></report>
       </el-tab-pane>
