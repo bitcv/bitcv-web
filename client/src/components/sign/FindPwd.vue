@@ -50,11 +50,10 @@ export default {
   },
   methods: {
     getVcode () {
-      //var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
-      if (this.mobile.length < 7 ) {
+      if (this.mobile.length < 7) {
         return alert('请填写正确的手机号')
       }
-      if (this.mobile.length > 11 ) {
+      if (this.mobile.length > 11) {
         return alert('请填写正确的手机号')
       }
       this.disableSms = true
@@ -82,14 +81,13 @@ export default {
       })
     },
     findPwd () {
-      //var mobileReg = new RegExp(/^0?(13|14|15|16|17|18)[0-9]{9}$/)
       if (!this.selected) {
         return alert('请选择手机国家号')
       }
-      if (this.mobile.length < 7 ) {
+      if (this.mobile.length < 7) {
         return alert('请填写正确的手机号')
       }
-      if (this.mobile.length > 11 ) {
+      if (this.mobile.length > 11) {
         return alert('请填写正确的手机号')
       }
       if (!this.vcode) {

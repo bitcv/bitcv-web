@@ -53,7 +53,6 @@ export default {
   },
   methods: {
     signup () {
-      //var mobileReg = new RegExp(/^0?(13|14|15|17|18)[0-9]{9}$/)
       if (!this.selected) {
         return alert('请选择手机国家号')
       }
@@ -86,7 +85,6 @@ export default {
       })
     },
     getVcode () {
-      //var mobileReg = new RegExp(/^0?(13|14|15|16|17|18)[0-9]{9}$/)
       if (this.mobile.length < 7) {
         return alert('请填写正确的手机号')
       }
