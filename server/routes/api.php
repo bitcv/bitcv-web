@@ -59,10 +59,12 @@ Route::any('getNewsList','NewsController@getNewsList');
 Route::any('getNewsDetail/{id?}','NewsController@getNewsDetail');
 Route::any('getWeChatList','NewsController@getWeChatList');
 Route::any('articleLists','NewsController@articleList');
+
+
 //Route::any('articleList','NewsController@articleList');
 
 //获取自己的登录信息
-Route::post('getUser', 'AdminController@getUser');
+Route::any('getUser', 'AdminController@getUser');
 
 //个人登录后的接口
 Route::group(['middleware' => 'checkLogin'], function() {
@@ -95,6 +97,21 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('getAdminDepositOrderList', 'AdminController@getAdminDepositOrderList');
     Route::any('delMediaReport','AdminController@delMediaReport');
     Route::any('getMediaReportList','AdminController@getMediaReportList');
+
+    Route::any('getInstituList','AdminController@getInstituList');
+    Route::any('delInstitu','AdminController@delInstitu');
+    Route::any('addInstitu','AdminController@addInstitu');
+    Route::any('updInstitu','AdminController@updInstitu');
+
+    Route::any('getPerList','AdminController@getPerList');
+    Route::any('delPerson','AdminController@delPerson');
+    Route::any('addPerson','AdminController@addPerson');
+    Route::any('updPerson','AdminController@updPerson');
+
+    Route::any('getExchangeList','AdminController@getExchangeList');
+    Route::any('delExchange','AdminController@delExchange');
+    Route::any('addExchange','AdminController@addExchange');
+    Route::any('updExchange','AdminController@updExchange');
 
 });
     Route::any('getAdminDepositBoxList', 'AdminController@getAdminDepositBoxList');

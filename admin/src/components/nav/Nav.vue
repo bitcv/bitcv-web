@@ -60,6 +60,18 @@ export default {
               icon: 'el-icon-menu',
               url: '/admin/mediareport',
               text: '项目动态'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/perlist',
+              text: '成员配置'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/institution',
+              text: '机构管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/exchange',
+              text: '交易所管理'
             }]
           // 项目管理员
           } else if (user['projId'] > 0) {

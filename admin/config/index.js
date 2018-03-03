@@ -12,22 +12,22 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://www.kingco.com',
-        pathRewrite: {
+        target: 'http://0.0.0.0:8888',
+        /*pathRewrite: {
           '^/api': ''
-        }
+        }*/
       },
       '/storage': {
-        target: 'http://www.kingco.com',
-        pathRewrite: {
+        target: 'http://0.0.0.0:8888',
+        /*pathRewrite: {
           '^/storage': ''
-        }
+        }*/
       }
     },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,

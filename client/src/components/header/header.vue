@@ -10,7 +10,10 @@
           <span class="icon-bar"></span>
         </button>
 
-        <router-link to="/" class="navbar-brand"><img src="/static/img/brand.png" alt="BitCV" height="30"></router-link>
+        <router-link to="/" class="navbar-brand">
+          <img src="/static/img/brand.png" alt="BitCV" height="30" class="hidden-xs hidden-sm">
+          <img src="/static/img/brand-mobile.png" alt="BitCV" height="30" class="hidden-md hidden-lg">
+        </router-link>
       </div>
 
       <div v-if="!hasToken" class="navbar-right hidden-sm hidden-xs">
@@ -19,10 +22,17 @@
         <router-link class="btn navbar-btn btn-default btn-outline" to="/signin">登录</router-link>
       </div>
 
-      <div class="dropdown navbar-right" :class="{open: showDropdown}" @mouseenter="onMouseenter" @mouseleave="onMouseleave">
-        <a v-if="hasToken" href="javascrip:;" class="dropdown-toggle"><img :src="avatar" class="img-circle"></a>
+      <div class="dropdown navbar-right" :class="{open: showDropdown}" @mouseenter="onMouseenter" @mouseleave="onMouseleave" style="margin-right:0">
+        <a
+          href="javascript:;"
+          class="dropdown-toggle"
+          :class="{'hidden-md': !hasToken, 'hidden-lg': !hasToken}"
+        >
+          <img :src="avatar" class="img-circle">
+          <span>{{ mobile }}</span>
+        </a>
         <ul v-if="hasToken" class="dropdown-menu">
-          <li><router-link to="/wallet?code=user" @click.native="dimissMenu">我的资产</router-link></li>
+          <li><router-link to="/wallet" @click.native="dimissMenu">我的资产</router-link></li>
           <li><a href="javascript:;" @click="$emit('signout')">注销登录</a></li>
         </ul>
         <ul v-else class="dropdown-menu hidden-md hidden-lg">
@@ -66,6 +76,18 @@ export default {
       }
 
       return '/static/img/avatar.png'
+    },
+    mobile () {
+      if (this.userInfo) {
+        const {mobile} = this.userInfo
+
+        const list = `${mobile}`.split('')
+        list.splice(2, 7, '**')
+
+        return list.join('')
+      }
+
+      return ''
     }
   },
   directives: {
@@ -168,10 +190,12 @@ export default {
   .dropdown-toggle {
     display: block;
     padding: 5px;
+    color: $primary-color;
     > img {
       width: 40px;
       height: 40px;
-      display: block;
+      display: inline-block;
+      vertical-align: middle;
     }
   }
   .btn-outline {

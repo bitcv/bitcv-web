@@ -32,7 +32,7 @@
                 <p>项目符号：<span class="text-primary">{{ info.tokenSymbol }}</span></p>
               </div>
             </div>
-            <p class="span-group">
+            <p class="span-group" v-if="info.tagList && info.tagList.length > 1">
               <span class="text-dark">标签</span>
               <span v-for="(item, index) in info.tagList" :key="index">{{ item }}</span>
             </p>
