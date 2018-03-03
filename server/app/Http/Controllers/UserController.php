@@ -397,9 +397,12 @@ class UserController extends Controller
         }
         $tokenId = $userAssetData->tokenId;
         $tokenProtocol = $userAssetData->protocol;
-        $tokenSymbol = $userAssetData->symbol;
+        $tokenSymbol = strtoupper($userAssetData->symbol);
         $amount = $userAssetData->amount;
-        if ($tokenProtocol != 1) {
+
+        // 暂时只支持ERC20协议的提现
+        $tokenSymbolArr = ['BCV', 'EOS', 'PXC', 'ICST'];
+        if (!in_array($tokenSymbol, $tokenSymbolArr)) {
             return $this->error(103);
         }
 
@@ -411,6 +414,12 @@ class UserController extends Controller
         }
         $walletAddr = $userWalletData['addr'];
 
+        // 更改用户资产状态
+        $flag = Model\UserAsset::where([['id', $assetId], ['status', 1]])->update(['status' => 2]);
+        if ($flag !== 1) {
+            return $this->error(208);
+        }
+
         // 调用提现接口
         $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/withdraw', [
             'toAddr' => $walletAddr,
@@ -420,6 +429,8 @@ class UserController extends Controller
         
         $resArr = json_decode($resJson, true);
         if (!$resArr || $resArr['errcode'] !== 0) {
+            // 调用接口失败，将用户资产状态重置
+            Model\UserAsset::where([['id', $assetId], ['status', 2]])->update(['status' => 1]);
             return $this->error(104);
         }
 
@@ -433,9 +444,6 @@ class UserController extends Controller
             'amount' => $amount,
             'status' => 1,
         ]);
-
-        // 更改用户资产状态
-        Model\UserAsset::where('id', $assetId)->update(['status' => 2]);
 
         return $this->output();
     }
