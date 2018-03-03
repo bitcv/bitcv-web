@@ -150,7 +150,7 @@
             <!-- <span class = "smscode" @click="getVcode">发送短信验证码</span> -->
           </div>
           <input v-model="passwd" type="password" placeholder="请输入新的密码">
-          <button @click.prevent="findPwd">找回密码</button>
+          <button @click.prevent="findPwd">重置密码</button>
         </form>
     </div>
   </div>
