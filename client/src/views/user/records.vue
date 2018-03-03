@@ -38,7 +38,6 @@ export default {
   },
   data () {
     return {
-      currentPage: 1,
       perpage: 10,
       pageno: 1,
       dataCount: 0,
@@ -62,6 +61,7 @@ export default {
     },
     onPageClick (pageno) {
       this.pageno = pageno
+      this.updateData()
     }
   }
 }

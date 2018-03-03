@@ -30,10 +30,9 @@
           <td><img :src="item.logoUrl" class="img-circle" style="max-width: 40px;max-height: 40px;"/>&nbsp;&nbsp;{{ item.symbol }}</td>
           <td>{{ item.price }}</td>
           <td>{{ item.amount }} ≈ <span class="text-dark small">{{ parseInt(item.amount * item.price * 10000) / 10000 }}</span></td>
-          <td v-if="item.symbol === 'BCV'">{{ statusDict[item.status] }}</td>
+          <td v-if="checkAuth(item.symbol)">{{ statusDict[item.status] }}</td>
           <td v-else>稍后提取</td>
-          <!--<td >稍后提取</td>-->
-          <td v-if="item.symbol === 'BCV' && statusDict[item.status] === '可提取'"><button class="btn btn-text btn-sm" @click="toWithdraw(item)">立即提取</button></td>
+          <td v-if="checkAuth(item.symbol) && statusDict[item.status] === '可提取'"><button class="btn btn-text btn-sm" @click="toWithdraw(item)">立即提取</button></td>
           <td v-else>-</td>
         </tr>
       </tbody>
@@ -45,6 +44,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 import Pagination from '@/components/pagination'
 
 export default {
@@ -67,6 +67,9 @@ export default {
     this.updateData()
   },
   computed: {
+    ...mapState({
+      code: state => state.route.query.code
+    }),
     totalAssetArr () {
       return this.dataList.reduce((prev, curr) => curr.amount * curr.price + prev, 0).toString().split('.')
     }
@@ -74,8 +77,8 @@ export default {
   methods: {
     updateData () {
       this.$http.post('/api/getUserAsset', {
-        perpage: 10,
-        pageno: 1
+        perpage: this.perpage,
+        pageno: this.pageno
       }).then(res => {
         if (res.data.errcode === 0) {
           this.dataCount = res.data.data.dataCount
@@ -85,8 +88,26 @@ export default {
         }
       })
     },
+    checkAuth (tokenSymbol) {
+      if (this.code !== 'bcvadmin') {
+        // 非管理员只开通BCV
+        if (tokenSymbol === 'BCV') {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        // 管理员开通
+        if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST') {
+          return true
+        } else {
+          return false
+        }
+      }
+    },
     onPageClick (pageno) {
       this.pageno = pageno
+      this.updateData()
     },
     toWithdraw (item) {
       if (item.walletAddr) {

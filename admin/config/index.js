@@ -13,15 +13,15 @@ module.exports = {
     proxyTable: {
       '/api': {
         target: 'http://0.0.0.0:8888',
-        // pathRewrite: {
-        //   '^/api': ''
-        // }
+        /*pathRewrite: {
+          '^/api': ''
+        }*/
       },
       '/storage': {
         target: 'http://0.0.0.0:8888',
-        // pathRewrite: {
-        //   '^/storage': ''
-        // }
+        /*pathRewrite: {
+          '^/storage': ''
+        }*/
       }
     },
 

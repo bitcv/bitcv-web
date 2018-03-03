@@ -13,6 +13,7 @@ module.exports = {
     proxyTable: {
       '/api': {
         // target: 'http://www.kingco.com'
+<<<<<<< HEAD
         // target: 'http://192.168.31.252:8888'
         target: 'https://www.bticv.com'
       },
@@ -20,6 +21,13 @@ module.exports = {
         // target: 'http://www.kingco.com'
         // target: 'http://192.168.31.252:8888'
         target: 'https://www.bticv.com'
+=======
+        target: 'http://0.0.0.0:8888'
+      },
+      '/storage': {
+        // target: 'http://www.kingco.com'
+        target: 'http://0.0.0.0:8888'
+>>>>>>> 0afb630af05bf70752e3885da6dd7e8caaae4681
       }
     },
 
