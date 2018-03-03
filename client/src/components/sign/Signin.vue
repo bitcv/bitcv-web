@@ -14,6 +14,14 @@
           <h5 style="margin-top: 10px;"><span style="color: #ddd;">春节期间参加活动的用户请先<a href="/findpwd" style="cursor: pointer;"><span style="color: #ff8b13;">重置密码</span></a></span></h5>
           <button @click.prevent="signin">立即登录</button>
         </form>
+        <div class="btn-area">
+          <router-link to="findPwd">
+            <a style="float: left">重置密码?</a>
+          </router-link>
+          <router-link to="signup">
+            <a style="float: right;">注册</a>
+          </router-link>
+        </div>
       </template>
       <div class="qrcode-area" v-else>
         <img src="/static/img/logo.png" alt="">

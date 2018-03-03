@@ -151,7 +151,7 @@
           </div>
           <input v-model="passwd" type="password" placeholder="密码">
           <button class="signup-btn" @click.prevent="signup">注册</button>
-          <h5 style="margin-top: 25px;"><span style="color: #aaa;">已有账号?</span><a href="/signin" style="cursor: pointer;"><span style="color: #ff8b13;"> 去登陆</span></a></h5>
+          <h5 style="margin-top: 25px;"><span style="color: #aaa;">已有账号?</span><a href="/signin" style="cursor: pointer;"><span style="color: #ff8b13;"> 去登录</span></a></h5>
         </form>
     </div>
   </div>
