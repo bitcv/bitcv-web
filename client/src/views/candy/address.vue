@@ -18,7 +18,7 @@
         </div>
 
         <div class="col-md-5">
-          <b>{{bitcv.lockTime}}</b>
+          <b>{{bitcv.lockTime}}9</b>
           个月后回报
           <b>{{bitcv.money}}</b>
           枚
@@ -30,19 +30,19 @@
     <div class="content">
       <div>
         <h4>充值接收地址</h4>
-        <div>
+        <div class="buying-address-adr">
           <p>343443dsdsfdfdsdsfdf</p>
           <p>此地址为项目方与平台共同认可的资金存管地址，回报已入账，请放心充值</p>
         </div>
       </div>
+      <h4>您的支出地址</h4>
       <div class="buying-address-form">
         <div class="form-group" :class="addressError">
-           <label for="address">您的支出地址</label>
           <input type="text" class="form-control" id="address" placeholder="请输入支出地址" v-model="form.address">
-          <span v-if="addressError">请填写余币宝回报</span>
+          <span v-if="addressError">请填写支出地址</span>
         </div>
         <div class="col-md-10 buying-address-form-submit">
-          <button class="btn btn-warning" @click="handleSubmit">立即下单</button>
+          <button class="btn btn-warning" @click="handleSubmit">提交订单</button>
         </div>
       </div>
     </div>
@@ -68,19 +68,22 @@ export default {
       this.bitcv = this.$route.query
     },
     handleSubmit () {
-      this.numberError = ''
+      console.log(111)
       this.addressError = ''
-      if (!this.form.number) {
-        this.numberError = 'has-error'
-        return
-      }
       if (!this.form.address) {
         this.addressError = 'has-error'
         return
       }
-      if (this.form.number && this.form.money) {
-        // this.numberError = ''
-        // this.moneyError = ''
+      if (this.form.address) {
+        this.$router.push({
+          path: '/candyRoom/candyDetails',
+          query: {
+            address: this.form.address,
+            lockTime: this.bitcv.lockTime,
+            number: this.bitcv.number,
+            money: this.bitcv.money
+          }
+        })
       }
     }
   }
@@ -90,6 +93,10 @@ export default {
 <style lang="scss" scoped>
 @import '~@/styles/variables';
 .buying-address{
+  h4{
+    font-size: 16px;
+    color: #333;
+  }
   .row{
     margin: 0;
   }
@@ -101,52 +108,32 @@ export default {
   }
   .bitcv{
     background: #fcf7f1;
-    padding: 30px 0 25px 0;
+    padding: 25px;
     box-sizing: border-box;
-    .col-md-3{
+    .col-md-5{
       padding-top: 10px;
-      &:nth-child(1){
-        padding-left: 40px;
-        padding-top: 0;
-      }
-      &:nth-child(2), &:nth-child(3), &:nth-child(4){
-        b{
-          font-weight: 500;
-          font-size: 20px;
-          span{
-            font-size: 14px;
-            color: $gray;
-          }
-        }
-        p{
-          color: $gray;
-        }
-      }
-      &:nth-child(2){
-        b{
-          color: $primary-color;
-        }
+      b{
+        font-size: 18px;
+        color: $primary-color;
       }
     }
   }
   .content{
     background: #fff;
-    padding: 40px 48px;
-    .col-md-4, .col-md-10{
-      padding: 0;
-    }
-    .col-md-2{
-      text-align: center;
-      line-height: 90px;
-    }
-    .buying-address-label{
-      margin-bottom: 15px;
+    padding: 25px;
+    .buying-address-adr{
+      padding: 20px 50px;
+      p{
+        &:nth-child(2){
+          color: $primary-color;
+          font-size: 12px;
+          font-weight: 500;
+        }
+      }
     }
     .buying-address-form{
-      label{
-        font-weight: normal;
-        color: #7d7d7d;
-      }
+      overflow: hidden;
+      padding-left: 50px;
       input{
         width: 100%;
         height: 50px;
@@ -160,7 +147,7 @@ export default {
       }
     }
     .buying-address-form-submit{
-      margin-top:30px;
+      margin-top:20px;
       button{
         padding: 15px 35px;
         font-size: 16px;

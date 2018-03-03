@@ -172,7 +172,7 @@ export default {
       }
     }
     .buying-form-submit{
-      margin-top:30px;
+      margin-top:20px;
       button{
         padding: 15px 35px;
         font-size: 16px;

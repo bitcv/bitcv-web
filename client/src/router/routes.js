@@ -62,6 +62,13 @@ export default [{
       requiresAuth: true
     }
   }, {
+    path: 'candyDetails',
+    // component: getComponent('candyRoom/CandyBuy'),
+    component: getViews('candy/details'),
+    meta: {
+      requiresAuth: true
+    }
+  }, {
     path: 'candyOrder',
     component: getComponent('candyRoom/CandyOrder'),
     meta: {
