@@ -847,7 +847,10 @@ class AdminController extends Controller
         }
         extract($params);
 
-        $projMemberList = Model\ProjMember::where('proj_id', $projId)->get()->toArray();
+        $projMemberList = Model\ProjMember::join('person','person.id','=','proj_member.per_id')
+            ->where('proj_id', $projId)
+            ->select('proj_member.id','person.logo_url','person.position','person.intro','person.name')
+            ->get()->toArray();
 
         return $this->output(['dataList' => $projMemberList]);
     }
@@ -855,10 +858,7 @@ class AdminController extends Controller
     public function addProjMember (Request $request) {
         $params = $this->validation($request, [
             'projId' => 'required|numeric',
-            'name' => 'required|string',
-            'photoUrl' => 'nullable|string',
-            'position' => 'required|string',
-            'intro' => 'required|string',
+            'memberId' => 'required|numeric'
         ]);
         if ($params === false) {
             return $this->error(100);
@@ -867,27 +867,23 @@ class AdminController extends Controller
 
         $memberData = [
             'proj_id' => $projId,
-            'name' => $name,
-            'position' => $position,
-            'intro' => $intro,
+            'per_id' => $memberId,
         ];
 
-        if ($photoUrl) {
-            $memberData['photo_url'] = $photoUrl;
-        }
+//        if ($photoUrl) {
+//            $memberData['photo_url'] = $photoUrl;
+//        }
 
         Model\ProjMember::firstOrCreate($memberData);
 
         return $this->output();
     }
 
-    public function updProjMember (Request $request) {
+    public function addProjAdvisor(Request $request){
+
         $params = $this->validation($request, [
+            'projId' => 'required|numeric',
             'memberId' => 'required|numeric',
-            'name' => 'required|string',
-            'photoUrl' => 'nullable|string',
-            'position' => 'required|string',
-            'intro' => 'required|string',
         ]);
         if ($params === false) {
             return $this->error(100);
@@ -895,14 +891,44 @@ class AdminController extends Controller
         extract($params);
 
         $memberData = [
-            'name' => $name,
-            'position' => $position,
-            'intro' => $intro,
+            'proj_id' => $projId,
+            'advisor_id' => $memberId,
         ];
 
-        if ($photoUrl) {
-            $memberData['photo_url'] = $photoUrl;
+//        if ($photoUrl) {
+//            $memberData['photo_url'] = $photoUrl;
+//        }
+
+        Model\ProjAdvisor::firstOrCreate($memberData);
+
+        return $this->output();
+
+    }
+
+    public function updProjMember (Request $request) {
+        $params = $this->validation($request, [
+            'memberId' => 'required|numeric',
+            'projId' => 'required|numeric',
+//            'name' => 'required|string',
+//            'photoUrl' => 'nullable|string',
+//            'position' => 'required|string',
+//            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
         }
+        extract($params);
+
+        $memberData = [
+              'per_id' => $prodId,
+//            'name' => $name,
+//            'position' => $position,
+//            'intro' => $intro,
+        ];
+
+//        if ($photoUrl) {
+//            $memberData['photo_url'] = $photoUrl;
+//        }
 
         Model\ProjMember::where('id', $memberId)->update($memberData);
 
@@ -1085,29 +1111,34 @@ class AdminController extends Controller
         }
         extract($params);
 
-        $projPartnerList = Model\ProjPartner::where('proj_id', $projId)->get()->toArray();
-
+        $projPartnerList = Model\ProjPartner::join('institution','institution.id','=','proj_partner.institu_id')
+            ->where('proj_partner.proj_id', $projId)
+            ->select('proj_partner.id','institution.name','institution.home_url','institution.logo_url')
+            ->get()->toArray();
+        //
         return $this->output(['dataList' => $projPartnerList]);
     }
 
     public function addProjPartner (Request $request) {
         $params = $this->validation($request, [
             'projId' => 'required|numeric',
-            'name' => 'required|string',
-            'logoUrl' => 'required|string',
-            'homeUrl' => 'required|string',
+            'partnerId'=> 'required|numeric',
+//            'name' => 'required|string',
+//            'logoUrl' => 'required|string',
+//            'homeUrl' => 'required|string',
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
-        $homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
+        //$homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
 
         Model\ProjPartner::firstOrCreate([
             'proj_id' => $projId,
-            'name' => $name,
-            'logo_url' => $logoUrl,
-            'home_url' => $homeUrl,
+            'institu_id' => $partnerId,
+//            'name' => $name,
+//            'logo_url' => $logoUrl,
+//            'home_url' => $homeUrl,
         ]);
 
         return $this->output();
@@ -1116,20 +1147,22 @@ class AdminController extends Controller
     public function updProjPartner (Request $request) {
         $params = $this->validation($request, [
             'partnerId' => 'required|numeric',
-            'name' => 'required|string',
-            'logoUrl' => 'required|string',
-            'homeUrl' => 'required|string',
+            'projId' => 'required|numeric',
+//            'name' => 'required|string',
+//            'logoUrl' => 'required|string',
+//            'homeUrl' => 'required|string',
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
-        $homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
+        //$homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
 
         Model\ProjPartner::where('id', $partnerId)->update([
-            'name' => $name,
-            'logo_url' => $logoUrl,
-            'home_url' => $homeUrl,
+              'institu_id' => $projId,
+//            'name' => $name,
+//            'logo_url' => $logoUrl,
+//            'home_url' => $homeUrl,
         ]);
 
         return $this->output();
@@ -1244,39 +1277,42 @@ class AdminController extends Controller
         }
         extract($params);
 
-        $projAdvisorList = Model\ProjAdvisor::where('proj_id', $projId)->get()->toArray();
+        $projAdvisorList = Model\ProjAdvisor::join('advisor','advisor.id','=','proj_advisor.advisor_id')
+            ->where('proj_id', $projId)
+            ->select('proj_advisor.id','advisor.name','advisor.company','advisor.intro','advisor.logo_url')
+            ->get()->toArray();
 
         return $this->output(['dataList' => $projAdvisorList]);
     }
 
-    public function addProjAdvisor (Request $request) {
-        $params = $this->validation($request, [
-            'projId' => 'required|numeric',
-            'name' => 'required|string',
-            'photoUrl' => 'nullable|string',
-            'company' => 'required|string',
-            'intro' => 'required|string',
-        ]);
-        if ($params === false) {
-            return $this->error(100);
-        }
-        extract($params);
-
-        $advisorData = [
-            'proj_id' => $projId,
-            'name' => $name,
-            'company' => $company,
-            'intro' => $intro,
-        ];
-
-        if ($photoUrl) {
-            $advisorData['photo_url'] = $photoUrl;
-        }
-
-        Model\ProjAdvisor::firstOrCreate($advisorData);
-
-        return $this->output();
-    }
+//    public function addProjIAdvisor (Request $request) {
+//        $params = $this->validation($request, [
+//            'projId' => 'required',
+//            'name' => 'required|string',
+//            'photoUrl' => 'nullable|string',
+//            'company' => 'required|string',
+//            'intro' => 'required|string',
+//        ]);
+//        if ($params === false) {
+//            return $this->error(100);
+//        }
+//        extract($params);
+//
+//        $advisorData = [
+//            'proj_id' => $projId,
+//            'name' => $name,
+//            'company' => $company,
+//            'intro' => $intro,
+//        ];
+//
+//        if ($photoUrl) {
+//            $advisorData['photo_url'] = $photoUrl;
+//        }
+//
+//        Model\ProjAdvisor::firstOrCreate($advisorData);
+//
+//        return $this->output();
+//    }
 
     public function updProjAdvisor (Request $request) {
         $params = $this->validation($request, [
@@ -1308,7 +1344,7 @@ class AdminController extends Controller
 
     public function delProjAdvisor (Request $request) {
         $params = $this->validation($request, [
-            'advisorId' => 'required|numeric'
+            'advisorId' => 'required|numeric',
         ]);
         if ($params === false) {
             return $this->error(100);
@@ -1428,6 +1464,11 @@ class AdminController extends Controller
 
     public function getPerList(Request $request){
         $perList = Model\Person::select('id', 'name', 'logo_url','position','intro')->get()->toArray();
+        return $this->output(['perList' => $perList]);
+    }
+
+    public function getAdvList(Request $request){
+        $perList = Model\Advisor::select('id', 'name', 'logo_url','company','intro')->get()->toArray();
         return $this->output(['perList' => $perList]);
     }
 
@@ -1573,5 +1614,232 @@ class AdminController extends Controller
         return $this->output();
 
     }
+
+    public function getProjExchangeList(Request $request){
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $projMemberList = Model\ProjExchange::join('exchange','exchange.id','=','proj_exchange.exchan_id')
+            ->where('proj_exchange.proj_id', $projId)
+            ->select('proj_exchange.id','exchange.home_url','exchange.name','exchange.logo_url','exchange.intro')
+            ->get()->toArray();
+
+        return $this->output(['dataList' => $projMemberList]);
+
+    }
+
+    public function addProjExchange(Request $request){
+        $params = $this->validation($request, [
+            'projId' => 'required|string',
+            'memberId' => 'required|numeric',
+//            'name' => 'required|string',
+//            'photoUrl' => 'nullable|string',
+//            'position' => 'required|string',
+//            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $memberData = [
+            'proj_id' => $projId,
+            'exchan_id' => $memberId,
+//            'name' => $name,
+//            'position' => $position,
+//            'intro' => $intro,
+        ];
+
+//        if ($photoUrl) {
+//            $memberData['photo_url'] = $photoUrl;
+//        }
+
+        Model\ProjExchange::firstOrCreate($memberData);
+
+        return $this->output();
+    }
+
+    public function updProjExchange(Request $request){
+        $params = $this->validation($request, [
+            'memberId' => 'required|numeric',
+            'projId' => 'required|numeric',
+//            'name' => 'required|string',
+//            'photoUrl' => 'nullable|string',
+//            'position' => 'required|string',
+//            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $memberData = [
+            'exchan_id' => $prodId,
+//            'name' => $name,
+//            'position' => $position,
+//            'intro' => $intro,
+        ];
+
+//        if ($photoUrl) {
+//            $memberData['photo_url'] = $photoUrl;
+//        }
+
+        Model\ProjExchange::where('id', $memberId)->update($memberData);
+
+        return $this->output();
+    }
+
+    public function delProjExchange(Request $request){
+        $params = $this->validation($request, [
+            'partnerId' => 'required|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\ProjExchange::where('id', $partnerId)->delete();
+
+        return $this->output();
+    }
+
+
+    public function addProjIMember (Request $request) {
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'name' => 'required|string',
+            'photoUrl' => 'nullable|string',
+            'position' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $memberData = [
+//          'proj_id' => $projId,
+            'name' => $name,
+            'position' => $position,
+            'intro' => $intro,
+            'logo_url' => $photoUrl,
+        ];
+        if ($photoUrl) {
+            $memberData['logo_url'] = $photoUrl;
+        }
+        $result = Model\Person::firstOrCreate($memberData);
+        $data = [
+            'proj_id' => $projId,
+            'per_id' => $result->id,
+        ];
+        Model\ProjMember::firstOrCreate($data);
+        return $this->output();
+    }
+
+    public function addProjIPartner(Request $request){
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'name' => 'required|string',
+            'logoUrl' => 'required|string',
+            'homeUrl' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
+        $partnerData = [
+            'name' => $name,
+            'logo_url' => $logoUrl,
+            'home_url' => $homeUrl,
+        ];
+
+        $result = Model\Institution::firstOrCreate($partnerData);
+
+        $data = [
+            'proj_id' => $projId,
+            'institu_id' => $result->id,
+        ];
+        Model\ProjPartner::firstOrCreate($data);
+        return $this->output();
+    }
+
+    public function addProjIExchange(Request $request){
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'name' => 'required|string',
+            'logoUrl' => 'required|string',
+            'homeUrl' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
+
+        $exchanData = [
+            'name' => $name,
+            'logo_url' => $logoUrl,
+            'home_url' => $homeUrl,
+        ];
+
+        $result = Model\Exchange::firstOrCreate($exchanData);
+
+        $data = [
+            'proj_id' => $projId,
+            'exchan_id' => $result->id,
+        ];
+        Model\ProjExchange::firstOrCreate($data);
+        return $this->output();
+    }
+
+    public function addProjIAdvisor(Request $request){
+        $params = $this->validation($request, [
+            'projId' => 'required|numeric',
+            'name' => 'required|string',
+            'photoUrl' => 'required|string',
+            'company' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        //$homeUrl = strpos($homeUrl, 'http') === 0 ? $homeUrl : 'http://' . $homeUrl;
+
+        $exchanData = [
+            'name' => $name,
+            'logo_url' => $photoUrl,
+            'company' => $company,
+            'intro' => $intro,
+        ];
+
+        $result = Model\Advisor::firstOrCreate($exchanData);
+
+        $data = [
+            'proj_id' => $projId,
+            'advisor_id' => $result->id,
+        ];
+        Model\ProjAdvisor::firstOrCreate($data);
+        return $this->output();
+    }
+
+//    public function delProjAdvisor (Request $request) {
+//        $params = $this->validation($request, [
+//            'memberId' => 'required|numeric',
+//        ]);
+//        if ($params === false) {
+//            return $this->error(100);
+//        }
+//        extract($params);
+//
+//        Model\ProjAdvisor::where('id', $memberId)->delete();
+//
+//        return $this->output();
+//    }
 
 }

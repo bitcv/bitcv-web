@@ -129,6 +129,7 @@ Route::group(['middleware' => 'checkProj'], function () {
 
     Route::any('getProjMemberList', 'AdminController@getProjMemberList');
     Route::any('addProjMember', 'AdminController@addProjMember');
+    Route::any('addProjIMember','AdminController@addProjIMember');
     Route::any('delProjMember', 'AdminController@delProjMember');
     Route::any('updProjMember', 'AdminController@updProjMember');
 
@@ -149,6 +150,7 @@ Route::group(['middleware' => 'checkProj'], function () {
 
     Route::any('getProjPartnerList', 'AdminController@getProjPartnerList');
     Route::any('addProjPartner', 'AdminController@addProjPartner');
+    Route::any('addProjIPartner','AdminController@addProjIPartner');
     Route::any('delProjPartner', 'AdminController@delProjPartner');
     Route::any('updProjPartner', 'AdminController@updProjPartner');
 
@@ -156,6 +158,19 @@ Route::group(['middleware' => 'checkProj'], function () {
     Route::any('addProjReport', 'AdminController@addProjReport');
     Route::any('delProjReport', 'AdminController@delProjReport');
     Route::any('updProjReport', 'AdminController@updProjReport');
+
+    Route::any('getProjExchangeList','AdminController@getProjExchangeList');
+    Route::any('addProjExchange','AdminController@addProjExchange');
+    Route::any('addProjIExchange','AdminController@addProjIExchange');
+    Route::any('delProjExchange','AdminController@delProjExchange');
+    Route::any('updProjExchange','AdminController@updProjExchange');
+
+
+    Route::any('getAdvList','AdminController@getAdvList');
+    Route::any('addProjAdvisor','AdminController@addProjAdvisor');
+    Route::any('addProjIAdvisor','AdminController@addProjIAdvisor');
+    Route::any('delProjAdvisor','AdminController@delProjAdvisor');
+
 
 });
 

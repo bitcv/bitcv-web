@@ -16,14 +16,14 @@
       <el-tab-pane label="项目顾问">
         <advisor></advisor>
       </el-tab-pane>
-      <el-tab-pane label="合作机构">
+      <!-- <el-tab-pane label="合作机构">
         <partner></partner>
-      </el-tab-pane>
+      </el-tab-pane> -->
       <el-tab-pane label="投资机构">
         <partner></partner>
       </el-tab-pane>
       <el-tab-pane label="交易所">
-        <partner></partner>
+        <exchange></exchange>
       </el-tab-pane>
       <el-tab-pane label="媒体报道">
         <report></report>
@@ -44,6 +44,7 @@ import Advisor from '@/components/projList/editProject/Advisor'
 import Partner from '@/components/projList/editProject/Partner'
 import Report from '@/components/projList/editProject/Report'
 import DepositBox from '@/components/projList/editProject/DepositBox'
+import Exchange from '@/components/projList/editProject/Exchange'
 
 export default {
   data () {
@@ -65,6 +66,7 @@ export default {
     Advisor,
     Partner,
     Report,
+    Exchange,
     DepositBox
   }
 }
