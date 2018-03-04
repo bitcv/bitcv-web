@@ -16,8 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
-        Commands\ImpUser::class,
-        Commands\ChgPwd::class,
+        Commands\SendSMS::class,
         Commands\CrawlData::class,
     ];
 

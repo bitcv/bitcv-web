@@ -28,12 +28,11 @@
       <tbody>
         <tr v-for="item in dataList" :key="item.id">
           <td><img :src="item.logoUrl" class="img-circle" style="max-width: 40px;max-height: 40px;"/>&nbsp;&nbsp;{{ item.symbol }}</td>
-          <td>{{ item.price }}</td>
-          <td>{{ item.amount }} ≈ <span class="text-dark small">{{ parseInt(item.amount * item.price * 10000) / 10000 }}</span></td>
-          <td v-if="item.symbol === 'BCV'">{{ statusDict[item.status] }}</td>
+          <td>{{ item.price || '以交易所价格为准' }}</td>
+          <td>{{ item.amount }} ≈ <span class="text-dark small">{{ item.price ? parseInt(item.amount * item.price * 10000) / 10000 : '-' }}</span></td>
+          <td v-if="checkAuth(item.symbol)">{{ statusDict[item.status] }}</td>
           <td v-else>稍后提取</td>
-          <!--<td >稍后提取</td>-->
-          <td v-if="item.symbol === 'BCV' && statusDict[item.status] === '可提取'"><button class="btn btn-text btn-sm" @click="toWithdraw(item)">立即提取</button></td>
+          <td v-if="checkAuth(item.symbol) && statusDict[item.status] === '可提取'"><button class="btn btn-text btn-sm" @click="toWithdraw(item)">立即提取</button></td>
           <td v-else>-</td>
         </tr>
       </tbody>
@@ -45,6 +44,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 import Pagination from '@/components/pagination'
 
 export default {
@@ -54,7 +54,6 @@ export default {
   data () {
     return {
       total: 85,
-      currentPage: 1,
       perpage: 10,
       pageno: 1,
       dataCount: 0,
@@ -67,6 +66,9 @@ export default {
     this.updateData()
   },
   computed: {
+    ...mapState({
+      code: state => state.route.query.code
+    }),
     totalAssetArr () {
       return this.dataList.reduce((prev, curr) => curr.amount * curr.price + prev, 0).toString().split('.')
     }
@@ -74,8 +76,8 @@ export default {
   methods: {
     updateData () {
       this.$http.post('/api/getUserAsset', {
-        perpage: 10,
-        pageno: 1
+        perpage: this.perpage,
+        pageno: this.pageno
       }).then(res => {
         if (res.data.errcode === 0) {
           this.dataCount = res.data.data.dataCount
@@ -85,20 +87,43 @@ export default {
         }
       })
     },
+    checkAuth (tokenSymbol) {
+      // 管理员开通
+      if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST') {
+        return true
+      } else {
+        return false
+      }
+    },
     onPageClick (pageno) {
       this.pageno = pageno
+      this.updateData()
     },
     toWithdraw (item) {
       if (item.walletAddr) {
-        this.$http.post('/api/withdraw', {
-          assetId: item.id
-        }).then(res => {
-          if (res.data.errcode === 0) {
-            alert('提交成功')
-            this.updateData()
-          } else {
-            alert(res.data.errmsg)
-          }
+        this.$confirm('您的收币地址为' + item.walletAddr + ', 确认提币?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.post('/api/withdraw', {
+            assetId: item.id
+          }).then(res => {
+            if (res.data.errcode === 0) {
+              this.$message({
+                type: 'success',
+                message: '提交成功!'
+              })
+              this.updateData()
+            } else {
+              alert(res.data.errmsg)
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
         })
       } else {
         this.$router.push('/wallet/withdraw/' + item.id)
