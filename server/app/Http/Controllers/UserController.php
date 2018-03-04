@@ -259,7 +259,7 @@ class UserController extends Controller
 
         $passwd = Service::getPwd($passwd);
 
-        $flag = Model\User::where([['nation', $nation], ['mobile', $mobile]])->update(['passwd' => $passwd]);
+        $flag = Model\User::where('mobile', $mobile)->update(['passwd' => $passwd]);
         if ($flag === 0) {
             return $this->error(203);
         }
