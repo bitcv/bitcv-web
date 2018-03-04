@@ -157,7 +157,11 @@ export default {
       console.log(this.recordIdList)
       this.confirmDepositTx({depositOrderId: this.orderData.id, txRecordIdList: this.txRecordIdList})
         .then((data = {}) => {
-          console.log(data)
+          if (data.data.errcode === 0) {
+            this.$router.push('/candyRoom/myCandyOrder')
+          } else {
+            alert(data.data.errmsg)
+          }
           this.loading = false
         })
     }
