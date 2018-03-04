@@ -88,20 +88,11 @@ export default {
       })
     },
     checkAuth (tokenSymbol) {
-      if (this.code !== 'bcvadmin') {
-        // 非管理员只开通BCV
-        if (tokenSymbol === 'BCV') {
-          return true
-        } else {
-          return false
-        }
+      // 管理员开通
+      if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST') {
+        return true
       } else {
-        // 管理员开通
-        if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST') {
-          return true
-        } else {
-          return false
-        }
+        return false
       }
     },
     onPageClick (pageno) {
