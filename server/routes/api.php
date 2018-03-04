@@ -165,7 +165,6 @@ Route::group(['middleware' => 'checkProj'], function () {
     Route::any('delProjExchange','AdminController@delProjExchange');
     Route::any('updProjExchange','AdminController@updProjExchange');
 
-
     Route::any('getAdvList','AdminController@getAdvList');
     Route::any('addProjAdvisor','AdminController@addProjAdvisor');
     Route::any('addProjIAdvisor','AdminController@addProjIAdvisor');
