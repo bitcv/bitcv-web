@@ -365,7 +365,7 @@ class UserController extends Controller
         // 添加用户钱包地址
         Model\UserWallet::create([
             'user_id' => $userId,
-            'token_id' => $tokenId,
+            'token_protocol' => $tokenProtocol,
             'addr' => $walletAddr,
         ]);
 
