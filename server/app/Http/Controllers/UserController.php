@@ -259,7 +259,7 @@ class UserController extends Controller
 
         $passwd = Service::getPwd($passwd);
 
-        $flag = Model\User::where([['nation', $nation], ['mobile', $mobile]])->update(['passwd' => $passwd]);
+        $flag = Model\User::where('mobile', $mobile)->update(['passwd' => $passwd]);
         if ($flag === 0) {
             return $this->error(203);
         }
@@ -328,7 +328,7 @@ class UserController extends Controller
 
     public function addUserWallet (Request $request) {
         $params = $this->validation($request,[
-            'tokenProtocol' => 'required|string',
+            'tokenId' => 'required|string',
             'walletAddr' => 'required|string',
             'mobile' => 'required|string',
             'vcode' => 'required|string',
@@ -341,11 +341,6 @@ class UserController extends Controller
         $walletAddr = strtolower($walletAddr);
         if (!preg_match('/^0x[0-9a-f]{40}$/', $walletAddr)) {
             return $this->error(100);
-        }
-        // 验证钱包地址是否重复
-        $isExist = Model\UserWallet::where('addr', $walletAddr)->count();
-        if ($isExist) {
-            return $this->error(210);
         }
         // 获取用户ID
         $userId = Auth::getUserId();
@@ -362,10 +357,15 @@ class UserController extends Controller
         if (false && $ret['err'] > 0) {
             return $this->error(206);
         }
+        // 验证钱包地址是否为其它用户所有
+        $isExist = Model\UserWallet::where([['user_id', '!=', $userId], ['addr', $walletAddr]])->count();
+        if ($isExist) {
+            return $this->error(210);
+        }
         // 添加用户钱包地址
         Model\UserWallet::create([
             'user_id' => $userId,
-            'token_protocol' => $tokenProtocol,
+            'token_id' => $tokenId,
             'addr' => $walletAddr,
         ]);
 
@@ -397,9 +397,12 @@ class UserController extends Controller
         }
         $tokenId = $userAssetData->tokenId;
         $tokenProtocol = $userAssetData->protocol;
-        $tokenSymbol = $userAssetData->symbol;
+        $tokenSymbol = strtoupper($userAssetData->symbol);
         $amount = $userAssetData->amount;
-        if ($tokenProtocol != 1) {
+
+        // 暂时只支持ERC20协议的提现
+        $tokenSymbolArr = ['BCV', 'EOS', 'PXC', 'ICST'];
+        if (!in_array($tokenSymbol, $tokenSymbolArr)) {
             return $this->error(103);
         }
 
@@ -411,6 +414,12 @@ class UserController extends Controller
         }
         $walletAddr = $userWalletData['addr'];
 
+        // 更改用户资产状态
+        $flag = Model\UserAsset::where([['id', $assetId], ['status', 1]])->update(['status' => 2]);
+        if ($flag !== 1) {
+            return $this->error(208);
+        }
+
         // 调用提现接口
         $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/withdraw', [
             'toAddr' => $walletAddr,
@@ -420,6 +429,8 @@ class UserController extends Controller
         
         $resArr = json_decode($resJson, true);
         if (!$resArr || $resArr['errcode'] !== 0) {
+            // 调用接口失败，将用户资产状态重置
+            Model\UserAsset::where([['id', $assetId], ['status', 2]])->update(['status' => 1]);
             return $this->error(104);
         }
 
@@ -433,9 +444,6 @@ class UserController extends Controller
             'amount' => $amount,
             'status' => 1,
         ]);
-
-        // 更改用户资产状态
-        Model\UserAsset::where('id', $assetId)->update(['status' => 2]);
 
         return $this->output();
     }
@@ -462,7 +470,7 @@ class UserController extends Controller
         // 获取用户转账记录
         $recordModel = Model\UserTransferRecord::from('user_transfer_record as a')
             ->join('token as b', 'a.token_id', '=', 'b.id')
-            ->where([['user_id', $userId], ['status', 2]]);
+            ->where([['user_id', $userId]]);
         $dataCount = $recordModel->count();
         $offset = $perpage * ($pageno - 1);
         $dataList = $recordModel->select('a.id', 'a.amount', 'a.tx_hash', 'a.tx_time', 'a.status', 'b.logo_url', 'b.symbol')
@@ -471,10 +479,12 @@ class UserController extends Controller
         return $this->output([
             'dataCount' => $dataCount,
             'dataList' => $dataList,
+            'statusDict' => DictUtil::UserTransferRecord_Status,
         ]);
     }
 
     private function updateUserAsset ($userId) {
+
         // 获取用户进行中的交易记录
         $recordIdArr = Model\UserTransferRecord::where([['user_id', $userId], ['status', 1]])->pluck('record_id');
         if ($recordIdArr == null) {
@@ -495,26 +505,27 @@ class UserController extends Controller
         foreach ($recordList as $record) {
             // 转账成功
             if ($record['status'] == 4) {
-                // 更新用户转账记录
+                // 更新用户转账记录为转账成功
                 $recordModel = Model\UserTransferRecord::where('record_id', $record['id'])->first();
                 $assetId = $recordModel->asset_id;
                 $recordModel->tx_hash = $record['txHash'];
                 $recordModel->tx_time = $record['txTime'];
                 $recordModel->status = 2;
                 $recordModel->save();
-                // 更新用户资产
+                // 更新用户资产为提现成功
                 $assetModel = Model\UserAsset::find($assetId);
                 $assetModel->status = 3;
                 $assetModel->amount = $assetModel->amount - $record['actualAmount'];
                 $assetModel->save();
             }
+            // 转账失败
             if ($record['status'] == 5) {
-                // 更新用户转账记录
+                // 更新用户转账记录为转账失败
                 $recordModel = Model\UserTransferRecord::where('record_id', $record['id'])->first();
                 $assetId = $recordModel->asset_id;
                 $recordModel->status = 3;
                 $recordModel->save();
-                // 更新用户资产
+                // 更新用户资产为提现失败
                 $assetModel = Model\UserAsset::find($assetId);
                 $assetModel->status = 4;
                 $assetModel->save();

@@ -120,6 +120,10 @@ export default {
             assetId: this.$route.params.id
           }).then(res => {
             if (res.data.errcode === 0) {
+              this.$message({
+                type: 'success',
+                message: '提交成功!'
+              })
               this.$router.push('/wallet')
             } else {
               alert(res.data.errmsg)
