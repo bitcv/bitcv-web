@@ -58,3 +58,23 @@ export const updateFocus = (store, params) => {
 export const getCandyList = (store, params) => {
   return post('/api/getDepositBoxList', params)
 }
+
+// 提交充值订单
+export const postCandyOrder = (store, params) => {
+  return post('/api/addDepositOrder', params)
+}
+
+// 获取订单详情
+export const getOrderDetail = (store, params) => {
+  return post('/api/getOrderDetail', params)
+}
+
+// 获取确认订单列表
+export const getOrderTxRecordList = (store, params) => {
+  return post('/api/getOrderTxRecordList', params)
+}
+
+// 确认记录完成
+export const confirmDepositTx = (store, params) => {
+  return post('/api/confirmDepositTx', params)
+}
