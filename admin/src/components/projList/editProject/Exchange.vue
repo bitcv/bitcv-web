@@ -26,7 +26,7 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="直接选择" name="first">
           <el-form label-width="80px">
-            <el-form-item label="交易所名称">
+            <el-form-item label="名称">
               <el-select v-model="exchangeId" placeholder="请选择交易所信息">
               <el-option v-for="(exchange, index) in exchangeOptionList" :key="index" :value="exchange.id" :label="exchange.name"></el-option>
               </el-select>

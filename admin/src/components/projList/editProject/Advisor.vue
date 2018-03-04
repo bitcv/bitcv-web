@@ -6,7 +6,7 @@
     <el-table :data="advisorList">
       <el-table-column label="照片">
         <template slot-scope="scope">
-          <img class="table-image" :src="scope.row.photoUrl" alt="">
+          <img class="table-image" :src="scope.row.logoUrl" alt="">
         </template>
       </el-table-column>
       <el-table-column label="姓名">
@@ -29,9 +29,9 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="直接选择" name="first">
           <el-form label-width="80px">
-            <el-form-item label="成员名称">
+            <el-form-item label="名称">
             <el-select v-model="memberId" placeholder="请选择成员">
-              <el-option v-for="(social, index) in socialOptionList" :key="index" :value="social.id" :label="social.name"></el-option>
+              <el-option v-for="(advisor, index) in socialOptionList" :key="index" :value="advisor.id" :label="advisor.name"></el-option>
             </el-select>
             </el-form-item>
           </el-form>
@@ -68,7 +68,7 @@
 export default {
   data () {
     return {
-      activeName: 'second',
+      activeName: 'first',
       showDialog: false,
       inputName: '',
       inputPhotoUrl: '',

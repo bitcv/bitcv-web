@@ -14,7 +14,7 @@
         <template slot-scope="scope">{{ scope.row.name }}</template>
       </el-table-column>
       <el-table-column label="职位">
-        <template slot-scope="scope">{{ scope.row.position }}</template>
+        <template slot-scope="scope">{{ scope.row.company }}</template>
       </el-table-column>
       <el-table-column label="简介">
         <template slot-scope="scope">{{ scope.row.intro }}</template>
@@ -93,7 +93,7 @@ export default {
       this.mediaId = perData.id
       this.inputName = perData.name
       this.inputLogoUrl = perData.logoUrl
-      this.inputPosition = perData.position
+      this.inputPosition = perData.company
       this.inputIntro = perData.intro
       this.showDialog = true
     },

@@ -20,13 +20,13 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <!-- <el-button size="mini" @click="showEdit(scope.$index)">编辑</el-button> -->
+          <el-button size="mini" @click="showEdit(scope.$index)">编辑</el-button>
           <el-button size="mini" type="danger" @click="showDel(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-dialog title="项目成员信息" :visible.sync="showDialog" center>
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <!-- <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="直接选择" name="first">
           <el-form label-width="80px">
             <el-form-item label="成员名称">
@@ -36,7 +36,7 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="手动输入" name="second">
+        <el-tab-pane label="手动输入" name="second"> -->
         <el-form label-width="80px">
           <el-form-item label="姓名">
             <el-input v-model="inputName"></el-input>
@@ -54,8 +54,8 @@
             <el-input type="textarea" v-model="inputIntro"></el-input>
           </el-form-item>
         </el-form>
-        </el-tab-pane>
-      </el-tabs>
+        <!-- </el-tab-pane>
+      </el-tabs> -->
       <div slot="footer">
         <el-button @click="showDialog = false">取消</el-button>
         <el-button type="primary" @click="submit">确定</el-button>
@@ -85,7 +85,7 @@ export default {
   },
   mounted () {
     this.updateData()
-    this.getSocialOptionList()
+    //this.getSocialOptionList()
   },
   methods: {
     updateData () {
@@ -119,9 +119,7 @@ export default {
     },
     showEdit (index) {
       var memberInfo = this.memberList[index]
-      var socialOption = socialOptionList[index]
       this.memberId = memberInfo.id
-      this.personId = socialOption.id
       this.inputName = memberInfo.name
       this.inputPhotoUrl = memberInfo.photoUrl
       this.inputPosition = memberInfo.position
@@ -143,16 +141,16 @@ export default {
       })
     },
     submit () {
-      if( this.activeName == 'first'){
-        this.addMember()
-      }else {
+      // if( this.activeName == 'first'){
+      //   this.addMember()
+      // }else {
+      //  this.addInputMember()
+      //}
+      if (this.memberId) {
+        this.updMember()
+      } else {
         this.addInputMember()
       }
-      // if (this.memberId) {
-      //   this.updMember()
-      // } else {
-      //this.addMember()
-      //}
     },
     addInputMember () {
       this.$http.post('/api/addProjIMember', {
@@ -176,11 +174,11 @@ export default {
     addMember () {
       this.$http.post('/api/addProjMember', {
         projId: this.$route.params.id,
-        memberId: this.memberId
-        // name: this.inputName,
-        // photoUrl: this.inputPhotoUrl,
-        // position: this.inputPosition,
-        // intro: this.inputIntro
+        memberId: this.memberId,
+        name: this.inputName,
+        photoUrl: this.inputPhotoUrl,
+        position: this.inputPosition,
+        intro: this.inputIntro
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '添加成功!' })
@@ -198,11 +196,11 @@ export default {
     updMember () {
       this.$http.post('/api/updProjMember', {
         memberId: this.memberId,
-        projId: this.personId
-        // name: this.inputName,
-        // photoUrl: this.inputPhotoUrl,
-        // position: this.inputPosition,
-        // intro: this.inputIntro
+        projId: this.$route.params.id,
+        name: this.inputName,
+        photoUrl: this.inputPhotoUrl,
+        position: this.inputPosition,
+        intro: this.inputIntro
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '更新成功!' })
