@@ -1,7 +1,7 @@
 <template>
   <div class="advisor">
     <div class="header-btn-area">
-      <el-button type="primary" icon="el-icon-plus" @click="showDialog = true">添加</el-button>
+      <el-button type="primary" icon="el-icon-plus" @click="showAdd">添加</el-button>
     </div>
     <el-table :data="advisorList">
       <el-table-column label="照片">
@@ -20,29 +20,42 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" @click="showEdit(scope.$index)">编辑</el-button>
+          <!-- <el-button size="mini" @click="showEdit(scope.$index)">编辑</el-button> -->
           <el-button size="mini" type="danger" @click="showDel(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="项目成员信息" :visible.sync="showDialog" center>
-      <el-form label-width="80px">
-        <el-form-item label="姓名">
-          <el-input v-model="inputName"></el-input>
-        </el-form-item>
-        <el-form-item label="照片">
-          <el-upload class="upload-box" name="picture" action="/api/uploadFile" :on-success="onPhotoSuccess" :show-file-list="false">
-            <i class="el-icon-plus"></i>
-            <img :src="inputPhotoUrl" alt="">
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="职位">
-          <el-input v-model="inputCompany"></el-input>
-        </el-form-item>
-        <el-form-item label="简介">
-          <el-input type="textarea" v-model="inputIntro"></el-input>
-        </el-form-item>
-      </el-form>
+    <el-dialog title="项目顾问信息" :visible.sync="showDialog" center>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="直接选择" name="first">
+          <el-form label-width="80px">
+            <el-form-item label="成员名称">
+            <el-select v-model="memberId" placeholder="请选择成员">
+              <el-option v-for="(social, index) in socialOptionList" :key="index" :value="social.id" :label="social.name"></el-option>
+            </el-select>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="手动输入" name="second">
+          <el-form label-width="80px">
+            <el-form-item label="姓名">
+              <el-input v-model="inputName"></el-input>
+            </el-form-item>
+            <el-form-item label="照片">
+              <el-upload class="upload-box" name="picture" action="/api/uploadFile" :on-success="onPhotoSuccess" :show-file-list="false">
+                <i class="el-icon-plus"></i>
+                <img :src="inputPhotoUrl" alt="">
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="职位">
+              <el-input v-model="inputCompany"></el-input>
+            </el-form-item>
+            <el-form-item label="简介">
+              <el-input type="textarea" v-model="inputIntro"></el-input>
+            </el-form-item>
+          </el-form>
+          </el-tab-pane>
+      </el-tabs>
       <div slot="footer">
         <el-button @click="showDialog = false">取消</el-button>
         <el-button type="primary" @click="submit">确定</el-button>
@@ -55,6 +68,7 @@
 export default {
   data () {
     return {
+      activeName: 'second',
       showDialog: false,
       inputName: '',
       inputPhotoUrl: '',
@@ -66,6 +80,7 @@ export default {
   },
   mounted () {
     this.updateData()
+    this.getSocialOptionList()
   },
   methods: {
     updateData () {
@@ -77,6 +92,13 @@ export default {
         }
       })
     },
+    getSocialOptionList () {
+      this.$http.get('/api/getAdvList').then((res) => {
+        if (res.data.errcode === 0) {
+          this.socialOptionList = res.data.data.perList
+        }
+      })
+    },
     onPhotoSuccess (res) {
       if (res.errcode === 0) {
         this.inputPhotoUrl = res.data.url
@@ -84,11 +106,17 @@ export default {
     },
     showEdit (index) {
       var advisorInfo = this.advisorList[index]
+      var advisordata = this.socialOptionList[index]
+      this.memberId = advisordata.id
       this.advisorId = advisorInfo.id
       this.inputName = advisorInfo.name
       this.inputPhotoUrl = advisorInfo.photoUrl
       this.inputCompany = advisorInfo.company
       this.inputIntro = advisorInfo.intro
+      this.showDialog = true
+    },
+    showAdd () {
+      this.memberId = ''
       this.showDialog = true
     },
     showDel (advisorId) {
@@ -106,14 +134,19 @@ export default {
       })
     },
     submit () {
-      if (this.advisorId) {
-        this.updAdvisor()
-      } else {
+      if( this.activeName == 'first'){
         this.addAdvisor()
+      }else {
+        this.addInputAdvisor()
       }
+      // if (this.memberId) {
+      //   this.updMember()
+      // } else {
+      //this.addMember()
+      //}
     },
-    addAdvisor () {
-      this.$http.post('/api/addProjAdvisor', {
+    addInputAdvisor () {
+      this.$http.post('/api/addProjIAdvisor', {
         projId: this.$route.params.id,
         name: this.inputName,
         photoUrl: this.inputPhotoUrl,
@@ -126,6 +159,28 @@ export default {
           this.inputPhotoUrl = ''
           this.inputCompany = ''
           this.inputIntro = ''
+          this.showDialog = false
+          this.updateData()
+        }
+      })
+    },
+    addAdvisor () {
+        this.$http.post('/api/addProjIAdvisor', {
+        projId: this.$route.params.id,
+        memberId: this.memberId
+        // name: this.inputName,
+        // photoUrl: this.inputPhotoUrl,
+        // position: this.inputPosition,
+        // intro: this.inputIntro
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$message({ type: 'success', message: '添加成功!' })
+          this.inputName = ''
+          this.inputPhotoUrl = ''
+          this.inputPosition = ''
+          this.inputIntro = ''
+          this.memberId = ''
+          this.personId = ''
           this.showDialog = false
           this.updateData()
         }
