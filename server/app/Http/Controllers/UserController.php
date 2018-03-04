@@ -328,7 +328,7 @@ class UserController extends Controller
 
     public function addUserWallet (Request $request) {
         $params = $this->validation($request,[
-            'tokenProtocol' => 'required|string',
+            'tokenId' => 'required|string',
             'walletAddr' => 'required|string',
             'mobile' => 'required|string',
             'vcode' => 'required|string',
@@ -341,11 +341,6 @@ class UserController extends Controller
         $walletAddr = strtolower($walletAddr);
         if (!preg_match('/^0x[0-9a-f]{40}$/', $walletAddr)) {
             return $this->error(100);
-        }
-        // 验证钱包地址是否重复
-        $isExist = Model\UserWallet::where('addr', $walletAddr)->count();
-        if ($isExist) {
-            return $this->error(210);
         }
         // 获取用户ID
         $userId = Auth::getUserId();
@@ -362,10 +357,15 @@ class UserController extends Controller
         if (false && $ret['err'] > 0) {
             return $this->error(206);
         }
+        // 验证钱包地址是否为其它用户所有
+        $isExist = Model\UserWallet::where([['user_id', '!=', $userId], ['addr', $walletAddr]])->count();
+        if ($isExist) {
+            return $this->error(210);
+        }
         // 添加用户钱包地址
         Model\UserWallet::create([
             'user_id' => $userId,
-            'token_protocol' => $tokenProtocol,
+            'token_id' => $tokenId,
             'addr' => $walletAddr,
         ]);
 
