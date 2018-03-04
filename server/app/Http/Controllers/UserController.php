@@ -328,7 +328,7 @@ class UserController extends Controller
 
     public function addUserWallet (Request $request) {
         $params = $this->validation($request,[
-            'tokenId' => 'required|string',
+            'tokenProtocol' => 'required|string',
             'walletAddr' => 'required|string',
             'mobile' => 'required|string',
             'vcode' => 'required|string',
@@ -358,7 +358,7 @@ class UserController extends Controller
             return $this->error(206);
         }
         // 验证钱包地址是否为其它用户所有
-        $isExist = Model\UserWallet::where([['user_id', '!=', $userId], ['addr', $walletAddr]])->count();
+        $isExist = Model\UserWallet::where('addr', $walletAddr)->count();
         if ($isExist) {
             return $this->error(210);
         }
