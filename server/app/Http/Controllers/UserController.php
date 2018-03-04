@@ -470,7 +470,7 @@ class UserController extends Controller
         // 获取用户转账记录
         $recordModel = Model\UserTransferRecord::from('user_transfer_record as a')
             ->join('token as b', 'a.token_id', '=', 'b.id')
-            ->where([['user_id', $userId], ['status', 2]]);
+            ->where([['user_id', $userId]]);
         $dataCount = $recordModel->count();
         $offset = $perpage * ($pageno - 1);
         $dataList = $recordModel->select('a.id', 'a.amount', 'a.tx_hash', 'a.tx_time', 'a.status', 'b.logo_url', 'b.symbol')
@@ -479,10 +479,12 @@ class UserController extends Controller
         return $this->output([
             'dataCount' => $dataCount,
             'dataList' => $dataList,
+            'statusDict' => DictUtil::UserTransferRecord_Status,
         ]);
     }
 
     private function updateUserAsset ($userId) {
+
         // 获取用户进行中的交易记录
         $recordIdArr = Model\UserTransferRecord::where([['user_id', $userId], ['status', 1]])->pluck('record_id');
         if ($recordIdArr == null) {
@@ -503,26 +505,27 @@ class UserController extends Controller
         foreach ($recordList as $record) {
             // 转账成功
             if ($record['status'] == 4) {
-                // 更新用户转账记录
+                // 更新用户转账记录为转账成功
                 $recordModel = Model\UserTransferRecord::where('record_id', $record['id'])->first();
                 $assetId = $recordModel->asset_id;
                 $recordModel->tx_hash = $record['txHash'];
                 $recordModel->tx_time = $record['txTime'];
                 $recordModel->status = 2;
                 $recordModel->save();
-                // 更新用户资产
+                // 更新用户资产为提现成功
                 $assetModel = Model\UserAsset::find($assetId);
                 $assetModel->status = 3;
                 $assetModel->amount = $assetModel->amount - $record['actualAmount'];
                 $assetModel->save();
             }
+            // 转账失败
             if ($record['status'] == 5) {
-                // 更新用户转账记录
+                // 更新用户转账记录为转账失败
                 $recordModel = Model\UserTransferRecord::where('record_id', $record['id'])->first();
                 $assetId = $recordModel->asset_id;
                 $recordModel->status = 3;
                 $recordModel->save();
-                // 更新用户资产
+                // 更新用户资产为提现失败
                 $assetModel = Model\UserAsset::find($assetId);
                 $assetModel->status = 4;
                 $assetModel->save();

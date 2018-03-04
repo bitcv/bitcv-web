@@ -12,10 +12,10 @@
     <!-- 币威 -->
     <div class="row bitcv">
       <div class="col-xs-3 col-md-3">
-        <img src="/static/logo/bcv.png" alt="BitCV" height="60">
-        <!-- <img :src="bitcv.logoUrl" alt="BitCV" height="60"> -->
-        <b>币威</b>
-        <span>_BitCV</span>
+        <!-- <img src="/static/logo/bcv.png" alt="BitCV" height="60"> -->
+        <img :src="bitcv.logoUrl" alt="BitCV" height="60">
+        <div class="clear">&nbsp;</div>
+        <b>{{bitcv.tokenSymbol}}<span>{{bitcv.nameCn}}</span></b>
       </div>
       <div class="col-xs-3 col-md-3">
         <b>{{bitcv.remainAmount}}</b>
@@ -37,13 +37,13 @@
         <div class="form-group col-md-4" :class="numberError">
            <label for="number">您要充值的数量？</label>
           <input type="number" class="form-control" id="number" placeholder="请输入" min="1" v-model="form.number">
-          <span v-if="numberError">请填写充值数量</span>
+          <span v-if="numberError">下单数量必须大于起始额度</span>
         </div>
-        <div class="col-md-2">-></div>
-        <div class="form-group col-md-4" :class="moneyError">
-           <label for="money">余币宝回报</label>
-          <input type="number" class="form-control" id="money" placeholder="请输入" min="1" v-model="form.money">
-          <span v-if="moneyError">请填写余币宝回报</span>
+        <div class="col-md-2">——></div>
+        <div class="form-group col-md-4">
+           <label for="report">余币宝回报</label>
+          <!-- <input type="number" class="form-control" id="report" placeholder="请输入" min="1" v-model="form.report"> -->
+          <input type="number" class="form-control" id="report" placeholder="请输入" min="1" readonly :value="getInterest(form.number, bitcv.interestRate, bitcv.lockTime)">
         </div>
         <div class="col-md-10 buying-form-submit">
           <button class="btn btn-warning" @click="handleSubmit">立即下单</button>
@@ -59,11 +59,9 @@ export default {
     return {
       bitcv: {},
       form: {
-        number: '',
-        money: ''
+        number: ''
       },
-      numberError: '',
-      moneyError: ''
+      numberError: ''
     }
   },
   created () {
@@ -72,26 +70,18 @@ export default {
   methods: {
     fetch () {
       this.bitcv = this.$route.query
+      this.form.number = this.bitcv.minAmount
     },
     handleSubmit () {
       this.numberError = ''
-      this.moneyError = ''
-      if (!this.form.number) {
+      if (this.form.number < parseInt(this.bitcv.minAmount)) {
         this.numberError = 'has-error'
-        return
-      }
-      if (!this.form.money) {
-        this.moneyError = 'has-error'
-        return
-      }
-      if (this.form.number && this.form.money) {
+      } else {
+        this.bitcv.number = this.form.number
+        this.bitcv.report = this.getInterest(this.form.number, this.bitcv.interestRate, this.bitcv.lockTime)
         this.$router.push({
-          path: '/candyRoom/candyAddress',
-          query: {
-            number: this.form.number,
-            money: this.form.money,
-            lockTime: this.bitcv.lockTime
-          }
+          path: '/candyRoom/candyOrder',
+          query: this.bitcv
         })
       }
     }
@@ -120,6 +110,13 @@ export default {
       &:nth-child(1){
         padding-left: 40px;
         padding-top: 0;
+        .clear{
+          height: 0;
+          display: none;
+        }
+        span{
+          font-weight: 400;
+        }
       }
       &:nth-child(2), &:nth-child(3), &:nth-child(4){
         b{
@@ -150,6 +147,7 @@ export default {
     .col-md-2{
       text-align: center;
       line-height: 90px;
+      color: $primary-color;
     }
     .buying-label{
       margin-bottom: 15px;
@@ -172,10 +170,38 @@ export default {
       }
     }
     .buying-form-submit{
-      margin-top:20px;
+      margin-top:15px;
       button{
         padding: 15px 35px;
         font-size: 16px;
+        background: #fd9801;
+      }
+    }
+  }
+  @media screen and (max-width: 767px) {
+    .bitcv{
+      .col-md-3{
+        padding: 0;
+        text-align: center;
+        p{
+          font-size: 12px;
+          margin-top: 10px;
+        }
+        &:nth-child(1){
+          .clear{
+            display: block;
+          }
+          img{
+            height: 40px;
+          }
+          padding-left: 0;
+          font-size: 12px;
+        }
+      }
+    }
+    .content{
+      .col-md-2{
+        line-height: 20px;
       }
     }
   }

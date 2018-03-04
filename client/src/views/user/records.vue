@@ -11,6 +11,7 @@
           <th>币种</th>
           <th>数量</th>
           <th>交易哈希</th>
+          <th>状态</th>
           <th style="width:200px">交易时间</th>
         </tr>
       </thead>
@@ -19,6 +20,7 @@
           <td>{{ item.symbol }}</td>
           <td>{{ item.amount }}</td>
           <td><a :href="'https://etherscan.io/tx/' + item.txHash" target="_blank">{{ item.txHash }}</a></td>
+          <td>{{ statusDict[item.status] }}</td>
           <td>{{ item.txTime }}</td>
         </tr>
       </tbody>
@@ -41,7 +43,8 @@ export default {
       perpage: 10,
       pageno: 1,
       dataCount: 0,
-      recordList: []
+      recordList: [],
+      statusDict: {}
     }
   },
   mounted () {
@@ -56,6 +59,7 @@ export default {
         if (res.data.errcode === 0) {
           this.dataCount = res.data.data.dataCount
           this.recordList = res.data.data.dataList
+          this.statusDict = res.data.data.statusDict
         }
       })
     },

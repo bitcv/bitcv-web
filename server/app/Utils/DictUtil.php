@@ -19,6 +19,12 @@ class DictUtil
         '3' => '已提取',
     ];
 
+    const UserTransferRecord_Status = [
+        '1' => '进行中',
+        '2' => '交易成功',
+        '3' => '交易失败',
+    ];
+
     const DepositBox_Status = [
         '0' => '待付款',
         '1' => '进行中',
