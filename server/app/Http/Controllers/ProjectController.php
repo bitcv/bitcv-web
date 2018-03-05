@@ -165,21 +165,21 @@ class ProjectController extends Controller
         $projData['eventList'] = $resultList;
 
         // 获取项目顾问信息
-        $projAdvisorList = Model\ProjAdvisor::where('proj_id', $projId)
-            ->select('name', 'photo_url', 'company', 'intro')
-            ->get()->toArray();
-//        $projAdvisorList = Model\ProjAdvisor::join('advisor','advisor.id','=','proj_advisor.advisor_id')
-//            ->select('advisor.name','advisor.logo_url','advisor.company','advisor.intro')
+//        $projAdvisorList = Model\ProjAdvisor::where('proj_id', $projId)
+//            ->select('name', 'photo_url', 'company', 'intro')
 //            ->get()->toArray();
+        $projAdvisorList = Model\ProjAdvisor::join('advisor','advisor.id','=','proj_advisor.advisor_id')
+            ->select('advisor.name','advisor.logo_url','advisor.company','advisor.intro')
+            ->get()->toArray();
         $projData['advisorList'] = $projAdvisorList;
 
         // 获取合作伙伴信息
-        $projPartnerList = Model\ProjPartner::where('proj_id', $projId)
-            ->select('name', 'logo_url', 'home_url')
-            ->get()->toArray();
-//        $projPartnerList = Model\ProjPartner::join('institution','institution.id','=','proj_partner.institu_id')
-//            ->select('institution.name','institution.logo_url','institution.home_url')
+//        $projPartnerList = Model\ProjPartner::where('proj_id', $projId)
+//            ->select('name', 'logo_url', 'home_url')
 //            ->get()->toArray();
+        $projPartnerList = Model\ProjPartner::join('institution','institution.id','=','proj_partner.institu_id')
+            ->select('institution.name','institution.logo_url','institution.home_url')
+            ->get()->toArray();
         $projData['partnerList'] = $projPartnerList;
 
         // 获取媒体报道信息
