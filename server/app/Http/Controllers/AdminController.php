@@ -1394,6 +1394,16 @@ class AdminController extends Controller
         ]);
     }
 
+    public function getMediaReportCount(Request $request){
+        $projAdvisor = Model\CrawlerSocialNews::join('project','crawler_socialnews.proj_id','=','project.id')
+            ->join('social','crawler_socialnews.social_id','=','social.id');
+        $dataCount = $projAdvisor->count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+        ]);
+    }
+
     public function getInstituList(Request $request){
 
         $instituList = Model\Institution::select('id', 'name', 'logo_url','home_url')->get()->toArray();

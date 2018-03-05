@@ -97,6 +97,7 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('getAdminDepositOrderList', 'AdminController@getAdminDepositOrderList');
     Route::any('delMediaReport','AdminController@delMediaReport');
     Route::any('getMediaReportList','AdminController@getMediaReportList');
+    Route::any('getMediaReportCount','AdminController@getMediaReportCount');
 
     Route::any('getInstituList','AdminController@getInstituList');
     Route::any('delInstitu','AdminController@delInstitu');
