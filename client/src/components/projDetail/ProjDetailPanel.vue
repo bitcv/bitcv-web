@@ -46,7 +46,7 @@
         <div class="advisor-box">
           <ul class="advisor-list">
             <li class="advisor-item mobile-list-item" v-for="(advisor, index) in projDetail.advisorList" :key="index">
-              <img :src="advisor.photoUrl" alt="">
+              <img :src="advisor.logoUrl" alt="">
               <span class="name">{{ advisor.name }}</span>
               <div class="intro-hover">
                 <span class="intro">{{ advisor.intro }}</span>
