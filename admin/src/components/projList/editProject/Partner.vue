@@ -96,6 +96,9 @@ export default {
         }
       })
     },
+    handleClick(tab, event) {
+        console.log(tab, event);
+    },
     onLogoSuccess (res) {
       if (res.errcode === 0) {
         this.inputLogoUrl = res.data.url

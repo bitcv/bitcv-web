@@ -34,7 +34,7 @@
       </el-table-column>
     </el-table>
     <!--Pagination-->
-    <el-pagination class="footer-page-box" @size-change="onSizeChange" @current-change="onCurChange" :current-page="pageno" :page-sizes="[10, 20, 30, 40]" :page-size="perpage" layout="total, sizes, prev, pager, next, jumper" :total="dataCount">
+    <el-pagination class="footer-page-box" @size-change="onMediaSizeChange" @current-change="onMediaCurChange" :current-page="pageno" :page-sizes="[10, 20, 30, 40]" :page-size="perpage" layout="total, sizes, prev, pager, next, jumper" :total="dataCount">
     </el-pagination>
   </div>
 </template>
@@ -50,6 +50,7 @@ export default {
   },
   mounted () {
     this.updateData()
+    this.getMediaCount()
   },
   methods: {
     updateData () {
@@ -59,6 +60,13 @@ export default {
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.mediaReportList = res.data.data.medisReportList
+          //this.dataCount = res.data.data.dataCount
+        }
+      })
+    },
+    getMediaCount () {
+      this.$http.post('/api/getMediaReportCount').then((res) => {
+        if (res.data.errcode === 0) {
           this.dataCount = res.data.data.dataCount
         }
       })
@@ -87,11 +95,11 @@ export default {
         }
       })
     },
-    onSizeChange (perpage) {
+    onMediaSizeChange (perpage) {
       this.perpage = perpage
       this.updateData()
     },
-    onCurChange (pageno) {
+    onMediaCurChange (pageno) {
       this.pageno = pageno
       this.updateData()
     }

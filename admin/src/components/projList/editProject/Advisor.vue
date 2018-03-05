@@ -75,7 +75,12 @@ export default {
       inputCompany: '',
       inputIntro: '',
       advisorId: '',
-      advisorList: []
+      advisorList: [],
+      options4: [],
+      value9: [],
+      list: [],
+      loading: false,
+      states: []
     }
   },
   mounted () {
@@ -92,12 +97,43 @@ export default {
         }
       })
     },
+    remoteMethod(query) {
+        if (query !== '') {
+          this.loading = true;
+          setTimeout(() => {
+            this.loading = false;
+            this.options4 = this.list.filter(item => {
+              return item.label.toLowerCase()
+                .indexOf(query.toLowerCase()) > -1;
+            });
+            console.log('test')
+            console.log(this.list)
+          }, 200);
+        } else {
+          this.options4 = [];
+        }
+    },
     getSocialOptionList () {
       this.$http.get('/api/getAdvList').then((res) => {
         if (res.data.errcode === 0) {
           this.socialOptionList = res.data.data.perList
+          var data = new Array()
+          this.socialOptionList.forEach(function (value) {
+            //console.log(value.name);
+            data.push(value.name)
+          });
+          this.states = data
+          
         }
       })
+      console.log(this.states)
+      this.states = ["we", "we", "mawenc", "we"]
+      this.list = this.states.map(item => {
+        return { value: item, label: item };
+      });
+    },
+    handleClick(tab, event) {
+        console.log(tab, event);
     },
     onPhotoSuccess (res) {
       if (res.errcode === 0) {
