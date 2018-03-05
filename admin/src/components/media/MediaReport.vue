@@ -60,7 +60,6 @@ export default {
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.mediaReportList = res.data.data.medisReportList
-          //this.dataCount = res.data.data.dataCount
         }
       })
     },
