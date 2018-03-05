@@ -91,7 +91,7 @@ export default {
     handleClick (tab, event) {
     },
     getSocialOptionList () {
-      this.$http.get('/api/getExchangeList').then((res) => {
+      this.$http.get('/api/getExchangeNameList').then((res) => {
         if (res.data.errcode === 0) {
           this.exchangeOptionList = res.data.data.exchangeList
         }

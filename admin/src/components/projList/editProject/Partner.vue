@@ -90,7 +90,7 @@ export default {
       })
     },
     getSocialOptionList () {
-      this.$http.get('/api/getInstituList').then((res) => {
+      this.$http.get('/api/getInstituNameList').then((res) => {
         if (res.data.errcode === 0) {
           this.partnerOptionList = res.data.data.instituList
         }

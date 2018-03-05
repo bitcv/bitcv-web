@@ -28,9 +28,9 @@
     <el-dialog title="项目顾问信息" :visible.sync="showDialog" center>
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="直接选择" name="first">
-          <el-form label-width="80px">
-            <el-form-item label="名称">
-            <el-select v-model="memberId" placeholder="请选择成员">
+          <el-form label-width="100px">
+            <el-form-item label="顾问信息">
+            <el-select v-model="memberId" placeholder="请选择顾问姓名">
               <el-option v-for="(advisor, index) in socialOptionList" :key="index" :value="advisor.id" :label="advisor.name"></el-option>
             </el-select>
             </el-form-item>

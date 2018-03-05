@@ -1427,6 +1427,11 @@ class AdminController extends Controller
         //return $this->output(['instituList' => $instituList]);
     }
 
+    public function getInstituNameList(Request $request){
+        $instituList = Model\Institution::select('id', 'name', 'logo_url','home_url')->get()->toArray();
+        return $this->output(['instituList' => $instituList]);
+    }
+
     public function delInstitu(Request $request){
         $params = $this->validation($request, [
             'mediaId' => 'required|numeric'
@@ -1609,8 +1614,13 @@ class AdminController extends Controller
             'exchangeList' => $projList
         ]);
 
-        //$exchangeList = Model\Exchange::select('id', 'name', 'logo_url','home_url','intro')->get()->toArray();
-        //return $this->output(['exchangeList' => $exchangeList]);
+
+    }
+
+    public function getExchangeNameList(Request $request){
+
+        $exchangeList = Model\Exchange::select('id', 'name', 'logo_url','home_url','intro')->get()->toArray();
+        return $this->output(['exchangeList' => $exchangeList]);
     }
 
     public function delExchange(Request $request){
