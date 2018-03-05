@@ -1405,9 +1405,26 @@ class AdminController extends Controller
     }
 
     public function getInstituList(Request $request){
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
 
-        $instituList = Model\Institution::select('id', 'name', 'logo_url','home_url')->get()->toArray();
-        return $this->output(['instituList' => $instituList]);
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\Institution::offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = Model\Institution::count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'instituList' => $projList
+        ]);
+
+        //$instituList = Model\Institution::select('id', 'name', 'logo_url','home_url')->get()->toArray();
+        //return $this->output(['instituList' => $instituList]);
     }
 
     public function delInstitu(Request $request){
@@ -1476,8 +1493,26 @@ class AdminController extends Controller
 
     public function getPerList(Request $request){
 
-        $perList = Model\Advisor::select('id', 'name', 'logo_url','company','intro')->get()->toArray();
-        return $this->output(['perList' => $perList]);
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\Advisor::offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = Model\Advisor::count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+
+        //$perList = Model\Advisor::select('id', 'name', 'logo_url','company','intro')->get()->toArray();
+        //return $this->output(['perList' => $perList]);
     }
 
     public function getAdvList(Request $request){
@@ -1556,8 +1591,26 @@ class AdminController extends Controller
 
     public function getExchangeList(Request $request){
 
-        $exchangeList = Model\Exchange::select('id', 'name', 'logo_url','home_url','intro')->get()->toArray();
-        return $this->output(['exchangeList' => $exchangeList]);
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\Exchange::offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = Model\Exchange::count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'exchangeList' => $projList
+        ]);
+
+        //$exchangeList = Model\Exchange::select('id', 'name', 'logo_url','home_url','intro')->get()->toArray();
+        //return $this->output(['exchangeList' => $exchangeList]);
     }
 
     public function delExchange(Request $request){
