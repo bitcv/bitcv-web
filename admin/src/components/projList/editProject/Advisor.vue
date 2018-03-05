@@ -97,43 +97,14 @@ export default {
         }
       })
     },
-    remoteMethod(query) {
-        if (query !== '') {
-          this.loading = true;
-          setTimeout(() => {
-            this.loading = false;
-            this.options4 = this.list.filter(item => {
-              return item.label.toLowerCase()
-                .indexOf(query.toLowerCase()) > -1;
-            });
-            console.log('test')
-            console.log(this.list)
-          }, 200);
-        } else {
-          this.options4 = [];
-        }
-    },
     getSocialOptionList () {
       this.$http.get('/api/getAdvList').then((res) => {
         if (res.data.errcode === 0) {
           this.socialOptionList = res.data.data.perList
-          var data = new Array()
-          this.socialOptionList.forEach(function (value) {
-            //console.log(value.name);
-            data.push(value.name)
-          });
-          this.states = data
-          
         }
       })
-      console.log(this.states)
-      this.states = ["we", "we", "mawenc", "we"]
-      this.list = this.states.map(item => {
-        return { value: item, label: item };
-      });
     },
-    handleClick(tab, event) {
-        console.log(tab, event);
+    handleClick (tab, event) {
     },
     onPhotoSuccess (res) {
       if (res.errcode === 0) {
@@ -170,16 +141,11 @@ export default {
       })
     },
     submit () {
-      if( this.activeName == 'first'){
+      if (this.activeName === 'first') {
         this.addAdvisor()
-      }else {
+      } else {
         this.addInputAdvisor()
       }
-      // if (this.memberId) {
-      //   this.updMember()
-      // } else {
-      //this.addMember()
-      //}
     },
     addInputAdvisor () {
       this.$http.post('/api/addProjIAdvisor', {
@@ -201,7 +167,7 @@ export default {
       })
     },
     addAdvisor () {
-        this.$http.post('/api/addProjIAdvisor', {
+      this.$http.post('/api/addProjIAdvisor', {
         projId: this.$route.params.id,
         memberId: this.memberId
         // name: this.inputName,

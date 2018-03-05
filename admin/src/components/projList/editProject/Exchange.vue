@@ -34,7 +34,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="手动输入" name="second">
-         <el-form label-width="80px">  
+         <el-form label-width="80px">
           <el-form-item label="名称">
             <el-input v-model="inputName"></el-input>
           </el-form-item>
@@ -88,8 +88,7 @@ export default {
         }
       })
     },
-    handleClick(tab, event) {
-        console.log(tab, event);
+    handleClick (tab, event) {
     },
     getSocialOptionList () {
       this.$http.get('/api/getExchangeList').then((res) => {
@@ -97,9 +96,6 @@ export default {
           this.exchangeOptionList = res.data.data.exchangeList
         }
       })
-    },
-    handleClick(tab, event) {
-        console.log(tab, event);
     },
     onLogoSuccess (res) {
       if (res.errcode === 0) {
@@ -135,16 +131,11 @@ export default {
       })
     },
     submit () {
-      if (this.activeName == 'first'){
+      if (this.activeName === 'first') {
         this.addPartner()
-      }else {
+      } else {
         this.addInputPartner()
       }
-      // if (this.partnerId) {
-      //   this.updPartner()
-      // } else {
-      //this.addPartner()
-      //}
     },
     addPartner () {
       this.$http.post('/api/addProjExchange', {

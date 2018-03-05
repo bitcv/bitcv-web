@@ -108,8 +108,7 @@ export default {
         this.inputPhotoUrl = res.data.url
       }
     },
-    handleClick(tab, event) {
-        
+    handleClick (tab, event) {
     },
     showAdd () {
       this.projReportId = ''
