@@ -166,14 +166,14 @@ class ProjectController extends Controller
 
         // 获取项目顾问信息
         $projAdvisorList = Model\ProjAdvisor::join('advisor','advisor.id','=','proj_advisor.advisor_id')
-            ->where('proj_partner.proj_id', $projId)
+            ->where('proj_id', $projId)
             ->select('advisor.name','advisor.logo_url','advisor.company','advisor.intro')
             ->get()->toArray();
         $projData['advisorList'] = $projAdvisorList;
 
         // 获取合作伙伴信息
         $projPartnerList = Model\ProjPartner::join('institution','institution.id','=','proj_partner.institu_id')
-            ->where('proj_partner.proj_id', $projId)
+            ->where('proj_id', $projId)
             ->select('institution.name','institution.logo_url','institution.home_url')
             ->get()->toArray();
         $projData['partnerList'] = $projPartnerList;
