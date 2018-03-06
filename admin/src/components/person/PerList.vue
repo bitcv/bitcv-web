@@ -14,7 +14,7 @@
         <template slot-scope="scope">{{ scope.row.name }}</template>
       </el-table-column>
       <el-table-column label="职位">
-        <template slot-scope="scope">{{ scope.row.position }}</template>
+        <template slot-scope="scope">{{ scope.row.company }}</template>
       </el-table-column>
       <el-table-column label="简介">
         <template slot-scope="scope">{{ scope.row.intro }}</template>
@@ -53,8 +53,8 @@
       </div>
     </el-dialog>
     <!--Pagination-->
-    <!-- <el-pagination class="footer-page-box" @size-change="onSizeChange" @current-change="onCurChange" :current-page="pageno" :page-sizes="[10, 20, 30, 40]" :page-size="perpage" layout="total, sizes, prev, pager, next, jumper" :total="dataCount">
-    </el-pagination> -->
+    <el-pagination class="footer-page-box" @size-change="onSizeChange" @current-change="onCurChange" :current-page="pageno" :page-sizes="[10, 20, 30, 40]" :page-size="perpage" layout="total, sizes, prev, pager, next, jumper" :total="dataCount">
+    </el-pagination>
   </div>
 </template>
 <script>
@@ -66,7 +66,10 @@ export default {
       inputName: '',
       inputLogoUrl: '',
       inputPosition: '',
-      inputIntro: ''
+      inputIntro: '',
+      pageno: 1,
+      perpage: 10,
+      dataCount: 0
     }
   },
   mounted () {
@@ -74,9 +77,13 @@ export default {
   },
   methods: {
     updateData () {
-      this.$http.post('/api/getPerList').then((res) => {
+      this.$http.post('/api/getPerList', {
+        pageno: this.pageno,
+        perpage: this.perpage
+      }).then((res) => {
         if (res.data.errcode === 0) {
-          this.perList = res.data.data.perList
+          this.perList = res.data.data.dataList
+          this.dataCount = res.data.data.dataCount
         }
       })
     },
@@ -93,7 +100,7 @@ export default {
       this.mediaId = perData.id
       this.inputName = perData.name
       this.inputLogoUrl = perData.logoUrl
-      this.inputPosition = perData.position
+      this.inputPosition = perData.company
       this.inputIntro = perData.intro
       this.showDialog = true
     },
