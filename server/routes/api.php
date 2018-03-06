@@ -97,8 +97,10 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('getAdminDepositOrderList', 'AdminController@getAdminDepositOrderList');
     Route::any('delMediaReport','AdminController@delMediaReport');
     Route::any('getMediaReportList','AdminController@getMediaReportList');
+    Route::any('getMediaReportCount','AdminController@getMediaReportCount');
 
     Route::any('getInstituList','AdminController@getInstituList');
+    Route::any('getInstituNameList','AdminController@getInstituNameList');
     Route::any('delInstitu','AdminController@delInstitu');
     Route::any('addInstitu','AdminController@addInstitu');
     Route::any('updInstitu','AdminController@updInstitu');
@@ -164,6 +166,7 @@ Route::group(['middleware' => 'checkProj'], function () {
     Route::any('addProjIExchange','AdminController@addProjIExchange');
     Route::any('delProjExchange','AdminController@delProjExchange');
     Route::any('updProjExchange','AdminController@updProjExchange');
+    Route::any('getExchangeNameList','AdminController@getExchangeNameList');
 
     Route::any('getAdvList','AdminController@getAdvList');
     Route::any('addProjAdvisor','AdminController@addProjAdvisor');

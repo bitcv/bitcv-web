@@ -85,7 +85,6 @@ export default {
   },
   mounted () {
     this.updateData()
-    //this.getSocialOptionList()
   },
   methods: {
     updateData () {
@@ -109,8 +108,7 @@ export default {
         this.inputPhotoUrl = res.data.url
       }
     },
-    handleClick(tab, event) {
-        console.log(tab, event);
+    handleClick (tab, event) {
     },
     showAdd () {
       this.projReportId = ''
@@ -141,11 +139,6 @@ export default {
       })
     },
     submit () {
-      // if( this.activeName == 'first'){
-      //   this.addMember()
-      // }else {
-      //  this.addInputMember()
-      //}
       if (this.memberId) {
         this.updMember()
       } else {

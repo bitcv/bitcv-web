@@ -1394,8 +1394,40 @@ class AdminController extends Controller
         ]);
     }
 
-    public function getInstituList(Request $request){
+    public function getMediaReportCount(Request $request){
+        $projAdvisor = Model\CrawlerSocialNews::join('project','crawler_socialnews.proj_id','=','project.id')
+            ->join('social','crawler_socialnews.social_id','=','social.id');
+        $dataCount = $projAdvisor->count();
 
+        return $this->output([
+            'dataCount' => $dataCount,
+        ]);
+    }
+
+    public function getInstituList(Request $request){
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\Institution::offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = Model\Institution::count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'instituList' => $projList
+        ]);
+
+        //$instituList = Model\Institution::select('id', 'name', 'logo_url','home_url')->get()->toArray();
+        //return $this->output(['instituList' => $instituList]);
+    }
+
+    public function getInstituNameList(Request $request){
         $instituList = Model\Institution::select('id', 'name', 'logo_url','home_url')->get()->toArray();
         return $this->output(['instituList' => $instituList]);
     }
@@ -1466,8 +1498,26 @@ class AdminController extends Controller
 
     public function getPerList(Request $request){
 
-        $perList = Model\Advisor::select('id', 'name', 'logo_url','company','intro')->get()->toArray();
-        return $this->output(['perList' => $perList]);
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\Advisor::offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = Model\Advisor::count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+
+        //$perList = Model\Advisor::select('id', 'name', 'logo_url','company','intro')->get()->toArray();
+        //return $this->output(['perList' => $perList]);
     }
 
     public function getAdvList(Request $request){
@@ -1545,6 +1595,29 @@ class AdminController extends Controller
     }
 
     public function getExchangeList(Request $request){
+
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\Exchange::offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = Model\Exchange::count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'exchangeList' => $projList
+        ]);
+
+
+    }
+
+    public function getExchangeNameList(Request $request){
 
         $exchangeList = Model\Exchange::select('id', 'name', 'logo_url','home_url','intro')->get()->toArray();
         return $this->output(['exchangeList' => $exchangeList]);

@@ -7,7 +7,10 @@
         </router-link>
       </div>
       <el-table :data="projList">
-        <el-table-column type="index"></el-table-column>
+        <!-- <el-table-column type="index"></el-table-column> -->
+        <el-table-column label="项目编号">
+          <template slot-scope="scope">{{ scope.row.id }}</template>
+        </el-table-column>
         <el-table-column label="项目logo">
           <template slot-scope="scope">
             <img class="table-image" :src="scope.row.logoUrl" alt="">
