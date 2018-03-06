@@ -45,26 +45,26 @@ export default [{
   component: getComponent('candyRoom/CandyRoom'),
   children: [{
     path: 'candyList',
-    // component: getComponent('candyRoom/CandyList')
-    component: getViews('candy/list')
+    component: getComponent('candyRoom/CandyList')
+    // component: getViews('candy/list')
   }, {
     path: 'candyBuy',
-    // component: getComponent('candyRoom/CandyBuy'),
-    component: getViews('candy/buying'),
+    component: getComponent('candyRoom/CandyBuy'),
+    // component: getViews('candy/buying'),
     meta: {
       requiresAuth: true
     }
   }, {
     path: 'candyOrder',
-    // component: getComponent('candyRoom/CandyBuy'),
-    component: getViews('candy/order'),
+    component: getComponent('candyRoom/CandyBuy'),
+    // component: getViews('candy/order'),
     meta: {
       requiresAuth: true
     }
   }, {
     path: 'candyDetails',
-    // component: getComponent('candyRoom/CandyBuy'),
-    component: getViews('candy/details'),
+    component: getComponent('candyRoom/CandyBuy'),
+    // component: getViews('candy/details'),
     meta: {
       requiresAuth: true
     }
