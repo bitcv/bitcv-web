@@ -90,11 +90,13 @@ export default {
       })
     },
     getSocialOptionList () {
-      this.$http.get('/api/getInstituList').then((res) => {
+      this.$http.get('/api/getInstituNameList').then((res) => {
         if (res.data.errcode === 0) {
           this.partnerOptionList = res.data.data.instituList
         }
       })
+    },
+    handleClick (tab, event) {
     },
     onLogoSuccess (res) {
       if (res.errcode === 0) {
@@ -130,16 +132,11 @@ export default {
       })
     },
     submit () {
-      if( this.activeName == 'first'){
+      if (this.activeName === 'first') {
         this.addPartner()
-      }else {
+      } else {
         this.addInputPartner()
       }
-      // if (this.partnerId) {
-      //   this.updPartner()
-      // } else {
-      //this.addPartner()
-      //}
     },
     addInputPartner () {
       this.$http.post('/api/addProjIPartner', {
@@ -161,7 +158,7 @@ export default {
     addPartner () {
       this.$http.post('/api/addProjPartner', {
         projId: this.$route.params.id,
-        partnerId :this.partnerId
+        partnerId: this.partnerId
         // name: this.inputName,
         // logoUrl: this.inputLogoUrl,
         // homeUrl: this.inputHomeUrl

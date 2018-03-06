@@ -52,8 +52,8 @@
       </div>
     </el-dialog>
     <!--Pagination-->
-    <!-- <el-pagination class="footer-page-box" @size-change="onSizeChange" @current-change="onCurChange" :current-page="pageno" :page-sizes="[10, 20, 30, 40]" :page-size="perpage" layout="total, sizes, prev, pager, next, jumper" :total="dataCount">
-    </el-pagination> -->
+    <el-pagination class="footer-page-box" @size-change="onSizeChange" @current-change="onCurChange" :current-page="pageno" :page-sizes="[10, 20, 30, 40]" :page-size="perpage" layout="total, sizes, prev, pager, next, jumper" :total="dataCount">
+    </el-pagination>
   </div>
 </template>
 <script>
@@ -65,7 +65,10 @@ export default {
       inputName: '',
       inputLogoUrl: '',
       inputHomeUrl: '',
-      inputIntro: ''
+      inputIntro: '',
+      pageno: 1,
+      perpage: 10,
+      dataCount: 0
     }
   },
   mounted () {
@@ -73,9 +76,13 @@ export default {
   },
   methods: {
     updateData () {
-      this.$http.post('/api/getExchangeList').then((res) => {
+      this.$http.post('/api/getExchangeList', {
+        pageno: this.pageno,
+        perpage: this.perpage
+      }).then((res) => {
         if (res.data.errcode === 0) {
           this.exchangeList = res.data.data.exchangeList
+          this.dataCount = res.data.data.dataCount
         }
       })
     },

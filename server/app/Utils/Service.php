@@ -5,6 +5,7 @@ namespace App\Utils;
 use Request;
 //use Redis;
 use Illuminate\Support\Facades\Redis;
+use Validator;
 
 class Service {
 

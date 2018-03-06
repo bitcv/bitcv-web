@@ -149,7 +149,7 @@
                   <div class="row adviser-list">
                     <div class="col-xs-6 col-sm-4 col-md-3" v-for="(item, index) in info.advisorList" :key="index">
                       <div class="thumbnail text-center">
-                        <div class="img img-circle" v-if="item.photoUrl" :style="{backgroundImage: `url(${item.photoUrl})`}"></div>
+                        <div class="img img-circle" v-if="item.logoUrl" :style="{backgroundImage: `url(${item.logoUrl})`}"></div>
                         <span v-else class="avatar-span">{{ item.name ? item.name.substr(0, 1) : '' }}</span>
                         <div class="caption">
                           <div class="text-darker">

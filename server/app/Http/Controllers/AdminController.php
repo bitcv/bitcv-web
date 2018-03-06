@@ -847,10 +847,12 @@ class AdminController extends Controller
         }
         extract($params);
 
-        $projMemberList = Model\ProjMember::join('person','person.id','=','proj_member.per_id')
-            ->where('proj_id', $projId)
-            ->select('proj_member.id','person.logo_url','person.position','person.intro','person.name')
+        $projMemberList = Model\ProjMember::where('proj_id', $projId)
             ->get()->toArray();
+            //::join('person','person.id','=','proj_member.per_id')
+            //->where('proj_id', $projId)
+            //->select('proj_member.id','person.logo_url','person.position','person.intro','person.name')
+
 
         return $this->output(['dataList' => $projMemberList]);
     }
@@ -909,10 +911,10 @@ class AdminController extends Controller
         $params = $this->validation($request, [
             'memberId' => 'required|numeric',
             'projId' => 'required|numeric',
-//            'name' => 'required|string',
-//            'photoUrl' => 'nullable|string',
-//            'position' => 'required|string',
-//            'intro' => 'required|string',
+            'name' => 'required|string',
+            'photoUrl' => 'nullable|string',
+            'position' => 'required|string',
+            'intro' => 'required|string',
         ]);
         if ($params === false) {
             return $this->error(100);
@@ -920,15 +922,15 @@ class AdminController extends Controller
         extract($params);
 
         $memberData = [
-              'per_id' => $prodId,
-//            'name' => $name,
-//            'position' => $position,
-//            'intro' => $intro,
+            'proj_id' => $projId,
+            'name' => $name,
+            'position' => $position,
+            'intro' => $intro,
         ];
 
-//        if ($photoUrl) {
-//            $memberData['photo_url'] = $photoUrl;
-//        }
+        if ($photoUrl) {
+            $memberData['photo_url'] = $photoUrl;
+        }
 
         Model\ProjMember::where('id', $memberId)->update($memberData);
 
@@ -1392,8 +1394,40 @@ class AdminController extends Controller
         ]);
     }
 
-    public function getInstituList(Request $request){
+    public function getMediaReportCount(Request $request){
+        $projAdvisor = Model\CrawlerSocialNews::join('project','crawler_socialnews.proj_id','=','project.id')
+            ->join('social','crawler_socialnews.social_id','=','social.id');
+        $dataCount = $projAdvisor->count();
 
+        return $this->output([
+            'dataCount' => $dataCount,
+        ]);
+    }
+
+    public function getInstituList(Request $request){
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\Institution::offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = Model\Institution::count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'instituList' => $projList
+        ]);
+
+        //$instituList = Model\Institution::select('id', 'name', 'logo_url','home_url')->get()->toArray();
+        //return $this->output(['instituList' => $instituList]);
+    }
+
+    public function getInstituNameList(Request $request){
         $instituList = Model\Institution::select('id', 'name', 'logo_url','home_url')->get()->toArray();
         return $this->output(['instituList' => $instituList]);
     }
@@ -1463,11 +1497,31 @@ class AdminController extends Controller
     }
 
     public function getPerList(Request $request){
-        $perList = Model\Person::select('id', 'name', 'logo_url','position','intro')->get()->toArray();
-        return $this->output(['perList' => $perList]);
+
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\Advisor::offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = Model\Advisor::count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+
+        //$perList = Model\Advisor::select('id', 'name', 'logo_url','company','intro')->get()->toArray();
+        //return $this->output(['perList' => $perList]);
     }
 
     public function getAdvList(Request $request){
+
         $perList = Model\Advisor::select('id', 'name', 'logo_url','company','intro')->get()->toArray();
         return $this->output(['perList' => $perList]);
     }
@@ -1483,7 +1537,7 @@ class AdminController extends Controller
         }
         extract($params);
 
-        Model\Person::where('id', $mediaId)->delete();
+        Model\Advisor::where('id', $mediaId)->delete();
 
         return $this->output();
     }
@@ -1505,11 +1559,11 @@ class AdminController extends Controller
         $mediaData = [
             'name' => $name,
             'logo_url' => $logoUrl,
-            'position' => $position,
+            'company' => $position,
             'intro' => $intro,
         ];
 
-        Model\Person::where('id', $mediaId)->update($mediaData);
+        Model\Advisor::where('id', $mediaId)->update($mediaData);
 
         return $this->output();
     }
@@ -1531,16 +1585,39 @@ class AdminController extends Controller
         $perData = [
             'name' => $name,
             'logo_url' => $logoUrl,
-            'position' => $position,
+            'company' => $position,
             'intro' => $intro,
         ];
 
-        Model\Person::firstOrCreate($perData);
+        Model\Advisor::firstOrCreate($perData);
 
         return $this->output();
     }
 
     public function getExchangeList(Request $request){
+
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\Exchange::offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = Model\Exchange::count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'exchangeList' => $projList
+        ]);
+
+
+    }
+
+    public function getExchangeNameList(Request $request){
 
         $exchangeList = Model\Exchange::select('id', 'name', 'logo_url','home_url','intro')->get()->toArray();
         return $this->output(['exchangeList' => $exchangeList]);
@@ -1722,21 +1799,21 @@ class AdminController extends Controller
         }
         extract($params);
         $memberData = [
-//          'proj_id' => $projId,
+            'proj_id' => $projId,
             'name' => $name,
             'position' => $position,
             'intro' => $intro,
-            'logo_url' => $photoUrl,
+            'photo_url' => $photoUrl,
         ];
-        if ($photoUrl) {
-            $memberData['logo_url'] = $photoUrl;
-        }
-        $result = Model\Person::firstOrCreate($memberData);
-        $data = [
-            'proj_id' => $projId,
-            'per_id' => $result->id,
-        ];
-        Model\ProjMember::firstOrCreate($data);
+//        if ($photoUrl) {
+//            $memberData['logo_url'] = $photoUrl;
+//        }
+        Model\ProjMember::firstOrCreate($memberData);
+//        $data = [
+//            'proj_id' => $projId,
+//            'per_id' => $result->id,
+//        ];
+//        Model\ProjMember::firstOrCreate($data);
         return $this->output();
     }
 

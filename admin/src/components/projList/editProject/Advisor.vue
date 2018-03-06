@@ -6,7 +6,7 @@
     <el-table :data="advisorList">
       <el-table-column label="照片">
         <template slot-scope="scope">
-          <img class="table-image" :src="scope.row.photoUrl" alt="">
+          <img class="table-image" :src="scope.row.logoUrl" alt="">
         </template>
       </el-table-column>
       <el-table-column label="姓名">
@@ -29,9 +29,9 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="直接选择" name="first">
           <el-form label-width="80px">
-            <el-form-item label="成员名称">
-            <el-select v-model="memberId" placeholder="请选择成员">
-              <el-option v-for="(social, index) in socialOptionList" :key="index" :value="social.id" :label="social.name"></el-option>
+            <el-form-item label="顾问信息">
+            <el-select v-model="memberId" placeholder="请选择顾问姓名">
+              <el-option v-for="(advisor, index) in socialOptionList" :key="index" :value="advisor.id" :label="advisor.name"></el-option>
             </el-select>
             </el-form-item>
           </el-form>
@@ -68,14 +68,20 @@
 export default {
   data () {
     return {
-      activeName: 'second',
+      activeName: 'first',
       showDialog: false,
       inputName: '',
       inputPhotoUrl: '',
       inputCompany: '',
       inputIntro: '',
       advisorId: '',
-      advisorList: []
+      advisorList: [],
+      options4: [],
+      value9: [],
+      list: [],
+      memberId: '',
+      loading: false,
+      states: []
     }
   },
   mounted () {
@@ -98,6 +104,8 @@ export default {
           this.socialOptionList = res.data.data.perList
         }
       })
+    },
+    handleClick (tab, event) {
     },
     onPhotoSuccess (res) {
       if (res.errcode === 0) {
@@ -134,16 +142,11 @@ export default {
       })
     },
     submit () {
-      if( this.activeName == 'first'){
+      if (this.activeName === 'first') {
         this.addAdvisor()
-      }else {
+      } else {
         this.addInputAdvisor()
       }
-      // if (this.memberId) {
-      //   this.updMember()
-      // } else {
-      //this.addMember()
-      //}
     },
     addInputAdvisor () {
       this.$http.post('/api/addProjIAdvisor', {
@@ -165,7 +168,7 @@ export default {
       })
     },
     addAdvisor () {
-        this.$http.post('/api/addProjIAdvisor', {
+      this.$http.post('/api/addProjIAdvisor', {
         projId: this.$route.params.id,
         memberId: this.memberId
         // name: this.inputName,

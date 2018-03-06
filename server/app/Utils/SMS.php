@@ -5,7 +5,7 @@ namespace App\Utils;
 use Qcloud\Sms\SmsSingleSender;
 use Redis;
 use Request;
-use Service;
+use App\Utils\Service;
 
 class SMS {
     
