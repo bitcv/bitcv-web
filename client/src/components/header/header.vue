@@ -34,7 +34,7 @@
         </a>
         <ul v-if="hasToken" class="dropdown-menu">
           <li><router-link to="/wallet" @click.native="dimissMenu">我的资产</router-link></li>
-          <li><router-link to="/candyRoom/myCandyOrder" @click.native="dimissMenu">余币宝订单</router-link></li>
+          <li><router-link to="/candyRoom/myCandyOrder" @click.native="dimissMenu">余币宝清单</router-link></li>
           <li><a href="javascript:;" @click="$emit('signout')">注销登录</a></li>
         </ul>
         <ul v-else class="dropdown-menu hidden-md hidden-lg">
