@@ -17,7 +17,7 @@
         </router-link>
       </div>
 
-      <div v-if="!hasToken" class="navbar-right hidden-sm hidden-xs">
+      <div v-if="!hasToken" class="navbar-right hidden-sm hidden-xs" style="margin-right:0;">
         <router-link class="btn navbar-btn btn-default btn-outline" to="/signup">注册</router-link>
         <span>&nbsp;&nbsp;</span>
         <router-link class="btn navbar-btn btn-default btn-outline" to="/signin">登录</router-link>
