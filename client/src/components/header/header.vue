@@ -1,6 +1,7 @@
 <template>
   <nav class="navbar navbar-inverse navbar-static-top">
     <div class="container">
+      <a href="javascrpt:''" @click="toggleLang" style="position:absolute;right:300px;top:15px;color:#FFF">{{ $t('label.lang') }}</a>
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" :class="{collapsed: !showSide}" @click.stop="navbarToggle">
           <span class="sr-only">Toggle navigation</span>
@@ -44,7 +45,7 @@
 
       <div class="collapse navbar-collapse" :class="{'in': showSide}" v-click-outside="onClickOutside">
         <ul class="nav navbar-nav">
-          <router-link tag="li" active-class="active" exact to="/" @click.native="dimissMenu"><a href="javascript:;">主页</a></router-link>
+          <router-link tag="li" active-class="active" exact to="/" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.home')}}</a></router-link>
           <router-link tag="li" active-class="active" to="/discover" @click.native="dimissMenu"><a href="javascript:;">发现</a></router-link>
           <router-link tag="li" active-class="active" to="/candyRoom" @click.native="dimissMenu"><a href="javascript:;">余币宝</a></router-link>
         </ul>
@@ -99,6 +100,9 @@ export default {
     showDropdown: 'onToggleMenu'
   },
   methods: {
+    toggleLang () {
+      this.$i18n.locale = this.$i18n.locale === 'en' ? 'cn' : 'en'
+    },
     navbarToggle () {
       this.showDropdown = false
       this.showSide = !this.showSide
