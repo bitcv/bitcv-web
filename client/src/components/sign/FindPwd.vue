@@ -21,8 +21,12 @@
             <el-button :disabled="disableSms" class="sms-btn" :class="{disabled : disableSms}" type="primary" @click="getVcode">发送验证码<span v-show="timerId"> ({{ countDown }}s)</span></el-button>
             <!-- <span class = "smscode" @click="getVcode">发送短信验证码</span> -->
           </div>
-          <input v-model="passwd" type="password" placeholder="请输入新的密码">
-          <button @click.prevent="findPwd">重置密码</button>
+          <div class="flex-box">
+            <input v-model="passwd" type="password" placeholder="请输入新的密码">
+          </div>
+          <div class="flex-box">
+            <button @click.prevent="findPwd">重置密码</button>
+          </div>
         </form>
     </div>
   </div>
@@ -115,12 +119,20 @@ export default {
 .signup-container {
 .findpwd {
   box-sizing: border-box;
-  width: 530px;
+  max-width: 530px;
   margin: 0 auto;
   background-color: #FFF;
   padding: 20px;
   position: relative;
   font-size: 0;
+  .flex-box{
+    display: flex;
+    max-width: 426px;
+    width: 100%;
+    input, button{
+      width: 100%;
+    }
+  }
   .panel-title {
     font-size: 30px;
     margin: 12px 0 32px;
@@ -136,7 +148,7 @@ export default {
     input {
       display: block;
       box-sizing: border-box;
-      width: 426px;
+      width: 87%;
       height: 50px;
       border: 1px solid #ddd;
       padding: 0 20px;
@@ -190,7 +202,7 @@ export default {
       width: 275px;
     }
     button {
-      width: 426px;
+      width: 87%;
       height: 50px;
       text-align: center;
       color: #fff;
