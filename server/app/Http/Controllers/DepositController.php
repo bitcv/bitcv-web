@@ -272,7 +272,7 @@ class DepositController extends Controller
 
         // 获取请求参数
         $params = $this->validation($request, [
-            'status' => 'nullable|string',
+            'status' => 'nullable|numeric',
             'pageno' => 'required|numeric',
             'perpage' => 'required|numeric',
         ]);
