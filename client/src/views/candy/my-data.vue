@@ -17,8 +17,8 @@
       </div>
     </div>
     <div class="panel panel-custom">
-      <div class="table-responsive">
-        <table class="table table-hover">
+      <div class="table-responsive" v-if="list.length">
+        <table class="table table-hover hidden-xs">
           <thead>
             <tr class="text-dark">
               <th>项目</th>
@@ -34,7 +34,7 @@
             <tr v-for="item in list" :key="item.id">
               <td>
                 <img class="small-image" :src="item.logoUrl" alt="图片" height="30">
-                <span>{{ item.nameCn }}</span>
+                <span>{{ item.nameCn }}<span class="text-gray small">{{ item.tokenSymbol }}</span></span>
               </td>
               <td>{{convertDate(item.orderTime)}}</td>
               <td>{{item.orderAmount}}</td>
@@ -60,7 +60,62 @@
             </tr>
           </tbody>
         </table>
+        <!-- 小屏幕时显示的模拟table -->
+        <div class="visible-xs xs-box">
+          <div class="xs-header text-gray">
+            <span>项目</span>
+            <span>充值数量</span>
+            <span>操作</span>
+          </div>
+          <div class="xs-body">
+            <div class="xs-item" v-for="(item, index) in list" :key="item.id">
+              <div class="xs-row" @click="handleShow(index)">
+                <span :style="{lineHeight: item.status === 0 ? '80px' : '50px'}">
+                  <img :src="item.logoUrl" height="30" class="img-rounded">
+                  <b>{{ item.nameCn }}<i class="text-gray small">{{ item.tokenSymbol }}</i></b>
+                </span>
+                <span :style="{lineHeight: item.status === 0 ? '80px' : '50px'}">{{ item.orderAmount }}枚</span>
+                <span :style="{lineHeight: item.status === 0 ? '33px' : '50px', padding: item.status === 0 ? '5px 0' : '0'}">
+                  <em v-if="item.status === 0" class="btn-box">
+                    <button class="btn btn-warning" @click="handleConfirm(item.id)">确认订单</button>
+                    <button class="btn btn-default" @click="handleCancel(item.id)">取消订单</button>
+                  </em>
+                  <em v-else :class="{'text-muted': item.status === 2}">
+                    {{['', '订单完成', '已取消'][item.status]}}
+                  </em>
+                </span>
+              </div>
+              <div class="xs-detail" v-if="item.isDetail">
+                <p>
+                  <span>下单时间：</span>
+                  {{ convertDate(item.orderTime) }}个月
+                </p>
+                <p>
+                  <span>锁仓期：</span>
+                  {{ item.orderAmount }}枚
+                </p>
+                <p>
+                  <span>回报：</span>
+                  {{ getInterest(item.orderAmount, item.interestRate, item.lockTime) }}枚
+                </p>
+                <p>
+                  <span>交易哈希：</span>
+
+                  <i v-if="item.txHashList && item.txHashList.length">
+                    <em v-for="(hash, index) in item.txHashList" :key="index">
+                      {{maskStr(hash, 5)}}
+                    </em>
+                  </i>
+                  <i v-else>-</i>
+
+                  <b class="b-hidden" @click="handleHidden(index)">收起</b>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      <div v-else class="nodat">暂无数据</div>
     </div>
     <div class="text-right">
       <pagination :total="total" :current-page="currentPage" @onPageClick="onPageClick"></pagination>
@@ -118,6 +173,9 @@ export default {
         .then(({dataCount = 0, dataList = []} = {}) => {
           this.total = dataCount
           this.list = dataList
+          this.list.map((item) => {
+            this.$set(item, 'isDetail', false)
+          })
           this.loading = false
         })
         .catch(() => {
@@ -146,6 +204,15 @@ export default {
       this.lockTime.value = val
       this.currentPage = 1
       this.fetch()
+    },
+    handleShow (index) {
+      this.list.map((item, i) => {
+        if (i !== index) item.isDetail = false
+      })
+      this.list[index].isDetail = !this.list[index].isDetail
+    },
+    handleHidden (index) {
+      this.list[index].isDetail = false
     },
     onPageClick (page) {
       this.currentPage = page
@@ -231,6 +298,61 @@ export default {
       padding: 5px 8px;
       font-size: 12px;
     }
+  }
+  .xs-box{
+    background: #fff;
+    .xs-header, .xs-row{
+      display: flex;
+      padding: 0 15px;
+      border-bottom: 1px solid #e6e6e6;
+      span{
+        line-height: 50px;
+        flex: 2;
+        &:last-child{
+          flex: 1;
+        }
+      }
+    }
+    .xs-header{
+      // border-bottom: 1px solid #e6e6e6;
+      line-height: 50px;
+    }
+    .xs-body{
+      em{
+        font-style: normal;
+      }
+      .xs-row{
+        &:active{
+          background: #eee;
+        }
+        b{
+          font-weight: 500;
+        }
+        i{
+          font-style: normal;
+        }
+      }
+      .xs-detail{
+        padding: 10px 20px;
+        background: #f5f5f5;
+        line-height: 30px;
+        p{
+          margin: 0;
+          overflow: hidden;
+        }
+        .b-hidden{
+          float: right;
+          padding: 0 10px;
+          color: #999;
+        }
+      }
+    }
+  }
+
+  .nodat{
+    width: 100%;
+    line-height: 50px;
+    text-align: center;
   }
 }
 </style>
