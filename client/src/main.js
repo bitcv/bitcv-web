@@ -7,6 +7,9 @@ import store from './store'
 import router from './router'
 import {sync} from 'vuex-router-sync'
 
+import 'nprogress/nprogress.css'
+import NProgress from 'nprogress'
+
 import ElementUI from 'element-ui'
 import 'swiper/dist/css/swiper.css'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -17,6 +20,8 @@ require('es6-promise').polyfill()
 Vue.use(ElementUI)
 
 Vue.prototype.$http = axios
+Vue.prototype.nprogress = NProgress
+window.NProgress = NProgress
 
 Vue.config.productionTip = false
 
@@ -54,6 +59,7 @@ store.commit('updateUserInfo')
 
 // 登录拦截
 router.beforeEach((to, from, next) => {
+  NProgress.start()
   if (to.matched.some(route => route.meta && route.meta.requiresAuth)) { // 需要校验登录信息
     const hasToken = getToken()
 
@@ -66,6 +72,10 @@ router.beforeEach((to, from, next) => {
   }
 
   next()
+})
+
+router.afterEach((to, from) => {
+  NProgress.done()
 })
 
 /* eslint-disable no-new */

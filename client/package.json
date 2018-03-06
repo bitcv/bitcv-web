@@ -15,6 +15,7 @@
     "element-ui": "^2.0.11",
     "es6-promise": "^4.2.4",
     "html2canvas": "^1.0.0-alpha.10",
+    "nprogress": "^0.2.0",
     "vue": "^2.5.2",
     "vue-awesome-swiper": "^3.1.2",
     "vue-qr": "^1.2.8",
