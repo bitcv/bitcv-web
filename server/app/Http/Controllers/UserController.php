@@ -401,7 +401,7 @@ class UserController extends Controller
         $amount = $userAssetData->amount;
 
         // 暂时只支持ERC20协议的提现
-        $tokenSymbolArr = ['BCV', 'EOS', 'PXC', 'ICST'];
+        $tokenSymbolArr = ['BCV', 'EOS', 'PXC', 'ICST', 'ETH'];
         if (!in_array($tokenSymbol, $tokenSymbolArr)) {
             return $this->error(103);
         }

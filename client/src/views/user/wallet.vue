@@ -88,10 +88,12 @@ export default {
       })
     },
     checkAuth (tokenSymbol) {
-      // 管理员开通
       if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST') {
         return true
       } else {
+        if (this.code === 'bcvadmin' && tokenSymbol === 'ETH') {
+          return true
+        }
         return false
       }
     },
