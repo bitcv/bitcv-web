@@ -145,7 +145,8 @@ export default {
       },
       total: 0,
       currentPage: 1,
-      list: []
+      list: [],
+      bitcv: {}
     }
   },
   computed: {
@@ -158,7 +159,7 @@ export default {
     }
   },
   created () {
-    this.bitcv = this.$route.query
+    // this.bitcv = this.$route.query
     this.fetch()
   },
   methods: {

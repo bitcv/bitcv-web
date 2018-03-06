@@ -14,7 +14,7 @@
           <div class="row">
             <div class="col-md-3"><span>充值数量：</span><b>{{orderData.orderAmount}}</b><i>枚</i></div>
             <div class="col-md-3"><span>锁仓期：</span><b>{{orderData.lockTime}}</b><i>个月</i></div>
-            <div class="col-md-3"><span>回报：</span><b> {{getInterest(orderData.orderAmount, bitcv.interestRate, bitcv.lockTime)}}</b><i>枚</i></div>
+            <div class="col-md-3"><span>回报：</span><b> {{getInterest(orderData.orderAmount, orderData.interestRate, orderData.lockTime)}}</b><i>枚</i></div>
           </div>
           <div>
             <span>接收地址：</span>
@@ -44,7 +44,10 @@
         </div>
       </div>
       <div v-else class="details-list">
-        <p class="details-tip">以下为系统自动检测到的交易记录，请勾选此笔订单相关的交易记录进行确认！</p>
+        <p class="details-tip">
+          <span class="update-btn" @click="fetch">更新数据</span>
+          以下为系统自动检测到的交易记录，请勾选此笔订单相关的交易记录进行确认！
+        </p>
         <div class="table-responsive">
           <table class="table table-hover">
             <thead>
@@ -66,13 +69,13 @@
               </tr>
             </tbody>
             <div v-else class="nodata">
-                暂无交易记录，请稍后重试！
+                暂无交易记录，请点击<span class="update-btn" @click="fetch">更新数据</span>重试！
             </div>
           </table>
         </div>
 
-        <div class="buying-details-form-submit" v-if="list.length">
-          <button class="btn btn-warning" :disabled="isChecked" @click="handleFinish">确认完成</button>
+        <div class="buying-details-form-submit">
+          <button class="btn btn-warning" v-if="list.length" :disabled="isChecked" @click="handleFinish">确认完成</button>
         </div>
       </div>
     </div>
@@ -105,9 +108,10 @@ export default {
     }
   },
   created () {
+    this.orderId = this.$route.query.orderId
     this.bitcv = this.$route.query
     this.fetch()
-    if (this.bitcv.orderId) {
+    if (this.orderId) {
       this.fetchList(false)
       this.isFinish = true
     }
@@ -116,7 +120,7 @@ export default {
     ...mapActions(['getOrderDetail', 'getOrderTxRecordList', 'confirmDepositTx']),
     fetch () {
       this.loading = true
-      this.getOrderDetail({depositOrderId: this.bitcv.id})
+      this.getOrderDetail({depositOrderId: this.orderId || this.bitcv.id})
         .then((data = {}) => {
           this.loading = false
           this.orderData = data
@@ -128,7 +132,7 @@ export default {
     },
     fetchList () { // 获取交易列表
       this.loading = true
-      this.getOrderTxRecordList({depositOrderId: this.bitcv.id})
+      this.getOrderTxRecordList({depositOrderId: this.orderId || this.bitcv.id})
         .then((data = {}) => {
           this.list = data.dataList
           this.list.length && this.list.map(item => {
@@ -252,14 +256,25 @@ export default {
       margin-bottom: 0;
     }
     .nodata{
-      width: 200%;
+      width: 170%;
       text-align: center;
       line-height: 50px;
+    }
+    .update-btn{
+      color: #fd9801;
+      cursor: pointer;
+      &:hover{
+        color: #ff6b34;
+      }
     }
     .details-tip{
       color: $primary-color;
       text-align: center;
       font-size: 12px;
+      overflow: hidden;
+      span{
+        float: left;
+      }
     }
     .details-list{
       .buying-details-form-submit{
