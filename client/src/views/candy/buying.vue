@@ -12,7 +12,6 @@
     <!-- 币威 -->
     <div class="row bitcv">
       <div class="col-xs-3 col-md-3">
-        <!-- <img src="/static/logo/bcv.png" alt="BitCV" height="60"> -->
         <img :src="bitcv.logoUrl" alt="BitCV" height="60">
         <div class="clear">&nbsp;</div>
         <b>{{bitcv.tokenSymbol}}<span>{{bitcv.nameCn}}</span></b>
@@ -42,7 +41,6 @@
         <div class="col-md-2">——></div>
         <div class="form-group col-md-4">
            <label for="report">余币宝回报</label>
-          <!-- <input type="number" class="form-control" id="report" placeholder="请输入" min="1" v-model="form.report"> -->
           <input type="number" class="form-control" id="report" placeholder="请输入" min="1" readonly :value="getInterest(form.number, bitcv.interestRate, bitcv.lockTime)">
         </div>
         <div class="col-md-10 buying-form-submit">
