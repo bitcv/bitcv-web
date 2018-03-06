@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <ol class="breadcrumb">
-      <li><span>总资产</span></li>
+      <li><router-link to="/wallet">总资产</router-link></li>
       <li class="active">交易记录</li>
     </ol>
 
