@@ -1186,7 +1186,7 @@ class AdminController extends Controller
 
     public function getProjReportList (Request $request) {
         $params = $this->validation($request, [
-            'projId' => 'required|numeric',
+            'projId' => 'required',
         ]);
         if ($params === false) {
             return $this->error(100);
