@@ -1,10 +1,10 @@
 <template>
-  <div v-loading="loading">
+  <div v-loading="loading" class="my-data">
     <div class="panel panel-custom">
       <div class="panel-body filter-list">
-        <div><h3 style="margin:20px 0 30px;">余币宝计划</h3></div>
+        <div><h3 style="margin:20px 0 30px;">我的余币宝订单</h3></div>
         <dl class="dl-horizontal">
-          <dt>锁仓期限</dt>
+          <dt>订单状态</dt>
           <dd>
             <a href="javascript:;"
               v-for="item in lockTime.items"
@@ -18,33 +18,47 @@
     </div>
     <div class="panel panel-custom">
       <div class="table-responsive">
-        <table class="table">
+        <table class="table table-hover">
           <thead>
             <tr class="text-dark">
               <th>项目</th>
-              <th>回报（每万枚）</th>
+              <th>下单时间</th>
+              <th>充值数量</th>
               <th>锁仓期</th>
-              <th>起始额度</th>
-              <th>剩余额度</th>
-              <th style="width:100px;">&nbsp;</th>
+              <th>回报</th>
+              <th>操作</th>
+              <th>交易哈希</th>
             </tr>
           </thead>
-          <tbody v-if="list.length">
+          <tbody>
             <tr v-for="item in list" :key="item.id">
               <td>
-                <img :src="item.logoUrl" height="30" class="img-rounded">
-                <span>{{ item.nameCn }}_<span class="text-gray small">{{ item.tokenSymbol }}</span></span>
+                <img class="small-image" :src="item.logoUrl" alt="图片" height="30">
+                <span>{{ item.nameCn }}</span>
               </td>
-              <td><span class="text-danger">{{ getInterest(10000, item.interestRate, item.lockTime) }}枚</span></td>
-              <td>{{ item.lockTime }}个月</td>
-              <td>{{ item.minAmount }}枚</td>
-              <td><span class="text-primary">{{ item.remainAmount }}枚</span></td>
+              <td>{{convertDate(item.orderTime)}}</td>
+              <td>{{item.orderAmount}}</td>
+              <td>{{item.lockTime}}个月</td>
+              <td>{{item.interestRate * item.orderAmount * item.lockTime / 12}}枚</td>
               <td>
-                <router-link class="btn btn-primary btn-sm btn-nocorner" :to="{path: '/candyRoom/candyBuy', query: item}">立即抢购</router-link>
+                <span v-if="item.status === 0" class="btn-box">
+                  <button class="btn btn-warning" @click="handleConfirm(item.id)">确认订单</button><br>
+                  <button class="btn btn-default" @click="handleCancel(item.id)" style="margin-top:10px;">取消订单</button>
+                </span>
+                <span v-else :class="{'text-muted': item.status === 2}">
+                  {{['', '订单完成', '已取消'][item.status]}}
+                </span>
+              </td>
+              <td>
+                <div v-if="item.txHashList && item.txHashList.length">
+                  <p v-for="(hash, index) in item.txHashList" :key="index">
+                    {{maskStr(hash, 5)}}
+                  </p>
+                </div>
+                <p v-else>-</p>
               </td>
             </tr>
           </tbody>
-          <div v-else class="nodat">暂无数据</div>
         </table>
       </div>
     </div>
@@ -57,6 +71,7 @@
 <script>
 import {mapActions} from 'vuex'
 import Pagination from '@/components/pagination'
+import {maskStr} from '@/utils/utils'
 
 export default {
   components: {
@@ -66,13 +81,11 @@ export default {
     return {
       loading: false,
       lockTime: {
-        value: 0,
+        value: 3,
         items: [
-          {label: '全部', value: 0},
-          {label: '1个月', value: 1},
-          {label: '3个月', value: 3},
-          {label: '6个月', value: 6},
-          {label: '12个月', value: 12}
+          {label: '全部', value: 3},
+          {label: '已充值', value: 0},
+          {label: '未充值', value: 1}
         ]
       },
       total: 0,
@@ -85,18 +98,23 @@ export default {
       return {
         pageno: this.currentPage,
         perpage: 10,
-        lockTime: this.lockTime.value
+        status: this.lockTime.value
       }
     }
   },
   created () {
+    this.bitcv = this.$route.query
     this.fetch()
   },
   methods: {
-    ...mapActions(['getCandyList']),
+    ...mapActions(['getUserOrderList', 'cancelDepositOrder']),
+    maskStr (str, number) {
+      return maskStr(str, number)
+    },
     fetch () {
+      if (this.params.status === 3) delete this.params.status
       this.loading = true
-      this.getCandyList(this.params)
+      this.getUserOrderList(this.params)
         .then(({dataCount = 0, dataList = []} = {}) => {
           this.total = dataCount
           this.list = dataList
@@ -106,8 +124,23 @@ export default {
           this.loading = false
         })
     },
-    getInterest (amount, interestRate, lockTime) {
-      return parseInt(amount * interestRate * lockTime / 12 * 100) / 100
+    handleConfirm (id) {
+      this.bitcv.orderId = id
+      this.$router.push({
+        path: '/candyRoom/candyDetails',
+        query: this.bitcv
+      })
+    },
+    handleCancel (id) {
+      this.loading = true
+      this.cancelDepositOrder({depositOrderId: id})
+        .then((data = {}) => {
+          this.loading = false
+          this.fetch()
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     onFilterClick (val) {
       this.lockTime.value = val
@@ -165,15 +198,19 @@ export default {
 }
 .table > tbody > tr > td {
   vertical-align: middle;
+  &:nth-child(1) {
+    padding-left: 20px;
+  }
+  &:last-child{
+    p{
+      // max-width: 200px;
+      word-break: break-all;
+    }
+  }
 
   .text-danger {
     color: darken($primary-color, 20%);
   }
-}
-.nodat{
-  width: 700%;
-  line-height: 50px;
-  text-align: center;
 }
 .panel-custom {
   margin-bottom: 0;
@@ -182,6 +219,18 @@ export default {
   & + .panel-custom {
     margin-bottom: 15px;
     border-top: 1px solid $gray-light;
+  }
+}
+.my-data{
+  .btn-default{
+    background: #ccc;
+    color: #fff;
+  }
+  .btn-box{
+    .btn{
+      padding: 5px 8px;
+      font-size: 12px;
+    }
   }
 }
 </style>

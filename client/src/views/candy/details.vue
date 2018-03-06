@@ -1,6 +1,5 @@
 <template>
-  <div class="container buying-details">
-    <loading :load="loading"></loading>
+  <div class="container buying-details" v-loading="loading">
     <!-- 币威 -->
     <div class="bitcv">
       <h4>{{isFinish ? '确认订单' : '订单详情'}}</h4>
@@ -15,7 +14,7 @@
           <div class="row">
             <div class="col-md-3"><span>充值数量：</span><b>{{orderData.orderAmount}}</b><i>枚</i></div>
             <div class="col-md-3"><span>锁仓期：</span><b>{{orderData.lockTime}}</b><i>个月</i></div>
-            <div class="col-md-3"><span>回报：</span><b>{{orderData.interestRate * orderData.orderAmount}}</b><i>枚</i></div>
+            <div class="col-md-3"><span>回报：</span><b> {{getInterest(orderData.orderAmount, bitcv.interestRate, bitcv.lockTime)}}</b><i>枚</i></div>
           </div>
           <div>
             <span>接收地址：</span>
@@ -83,11 +82,8 @@
 <script>
 import {mapActions} from 'vuex'
 import VueQr from 'vue-qr'
-import Loading from '@/components/loading'
-// import '@/utils/qrcode'
 export default {
   components: {
-    Loading,
     VueQr
   },
   data () {
@@ -104,12 +100,17 @@ export default {
       isFinish: false,
       isChecked: true,
       list: [],
-      qrTxt: ''
+      qrTxt: '',
+      txRecordIdList: []
     }
   },
   created () {
     this.bitcv = this.$route.query
     this.fetch()
+    if (this.bitcv.orderId) {
+      this.fetchList(false)
+      this.isFinish = true
+    }
   },
   methods: {
     ...mapActions(['getOrderDetail', 'getOrderTxRecordList', 'confirmDepositTx']),
@@ -121,13 +122,29 @@ export default {
           this.orderData = data
           this.qrTxt = this.orderData.toAddr
         })
+        .catch((err = '') => {
+          this.loading = false
+        })
+    },
+    fetchList () { // 获取交易列表
+      this.loading = true
+      this.getOrderTxRecordList({depositOrderId: this.bitcv.id})
+        .then((data = {}) => {
+          this.list = data.dataList
+          this.list.length && this.list.map(item => {
+            item.checked = false
+          })
+          this.isFinish = true
+          this.loading = false
+        })
+        .catch((err = '') => {
+          this.loading = false
+        })
     },
     handleChange () {
       this.isChecked = true
       this.list.map(item => {
-        if (item.checked) {
-          this.isChecked = false
-        }
+        if (item.checked) this.isChecked = false
       })
     },
     handleSubmit () {
@@ -135,33 +152,25 @@ export default {
       if (!this.form.confirm) {
         this.confirmError = 'has-error'
       } else {
-        this.loading = true
-        this.getOrderTxRecordList({depositOrderId: this.bitcv.id})
-          .then((data = {}) => {
-            this.list = data.dataList
-            this.list.length && this.list.map(item => {
-              item.checked = false
-            })
-            this.isFinish = true
-            this.loading = false
-          })
+        this.fetchList()
       }
     },
     handleFinish () {
       this.loading = true
       this.list.map(item => {
         if (item.checked) {
-          this.recordIdList.push(item.id)
+          this.txRecordIdList.push(item.id)
         }
       })
-      console.log(this.recordIdList)
       this.confirmDepositTx({depositOrderId: this.orderData.id, txRecordIdList: this.txRecordIdList})
         .then((data = {}) => {
-          if (data.data.errcode === 0) {
-            this.$router.push('/candyRoom/myCandyOrder')
-          } else {
-            alert(data.data.errmsg)
-          }
+          this.$router.push({
+            path: '/candyRoom/candyMyData',
+            query: this.bitcv
+          })
+          this.loading = false
+        })
+        .catch((err = '') => {
           this.loading = false
         })
     }
