@@ -362,6 +362,11 @@ class UserController extends Controller
         if ($isExist) {
             return $this->error(210);
         }
+        // 验证用户是否已经有此类型的钱包地址
+        $isExist = Model\UserWallet::where([['user_id', $userId], ['token_protocol', $tokenProtocol]])->count();
+        if ($isExist) {
+            return $this->error(211);
+        }
         // 添加用户钱包地址
         Model\UserWallet::create([
             'user_id' => $userId,
