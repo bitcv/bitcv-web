@@ -17,7 +17,7 @@
         </router-link>
       </div>
 
-      <div v-if="!hasToken" class="navbar-right hidden-sm hidden-xs">
+      <div v-if="!hasToken" class="navbar-right hidden-sm hidden-xs" style="margin-right:0;">
         <router-link class="btn navbar-btn btn-default btn-outline" to="/signup">注册</router-link>
         <span>&nbsp;&nbsp;</span>
         <router-link class="btn navbar-btn btn-default btn-outline" to="/signin">登录</router-link>
@@ -34,7 +34,7 @@
         </a>
         <ul v-if="hasToken" class="dropdown-menu">
           <li><router-link to="/wallet" @click.native="dimissMenu">我的资产</router-link></li>
-          <li><router-link to="/candyRoom/myCandyOrder" @click.native="dimissMenu">余币宝清单</router-link></li>
+          <li><router-link to="/candyRoom/candyMyData" @click.native="dimissMenu">余币宝清单</router-link></li>
           <li><a href="javascript:;" @click="$emit('signout')">注销登录</a></li>
         </ul>
         <ul v-else class="dropdown-menu hidden-md hidden-lg">

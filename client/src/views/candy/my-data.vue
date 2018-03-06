@@ -52,7 +52,7 @@
               <td>
                 <div v-if="item.txHashList && item.txHashList.length">
                   <p v-for="(hash, index) in item.txHashList" :key="index">
-                    {{maskStr(hash, 5)}}
+                    <a :href="'https://etherscan.io/tx/' + hash" target="_blank">{{maskStr(hash, 5)}}</a>
                   </p>
                 </div>
                 <p v-else>-</p>
@@ -136,9 +136,9 @@ export default {
     return {
       loading: false,
       lockTime: {
-        value: 3,
+        value: -1,
         items: [
-          {label: '全部', value: 3},
+          {label: '全部', value: -1},
           {label: '已充值', value: 0},
           {label: '未充值', value: 1}
         ]
