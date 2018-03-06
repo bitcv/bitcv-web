@@ -76,7 +76,7 @@ export default {
   },
   mounted () {
     this.updateData()
-    this.getSocialOptionList()
+    this.getExchangeOptionList()
   },
   methods: {
     updateData () {
@@ -90,7 +90,7 @@ export default {
     },
     handleClick (tab, event) {
     },
-    getSocialOptionList () {
+    getExchangeOptionList () {
       this.$http.get('/api/getExchangeNameList').then((res) => {
         if (res.data.errcode === 0) {
           this.exchangeOptionList = res.data.data.exchangeList

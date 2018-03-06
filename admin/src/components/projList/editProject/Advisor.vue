@@ -99,7 +99,7 @@ export default {
       })
     },
     getSocialOptionList () {
-      this.$http.get('/api/getAdvList').then((res) => {
+      this.$http.post('/api/getAdvList').then((res) => {
         if (res.data.errcode === 0) {
           this.socialOptionList = res.data.data.perList
         }
@@ -168,7 +168,7 @@ export default {
       })
     },
     addAdvisor () {
-      this.$http.post('/api/addProjIAdvisor', {
+      this.$http.post('/api/addProjAdvisor', {
         projId: this.$route.params.id,
         memberId: this.memberId
         // name: this.inputName,

@@ -18,6 +18,7 @@ Vue.use(ElementUI)
 axios.interceptors.response.use(
   response => {
     if (response.data['errcode'] === 302) {
+      //alert(response.data.errcode)
       location.href = '/signin'
     }
     return response
