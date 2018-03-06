@@ -88,12 +88,9 @@ export default {
       })
     },
     checkAuth (tokenSymbol) {
-      if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST') {
+      if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST' || tokenSymbol === 'ETH') {
         return true
       } else {
-        if (this.code === 'bcvadmin' && tokenSymbol === 'ETH') {
-          return true
-        }
         return false
       }
     },
