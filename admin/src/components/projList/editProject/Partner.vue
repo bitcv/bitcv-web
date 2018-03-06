@@ -77,7 +77,7 @@ export default {
   },
   mounted () {
     this.updateData()
-    this.getSocialOptionList()
+    this.getReportOptionList()
   },
   methods: {
     updateData () {
@@ -89,7 +89,7 @@ export default {
         }
       })
     },
-    getSocialOptionList () {
+    getReportOptionList () {
       this.$http.get('/api/getInstituNameList').then((res) => {
         if (res.data.errcode === 0) {
           this.partnerOptionList = res.data.data.instituList

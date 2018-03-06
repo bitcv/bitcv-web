@@ -18,6 +18,7 @@
     "nprogress": "^0.2.0",
     "vue": "^2.5.2",
     "vue-awesome-swiper": "^3.1.2",
+    "vue-i18n": "^7.4.2",
     "vue-qr": "^1.2.8",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",

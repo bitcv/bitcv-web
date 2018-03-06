@@ -14,6 +14,32 @@ import ElementUI from 'element-ui'
 import 'swiper/dist/css/swiper.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import common from './common'
+// 多语言
+import VueI18n from 'vue-i18n'
+
+Vue.use(VueI18n)
+const messages = {
+  // 简体中文
+  cn: {
+    label: {
+      lang: '中文',
+      home: '主页'
+    }
+  },
+  // 英文
+  en: {
+    label: {
+      lang: 'English',
+      home: 'home'
+    }
+  }
+}
+const i18n = new VueI18n({
+  // 定义默认语言
+  locale: 'cn',
+  messages
+})
+
 Vue.use(common)
 
 require('es6-promise').polyfill()
@@ -83,6 +109,7 @@ new Vue({
   el: '#app',
   store,
   router,
+  i18n,
   components: { App },
   template: '<App/>',
   data: {
