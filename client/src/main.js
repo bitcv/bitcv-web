@@ -74,14 +74,16 @@ axios.interceptors.response.use(
   }
 )
 
+// 同步缓存中的用户信息
+const syncUserInfo = () => store.commit('updateUserInfo')
+
 const getToken = () => {
+  syncUserInfo()
+
   const userInfo = store.state.userInfo
 
   return userInfo && Object.keys(userInfo).length > 0
 }
-
-// 同步缓存中的用户信息
-store.commit('updateUserInfo')
 
 // 登录拦截
 router.beforeEach((to, from, next) => {
@@ -89,9 +91,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(route => route.meta && route.meta.requiresAuth)) { // 需要校验登录信息
     const hasToken = getToken()
 
-    if (hasToken) { // 有token
-      next()
-    } else { // 没有token
+    if (!hasToken) { // 没有token
       // 跳转到登录页
       next('/signin')
     }
@@ -103,6 +103,8 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from) => {
   NProgress.done()
 })
+
+syncUserInfo()
 
 /* eslint-disable no-new */
 new Vue({
