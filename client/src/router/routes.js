@@ -26,7 +26,7 @@ export default [{
   }
 }, {
   // 提现
-  path: '/wallet/withdraw/:id',
+  path: '/wallet/withdraw/:id/:protocol',
   component: getViews('user/withdraw'),
   meta: {
     requiresAuth: true

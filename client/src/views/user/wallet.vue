@@ -91,6 +91,9 @@ export default {
       if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST' || tokenSymbol === 'ETH') {
         return true
       } else {
+        if (this.code === 'bcvadmin' && (tokenSymbol === 'BTC' || tokenSymbol === 'DOGE')) {
+          return true
+        }
         return false
       }
     },
@@ -125,7 +128,7 @@ export default {
           })
         })
       } else {
-        this.$router.push('/wallet/withdraw/' + item.id)
+        this.$router.push('/wallet/withdraw/' + item.id + '/' + item.protocol)
       }
     }
   }

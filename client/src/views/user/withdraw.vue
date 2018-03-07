@@ -62,9 +62,8 @@ import {mapState} from 'vuex'
 export default {
   computed: {
     ...mapState({
-      id: state => state.route.params.id
-    }),
-    ...mapState({
+      id: state => state.route.params.id,
+      protocol: state => state.route.params.protocol,
       userInfo: state => state.userInfo
     })
   },
@@ -103,14 +102,20 @@ export default {
       })
     },
     onSubmit () {
-      if (!/^0x[0-9a-f]{40}/i.test(this.walletAddr)) {
+      // 钱包地址正则校验
+      if (this.protocol == 1) {
+        var reg = /^0x[0-9a-f]{40}/i
+      } else if (this.protocol == 2 || this.protocol == 3) {
+        var reg = /^[0-9a-zA-Z]{34}$/i
+      }
+      if (!reg.test(this.walletAddr)) {
         return alert('请填写正确的收币钱包地址')
       }
       // 创建钱包
       this.$http.post('/api/addUserWallet', {
         mobile: this.userInfo.mobile,
         vcode: this.vcode,
-        tokenProtocol: '1',
+        tokenProtocol: this.protocol,
         walletAddr: this.walletAddr
       }).then(res => {
         if (res.data.errcode === 0) {
