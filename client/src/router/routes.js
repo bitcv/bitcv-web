@@ -1,9 +1,9 @@
 function getComponent (path) {
-  return () => import(`@/components/${path}.vue`)
+  return () => import(`@/components/${path}.vue`).catch(e => location.reload())
 }
 
 function getViews (path) {
-  return () => import(`@/views/${path}.vue`)
+  return () => import(`@/views/${path}.vue`).catch(e => location.reload())
 }
 
 export default [{
