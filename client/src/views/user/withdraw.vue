@@ -107,6 +107,8 @@ export default {
         var reg = /^0x[0-9a-f]{40}/i
       } else if (this.protocol == 2 || this.protocol == 3) {
         var reg = /^[0-9a-zA-Z]{34}$/i
+      } else {
+        return false;
       }
       if (!reg.test(this.walletAddr)) {
         return alert('请填写正确的收币钱包地址')
