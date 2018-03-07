@@ -128,7 +128,7 @@ export default {
           })
         })
       } else {
-        this.$router.push('/wallet/withdraw/' + item.id + '/' + item.protocol)
+        this.$router.push('/wallet/withdraw/' + item.id + '/' + item.protocol + '?symbol=' + item.symbol)
       }
     }
   }

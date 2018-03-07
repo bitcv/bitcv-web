@@ -16,9 +16,9 @@
         <div class="col-md-6 col-md-offset-3">
           <form class="form-horizontal">
             <div class="form-group no-corner">
-              <label class="control-label col-md-4">收款地址:</label>
+              <label class="control-label col-md-4">{{symbol}}钱包地址:</label>
               <div class="col-md-8">
-                <input type="text" class="form-control" v-model="walletAddr">
+                <input type="text" class="form-control" v-model="walletAddr" placeholder="请输入相应币种的钱包地址">
               </div>
             </div>
             <div class="form-group no-corner">
@@ -64,6 +64,7 @@ export default {
     ...mapState({
       id: state => state.route.params.id,
       protocol: state => state.route.params.protocol,
+      symbol: state => state.route.query.symbol,
       userInfo: state => state.userInfo
     })
   },
