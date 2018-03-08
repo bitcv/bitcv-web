@@ -345,14 +345,25 @@ class UserController extends Controller
         extract($params);
         // 正则校验钱包地址
         if ($tokenProtocol == 1) {
+            // ERC20钱包地址校验
             $walletAddr = strtolower($walletAddr);
             $reg = '/^0x[0-9a-f]{40}$/';
-        } else if ($tokenProtocol == 2 || $tokenProtocol == 3) {
-            $reg = '/^[0-9a-zA-Z]{34}$/';
+            if (!preg_match($reg, $walletAddr)) {
+                return $this->error(212);
+            }
+        } else if ($tokenProtocol == 2) {
+            // 比特币钱包地址校验
+            $balance = @file_get_contents("https://blockchain.info/q/addressbalance/$walletAddr");
+            if (!is_numeric($balance)) {
+                return $this->error(212);
+            }
+        } else if ($tokenProtocol == 3) {
+            // 狗狗币钱包地址校验
+            $result = @file_get_contents("https://dogechain.info/api/v1/address/balance/$walletAddr");
+            if ($result === false) {
+                return $this->error(212);
+            }
         } else {
-            return $this->error(100);
-        }
-        if (!preg_match($reg, $walletAddr)) {
             return $this->error(100);
         }
         // 获取用户ID

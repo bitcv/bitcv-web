@@ -548,7 +548,7 @@ export default {
       left: 5px;
       align-items: center;
       justify-content: center;
-      border: 1px solid $gray;
+      // border: 1px solid $gray;
     }
   }
 }

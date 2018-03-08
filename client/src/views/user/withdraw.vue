@@ -107,7 +107,7 @@ export default {
       if (this.protocol == 1) {
         var reg = /^0x[0-9a-f]{40}/i
       } else if (this.protocol == 2 || this.protocol == 3) {
-        var reg = /^[0-9a-zA-Z]{34}$/i
+        var reg = /^[0-9a-zA-Z]{30,40}$/i
       } else {
         return false;
       }
