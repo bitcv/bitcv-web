@@ -214,6 +214,12 @@ class UserController extends Controller
             return $this->error(100);
         }
         extract($params);
+        if (!$nation) {
+            $userModel = Model\User::where('mobile', $mobile)->first();
+            if ($userModel) {
+                $nation = $userModel->nation;
+            }
+        }
         return self::vcode($mobile, $nation);
     }
 
