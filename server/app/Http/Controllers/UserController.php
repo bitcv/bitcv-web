@@ -207,7 +207,7 @@ class UserController extends Controller
 
     public function getVcode(Request $request){
         $params = $this->validation($request,[
-            'mobile' => 'required|numeric',
+            'mobile' => 'required|string',
             'nation' => 'nullable|numeric'
         ]);
         if($params === false){
