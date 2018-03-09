@@ -61,6 +61,9 @@ export default {
       display: block;
       height: 100%;
       box-sizing: border-box;
+      width: 180px;
+      height: 28px;
+      margin-top: 6px;
     }
   }
 

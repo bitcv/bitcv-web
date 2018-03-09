@@ -29,8 +29,8 @@ export default {
   data () {
     return {
       form: {
-        mobile: '',
-        passwd: ''
+        mobile: '', // 13611146629
+        passwd: '' // qqq111
       },
       rules: {
         mobile: [
