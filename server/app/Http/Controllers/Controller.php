@@ -63,7 +63,7 @@ class Controller extends BaseController
             $params = $request->only(array_keys($rules));
             foreach ($params as $key => &$value) {
                 if (strpos($rules[$key], 'numeric') !== false) {
-                    $value = intval($value);
+                    $value = floatval($value);
                 }
             }
             return $params;

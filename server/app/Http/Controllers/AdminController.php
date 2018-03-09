@@ -47,10 +47,10 @@ class AdminController extends Controller
 
         $params = $this->validation($request, [
             'projId' => 'required|numeric',
-            'minAmount' => 'required|string',
+            'minAmount' => 'required|numeric',
             'lockTime' => 'required|numeric',
-            'totalAmount' => 'required|string',
-            'interestRate' => 'required|string',
+            'totalAmount' => 'required|numeric',
+            'interestRate' => 'required|numeric',
             'fromAddr' => 'required|string',
         ]);
         if ($params === false) {
