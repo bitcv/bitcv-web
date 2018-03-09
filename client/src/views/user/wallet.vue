@@ -4,13 +4,13 @@
       <div class="panel-body">
         <div class="col-xs-6 text-center">
           <div class="text-darker">
-            <span>总资产 (CNY) ≈ </span>
+            <span>{{ $t('label.sum_money') }} (CNY) ≈ </span>
             <span class="text-primary" style="font-size:48px">{{ totalAssetArr[0] }}</span>
             <span class="text-primary">.{{ totalAssetArr[1] || '00' }}</span>
           </div>
         </div>
         <div class="col-xs-6 text-right" style="padding-top:30px;">
-          <router-link to="/wallet/records" class="text-primary">查看交易记录</router-link>
+          <router-link to="/wallet/records" class="text-primary">{{ $t('label.view_r') }}</router-link>
         </div>
       </div>
     </div>
@@ -18,11 +18,11 @@
     <table class="table text-darker table-hover small" style="background: #fff;">
       <thead class="shadow-thead">
         <tr>
-          <th>币种</th>
-          <th>参考价</th>
-          <th>数量</th>
-          <th>状态</th>
-          <th style="width:120px">操作</th>
+          <th>{{ $t('label.coin_type') }}</th>
+          <th>{{ $t('label.price') }}</th>
+          <th>{{ $t('label.coin_num') }}</th>
+          <th>{{ $t('label.coin_status') }}</th>
+          <th style="width:120px">{{ $t('label.operation') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -31,8 +31,8 @@
           <td>{{ item.price || '以交易所价格为准' }}</td>
           <td>{{ item.amount }} ≈ <span class="text-dark small">{{ item.price ? parseInt(item.amount * item.price * 10000) / 10000 : '-' }}</span></td>
           <td v-if="checkAuth(item.symbol)">{{ statusDict[item.status] }}</td>
-          <td v-else>稍后提取</td>
-          <td v-if="checkAuth(item.symbol) && statusDict[item.status] === '可提取'"><button class="btn btn-text btn-sm" @click="toWithdraw(item)">立即提取</button></td>
+          <td v-else>{{ $t('label.later_t') }}</td>
+          <td v-if="checkAuth(item.symbol) && statusDict[item.status] === '可提取'"><button class="btn btn-text btn-sm" @click="toWithdraw(item)">{{ $t('label.hurry_t') }}</button></td>
           <td v-else>-</td>
         </tr>
       </tbody>

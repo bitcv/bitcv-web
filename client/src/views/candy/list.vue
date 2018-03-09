@@ -2,15 +2,23 @@
   <div v-loading="loading">
     <div class="panel panel-custom">
       <div class="panel-body filter-list">
-        <div><h3 style="margin:20px 0 30px;">余币宝计划</h3></div>
+        <div><h3 style="margin:20px 0 30px;">{{ $t('label.ybb_plan') }}</h3></div>
         <dl class="dl-horizontal">
-          <dt>锁仓期限</dt>
-          <dd>
+          <dt>{{ $t('label.lock') }}</dt>
+          <dd  v-if="language === 'cn'">
             <a href="javascript:;"
               v-for="item in lockTime.items"
               :key="item.value"
               :class="{active: lockTime.value == item.value}"
               @click="onFilterClick(item.value)"
+            >{{ item.label }}</a>
+          </dd>
+          <dd v-else>
+            <a href="javascript:;"
+               v-for="item in lockTime.e_items"
+               :key="item.value"
+               :class="{active: lockTime.value == item.value}"
+               @click="onFilterClick(item.value)"
             >{{ item.label }}</a>
           </dd>
         </dl>
@@ -21,12 +29,12 @@
         <table class="table hidden-xs">
           <thead>
             <tr class="text-dark">
-              <th>项目</th>
-              <th>回报（每万枚）</th>
-              <th>锁仓期</th>
-              <th>起始额度</th>
-              <th>剩余额度</th>
-              <th style="width:100px;">操作</th>
+              <th>{{ $t('label.candy_project') }}</th>
+              <th>{{ $t('label.return') }}（{{ $t('label.million') }})</th>
+              <th>{{ $t('label.lock') }}</th>
+              <th>{{ $t('label.start_amount') }}</th>
+              <th>{{ $t('label.leave_amount') }}</th>
+              <th style="width:100px;">&nbsp;</th>
             </tr>
           </thead>
           <tbody>
@@ -35,12 +43,12 @@
                 <img :src="item.logoUrl" height="30" class="img-rounded">
                 <span>{{ item.nameCn }}<span class="text-gray small">{{ item.tokenSymbol }}</span></span>
               </td>
-              <td><span class="text-danger">{{ getInterest(10000, item.interestRate, item.lockTime) }}枚</span></td>
-              <td>{{ item.lockTime }}个月</td>
-              <td>{{ item.minAmount }}枚</td>
-              <td><span class="text-primary">{{ item.remainAmount }}枚</span></td>
+              <td><span class="text-danger">{{ getInterest(10000, item.interestRate, item.lockTime) }} {{ $t('label.coin_amount') }}</span></td>
+              <td>{{ item.lockTime }} {{ $t('label.month') }}</td>
+              <td>{{ item.minAmount }} {{ $t('label.coin_amount') }}</td>
+              <td><span class="text-primary">{{ item.remainAmount }} {{ $t('label.coin_amount') }}</span></td>
               <td>
-                <router-link class="btn btn-primary btn-sm btn-nocorner" :to="{path: '/candyRoom/candyBuy', query: item}">立即抢购</router-link>
+                <router-link class="btn btn-primary btn-sm btn-nocorner" :to="{path: '/candyRoom/candyBuy', query: item}">{{  $t('label.buy')}}</router-link>
               </td>
             </tr>
           </tbody>
@@ -111,6 +119,13 @@ export default {
           {label: '3个月', value: 3},
           {label: '6个月', value: 6},
           {label: '12个月', value: 12}
+        ],
+        e_items: [
+          {label: 'ALl', value: 0},
+          {label: 'one month', value: 1},
+          {label: 'three month', value: 3},
+          {label: 'six month', value: 6},
+          {label: 'twelve month', value: 12}
         ]
       },
       total: 0,
@@ -125,6 +140,9 @@ export default {
         perpage: 10,
         lockTime: this.lockTime.value
       }
+    },
+    language () {
+      return this.$i18n.locale
     }
   },
   created () {

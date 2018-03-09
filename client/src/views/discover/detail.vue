@@ -28,26 +28,27 @@
               </div>
               <div class="media-body">
                 <h4>{{ info.nameCn}}</h4>
-                <p>项目简称：<span class="text-primary">{{ info.nameEn }}</span></p>
-                <p>项目符号：<span class="text-primary">{{ info.tokenSymbol }}</span></p>
+                <p>{{ $t('label.project_shortname') }}：<span class="text-primary">{{ info.nameEn }}</span></p>
+                <p>{{ $t('label.project_s') }}：<span class="text-primary">{{ info.tokenSymbol }}</span></p>
               </div>
             </div>
             <p class="span-group" v-if="info.tagList && info.tagList.length > 1">
-              <span class="text-dark">标签</span>
+              <span class="text-dark">{{ $t('label.detail_tag') }}</span>
               <span v-for="(item, index) in info.tagList" :key="index">{{ item }}</span>
             </p>
           </div>
           <div class="col-md-6 md-mg-t">
             <div class="col-xs-6 col-md-8">
-              <p><a :href="info.homeUrl" class="btn btn-default btn-outline btn-sm" target="_blank" style="width:80px;">项目主页</a></p>
+              <p><a :href="info.homeUrl" class="btn btn-default btn-outline btn-sm" target="_blank" style="width:105px;">{{ $t('label.project_home') }}</a></p>
               <div style="height: 20px;"></div>
-              <p><a :href="info.whitePaperUrl" class="btn btn-default btn-outline btn-sm" target="_blank" style="width:80px;">白皮书</a></p>
+              <p><a :href="info.whitePaperUrl" class="btn btn-default btn-outline btn-sm" target="_blank" style="width:105px;">{{ $t('label.white_paper') }}</a></p>
             </div>
             <div class="col-xs-6 col-md-4">
               <ul class="list-unstyled text-dark">
                 <li>
                   <p>
-                    <span class="fixed-label">{{ ['关注', '取消关注'][info.focusStatus] }}&nbsp;&nbsp;</span>
+                    <span v-if="language === 'cn'" class="fixed-label">{{ ['关注', '取消关注'][info.focusStatus] }}&nbsp;&nbsp;</span>
+                    <span v-else class="fixed-label">{{ ['follow', 'unfollow'][info.focusStatus] }}&nbsp;&nbsp;</span>
                     <a href="javascript:;" :style="info.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" @click="handleFocus">
                       <span class="icon-bcv" :class="{'icon-heart': info.focusStatus == 0, 'icon-heart-fill': info.focusStatus == 1}"></span>
                     </a>
@@ -55,19 +56,19 @@
                 </li>
                 <li>
                   <p>
-                    <span class="fixed-label">分享&nbsp;&nbsp;</span>
+                    <span class="fixed-label">{{ $t('label.share') }}：</span>
                     <a href="javascript:;" @click="openShare"><span class="icon-bcv icon-share"></span></a>
                   </p>
                 </li>
                 <li>
                   <p>
-                    <span class="fixed-label">关注：</span>
+                    <span class="fixed-label">{{ $t('label.focus') }}：</span>
                     <span class="text-black fnum">{{ info.focusNum }}</span>
                   </p>
                 </li>
                 <li>
                   <p>
-                    <span class="fixed-label">浏览：</span>
+                    <span class="fixed-label">{{ $t('label.view') }}：</span>
                     <span class="text-black">{{ info.viewTimes }}</span>
                   </p>
                 </li>
@@ -80,12 +81,12 @@
     <div class="tab-bar">
       <div class="row">
         <div class="col-md-6">
-          <a href="javascript:;" class="tab-item" :class="{active: activeName == 'info'}" @click="activeName = 'info'">项目信息</a>
-          <a href="javascript:;" class="tab-item" :class="{active: activeName == 'dynamic'}" @click="activeName = 'dynamic'">项目动态</a>
+          <a href="javascript:;" class="tab-item" :class="{active: activeName == 'info'}" @click="activeName = 'info'">{{ $t('label.project_info') }}</a>
+          <a href="javascript:;" class="tab-item" :class="{active: activeName == 'dynamic'}" @click="activeName = 'dynamic'">{{ $t('label.project_dy') }}</a>
         </div>
         <div class="col-md-6 text-right hidden-xs hidden-sm">
           <ul class="list-inline text-darker">
-            <li class="text-dark">社区</li>
+            <li class="text-dark">{{ $t('label.social') }}</li>
             <li v-for="(item, index) in info.socialList" :key="index">
               <a :href="item.linkUrl" target="_blank">
                 <span class="icon-bcv" :class="'icon-'+item.name"></span>
@@ -98,14 +99,24 @@
     <div class="component-wrapper">
       <div class="row">
         <div class="col-md-8">
-          <ul v-if="activeName == 'info'" class="nav nav-tabs">
+          <ul v-if="activeName == 'info' && language === 'cn'" class="nav nav-tabs">
             <li v-for="(item, index) in infoList" :class="{active: item.active}" :key="index">
               <a :href="item.target" @click="onTabItemClick(infoList, item)">{{ item.text }}</a>
             </li>
           </ul>
-          <ul v-if="activeName == 'dynamic'" class="nav nav-tabs">
+          <ul v-else-if="activeName == 'info' && language === 'en'" class="nav nav-tabs">
+            <li v-for="(item, index) in e_infoList" :class="{active: item.active}" :key="index">
+              <a :href="item.target" @click="onTabItemClick(e_infoList, item)">{{ item.text }}</a>
+            </li>
+          </ul>
+          <ul v-if="activeName == 'dynamic' && language === 'cn'" class="nav nav-tabs">
             <li v-for="(item, index) in dynamicList" :class="{active: item.active}" :key="index">
               <a :href="item.target" @click="onTabItemClick(dynamicList, item)">{{ item.text }}</a>
+            </li>
+          </ul>
+          <ul v-if="activeName == 'dynamic' && language === 'en'" class="nav nav-tabs">
+            <li v-for="(item, index) in e_dynamicList" :class="{active: item.active}" :key="index">
+              <a :href="item.target" @click="onTabItemClick(e_dynamicList, item)">{{ item.text }}</a>
             </li>
           </ul>
         </div>
@@ -114,7 +125,7 @@
         <div class="col-md-8 col">
           <div v-if="activeName == 'info'" class="tab-content">
             <div id="info" class="panel-body">
-              <h4 class="sub-title">项目简介</h4>
+              <h4 class="sub-title">{{ $t('label.project_intr') }}</h4>
               <div class="sub-content">
                 <p>{{ info.shortDesc }}</p>
                 <article class="text-darker">
@@ -124,7 +135,7 @@
               </div>
             </div><!-- /#info -->
             <div id="team" class="panel-body">
-              <h4 class="sub-title">团队成员</h4>
+              <h4 class="sub-title">{{ $t('label.team_mem') }}</h4>
               <div class="sub-content">
                 <swiper :options="swiperOption" ref="swiper">
                   <swiper-slide v-for="(item, index) in info.memberList" :key="index">
@@ -144,7 +155,7 @@
                 </swiper>
               </div>
               <div v-if="info.advisorList && info.advisorList.length">
-                <h4 class="sub-title">项目顾问</h4>
+                <h4 class="sub-title">{{ $t('label.project_advisor') }}</h4>
                 <div class="sub-content">
                   <div class="row adviser-list">
                     <div class="col-xs-6 col-sm-4 col-md-3" v-for="(item, index) in info.advisorList" :key="index">
@@ -164,7 +175,7 @@
               </div>
             </div><!-- /#team -->
             <div id="develop" class="panel-body" v-if="info.eventList && info.eventList.length">
-              <h4 class="sub-title">项目发展</h4>
+              <h4 class="sub-title">{{ $t('label.project_dev') }}</h4>
               <div class="sub-content">
                 <div class="timelime">
                   <div class="timelime-item" v-for="(item, index) in info.eventList" :key="index">
@@ -180,7 +191,7 @@
               </div>
             </div><!-- /#develop -->
             <div id="partner" class="panel-body" v-if="info.partnerList && info.partnerList.length">
-              <h4 class="sub-title">合作伙伴</h4>
+              <h4 class="sub-title">{{ $t('label.brother') }}</h4>
               <div class="sub-content">
                 <div class="row partner-list">
                   <div class="col col-xs-6 col-sm-4 col-md-3" v-for="(item, index) in info.partnerList" :key="index">
@@ -194,7 +205,7 @@
           </div>
           <div v-if="activeName == 'dynamic'" class="tab-content">
             <div id="media" class="panel-body">
-              <h4 class="sub-title">媒体报道</h4>
+              <h4 class="sub-title">{{ $t('label.media') }}</h4>
               <div class="sub-content" :href="report.bannerUrl" target="_blank" v-for="(report, index) in info.reportList" :key="index">
                 <div class="media">
                   <div class="media-left">
@@ -212,7 +223,7 @@
               </div>
             </div>
             <div id="offical" class="panel-body" v-if="info.publicList && info.publicList.length">
-              <h4 class="sub-title">官方公告</h4>
+              <h4 class="sub-title">{{ $t('label.anno') }}</h4>
               <div class="sub-content">
                 <ul class="list-unstyled notice-list">
                   <li class="clearfix" v-for="(notice, index) in info.publicList" :key="index">
@@ -223,7 +234,7 @@
               </div>
             </div>
             <div id="community" class="panel-body" v-if="info.dynamicList && info.dynamicList.length">
-              <h4 class="sub-title">社区发布</h4>
+              <h4 class="sub-title">{{ $t('label.comm_anno') }}</h4>
               <div class="sub-content community">
                 <div class="media" v-for="(social, index) in info.dynamicList" :key="index">
                   <div class="media-left">
@@ -232,7 +243,7 @@
                   <div class="media-body text-darker">
                     <p class="media-heading">{{ social.officialName }}</p>
                     <p class="small text-dark">{{ social.postTime }} 来自 {{ social.name }}</p>
-                    <p class="content"><span v-html="social.title"></span><a :href="social.referUrl" target="_blank" class="more">查看原文</a></p>
+                    <p class="content"><span v-html="social.title"></span><a :href="social.referUrl" target="_blank" class="more">{{ $t('label.view_full') }}</a></p>
                   </div>
                 </div>
               </div>
@@ -241,12 +252,12 @@
         </div>
         <div class="col-md-4 col">
           <div class="panel-body text-darker" style="padding-top: 0">
-            <h4>认领该公司</h4>
+            <h4>{{ $t('label.claim_co') }}</h4>
             <p class="text-center" style="height:200px;">
               <img src="https://placehold.it/100x100" style="width:100px;height100px;margin-top:50px;">
             </p>
             <div v-if="address">
-              <h4>公司联系信息</h4>
+              <h4>{{ $t('label.co_address') }}</h4>
               <p><span class="icon-bcv icon-loufang01"></span> {{ address }}</p>
             </div>
           </div>
@@ -287,10 +298,21 @@ export default {
         {text: '项目发展', target: '#develop', active: false},
         {text: '合作伙伴', target: '#partner', active: false}
       ],
+      e_infoList: [
+        {text: 'Project information', target: '#info', active: true},
+        {text: 'Team Information', target: '#team', active: false},
+        {text: 'Project development', target: '#develop', active: false},
+        {text: 'Cooperative partner', target: '#partner', active: false}
+      ],
       dynamicList: [
         {text: '媒体报道', target: '#media', active: true},
         {text: '官方发布', target: '#offical', active: false},
         {text: '社区发布', target: '#community', active: false}
+      ],
+      e_dynamicList: [
+        {text: 'Media coverage', target: '#media', active: true},
+        {text: 'Official announcement', target: '#offical', active: false},
+        {text: 'Community release', target: '#community', active: false}
       ]
     }
   },
@@ -316,6 +338,9 @@ export default {
         return `${companyEmail} ${companyAddr}`
       }
       return ''
+    },
+    language () {
+      return this.$i18n.locale
     }
   },
   created () {
