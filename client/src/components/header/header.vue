@@ -17,8 +17,9 @@
         </router-link>
       </div>
 
-      <div v-if="!hasToken" class="navbar-right hidden-sm hidden-xs">
+      <div v-if="!hasToken" class="navbar-right hidden-sm hidden-xs" style="margin-right:0;">
         <router-link class="btn navbar-btn btn-default btn-outline" to="/signup">{{ $t('label.registered') }}</router-link>
+
         <span>&nbsp;&nbsp;</span>
         <router-link class="btn navbar-btn btn-default btn-outline" to="/signin">{{ $t('label.login') }}</router-link>
       </div>
@@ -33,9 +34,11 @@
           <span>{{ mobile }}</span>
         </a>
         <ul v-if="hasToken" class="dropdown-menu">
+
           <li><router-link to="/wallet" @click.native="dimissMenu">{{ $t('label.assets') }}</router-link></li>
-          <li><router-link to="/candyRoom/myCandyOrder" @click.native="dimissMenu">{{ $t('label.order') }}</router-link></li>
+          <li><router-link to="/candyRoom/candyMyData" @click.native="dimissMenu">{{ $t('label.order') }}</router-link></li>
           <li><a href="javascript:;" @click="$emit('signout')">{{ $t('label.logout') }}</a></li>
+
         </ul>
         <ul v-else class="dropdown-menu hidden-md hidden-lg">
           <li><router-link to="/signin" @click.native="dimissMenu">{{ $t('label.login') }}</router-link></li>

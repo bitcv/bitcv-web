@@ -12,7 +12,6 @@
     <!-- 币威 -->
     <div class="row bitcv">
       <div class="col-xs-3 col-md-3">
-        <!-- <img src="/static/logo/bcv.png" alt="BitCV" height="60"> -->
         <img :src="bitcv.logoUrl" alt="BitCV" height="60">
         <div class="clear">&nbsp;</div>
         <b>{{bitcv.tokenSymbol}}<span>{{bitcv.nameCn}}</span></b>

@@ -83,3 +83,13 @@ export const getOrderTxRecordList = (store, params) => {
 export const confirmDepositTx = (store, params) => {
   return post('/api/confirmDepositTx', params)
 }
+
+// 获取用户订单列表
+export const getUserOrderList = (store, params) => {
+  return post('/api/getUserOrderList', params)
+}
+
+// 取消订单
+export const cancelDepositOrder = (store, params) => {
+  return post('/api/cancelDepositOrder', params)
+}

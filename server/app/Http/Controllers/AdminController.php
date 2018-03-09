@@ -1049,7 +1049,12 @@ class AdminController extends Controller
             return $this->error(100);
         }
         extract($params);
-        $linkUrl = strpos($linkUrl, 'http') === 0 ? $linkUrl : 'http://' . $linkUrl;
+        if($socialId == 5){
+            $linkUrl = $linkUrl;
+        }else{
+            $linkUrl = strpos($linkUrl, 'http') === 0 ? $linkUrl : 'http://' . $linkUrl;
+        }
+
 
         $isExist = Model\Social::where('id', $socialId)->count();
         if (!$isExist) {
@@ -1075,7 +1080,12 @@ class AdminController extends Controller
             return $this->error(100);
         }
         extract($params);
-        $linkUrl = strpos($linkUrl, 'http') === 0 ? $linkUrl : 'http://' . $linkUrl;
+
+        if($socialId == 5){
+            $linkUrl = $linkUrl;
+        }else{
+            $linkUrl = strpos($linkUrl, 'http') === 0 ? $linkUrl : 'http://' . $linkUrl;
+        }
 
         $isExist = Model\Social::where('id', $socialId)->count();
         if (!$isExist) {
@@ -1712,7 +1722,7 @@ class AdminController extends Controller
 
     public function addProjExchange(Request $request){
         $params = $this->validation($request, [
-            'projId' => 'required|string',
+            'projId' => 'required|numeric',
             'memberId' => 'required|numeric',
 //            'name' => 'required|string',
 //            'photoUrl' => 'nullable|string',

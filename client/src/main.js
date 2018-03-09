@@ -156,7 +156,14 @@ const messages = {
       shoukuan: '收款地址',
       wait: '请等待',
       sub: '提交',
-      can_btn: '取消'
+      can_btn: '取消',
+      no_data: '暂无数据',
+      shouqi: '收起',
+      jiaoyi: '交易数量',
+      no_t: '暂无交易记录，请点击',
+      retry: '重试',
+      confirm_recharge: '请确认充值数量',
+      coin_address: '请输入相应币种的钱包地址'
     }
   },
   // 英文
@@ -296,7 +303,14 @@ const messages = {
       shoukuan: 'Receiving Address',
       wait: 'Please Wait',
       sub: 'Submit',
-      can_btn: 'Cancel'
+      can_btn: 'Cancel',
+      no_data: 'No data',
+      shouqi: 'Collapse',
+      jiaoyi: 'Number of transactions',
+      no_t: 'No transaction history, please click',
+      retry: 'Retry',
+      confirm_recharge: 'Please confirm the amount of recharge',
+      coin_address: 'Please enter the wallet address for the currency'
     }
   }
 }
@@ -340,14 +354,16 @@ axios.interceptors.response.use(
   }
 )
 
+// 同步缓存中的用户信息
+const syncUserInfo = () => store.commit('updateUserInfo')
+
 const getToken = () => {
+  syncUserInfo()
+
   const userInfo = store.state.userInfo
 
   return userInfo && Object.keys(userInfo).length > 0
 }
-
-// 同步缓存中的用户信息
-store.commit('updateUserInfo')
 
 // 登录拦截
 router.beforeEach((to, from, next) => {
@@ -355,9 +371,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(route => route.meta && route.meta.requiresAuth)) { // 需要校验登录信息
     const hasToken = getToken()
 
-    if (hasToken) { // 有token
-      next()
-    } else { // 没有token
+    if (!hasToken) { // 没有token
       // 跳转到登录页
       next('/signin')
     }
@@ -369,6 +383,8 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from) => {
   NProgress.done()
 })
+
+syncUserInfo()
 
 /* eslint-disable no-new */
 new Vue({

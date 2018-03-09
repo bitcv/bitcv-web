@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <ol class="breadcrumb">
-      <li><span>{{ $t('label.sum_money') }}</span></li>
+      <li><router-link to="/wallet">{{ $t('label.sum_money') }}</router-link></li>
       <li class="active">{{ $t('label.records') }}</li>
     </ol>
 

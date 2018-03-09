@@ -16,9 +16,9 @@
         <div class="col-md-6 col-md-offset-3">
           <form class="form-horizontal">
             <div class="form-group no-corner">
-              <label class="control-label col-md-4">{{ $t('label.shoukuan') }}:</label>
+              <label class="control-label col-md-4">{{symbol}} {{ $t('label.shoukuan') }}:</label>
               <div class="col-md-8">
-                <input type="text" class="form-control" v-model="walletAddr">
+                <input type="text" class="form-control" v-model="walletAddr" :placeholder="$t('label.coin_address')">
               </div>
             </div>
             <div class="form-group no-corner">
@@ -62,11 +62,14 @@ import {mapState} from 'vuex'
 export default {
   computed: {
     ...mapState({
-      id: state => state.route.params.id
-    }),
-    ...mapState({
+      id: state => state.route.params.id,
+      protocol: state => state.route.params.protocol,
+      symbol: state => state.route.query.symbol,
       userInfo: state => state.userInfo
-    })
+    }),
+    language () {
+      return this.$i18n.locale
+    }
   },
   data () {
     return {
@@ -103,14 +106,33 @@ export default {
       })
     },
     onSubmit () {
-      if (!/^0x[0-9a-f]{40}/i.test(this.walletAddr)) {
-        return alert('请填写正确的收币钱包地址')
+      // 钱包地址正则校验
+      var reg = ''
+      if (this.protocol === '1') {
+        reg = /^0x[0-9a-f]{40}$/i
+      } else if (this.protocol === '2' || this.protocol === '3' || this.protocol === '4' || this.protocol === '5') {
+        reg = /^[0-9a-z]{30,40}$/i
+      } else {
+        if (this.language === 'cn') {
+          alert('未知错误')
+          return false
+        } else {
+          alert('Unknown error')
+          return false
+        }
+      }
+      if (!reg.test(this.walletAddr)) {
+        if (this.language === 'cn') {
+          return alert('请填写正确的收币钱包地址')
+        } else {
+          return alert('Please enter the wallet address for the currency')
+        }
       }
       // 创建钱包
       this.$http.post('/api/addUserWallet', {
         mobile: this.userInfo.mobile,
         vcode: this.vcode,
-        tokenProtocol: '1',
+        tokenProtocol: this.protocol,
         walletAddr: this.walletAddr
       }).then(res => {
         if (res.data.errcode === 0) {

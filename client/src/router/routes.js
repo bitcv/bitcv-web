@@ -1,9 +1,9 @@
 function getComponent (path) {
-  return () => import(`@/components/${path}.vue`)
+  return () => import(`@/components/${path}.vue`).catch(e => location.reload())
 }
 
 function getViews (path) {
-  return () => import(`@/views/${path}.vue`)
+  return () => import(`@/views/${path}.vue`).catch(e => location.reload())
 }
 
 export default [{
@@ -26,7 +26,7 @@ export default [{
   }
 }, {
   // 提现
-  path: '/wallet/withdraw/:id',
+  path: '/wallet/withdraw/:id/:protocol',
   component: getViews('user/withdraw'),
   meta: {
     requiresAuth: true
@@ -56,43 +56,49 @@ export default [{
     }
   }, {
     path: 'candyOrder',
-    // component: getComponent('candyRoom/CandyBuy'),
     component: getViews('candy/order'),
     meta: {
       requiresAuth: true
     }
   }, {
     path: 'candyDetails',
-    // component: getComponent('candyRoom/CandyBuy'),
     component: getViews('candy/details'),
     meta: {
       requiresAuth: true
     }
   }, {
-    path: 'candyOrder',
-    component: getComponent('candyRoom/CandyOrder'),
+    path: 'candyMyData',
+    component: getViews('candy/my-data'),
     meta: {
       requiresAuth: true
     }
-  }, {
-    path: 'candyOrderDetail/:id',
-    component: getComponent('candyRoom/CandyOrderDetail'),
-    meta: {
-      requiresAuth: true
-    }
-  }, {
-    path: 'candyOrderConfirm/:id',
-    component: getComponent('candyRoom/CandyOrderConfirm'),
-    meta: {
-      requiresAuth: true
-    }
-  }, {
-    path: 'myCandyOrder',
-    component: getComponent('candyRoom/MyCandyOrder'),
-    meta: {
-      requiresAuth: true
-    }
-  }]
+  }
+  // {
+  //   path: 'candyOrder',
+  //   component: getComponent('candyRoom/CandyOrder'),
+  //   meta: {
+  //     requiresAuth: true
+  //   }
+  // }, {
+  //   path: 'candyOrderDetail/:id',
+  //   component: getComponent('candyRoom/CandyOrderDetail'),
+  //   meta: {
+  //     requiresAuth: true
+  //   }
+  // }, {
+  //   path: 'candyOrderConfirm/:id',
+  //   component: getComponent('candyRoom/CandyOrderConfirm'),
+  //   meta: {
+  //     requiresAuth: true
+  //   }
+  // }, {
+    // path: 'myCandyOrder',
+    // component: getComponent('candyRoom/MyCandyOrder'),
+    // meta: {
+    //   requiresAuth: true
+    // }
+  // }
+  ]
 }, {
   // 创建项目
   path: '/apply',

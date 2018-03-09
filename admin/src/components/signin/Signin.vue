@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import {mapMutations} from 'vuex'
+
 export default {
   data () {
     return {
@@ -23,13 +25,15 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['updateUserInfo']),
     signin () {
       this.$http.post('/api/signin', {
         mobile: this.inputAccount,
         passwd: this.inputPasswd
       }).then((res) => {
         if (res.data.errcode === 0) {
-          this.$router.push('/admin')
+          this.updateUserInfo(res.data.data)
+          this.$router.replace('/')
         } else {
           alert(res.data.errmsg)
         }

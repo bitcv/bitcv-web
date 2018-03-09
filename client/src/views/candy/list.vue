@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <div class="panel panel-custom">
       <div class="panel-body filter-list">
         <div><h3 style="margin:20px 0 30px;">{{ $t('label.ybb_plan') }}</h3></div>
@@ -25,8 +25,8 @@
       </div>
     </div>
     <div class="panel panel-custom">
-      <div class="table-responsive">
-        <table class="table">
+      <div class="table-responsive" v-if="list.length">
+        <table class="table hidden-xs">
           <thead>
             <tr class="text-dark">
               <th>{{ $t('label.candy_project') }}</th>
@@ -41,7 +41,7 @@
             <tr v-for="item in list" :key="item.id">
               <td>
                 <img :src="item.logoUrl" height="30" class="img-rounded">
-                <span>{{ item.nameCn }}_<span class="text-gray small">{{ item.tokenSymbol }}</span></span>
+                <span>{{ item.nameCn }}<span class="text-gray small">{{ item.tokenSymbol }}</span></span>
               </td>
               <td><span class="text-danger">{{ getInterest(10000, item.interestRate, item.lockTime) }} {{ $t('label.coin_amount') }}</span></td>
               <td>{{ item.lockTime }} {{ $t('label.month') }}</td>
@@ -53,7 +53,46 @@
             </tr>
           </tbody>
         </table>
+        <!-- 小屏幕时显示的模拟table -->
+        <div class="visible-xs xs-box">
+          <div class="xs-header text-gray">
+            <span>项目</span>
+            <span>回报（每万枚）</span>
+            <span>操作</span>
+          </div>
+          <div class="xs-body">
+            <div class="xs-item" v-for="(item, index) in list" :key="item.id">
+              <div class="xs-row" @click="handleShow(index)">
+                <span>
+                  <img :src="item.logoUrl" height="30" class="img-rounded">
+                  <b>{{ item.nameCn }}<i class="text-gray small">{{ item.tokenSymbol }}</i></b>
+                </span>
+                <span>{{ getInterest(10000, item.interestRate, item.lockTime) }}枚</span>
+                <span>
+                  <router-link class="btn btn-primary btn-sm btn-nocorner" :to="{path: '/candyRoom/candyBuy', query: item}">立即抢购</router-link>
+                </span>
+              </div>
+              <div class="xs-detail" v-if="item.isDetail">
+                <p>
+                  <span>锁仓期：</span>
+                  {{ item.lockTime }}个月
+                </p>
+                <p>
+                  <span>起始额度：</span>
+                  {{ item.minAmount }}枚
+                </p>
+                <p>
+                  <span>剩余额度：</span>
+                  {{ item.remainAmount }}枚
+
+                  <b class="b-hidden" @click="handleHidden(index)">收起</b>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      <div v-else class="nodat">暂无数据</div>
     </div>
     <div class="text-right">
       <pagination :total="total" :current-page="currentPage" @onPageClick="onPageClick"></pagination>
@@ -71,6 +110,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       lockTime: {
         value: 0,
         items: [
@@ -111,10 +151,18 @@ export default {
   methods: {
     ...mapActions(['getCandyList']),
     fetch () {
+      this.loading = true
       this.getCandyList(this.params)
         .then(({dataCount = 0, dataList = []} = {}) => {
           this.total = dataCount
           this.list = dataList
+          this.list.map((item) => {
+            this.$set(item, 'isDetail', false)
+          })
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
         })
     },
     getInterest (amount, interestRate, lockTime) {
@@ -124,6 +172,15 @@ export default {
       this.lockTime.value = val
       this.currentPage = 1
       this.fetch()
+    },
+    handleShow (index) {
+      this.list.map((item, i) => {
+        if (i !== index) item.isDetail = false
+      })
+      this.list[index].isDetail = !this.list[index].isDetail
+    },
+    handleHidden (index) {
+      this.list[index].isDetail = false
     },
     onPageClick (page) {
       this.currentPage = page
@@ -180,6 +237,57 @@ export default {
   .text-danger {
     color: darken($primary-color, 20%);
   }
+}
+.xs-box{
+  background: #fff;
+  .xs-header, .xs-row{
+    display: flex;
+    padding: 0 15px;
+    line-height: 50px;
+    border-bottom: 1px solid #ccc;
+    span{
+      flex: 2;
+      &:last-child{
+        flex: 1;
+      }
+    }
+  }
+  .xs-header{
+    border-bottom: 1px solid #ccc;
+    line-height: 50px;
+  }
+  .xs-body{
+    .xs-row{
+      &:active{
+        background: #eee;
+      }
+      b{
+        font-weight: 500;
+      }
+      i{
+        font-style: normal;
+      }
+    }
+    .xs-detail{
+      padding: 10px 20px;
+      background: #f5f5f5;
+      line-height: 30px;
+      p{
+        margin: 0;
+        overflow: hidden;
+      }
+      .b-hidden{
+        float: right;
+        padding: 0 10px;
+        color: #999;
+      }
+    }
+  }
+}
+.nodat{
+  width: 100%;
+  line-height: 50px;
+  text-align: center;
 }
 .panel-custom {
   margin-bottom: 0;

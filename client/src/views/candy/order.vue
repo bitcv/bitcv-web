@@ -1,5 +1,5 @@
 <template>
-  <div class="container buying-address">
+  <div class="container buying-address" v-loading="loading">
 
     <!-- 路径导航 -->
     <ol class="breadcrumb">
@@ -55,6 +55,7 @@ import {mapActions} from 'vuex'
 export default {
   data () {
     return {
+      loading: false,
       bitcv: {},
       form: {
         address: ''
@@ -93,14 +94,19 @@ export default {
       if (this.form.address.indexOf('0x') !== 0 || this.form.address.length !== 42 || this.form.address === this.bitcv.toAddr) {
         this.addressError = 'has-error'
       } else {
+        this.loading = true
         this.postCandyOrder(this.params)
           .then((data = {}) => {
+            this.loading = false
             this.bitcv.address = this.form.address
             this.bitcv.id = data.id
             this.$router.push({
               path: '/candyRoom/candyDetails',
               query: this.bitcv
             })
+          })
+          .catch(() => {
+            this.loading = false
           })
       }
     }

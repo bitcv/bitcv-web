@@ -24,8 +24,12 @@
             <el-button :disabled="disableSms" class="sms-btn" :class="{disabled : disableSms}" type="primary" @click="getVcode">{{ $t('label.get_sms') }}<span v-show="timerId"> ({{ countDown }}s)</span></el-button>
             <!-- <span class = "smscode" @click="getVcode">发送短信验证码</span> -->
           </div>
-          <input v-model="passwd" type="password" :placeholder="$t('label.new_pwd')">
-          <button @click.prevent="findPwd">{{ $t('label.reset_pwd') }}</button>
+          <div class="flex-box">
+            <input v-model="passwd" type="password" :placeholder="$t('label.new_pwd')">
+          </div>
+          <div class="flex-box">
+            <button @click.prevent="findPwd">{{ $t('label.reset_pwd') }}</button>
+          </div>
         </form>
     </div>
   </div>
@@ -126,12 +130,20 @@ export default {
 .signup-container {
 .findpwd {
   box-sizing: border-box;
-  width: 530px;
+  max-width: 530px;
   margin: 0 auto;
   background-color: #FFF;
   padding: 20px;
   position: relative;
   font-size: 0;
+  .flex-box{
+    display: flex;
+    max-width: 426px;
+    width: 100%;
+    input, button{
+      width: 100%;
+    }
+  }
   .panel-title {
     font-size: 30px;
     margin: 12px 0 32px;
@@ -147,7 +159,7 @@ export default {
     input {
       display: block;
       box-sizing: border-box;
-      width: 426px;
+      width: 87%;
       height: 50px;
       border: 1px solid #ddd;
       padding: 0 20px;
@@ -201,7 +213,7 @@ export default {
       width: 275px;
     }
     button {
-      width: 426px;
+      width: 87%;
       height: 50px;
       text-align: center;
       color: #fff;

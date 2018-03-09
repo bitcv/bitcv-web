@@ -88,10 +88,12 @@ export default {
       })
     },
     checkAuth (tokenSymbol) {
-      // 管理员开通
-      if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST') {
+      if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST' || tokenSymbol === 'ETH' || tokenSymbol === 'BTC' || tokenSymbol === 'DOGE') {
         return true
       } else {
+        if (this.code === 'bcvadmin' && tokenSymbol === 'KCASH') {
+          return true
+        }
         return false
       }
     },
@@ -126,7 +128,7 @@ export default {
           })
         })
       } else {
-        this.$router.push('/wallet/withdraw/' + item.id)
+        this.$router.push('/wallet/withdraw/' + item.id + '/' + item.protocol + '?symbol=' + item.symbol)
       }
     }
   }

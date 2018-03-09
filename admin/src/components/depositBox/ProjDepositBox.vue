@@ -1,6 +1,6 @@
 <template>
   <div class="proj-deposit-box">
-    <template v-if="projData.status && projData.contractAddr">
+    <div v-if="projData.status && projData.contractAddr">
       <el-tabs type="border-card">
         <el-tab-pane label="余币宝列表">
           <div class="header-btn-area">
@@ -125,7 +125,7 @@
           </el-table>
         </el-tab-pane>
       </el-tabs>
-    </template>
+    </div>
     <div v-else>
       <div class="empty" v-if="!projData.contractAddr">请在基本信息页配置通证的ERC20智能合约地址</div>
       <div class="empty" v-if="!projData.status">项目通过管理员审核后才能创建余币宝</div>
