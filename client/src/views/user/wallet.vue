@@ -91,6 +91,9 @@ export default {
       if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST' || tokenSymbol === 'ETH' || tokenSymbol === 'BTC' || tokenSymbol === 'DOGE') {
         return true
       } else {
+        if (this.code === 'bcvadmin' && tokenSymbol === 'KCASH') {
+          return true
+        }
         return false
       }
     },

@@ -104,12 +104,14 @@ export default {
     },
     onSubmit () {
       // 钱包地址正则校验
-      if (this.protocol == 1) {
-        var reg = /^0x[0-9a-f]{40}/i
-      } else if (this.protocol == 2 || this.protocol == 3) {
-        var reg = /^[0-9a-zA-Z]{30,40}$/i
+      var reg = ''
+      if (this.protocol === '1') {
+        reg = /^0x[0-9a-f]{40}$/i
+      } else if (this.protocol === '2' || this.protocol === '3' || this.protocol === '4' || this.protocol === '5') {
+        reg = /^[0-9a-z]{30,40}$/i
       } else {
-        return false;
+        alert('未知错误')
+        return false
       }
       if (!reg.test(this.walletAddr)) {
         return alert('请填写正确的收币钱包地址')
