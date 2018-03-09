@@ -110,8 +110,8 @@
                   </router-link>
                 </td>
                 <td><span class="text-primary">{{ item.tokenSymbol }}</span></td>
-                <td>{{ (item.buzType - 1) | buzType }}</td>
-                <td><span class="text-primary">{{ item.fundStage | fundStage }}</span></td>
+                <td>{{ (item.buzType - 1) | buzType(language) }}</td>
+                <td><span class="text-primary">{{ item.fundStage | fundStage(language) }}</span></td>
               </tr>
             </tbody>
           </table>
