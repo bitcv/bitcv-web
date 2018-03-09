@@ -5,16 +5,20 @@ export const maskStr = (str, num, separator = '...') => {
 
 // 获取融资状态
 export const getFundStage = (v, lang) => {
-  var dict = {
+  var dist = {
     cn: ['保密', '未融资', '融资中', '已融资'],
-    en: ['secret', 'unfinanced', 'financing', 'financed']
+    en: ['Confidentiality', 'Unfunded', 'Financing', 'Financed']
   }
-  return dict[lang][v]
+  return dist[lang][v]
 }
 
 // 获取行业类型
-export const getBuzType = v => {
-  return ['金融', '数字货币', '娱乐', '供应链管理', '法律服务', '医疗', '能源服务', '公益', '物联网', '农业', '社交'][v] || '其他'
+export const getBuzType = (v, lang) => {
+  var dist = {
+    cn: ['金融', '数字货币', '娱乐', '供应链管理', '法律服务', '医疗', '能源服务', '公益', '物联网', '农业', '社交'] || '其他',
+    en: ['Financial', 'Digital currency', 'Entertainment', 'Supply Chain Management', 'Legal service', 'Medical', 'Energy service', 'Public welfare', 'Internet of Things', 'Agriculture', 'Social'] || 'Other'
+  }
+  return dist[lang][v]
 }
 
 // 获取订单状态

@@ -68,6 +68,7 @@ exports.install = function (Vue, options) {
     var day = hour * 24;
     var halfamonth = day * 15;
     var month = day * 30;
+    var lang = this.$i18n.locale;
 
     var now = new Date().getTime();
     var diffValue = now - new Date(dateTimeStamp).getTime();
@@ -77,14 +78,27 @@ exports.install = function (Vue, options) {
     var dayC = diffValue/day;
     var hourC = diffValue/hour;
     var minC = diffValue/minute;
-    if(hourC > 24){
-      var result = parseInt(dayC) + '天前';
-    } else if(hourC>=1){
-      var result = parseInt(hourC) +"个小时前";
-    } else if(minC>=1){
-      var result = parseInt(minC) +"分钟前";
+    if (lang === 'cn') {
+      if(hourC > 24){
+        var result = parseInt(dayC) + '天前';
+      } else if(hourC>=1){
+        var result = parseInt(hourC) +"个小时前";
+      } else if(minC>=1){
+        var result = parseInt(minC) +"分钟前";
+      } else {
+        var result = "刚刚"
+      }
+      return result;
     } else {
-      var result = "刚刚"
+      if(hourC > 24){
+        var result = parseInt(dayC) + ' days ago';
+      } else if(hourC>=1){
+        var result = parseInt(hourC) +" hours ago";
+      } else if(minC>=1){
+        var result = parseInt(minC) +" minutes ago";
+      } else {
+        var result = " just"
+      }
     }
     return result;
   }
