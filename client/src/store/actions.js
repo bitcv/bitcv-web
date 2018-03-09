@@ -44,6 +44,11 @@ export const getFilterParams = (store, params) => {
   return post('/api/getProjTagList', params)
 }
 
+// 获取英文筛选条件
+export const getEnFilterParams = (store, params) => {
+  return post('/api/getEnProjTagList', params)
+}
+
 // 获取TOP10
 export const getTop10 = (store, params) => {
   return post('/api/getProjTopList', params)

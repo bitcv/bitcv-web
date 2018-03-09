@@ -1,18 +1,18 @@
 <template>
   <div class="container">
     <ol class="breadcrumb">
-      <li><span>总资产</span></li>
-      <li class="active">交易记录</li>
+      <li><span>{{ $t('label.sum_money') }}</span></li>
+      <li class="active">{{ $t('label.records') }}</li>
     </ol>
 
     <table class="table text-darker table-hover small" style="background: #fff;">
       <thead class="shadow-thead">
         <tr>
-          <th>币种</th>
-          <th>数量</th>
-          <th>交易哈希</th>
-          <th>状态</th>
-          <th style="width:200px">交易时间</th>
+          <th>{{ $t('label.coin_type') }}</th>
+          <th>{{ $t('label.coin_num') }}</th>
+          <th>{{ $t('label.hash') }}</th>
+          <th>{{ $t('label.coin_status') }}</th>
+          <th style="width:200px">{{ $t('label.r_time') }}</th>
         </tr>
       </thead>
       <tbody>

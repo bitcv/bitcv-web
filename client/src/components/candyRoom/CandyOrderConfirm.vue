@@ -1,12 +1,12 @@
 <template>
   <div class="candy-order-confirm">
     <div class="title-area">
-      <span>订单详情</span>
+      <span>{{ $t('label.order_detail') }}</span>
     </div>
     <div class="content-area">
       <div class="info-area" :class="mediaClass()">
         <div v-if="orderData.projData" class="info-row">
-          <span class="title">项目：</span>
+          <span class="title">{{ $t('label.candy_project') }}：</span>
           <div class="content-box">
             <img :src="orderData.projData.logoUrl" alt="">
             <div class="info-box">
@@ -17,24 +17,24 @@
         </div>
         <div class="info-row">
           <div class="info-item">
-            <span class="title">充值数量：</span>
-            <span class="content">{{ orderData.orderAmount }}枚</span>
+            <span class="title">{{ $t('label.in_amount') }}：</span>
+            <span class="content">{{ orderData.orderAmount }} {{ $t('label.coin_amount') }}</span>
           </div>
           <div class="info-item">
-            <span class="title">锁仓期：</span>
-            <span class="content">{{ orderData.lockTime }}个月</span>
+            <span class="title">{{ $t('label.lock') }}：</span>
+            <span class="content">{{ orderData.lockTime }} {{ $t('label.month') }}</span>
           </div>
           <div class="info-item">
-            <span class="title">回报：</span>
-            <span class="content">{{ getInterest(orderData.orderAmount, orderData.interestRate, orderData.lockTime) }}枚</span>
+            <span class="title">{{ $t('label.return') }}：</span>
+            <span class="content">{{ getInterest(orderData.orderAmount, orderData.interestRate, orderData.lockTime) }} {{ $t('label.coin_amount') }}</span>
           </div>
         </div>
         <div class="info-row addr">
-          <span class="title addr">接收地址：</span>
+          <span class="title addr">{{ $t('label.re_address') }}：</span>
           <span class="content">{{ orderData.toAddr }}</span>
         </div>
         <div class="info-row addr">
-          <span class="title addr">您的地址：</span>
+          <span class="title addr">{{ $t('label.your_address') }}：</span>
           <span class="content">{{ orderData.fromAddr }}</span>
         </div>
         <!--<div class="status-row">-->
@@ -44,13 +44,13 @@
         <div class="qrcode" :class="mediaClass()"></div>
       </div>
       <div class="table-box" :class="mediaClass()" v-if="showConfirm">
-        <span class="title">以下为系统自动检测到的交易记录，请勾选此笔订单相关的交易记录进行确认！</span>
+        <span class="title">{{ $t('label.sys_notice') }}</span>
         <table>
           <tr>
-            <th>充值数量</th>
-            <th class="mobile-hide">交易时间</th>
-            <th>交易哈希</th>
-            <th>操作</th>
+            <th>{{ $t('label.in_amount') }}</th>
+            <th class="mobile-hide">{{ $t('label.r_time') }}</th>
+            <th>{{ $t('label.hash') }}</th>
+            <th>{{ $t('label.hash') }}</th>
           </tr>
           <tr v-for="(record, index) in recordList" :key="index">
             <td>{{ record.txAmount }}</td>
@@ -60,19 +60,19 @@
           </tr>
         </table>
         <div class="btn default" :class="mediaClass()" @click="refreshTx">
-          <span>刷新数据</span>
+          <span>{{ $t('label.refresh_data') }}</span>
         </div>
         <div class="btn" @click="confirmTx">
-          <span>确认完成</span>
+          <span>{{ $t('label.co_co') }}</span>
         </div>
       </div>
       <div class="btn-box" v-else>
         <div class="btn-row">
           <input type="checkbox">
-          <span>我已向目标接收地址充值<em>{{ orderData.orderAmount }}</em>枚</span>
+          <span>{{ $t('label.my_goal') }}<em>{{ orderData.orderAmount }}</em> {{ $t('label.coin_amount') }}</span>
         </div>
         <div class="btn" :class="mediaClass()" @click="toOrderConfirm">
-          <span>开始确认</span>
+          <span>{{ $t('label.start_co') }}</span>
         </div>
       </div>
     </div>

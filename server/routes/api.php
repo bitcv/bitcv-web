@@ -31,6 +31,7 @@ Route::any('getProjList', 'ProjectController@getProjList');
 Route::any('getProjTopList', 'ProjectController@getProjTopList');
 Route::any('getProjDetail', 'ProjectController@getProjDetail');
 Route::any('getProjTagList', 'ProjectController@getProjTagList');
+Route::any('getEnProjTagList', 'ProjectController@getEnProjTagList');
 
 Route::any('getDepositBoxList', 'DepositController@getDepositBoxList');
 Route::any('addDepositOrder', 'DepositController@addDepositOrder');

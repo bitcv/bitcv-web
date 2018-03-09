@@ -2,15 +2,15 @@
   <div class="my-candy-order">
     <div class="main-area">
       <div class="title-box" :class="mediaClass()">
-        <span class="title">我的余币宝清单</span>
+        <span class="title">{{ $t('label.my_list') }}</span>
         <!--<img src="/static/img/logo.png" alt="">-->
       </div>
       <div class="filter-box">
-        <span class="title" :class="mediaClass()">订单状态</span>
+        <span class="title" :class="mediaClass()">{{ $t('label.order_status') }}</span>
         <ul class="select" :class="mediaClass()">
-          <li :class="{cur: inputStatus===null}" @click="inputStatus=null">全部</li>
-          <li :class="{cur: inputStatus===1}" @click="inputStatus=1">已完成</li>
-          <li :class="{cur: inputStatus===0}" @click="inputStatus=0">待充值</li>
+          <li :class="{cur: inputStatus===null}" @click="inputStatus=null">{{ $t('label.all') }}</li>
+          <li :class="{cur: inputStatus===1}" @click="inputStatus=1">{{ $t('label.complete') }}</li>
+          <li :class="{cur: inputStatus===0}" @click="inputStatus=0">{{ $t('label.to_charge') }}</li>
         </ul>
       </div>
       <div class="table-box">
@@ -18,47 +18,47 @@
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-form label-position="left" inline>
-                <el-form-item label="项目名称">{{ props.row.nameCn }}</el-form-item>
-                <el-form-item label="符号">{{ props.row.tokenSymbol }}</el-form-item>
-                <el-form-item label="购买数量">{{ props.row.orderAmount }}</el-form-item>
-                <el-form-item label="锁仓期">{{ props.row.lockTime }}个月</el-form-item>
-                <el-form-item label="总回报">{{ props.row.interestRate * props.row.orderAmount * props.row.lockTime / 12 }}枚</el-form-item>
-                <el-form-item label="交易哈希">{{ props.row.txHash }}</el-form-item>
-                <el-form-item label="下单时间">{{ convertDate(props.row.orderTime) }}</el-form-item>
+                <el-form-item :label="$t('label.candy_project')">{{ props.row.nameCn }}</el-form-item>
+                <el-form-item :label="$t('label.project_s')">{{ props.row.tokenSymbol }}</el-form-item>
+                <el-form-item :label="$t('label.buy_q')">{{ props.row.orderAmount }}</el-form-item>
+                <el-form-item :label="$t('label.lock')">{{ props.row.lockTime }} {{ $t('label.month') }}</el-form-item>
+                <el-form-item :label="$t('label.sum_return')">{{ props.row.interestRate * props.row.orderAmount * props.row.lockTime / 12 }} {{ $t('label.coin_amount') }}</el-form-item>
+                <el-form-item :label="$t('label.hash')">{{ props.row.txHash }}</el-form-item>
+                <el-form-item :label="$t('label.order_time')">{{ convertDate(props.row.orderTime) }}</el-form-item>
               </el-form>
             </template>
           </el-table-column>
-          <el-table-column label="项目符号" prop="tokenSymbol">
+          <el-table-column :label="$t('label.project_s')" prop="tokenSymbol">
             <template slot-scope="scope">
               <img class="small-image" :src="scope.row.logoUrl" alt="">
               <span>{{ scope.row.tokenSymbol }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="订单金额" prop="orderAmount"></el-table-column>
-          <el-table-column label="操作" prop="orderAmount">
+          <el-table-column :label="$t('label.order_money')" prop="orderAmount"></el-table-column>
+          <el-table-column :label="$t('label.operation')" prop="orderAmount">
             <template slot-scope="scope">
               <div v-if="scope.row.status === 0">
-              <el-button @click="confirmOrder(scope.row.id)" size="mini" type="primary" style="margin:0 0 10px;display:inline;">确认</el-button>
-              <el-button @click="cancelOrder(scope.row.id)" size="mini" type="danger" style="margin:0">删除</el-button>
+              <el-button @click="confirmOrder(scope.row.id)" size="mini" type="primary" style="margin:0 0 10px;display:inline;">{{ $t('label.confirm') }}</el-button>
+              <el-button @click="cancelOrder(scope.row.id)" size="mini" type="danger" style="margin:0">{{ $t('label.delete') }}</el-button>
               </div>
               <div class="btn-box" v-else-if="scope.row.status === 1">
-                <span class="text">订单完成</span>
+                <span class="text">{{ $t('label.order_finished') }}</span>
               </div>
               <div class="btn-box" v-else-if="scope.row.status === 2">
-                <span class="text">已取消</span>
+                <span class="text">{{ $t('label.cancel') }}</span>
               </div>
             </template>
           </el-table-column>
         </el-table>
         <table v-else>
           <tr class="table-header">
-            <th colspan="2">项目</th>
-            <th class="mobile-hide">下单时间</th>
-            <th>充值数量</th>
-            <th class="mobile-hide">锁仓期</th>
-            <th class="mobile-hide">总回报</th>
-            <th>操作</th>
-            <th class="mobile-hide">交易哈希</th>
+            <th colspan="2">{{ $t('label.candy_project') }}</th>
+            <th class="mobile-hide">{{ $t('label.order_time') }}</th>
+            <th>{{ $t('label.in_amount') }}</th>
+            <th class="mobile-hide">{{ $t('label.lock') }}</th>
+            <th class="mobile-hide">{{ $t('label.sum_return') }}</th>
+            <th>{{ $t('label.operation') }}</th>
+            <th class="mobile-hide">{{ $t('label.hash') }}</th>
           </tr>
           <template v-for="order in orderList">
           <tr class="table-row" :key="order.id">
@@ -72,26 +72,26 @@
               </div>
             </td>
             <td class="mobile-hide">{{ convertDate(order.orderTime) }}</td>
-            <td>{{ order.orderAmount }}枚</td>
-            <td class="mobile-hide">{{ order.lockTime }}个月</td>
-            <td class="mobile-hide">{{ order.interestRate * order.orderAmount * order.lockTime / 12 }}枚</td>
+            <td>{{ order.orderAmount }} {{ $t('label.coin_amount') }}</td>
+            <td class="mobile-hide">{{ order.lockTime }} {{ $t('label.month') }}</td>
+            <td class="mobile-hide">{{ order.interestRate * order.orderAmount * order.lockTime / 12 }} {{ $t('label.coin_amount') }}</td>
             <td>
               <div class="btn-box" v-if="order.status === 0">
-                <span @click="confirmOrder(order.id)">确认订单</span>
-                <span @click="cancelOrder(order.id)">取消订单</span>
+                <span @click="confirmOrder(order.id)">{{ $t('label.confirm_o') }}</span>
+                <span @click="cancelOrder(order.id)">{{ $t('label.cancel_order') }}</span>
               </div>
               <div class="btn-box" v-else-if="order.status === 1">
-                <span class="text">订单完成</span>
+                <span class="text">{{ $t('label.order_finished') }}</span>
               </div>
               <div class="btn-box" v-else-if="order.status === 2">
-                <span class="text">已取消</span>
+                <span class="text">{{ $t('label.cancel') }}</span>
               </div>
             </td>
             <td class="mobile-hide">
               <template v-if="order.txHashList.length">
                 <a v-for="(txHash, index) in order.txHashList" :key="index" :href="'https://etherscan.io/tx/' + txHash" target="_blank">{{ getShortStr(txHash, 10) }}</a>
               </template>
-              <span v-else>暂无交易</span>
+              <span v-else>{{ $t('label.no') }}</span>
             </td>
           </tr>
           </template>

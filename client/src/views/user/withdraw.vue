@@ -3,7 +3,7 @@
     <div class="poptips" :class="{'poptips-show': showTips}">
       <div class="container">
         <i class="icon poptips-icon"></i>
-        <span>提示：本次矿工费由币威平台承担</span>
+        <span>{{ $t('label.tips') }}</span>
       </div>
     </div>
 
@@ -16,27 +16,27 @@
         <div class="col-md-6 col-md-offset-3">
           <form class="form-horizontal">
             <div class="form-group no-corner">
-              <label class="control-label col-md-4">收款地址:</label>
+              <label class="control-label col-md-4">{{ $t('label.shoukuan') }}:</label>
               <div class="col-md-8">
                 <input type="text" class="form-control" v-model="walletAddr">
               </div>
             </div>
             <div class="form-group no-corner">
-              <label class="control-label col-md-4">输入手机号:</label>
+              <label class="control-label col-md-4">{{ $t('label.login_mobile_ph') }}:</label>
               <div class="col-md-8">
                 <div class="input-group">
                   <input disabled type="text" class="form-control" :value="userInfo.mobile">
                   <span class="input-group-btn">
                     <button :disabled="disableSms" type="button" class="btn btn-gray-light" @click="getVcode">
-                      <span v-if="disableSms"> 请等待({{ countDown }}s)</span>
-                      <span v-else>获取验证码</span>
+                      <span v-if="disableSms"> {{ $t('label.wait') }} ({{ countDown }}s)</span>
+                      <span v-else>{{ $t('label.get_sms') }}</span>
                     </button>
                   </span>
                 </div>
               </div>
             </div>
             <div class="form-group no-corner">
-              <label class="control-label col-md-4">输入手机验证码:</label>
+              <label class="control-label col-md-4">{{ $t('label.sms') }}:</label>
               <div class="col-md-8">
                 <input type="text" class="form-control" v-model="vcode">
               </div>
@@ -45,8 +45,8 @@
             <p><br></p>
             <div class="form-group">
               <div class="col-md-8 col-md-offset-4">
-                <button type="button" class="btn btn-primary" @click="onSubmit" style="padding:6px 20px;">提交</button>
-                <button type="button" class="btn btn-gray" @click="onCancel" style="margin-left:20px;padding:6px 20px;color:#fff;">取消</button>
+                <button type="button" class="btn btn-primary" @click="onSubmit" style="padding:6px 20px;">{{ $t('label.sub') }}</button>
+                <button type="button" class="btn btn-gray" @click="onCancel" style="margin-left:20px;padding:6px 20px;color:#fff;">{{ $t('label.can_btn') }}</button>
               </div>
             </div>
           </form>

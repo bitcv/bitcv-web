@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-inverse navbar-static-top">
     <div class="container">
-      <a href="javascrpt:''" @click="toggleLang" style="position:absolute;right:300px;top:15px;color:#FFF">{{ $t('label.lang') }}</a>
+      <a href="javascrpt:''" @click="toggleLang" style="position:absolute;right:420px;top:15px;color:#FFF">{{ $t('label.lang') }}</a>
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" :class="{collapsed: !showSide}" @click.stop="navbarToggle">
           <span class="sr-only">Toggle navigation</span>
@@ -18,9 +18,9 @@
       </div>
 
       <div v-if="!hasToken" class="navbar-right hidden-sm hidden-xs">
-        <router-link class="btn navbar-btn btn-default btn-outline" to="/signup">注册</router-link>
+        <router-link class="btn navbar-btn btn-default btn-outline" to="/signup">{{ $t('label.registered') }}</router-link>
         <span>&nbsp;&nbsp;</span>
-        <router-link class="btn navbar-btn btn-default btn-outline" to="/signin">登录</router-link>
+        <router-link class="btn navbar-btn btn-default btn-outline" to="/signin">{{ $t('label.login') }}</router-link>
       </div>
 
       <div class="dropdown navbar-right" :class="{open: showDropdown}" @mouseenter="onMouseenter" @mouseleave="onMouseleave" style="margin-right:0">
@@ -33,21 +33,21 @@
           <span>{{ mobile }}</span>
         </a>
         <ul v-if="hasToken" class="dropdown-menu">
-          <li><router-link to="/wallet" @click.native="dimissMenu">我的资产</router-link></li>
-          <li><router-link to="/candyRoom/myCandyOrder" @click.native="dimissMenu">余币宝订单</router-link></li>
-          <li><a href="javascript:;" @click="$emit('signout')">注销登录</a></li>
+          <li><router-link to="/wallet" @click.native="dimissMenu">{{ $t('label.assets') }}</router-link></li>
+          <li><router-link to="/candyRoom/myCandyOrder" @click.native="dimissMenu">{{ $t('label.order') }}</router-link></li>
+          <li><a href="javascript:;" @click="$emit('signout')">{{ $t('label.logout') }}</a></li>
         </ul>
         <ul v-else class="dropdown-menu hidden-md hidden-lg">
-          <li><router-link to="/signin" @click.native="dimissMenu">登录</router-link></li>
-          <li><router-link to="/signup" @click.native="dimissMenu">注册</router-link></li>
+          <li><router-link to="/signin" @click.native="dimissMenu">{{ $t('label.login') }}</router-link></li>
+          <li><router-link to="/signup" @click.native="dimissMenu">{{ $t('label.registered') }}</router-link></li>
         </ul>
       </div>
 
       <div class="collapse navbar-collapse" :class="{'in': showSide}" v-click-outside="onClickOutside">
         <ul class="nav navbar-nav">
           <router-link tag="li" active-class="active" exact to="/" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.home')}}</a></router-link>
-          <router-link tag="li" active-class="active" to="/discover" @click.native="dimissMenu"><a href="javascript:;">发现</a></router-link>
-          <router-link tag="li" active-class="active" to="/candyRoom" @click.native="dimissMenu"><a href="javascript:;">余币宝</a></router-link>
+          <router-link tag="li" active-class="active" to="/discover" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.discover')}}</a></router-link>
+          <router-link tag="li" active-class="active" to="/candyRoom" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.ybb')}}</a></router-link>
         </ul>
       </div>
     </div>
