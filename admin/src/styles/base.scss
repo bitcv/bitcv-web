@@ -1,7 +1,27 @@
+@import 'variables';
+
 html, body {
   height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 body {
-  overflow-x: hidden;
+  font-family: 'PingFangSC-Regular', 'Microsoft YaHei', Arial, sans-serif;
+  font-size: 14px;
+  color: $text-main;
+  background-color: $bg-main;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+a {
+  color: $text-link;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  color: $text-hover;
+  text-decoration: none;
 }
