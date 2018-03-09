@@ -36,6 +36,7 @@ class Controller extends BaseController
         '209' => ['errcode' => 209, 'errmsg' => '未找到钱包地址'],
         '210' => ['errcode' => 210, 'errmsg' => '钱包地址重复'],
         '211' => ['errcode' => 211, 'errmsg' => '已有此类型的钱包地址'],
+        '212' => ['errcode' => 212, 'errmsg' => '钱包地址错误'],
         // 项目错误码
         '301' => ['errcode' => 301, 'errmsg' => '项目不存在'],
         '302' => ['errcode' => 302, 'errmsg' => '社交ID不存在'],

@@ -4,24 +4,24 @@
     <!-- 路径导航 -->
     <ol class="breadcrumb">
       <li class="active">
-        <router-link :to="{path: '/candyRoom/candyList'}">余币宝</router-link>
+        <router-link :to="{path: '/candyRoom/candyList'}">{{ $t('label.ybb') }}</router-link>
       </li>
-      <li>地址设置</li>
+      <li>{{ $t('label.set_address') }}</li>
     </ol>
 
     <!-- 币威 -->
     <div class="bitcv">
-      <h4>抢购详情</h4>
+      <h4>{{ $t('label.buy_detail') }}</h4>
       <div class="row">
         <div class="col-md-5">
-          充值数量：<b>{{bitcv.number}}</b>枚
+          {{ $t('label.in_amount') }}：<b>{{bitcv.number}}</b> {{ $t('label.coin_amount') }}
         </div>
 
         <div class="col-md-5">
           <b>{{bitcv.lockTime}}</b>
-          个月后回报
+          {{ $t('label.month') }} {{ $t('label.getback') }}
           <b>{{bitcv.report}}</b>
-          枚
+          {{ $t('label.coin_amount') }}
         </div>
       </div>
     </div>
@@ -29,20 +29,21 @@
     <!-- 内容 -->
     <div class="content">
       <div>
-        <h4>充值接收地址</h4>
+        <h4>{{ $t('label.re_address') }}</h4>
         <div class="buying-address-adr">
           <p>{{bitcv.toAddr}}</p>
-          <p>此地址为项目方与平台共同认可的资金存管地址，回报已入账，请放心充值</p>
+          <p>{{ $t('label.pla_notice') }}</p>
         </div>
       </div>
-      <h4>您的支出地址</h4>
+      <h4>{{ $t('label.spending') }}</h4>
       <div class="buying-address-form">
         <div class="form-group" :class="addressError">
-          <input type="text" class="form-control" id="address" placeholder="请输入支出地址" v-model="form.address">
-          <span v-if="addressError">{{errorTip}}</span>
+          <input type="text" class="form-control" id="address" :placeholder="$t('label.input_address')" v-model="form.address">
+          <span v-if="addressError && language === 'cn'">{{errorTip}}</span>
+          <span v-else-if="addressError && language === 'en'">{{e_errorTip}}</span>
         </div>
         <div class="col-md-10 buying-address-form-submit">
-          <button class="btn btn-warning" @click="handleSubmit">提交订单</button>
+          <button class="btn btn-warning" @click="handleSubmit">{{ $t('label.submit_ord') }}</button>
         </div>
       </div>
     </div>
@@ -60,7 +61,8 @@ export default {
         address: ''
       },
       addressError: '',
-      errorTip: '请输入正确的支付钱包地址'
+      errorTip: '请输入正确的支付钱包地址',
+      e_errorTip: 'Please enter the correct payment wallet address'
     }
   },
   created () {
@@ -73,6 +75,9 @@ export default {
         orderAmount: this.bitcv.number + '',
         fromAddr: this.form.address
       }
+    },
+    language () {
+      return this.$i18n.locale
     }
   },
   methods: {

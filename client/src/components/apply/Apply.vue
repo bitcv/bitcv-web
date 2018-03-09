@@ -1,28 +1,28 @@
 <template>
   <div class="container">
     <div class="signin">
-      <h3 class="panel-title center-title">项目申请</h3>
+      <h3 class="panel-title center-title">{{ $t('label.apply') }}</h3>
       <!-- <template> -->
-        <span class="prompt">已经展示的项目请在项目详情页面直接认领！</span>
+        <span class="prompt">{{ $t('label.apply_notice') }}</span>
         <form>
-          <input v-model="formData.nameCn" type="text" placeholder="项目中文名" required>
-          <input v-model="formData.nameEn" type="text" placeholder="项目英文名" required>
-          <input v-model="formData.tokenName" type="text" placeholder="通证名称" required>
-          <input v-model="formData.tokenSymbol" type="text" placeholder="通证符号" required>
+          <input v-model="formData.nameCn" type="text" :placeholder="$t('label.p_cname')" required>
+          <input v-model="formData.nameEn" type="text" :placeholder="$t('label.p_ename')" required>
+          <input v-model="formData.tokenName" type="text" :placeholder="$t('label.tong_name')" required>
+          <input v-model="formData.tokenSymbol" type="text" :placeholder="$t('label.pro_train_type')" required>
           <el-form-item :label="select.label" v-for="(select, field) in selectList" :key="field">
             <el-select v-model="formData[field]">
               <el-option v-for="(option, index) in select.optionList" :key="option.value" v-if="index" :label="option.label" :value="option.value"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="融资阶段">
+          <el-form-item :label="$t('label.f_stage')">
             <el-select v-model="formData.fundStage">
-              <el-option label="保密" :value="0"></el-option>
-              <el-option label="未融资" :value="1"></el-option>
-              <el-option label="融资中" :value="2"></el-option>
-              <el-option label="已融资" :value="3"></el-option>
+              <el-option :label="$t('label.f_se')" :value="0"></el-option>
+              <el-option :label="$t('label.f_no')" :value="1"></el-option>
+              <el-option :label="$t('label.f_ing')" :value="2"></el-option>
+              <el-option :label="$t('label.f_f')" :value="3"></el-option>
             </el-select>
           </el-form-item>
-          <button @click.prevent="signin">创建项目</button>
+          <button @click.prevent="signin">{{ $t('label.create_project') }}</button>
         </form>
       <!-- </template> -->
     </div>

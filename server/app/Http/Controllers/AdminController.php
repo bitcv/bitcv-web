@@ -1722,7 +1722,7 @@ class AdminController extends Controller
 
     public function addProjExchange(Request $request){
         $params = $this->validation($request, [
-            'projId' => 'required|string',
+            'projId' => 'required|numeric',
             'memberId' => 'required|numeric',
 //            'name' => 'required|string',
 //            'photoUrl' => 'nullable|string',

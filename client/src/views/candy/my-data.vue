@@ -2,12 +2,20 @@
   <div v-loading="loading" class="my-data">
     <div class="panel panel-custom">
       <div class="panel-body filter-list">
-        <div><h3 style="margin:20px 0 30px;">我的余币宝订单</h3></div>
+        <div><h3 style="margin:20px 0 30px;">{{ $t('label.my_list') }}</h3></div>
         <dl class="dl-horizontal">
-          <dt>订单状态</dt>
-          <dd>
+          <dt>{{ $t('label.order_status') }}</dt>
+          <dd v-if="language === 'cn'">
             <a href="javascript:;"
               v-for="item in lockTime.items"
+              :key="item.value"
+              :class="{active: lockTime.value == item.value}"
+              @click="onFilterClick(item.value)"
+            >{{ item.label }}</a>
+          </dd>
+          <dd v-else>
+            <a href="javascript:;"
+              v-for="item in lockTime.enitems"
               :key="item.value"
               :class="{active: lockTime.value == item.value}"
               @click="onFilterClick(item.value)"
@@ -21,32 +29,34 @@
         <table class="table table-hover hidden-xs">
           <thead>
             <tr class="text-dark">
-              <th>项目</th>
-              <th>下单时间</th>
-              <th>充值数量</th>
-              <th>锁仓期</th>
-              <th>回报</th>
-              <th>操作</th>
-              <th>交易哈希</th>
+              <th>{{ $t('label.candy_project') }}</th>
+              <th>{{ $t('label.order_time') }}</th>
+              <th>{{ $t('label.buy_q') }}</th>
+              <th>{{ $t('label.lock') }}</th>
+              <th>{{ $t('label.return') }}</th>
+              <th>{{ $t('label.operation') }}</th>
+              <th>{{ $t('label.hash') }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in list" :key="item.id">
               <td>
-                <img class="small-image" :src="item.logoUrl" alt="图片" height="30">
+                <img v-if="language === 'cn'" class="small-image" :src="item.logoUrl" alt="图片" height="30">
+                <img v-else class="small-image" :src="item.logoUrl" alt="Image" height="30">
                 <span>{{ item.nameCn }}<span class="text-gray small">{{ item.tokenSymbol }}</span></span>
               </td>
               <td>{{convertDate(item.orderTime)}}</td>
               <td>{{item.orderAmount}}</td>
-              <td>{{item.lockTime}}个月</td>
-              <td>{{item.interestRate * item.orderAmount * item.lockTime / 12}}枚</td>
+              <td>{{item.lockTime}} {{ $t('label.month') }}</td>
+              <td>{{item.interestRate * item.orderAmount * item.lockTime / 12}} {{ $t('label.coin_amount') }}</td>
               <td>
                 <span v-if="item.status === 0" class="btn-box">
-                  <button class="btn btn-warning" @click="handleConfirm(item.id)">确认订单</button><br>
-                  <button class="btn btn-default" @click="handleCancel(item.id)" style="margin-top:10px;">取消订单</button>
+                  <button class="btn btn-warning" @click="handleConfirm(item.id)">{{ $t('label.confirm_o') }}</button><br>
+                  <button class="btn btn-default" @click="handleCancel(item.id)" style="margin-top:10px;">{{ $t('label.cancel_order') }}</button>
                 </span>
                 <span v-else :class="{'text-muted': item.status === 2}">
-                  {{['', '订单完成', '已取消'][item.status]}}
+                  <span v-if="language === 'cn'">{{['', '订单完成', '已取消'][item.status]}}</span>
+                  <span v-else>{{['', 'Order completed', 'Cancelled'][item.status]}}</span>
                 </span>
               </td>
               <td>
@@ -63,9 +73,9 @@
         <!-- 小屏幕时显示的模拟table -->
         <div class="visible-xs xs-box">
           <div class="xs-header text-gray">
-            <span>项目</span>
-            <span>充值数量</span>
-            <span>操作</span>
+            <span>{{ $t('label.candy_project') }}</span>
+            <span>{{ $t('label.in_amount') }}</span>
+            <span>{{ $t('label.operation') }}</span>
           </div>
           <div class="xs-body">
             <div class="xs-item" v-for="(item, index) in list" :key="item.id">
@@ -74,32 +84,33 @@
                   <img :src="item.logoUrl" height="30" class="img-rounded">
                   <b>{{ item.nameCn }}<i class="text-gray small">{{ item.tokenSymbol }}</i></b>
                 </span>
-                <span :style="{lineHeight: item.status === 0 ? '80px' : '50px'}">{{ item.orderAmount }}枚</span>
+                <span :style="{lineHeight: item.status === 0 ? '80px' : '50px'}">{{ item.orderAmount }} {{ $t('label.coin_amount') }}</span>
                 <span :style="{lineHeight: item.status === 0 ? '33px' : '50px', padding: item.status === 0 ? '5px 0' : '0'}">
                   <em v-if="item.status === 0" class="btn-box">
-                    <button class="btn btn-warning" @click="handleConfirm(item.id)">确认订单</button>
-                    <button class="btn btn-default" @click="handleCancel(item.id)">取消订单</button>
+                    <button class="btn btn-warning" @click="handleConfirm(item.id)">{{ $t('label.confirm_o') }}</button>
+                    <button class="btn btn-default" @click="handleCancel(item.id)">{{ $t('label.cancel_order') }}</button>
                   </em>
                   <em v-else :class="{'text-muted': item.status === 2}">
-                    {{['', '订单完成', '已取消'][item.status]}}
+                    <span v-if="language === 'cn'">{{['', '订单完成', '已取消'][item.status]}}</span>
+                    <span v-else>{{['', 'Order completed', 'Cancelled'][item.status]}}</span>
                   </em>
                 </span>
               </div>
               <div class="xs-detail" v-if="item.isDetail">
                 <p>
-                  <span>下单时间：</span>
-                  {{ convertDate(item.orderTime) }}个月
+                  <span>{{ $t('label.order_time') }}：</span>
+                  {{ convertDate(item.orderTime) }} {{ $t('label.month') }}
                 </p>
                 <p>
-                  <span>锁仓期：</span>
-                  {{ item.orderAmount }}枚
+                  <span>{{ $t('label.lock') }}：</span>
+                  {{ item.orderAmount }} {{ $t('label.coin_amount') }}
                 </p>
                 <p>
-                  <span>回报：</span>
-                  {{ getInterest(item.orderAmount, item.interestRate, item.lockTime) }}枚
+                  <span>{{ $t('label.return') }}：</span>
+                  {{ getInterest(item.orderAmount, item.interestRate, item.lockTime) }} {{ $t('label.coin_amount') }}
                 </p>
                 <p>
-                  <span>交易哈希：</span>
+                  <span>{{ $t('label.hash') }}：</span>
 
                   <i v-if="item.txHashList && item.txHashList.length">
                     <em v-for="(hash, index) in item.txHashList" :key="index">
@@ -108,14 +119,14 @@
                   </i>
                   <i v-else>-</i>
 
-                  <b class="b-hidden" @click="handleHidden(index)">收起</b>
+                  <b class="b-hidden" @click="handleHidden(index)">{{ $t('label.shouqi') }}</b>
                 </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div v-else class="nodat">暂无数据</div>
+      <div v-else class="nodat">{{ $t('label.no_data') }}</div>
     </div>
     <div class="text-right">
       <pagination :total="total" :current-page="currentPage" @onPageClick="onPageClick"></pagination>
@@ -141,6 +152,11 @@ export default {
           {label: '全部', value: -1},
           {label: '已充值', value: 0},
           {label: '未充值', value: 1}
+        ],
+        enitems: [
+          {label: 'All', value: -1},
+          {label: 'Completed', value: 0},
+          {label: 'Not recharged', value: 1}
         ]
       },
       total: 0,
@@ -156,6 +172,9 @@ export default {
         perpage: 10,
         status: this.lockTime.value
       }
+    },
+    language () {
+      return this.$i18n.locale
     }
   },
   created () {

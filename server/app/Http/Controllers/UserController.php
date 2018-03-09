@@ -207,13 +207,19 @@ class UserController extends Controller
 
     public function getVcode(Request $request){
         $params = $this->validation($request,[
-            'mobile' => 'required|numeric',
+            'mobile' => 'required|string',
             'nation' => 'nullable|numeric'
         ]);
         if($params === false){
             return $this->error(100);
         }
         extract($params);
+        if (!$nation) {
+            $userModel = Model\User::where('mobile', $mobile)->first();
+            if ($userModel) {
+                $nation = $userModel->nation;
+            }
+        }
         return self::vcode($mobile, $nation);
     }
 
@@ -328,7 +334,7 @@ class UserController extends Controller
 
     public function addUserWallet (Request $request) {
         $params = $this->validation($request,[
-            'tokenProtocol' => 'required|string',
+            'tokenProtocol' => 'required|numeric',
             'walletAddr' => 'required|string',
             'mobile' => 'required|string',
             'vcode' => 'required|string',
@@ -338,8 +344,52 @@ class UserController extends Controller
         }
         extract($params);
         // 正则校验钱包地址
-        $walletAddr = strtolower($walletAddr);
-        if (!preg_match('/^0x[0-9a-f]{40}$/', $walletAddr)) {
+        if ($tokenProtocol == 1) {
+            // ERC20钱包地址校验
+            $walletAddr = strtolower($walletAddr);
+            $reg = '/^0x[0-9a-f]{40}$/';
+            if (!preg_match($reg, $walletAddr)) {
+                return $this->error(212);
+            }
+        } else if ($tokenProtocol == 2) {
+            // 比特币钱包地址校验
+            $balance = @file_get_contents("https://blockchain.info/q/addressbalance/$walletAddr");
+            if (!is_numeric($balance)) {
+                return $this->error(212);
+            }
+        } else if ($tokenProtocol == 3) {
+            // 狗狗币钱包地址校验
+            $result = @file_get_contents("https://dogechain.info/api/v1/address/balance/$walletAddr");
+            if ($result === false) {
+                return $this->error(212);
+            }
+        } else if ($tokenProtocol == 4) {
+            // NEO钱包地址校验
+            $data = [
+                'method' => 'validateaddress',
+                'params' => [$walletAddr],
+                'jsonrpc' => '2.0',
+                'id' => 1,
+            ];
+            $resJson = \App\Utils\BaseUtil::curlPost('http://139.219.98.23:10332', $data);
+            $resArr = json_decode($resJson, true);
+            if (!isset($resArr['result']['isvalid']) || !$resArr['result']['isvalid']) {
+                return $this->error(212);
+            }
+        } else if ($tokenProtocol == 5) {
+            // KCASH钱包地址校验
+            $data = [
+                'jsonrpc' => '2.0',
+                'params' => [$walletAddr],
+                'id' => 20,
+                'method' => 'wallet_check_address',
+            ];
+            $resJson = self::post('http://40.125.205.96:34942/rpc', $data);
+            $resArr = json_decode($resJson, true);
+            if (!isset($resArr['result']) || !$resArr['result']) {
+                return $this->error(212);
+            }
+        } else {
             return $this->error(100);
         }
         // 获取用户ID
@@ -354,7 +404,7 @@ class UserController extends Controller
         }
         // 验证验证码
         $ret = Service::checkVCode('reg', $mobile, $vcode);
-        if (false && $ret['err'] > 0) {
+        if ($ret['err'] > 0) {
             return $this->error(206);
         }
         // 验证钱包地址是否为其它用户所有
@@ -405,8 +455,8 @@ class UserController extends Controller
         $tokenSymbol = strtoupper($userAssetData->symbol);
         $amount = $userAssetData->amount;
 
-        // 暂时只支持ERC20协议的提现
-        $tokenSymbolArr = ['BCV', 'EOS', 'PXC', 'ICST', 'ETH'];
+        // 检查是否已开放提现
+        $tokenSymbolArr = ['BCV', 'EOS', 'PXC', 'ICST', 'ETH', 'BTC', 'DOGE', 'KCASH'];
         if (!in_array($tokenSymbol, $tokenSymbolArr)) {
             return $this->error(103);
         }
@@ -538,6 +588,29 @@ class UserController extends Controller
         }
 
         return true;
+    }
+
+    public static function post($url, Array $dataArr = []) {
+        $dataJson = json_encode($dataArr);
+        $length = strlen($dataJson);
+        $curlObj = curl_init();
+        curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($curlObj, CURLOPT_HEADER, 0);
+        curl_setopt($curlObj, CURLOPT_POST, 1);
+        curl_setopt($curlObj, CURLOPT_URL, $url);
+        curl_setopt($curlObj, CURLOPT_POSTFIELDS, $dataJson);
+        $auth = "000000" . base64_encode('bitcv:bitcv#0304');
+        curl_setopt($curlObj, CURLOPT_HTTPHEADER, array(
+            "Content-type: application/json; charset=utf-8",
+            "Content-length: $length",
+            "Authorization: $auth"
+        ));
+        //curl_setopt($curlObj, CURLOPT_USERPWD, 'bitcv:bitcv#0304');
+
+        $result = curl_exec($curlObj);
+        curl_close($curlObj);
+        return $result;
     }
 }
         
