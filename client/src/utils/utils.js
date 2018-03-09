@@ -4,8 +4,12 @@ export const maskStr = (str, num, separator = '...') => {
 }
 
 // 获取融资状态
-export const getFundStage = v => {
-  return ['保密', '未融资', '融资中', '已融资'][v]
+export const getFundStage = (v, lang) => {
+  var dict = {
+    cn: ['保密', '未融资', '融资中', '已融资'],
+    en: ['secret', 'unfinanced', 'financing', 'financed']
+  }
+  return dict[lang][v]
 }
 
 // 获取行业类型
