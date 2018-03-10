@@ -94,13 +94,9 @@ export default {
       })
     },
     checkAuth (tokenSymbol) {
-      if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST' || tokenSymbol === 'ETH' || tokenSymbol === 'BTC' || tokenSymbol === 'DOGE') {
+      if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST' || tokenSymbol === 'ETH' || tokenSymbol === 'BTC' || tokenSymbol === 'DOGE' || tokenSymbol === 'NEO' || tokenSymbol === 'KCASH') {
         return true
       } else {
-        // if (this.code === 'bcvadmin' && (tokenSymbol === 'KCASH' || tokenSymbol === 'NEO')) {
-        if (this.code === 'bcvadmin' && tokenSymbol === 'NEO') {
-          return true
-        }
         return false
       }
     },
