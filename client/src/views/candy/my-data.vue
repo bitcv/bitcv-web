@@ -56,7 +56,7 @@
                 </span>
                 <span v-else :class="{'text-muted': item.status === 2}">
                   <span v-if="language === 'cn'">{{['', '订单完成', '已取消'][item.status]}}</span>
-                  <span v-else>{{['', 'Order completed', 'Cancelled'][item.status]}}</span>
+                  <span v-else>{{['', 'Order Completed', 'Cancelled'][item.status]}}</span>
                 </span>
               </td>
               <td>
@@ -92,7 +92,7 @@
                   </em>
                   <em v-else :class="{'text-muted': item.status === 2}">
                     <span v-if="language === 'cn'">{{['', '订单完成', '已取消'][item.status]}}</span>
-                    <span v-else>{{['', 'Order completed', 'Cancelled'][item.status]}}</span>
+                    <span v-else>{{['', 'Order Completed', 'Cancelled'][item.status]}}</span>
                   </em>
                 </span>
               </div>
@@ -156,7 +156,7 @@ export default {
         enitems: [
           {label: 'All', value: -1},
           {label: 'Completed', value: 0},
-          {label: 'Not recharged', value: 1}
+          {label: 'Not Recharged', value: 1}
         ]
       },
       total: 0,

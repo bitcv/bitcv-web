@@ -40,7 +40,7 @@
         </div>
         <div class="col-md-2">——></div>
         <div class="form-group col-md-4">
-           <label for="report">{{ $t('label.ybb') }}{{ $t('label.return') }}</label>
+           <label for="report">{{ $t('label.ybbhuibao') }}</label>
           <!-- <input type="number" class="form-control" id="report" placeholder="请输入" min="1" v-model="form.report"> -->
           <input type="number" class="form-control" id="report" :placeholder="$t('label.p_in')" min="1" readonly :value="getInterest(form.number, bitcv.interestRate, bitcv.lockTime)">
         </div>
