@@ -48,7 +48,7 @@
                 <li>
                   <p>
                     <span v-if="language === 'cn'" class="fixed-label">{{ ['关注', '取消关注'][info.focusStatus] }}&nbsp;&nbsp;</span>
-                    <span v-else class="fixed-label">{{ ['follow', 'unfollow'][info.focusStatus] }}&nbsp;&nbsp;</span>
+                    <span v-else class="fixed-label">{{ ['Follow', 'Unfollow'][info.focusStatus] }}&nbsp;&nbsp;</span>
                     <a href="javascript:;" :style="info.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" @click="handleFocus">
                       <span class="icon-bcv" :class="{'icon-heart': info.focusStatus == 0, 'icon-heart-fill': info.focusStatus == 1}"></span>
                     </a>

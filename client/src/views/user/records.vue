@@ -20,7 +20,8 @@
           <td>{{ item.symbol === 'NEO' ? 'NeoGAS' : item.symbol }}</td>
           <td>{{ item.amount }}</td>
           <td><a :href="'https://etherscan.io/tx/' + item.txHash" target="_blank">{{ item.txHash }}</a></td>
-          <td>{{ statusDict[item.status] }}</td>
+          <td v-if="language === 'cn'">{{ statusDict[item.status] }}</td>
+          <td v-else>{{ enstatusDict[item.status] }}</td>
           <td>{{ item.txTime }}</td>
         </tr>
       </tbody>
@@ -44,7 +45,13 @@ export default {
       pageno: 1,
       dataCount: 0,
       recordList: [],
-      statusDict: {}
+      statusDict: {},
+      enstatusDict: {}
+    }
+  },
+  computed: {
+    language () {
+      return this.$i18n.locale
     }
   },
   mounted () {
@@ -60,6 +67,7 @@ export default {
           this.dataCount = res.data.data.dataCount
           this.recordList = res.data.data.dataList
           this.statusDict = res.data.data.statusDict
+          this.enstatusDict = res.data.data.enstatusDict
         }
       })
     },

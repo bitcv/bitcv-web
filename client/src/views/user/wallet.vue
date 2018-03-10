@@ -29,14 +29,19 @@
         <tr v-for="item in dataList" :key="item.id">
           <td><img :src="item.logoUrl" class="img-circle" style="max-width: 40px;max-height: 40px;"/>&nbsp;&nbsp;{{ item.symbol === 'NEO' ? 'NeoGAS' : item.symbol }}</td>
           <template v-if="item.symbol === 'NEO'">
-            <td>{{ Math.round(item.price / 3.5 * 100) / 100 || '以交易所价格为准' }}</td>
+            <td v-if="language === 'cn'">{{ Math.round(item.price / 3.5 * 100) / 100 || '以交易所价格为准' }}</td>
+            <td v-else>{{ item.price || 'Based on the exchange price' }}</td>
             <td>{{ item.amount * 4 + ' (' + item.amount + ' NEO) ' }} ≈ <span class="text-dark small">{{ item.price ? parseInt((item.amount * 4 * item.price / 3.5) * 10000) / 10000 : '-' }}</span></td>
           </template>
           <template v-else>
-            <td>{{item.price || '以交易所价格为准' }}</td>
+            <td v-if="language === 'cn'">{{item.price || '以交易所价格为准' }}</td>
+            <td v-else>{{ item.price || 'Based on the exchange price' }}</td>
             <td>{{item.amount }} ≈ <span class="text-dark small">{{ item.price ? parseInt(item.amount * item.price * 10000) / 10000 : '-' }}</span></td>
           </template>
-          <td v-if="checkAuth(item.symbol)">{{ statusDict[item.status] }}</td>
+          <td v-if="checkAuth(item.symbol)">
+              <span v-if="language === 'cn'">{{ statusDict[item.status] }}</span>
+              <span v-else>{{ enstatusDist[item.status] }}</span>
+          </td>
           <td v-else>{{ $t('label.later_t') }}</td>
           <td v-if="checkAuth(item.symbol) && statusDict[item.status] === '可提取'"><button class="btn btn-text btn-sm" @click="toWithdraw(item)">{{ $t('label.hurry_t') }}</button></td>
           <td v-else>-</td>
@@ -65,7 +70,8 @@ export default {
       dataCount: 0,
       dataList: [],
       protocolDict: {},
-      statusDict: {}
+      statusDict: {},
+      enstatusDist: {}
     }
   },
   mounted () {
@@ -77,6 +83,9 @@ export default {
     }),
     totalAssetArr () {
       return this.dataList.reduce((prev, curr) => curr.amount * curr.price + prev, 0).toString().split('.')
+    },
+    language () {
+      return this.$i18n.locale
     }
   },
   methods: {
@@ -90,6 +99,7 @@ export default {
           this.dataList = res.data.data.dataList
           this.protocolDict = res.data.data.protocolDict
           this.statusDict = res.data.data.statusDict
+          this.enstatusDist = res.data.data.enstatusDist
         }
       })
     },
@@ -106,30 +116,57 @@ export default {
     },
     toWithdraw (item) {
       if (item.walletAddr) {
-        this.$confirm('您的收币地址为' + item.walletAddr + ', 确认提币?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$http.post('/api/withdraw', {
-            assetId: item.id
-          }).then(res => {
-            if (res.data.errcode === 0) {
-              this.$message({
-                type: 'success',
-                message: '提交成功!'
-              })
-              this.updateData()
-            } else {
-              alert(res.data.errmsg)
-            }
+        if (this.language === 'cn') {
+          this.$confirm('您的收币地址为' + item.walletAddr + ', 确认提币?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$http.post('/api/withdraw', {
+              assetId: item.id
+            }).then(res => {
+              if (res.data.errcode === 0) {
+                this.$message({
+                  type: 'success',
+                  message: '提交成功!'
+                })
+                this.updateData()
+              } else {
+                alert(res.data.errmsg)
+              }
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消'
+            })
           })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
+        } else {
+          this.$confirm('Your payment address is' + item.walletAddr + ', Confirm the coins?', 'Tip', {
+            confirmButtonText: 'Sure',
+            cancelButtonText: 'Cancel',
+            type: 'warning'
+          }).then(() => {
+            this.$http.post('/api/withdraw', {
+              assetId: item.id
+            }).then(res => {
+              if (res.data.errcode === 0) {
+                this.$message({
+                  type: 'success',
+                  message: 'Submitted successfully!'
+                })
+                this.updateData()
+              } else {
+                alert(res.data.errmsg)
+              }
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: 'Cancelled'
+            })
           })
-        })
+        }
       } else {
         this.$router.push('/wallet/withdraw/' + item.id + '/' + item.protocol + '?symbol=' + item.symbol)
       }
