@@ -42,15 +42,28 @@ export default {
       passwd: ''
     }
   },
+  computed: {
+    language () {
+      return this.$i18n.locale
+    }
+  },
   methods: {
     ...mapMutations(['updateUserInfo']),
     signin () {
       var mobileReg = new RegExp(/^\d{7,11}$/)
       if (!mobileReg.test(this.mobile)) {
-        return alert('请填写正确的手机号')
+        if (this.language === 'cn') {
+          return alert('请填写正确的手机号')
+        } else {
+          return alert('Please fill in the correct phone number')
+        }
       }
       if (this.passwd.length < 6) {
-        return alert('账号或密码错误')
+        if (this.language === 'cn') {
+          return alert('账号或密码错误')
+        } else {
+          return alert('Account or password is wrong')
+        }
       }
       var that = this
       this.$http.post('/api/signin', {

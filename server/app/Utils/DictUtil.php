@@ -19,10 +19,24 @@ class DictUtil
         '3' => '已提取',
     ];
 
+    //英文版
+    const UserAsset_EnStatus = [
+        '1' => 'Extractable',
+        '2' => 'Transfer',
+        '3' => 'Extracted',
+    ];
+
     const UserTransferRecord_Status = [
         '1' => '进行中',
         '2' => '交易成功',
         '3' => '交易失败',
+    ];
+
+    //英文版
+    const UserTransferRecord_EnStatus = [
+        '1' => 'Processing',
+        '2' => 'Successful transaction',
+        '3' => 'Transaction failed',
     ];
 
     const DepositBox_Status = [

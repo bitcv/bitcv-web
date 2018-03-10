@@ -57,7 +57,11 @@ export default {
     getVcode () {
       var mobileReg = new RegExp(/^\d{7,11}$/)
       if (!mobileReg.test(this.mobile)) {
-        return alert('请填写正确的手机号')
+        if (this.language === 'cn') {
+          return alert('请填写正确的手机号')
+        } else {
+          return alert('Please fill in the correct phone number')
+        }
       }
       this.disableSms = true
       this.timerId = setInterval(() => {
@@ -85,17 +89,33 @@ export default {
     },
     findPwd () {
       if (!this.selected) {
-        return alert('请选择手机国家号')
+        if (this.language === 'cn') {
+          return alert('请选择手机国家号')
+        } else {
+          return alert('Please select the phone country number')
+        }
       }
       var mobileReg = new RegExp(/^\d{7,11}$/)
       if (!mobileReg.test(this.mobile)) {
-        return alert('请填写正确的手机号')
+        if (this.language === 'cn') {
+          return alert('请填写正确的手机号')
+        } else {
+          return alert('Please fill in the correct phone number')
+        }
       }
       if (!this.vcode) {
-        return alert('验证码不能为空')
+        if (this.language === 'cn') {
+          return alert('验证码不能为空')
+        } else {
+          return alert('Verification code must be filled')
+        }
       }
       if (this.passwd.length < 6) {
-        return alert('密码长度至少需要6位')
+        if (this.language === 'cn') {
+          return alert('密码长度至少需要6位')
+        } else {
+          return alert('Password length needs at least 6')
+        }
       }
       var nation = this.selected
       if (nation.substr(0, 1) === '+') {
