@@ -29,7 +29,7 @@
         <tr v-for="item in dataList" :key="item.id">
           <td><img :src="item.logoUrl" class="img-circle" style="max-width: 40px;max-height: 40px;"/>&nbsp;&nbsp;{{ item.symbol === 'NEO' ? 'NeoGAS' : item.symbol }}</td>
           <template v-if="item.symbol === 'NEO'">
-            <td>{{ item.price / 3.5 || '以交易所价格为准' }}</td>
+            <td>{{ Math.round(item.price / 3.5 * 100) / 100 || '以交易所价格为准' }}</td>
             <td>{{ item.amount * 4 + ' (' + item.amount + ' NEO) ' }} ≈ <span class="text-dark small">{{ item.price ? parseInt((item.amount * 4 * item.price / 3.5) * 10000) / 10000 : '-' }}</span></td>
           </template>
           <template v-else>
