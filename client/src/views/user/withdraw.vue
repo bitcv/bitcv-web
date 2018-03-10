@@ -144,7 +144,7 @@ export default {
             if (res.data.errcode === 0) {
               this.$message({
                 type: 'success',
-                message: '提交成功!'
+                message: this.language === 'cn' ? '提交成功!' : 'Submitted successfully'
               })
               this.$router.push('/wallet')
             } else {

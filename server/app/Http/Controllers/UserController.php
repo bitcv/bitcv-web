@@ -314,6 +314,7 @@ class UserController extends Controller
             'dataList' => $dataList,
             'protocolDict' => DictUtil::Token_Protocol,
             'statusDict' => DictUtil::UserAsset_Status,
+            'enstatusDist' => DictUtil::UserAsset_EnStatus
         ]);
     }
 
@@ -535,6 +536,7 @@ class UserController extends Controller
             'dataCount' => $dataCount,
             'dataList' => $dataList,
             'statusDict' => DictUtil::UserTransferRecord_Status,
+            'enstatusDict' => DictUtil::UserTransferRecord_EnStatus,
         ]);
     }
 
