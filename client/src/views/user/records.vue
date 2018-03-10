@@ -17,7 +17,7 @@
       </thead>
       <tbody>
         <tr v-for="item in recordList" :key="item.id">
-          <td>{{ item.symbol }}</td>
+          <td>{{ item.symbol === 'NEO' ? 'NeoGAS' : item.symbol }}</td>
           <td>{{ item.amount }}</td>
           <td><a :href="'https://etherscan.io/tx/' + item.txHash" target="_blank">{{ item.txHash }}</a></td>
           <td>{{ statusDict[item.status] }}</td>
