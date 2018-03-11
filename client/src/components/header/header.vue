@@ -1,7 +1,8 @@
 <template>
   <nav class="navbar navbar-inverse navbar-static-top">
     <div class="container">
-      <a href="javascrpt:''" @click="toggleLang" style="position:absolute;right:420px;top:15px;color:#FFF">{{ $t('label.lang') }}</a>
+      <div @click="toggleLang" class="switchlang" style="position:absolute;right:240px;top:15px"><span :class="{ activeaa : language === 'cn' }">CN</span>／<span :class="{ activeaa : language === 'en' }">EN</span></div>
+      <!--<a href="javascrpt:''" @click="toggleLang" style="position:absolute;right:280px;top:15px;color:#FFF">{{ $t('label.lang') }}</a>-->
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" :class="{collapsed: !showSide}" @click.stop="navbarToggle">
           <span class="sr-only">Toggle navigation</span>
@@ -94,6 +95,9 @@ export default {
       }
 
       return ''
+    },
+    language () {
+      return this.$i18n.locale
     }
   },
   directives: {
@@ -212,6 +216,13 @@ export default {
     &:hover, &:focus {
       color: #fff;
     }
+  }
+  .switchlang {
+    color: #9d9d9d;
+    cursor: pointer;
+  }
+  .switchlang .activeaa {
+    color: #fdb76e;
   }
 }
 @media (max-width: 767px) {

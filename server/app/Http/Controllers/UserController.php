@@ -314,6 +314,7 @@ class UserController extends Controller
             'dataList' => $dataList,
             'protocolDict' => DictUtil::Token_Protocol,
             'statusDict' => DictUtil::UserAsset_Status,
+            'enstatusDist' => DictUtil::UserAsset_EnStatus
         ]);
     }
 
@@ -456,7 +457,7 @@ class UserController extends Controller
         $amount = $userAssetData->amount;
 
         // 检查是否已开放提现
-        $tokenSymbolArr = ['BCV', 'EOS', 'PXC', 'ICST', 'ETH', 'BTC', 'DOGE', 'KCASH'];
+        $tokenSymbolArr = ['BCV', 'EOS', 'PXC', 'ICST', 'ETH', 'BTC', 'DOGE', 'KCASH', 'NEO'];
         if (!in_array($tokenSymbol, $tokenSymbolArr)) {
             return $this->error(103);
         }
@@ -478,8 +479,9 @@ class UserController extends Controller
         // 调用提现接口
         $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/withdraw', [
             'toAddr' => $walletAddr,
-            'amount' => $amount,
-            'tokenSymbol' => $tokenSymbol,
+            // 如果是NEO则发4倍的GAS
+            'amount' => $tokenSymbol === 'NEO' ? $amount * 4 : $amount,
+            'tokenSymbol' => $tokenSymbol === 'NEO' ? 'GAS' : $tokenSymbol,
         ]);
         
         $resArr = json_decode($resJson, true);
@@ -496,7 +498,7 @@ class UserController extends Controller
             'record_id' => $transferRecordId,
             'asset_id' => $assetId,
             'token_id' => $tokenId,
-            'amount' => $amount,
+            'amount' => $tokenSymbol === 'NEO' ? $amount * 4 : $amount,
             'status' => 1,
         ]);
 
@@ -535,6 +537,7 @@ class UserController extends Controller
             'dataCount' => $dataCount,
             'dataList' => $dataList,
             'statusDict' => DictUtil::UserTransferRecord_Status,
+            'enstatusDict' => DictUtil::UserTransferRecord_EnStatus,
         ]);
     }
 
@@ -569,8 +572,13 @@ class UserController extends Controller
                 $recordModel->save();
                 // 更新用户资产为提现成功
                 $assetModel = Model\UserAsset::find($assetId);
+                $tokenModel = Model\Token::find($assetModel->token_id);
                 $assetModel->status = 3;
-                $assetModel->amount = $assetModel->amount - $record['actualAmount'];
+                if ($tokenModel->symbol === 'NEO') {
+                    $assetModel->amount = $assetModel->amount - $record['actualAmount'] / 4;
+                } else {
+                    $assetModel->amount = $assetModel->amount - $record['actualAmount'];
+                }
                 $assetModel->save();
             }
             // 转账失败

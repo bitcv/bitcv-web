@@ -7,7 +7,7 @@ export const maskStr = (str, num, separator = '...') => {
 export const getFundStage = (v, lang) => {
   var dist = {
     cn: ['保密', '未融资', '融资中', '已融资'],
-    en: ['Confidentiality', 'Unfunded', 'Financing', 'Financed']
+    en: ['Undisclosed', 'Unfunded', 'Financing', 'Financed']
   }
   return dist[lang][v]
 }
