@@ -2,8 +2,6 @@
 import axios from 'axios'
 import { MessageBox } from 'element-ui'
 
-// Vue.use(Alert)
-
 const handleErr = (msg) => {
   MessageBox.alert(msg, '提示', {
     confirmButtonText: '确定',
