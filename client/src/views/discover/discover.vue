@@ -124,7 +124,8 @@
       <div class="col-md-4">
         <div class="panel panel-custom text-darker" style="min-height:200px;">
           <div class="panel-heading">
-            <h4 class="panel-title">{{ $t('label.focus') }} TOP10</h4>
+            <h4 v-if="language === 'cn'" class="panel-title">关注 TOP10</h4>
+            <h4 v-else class="panel-title">TOP10 Followings</h4>
           </div>
           <div class="list-group list-counter">
             <router-link class="list-group-item" v-for="item in focusList" :to="`/discover/detail/${item.projId}`" :key="item.projId">
@@ -135,7 +136,8 @@
         </div>
         <div class="panel panel-custom text-darker" style="min-height:200px;">
           <div class="panel-heading">
-            <h4 class="panel-title">{{ $t('label.view') }} TOP10</h4>
+            <h4 v-if="language === 'cn'" class="panel-title">浏览 TOP10</h4>
+            <h4 v-else class="panel-title">TOP10 Browsings</h4>
           </div>
           <div class="list-group list-counter">
             <router-link class="list-group-item" v-for="item in viewList" :to="`/discover/detail/${item.projId}`" :key="item.projId">

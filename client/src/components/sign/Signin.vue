@@ -12,7 +12,7 @@
           <input v-model="mobile" type="text" :placeholder="$t('label.login_mobile_ph')">
           <input v-model="passwd" type="password" :placeholder="$t('label.login_pwd_ph')">
           <h5 style="margin-top: 10px;"><span style="color: #ddd;">{{ $t('label.festival') }}<router-link to="findpwd"><a style="cursor: pointer;"><span style="color: #ff8b13;"> {{ $t('label.reset_pwd') }}</span></a></router-link></span></h5>
-          <button @click.prevent="signin">{{ $t('label.hurry_login') }}</button>
+          <button @click.prevent="signin">{{ $t('label.login') }}</button>
         </form>
         <div class="btn-area">
           <router-link to="findPwd">

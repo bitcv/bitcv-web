@@ -299,10 +299,10 @@ export default {
         {text: '合作伙伴', target: '#partner', active: false}
       ],
       e_infoList: [
-        {text: 'Project information', target: '#info', active: true},
+        {text: 'Project Information', target: '#info', active: true},
         {text: 'Team Information', target: '#team', active: false},
-        {text: 'Project development', target: '#develop', active: false},
-        {text: 'Cooperative partner', target: '#partner', active: false}
+        {text: 'Project Development', target: '#develop', active: false},
+        {text: 'Cooperative Partner', target: '#partner', active: false}
       ],
       dynamicList: [
         {text: '媒体报道', target: '#media', active: true},
@@ -310,9 +310,9 @@ export default {
         {text: '社区发布', target: '#community', active: false}
       ],
       e_dynamicList: [
-        {text: 'Media coverage', target: '#media', active: true},
-        {text: 'Official announcement', target: '#offical', active: false},
-        {text: 'Community release', target: '#community', active: false}
+        {text: 'Media Coverage', target: '#media', active: true},
+        {text: 'Official Announcement', target: '#offical', active: false},
+        {text: 'Community Release', target: '#community', active: false}
       ]
     }
   },

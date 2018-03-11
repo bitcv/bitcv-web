@@ -121,11 +121,11 @@ export default {
           {label: '12个月', value: 12}
         ],
         e_items: [
-          {label: 'ALl', value: 0},
-          {label: 'one month', value: 1},
-          {label: 'three month', value: 3},
-          {label: 'six month', value: 6},
-          {label: 'twelve month', value: 12}
+          {label: 'ALL', value: 0},
+          {label: 'One month', value: 1},
+          {label: 'Three month', value: 3},
+          {label: 'Six month', value: 6},
+          {label: 'Twelve month', value: 12}
         ]
       },
       total: 0,
