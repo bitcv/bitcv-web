@@ -56,9 +56,9 @@
         <!-- 小屏幕时显示的模拟table -->
         <div class="visible-xs xs-box">
           <div class="xs-header text-gray">
-            <span>项目</span>
-            <span>回报（每万枚）</span>
-            <span>操作</span>
+            <span>{{ $t('label.candy_project') }}</span>
+            <span>{{ $t('label.return') }}（{{ $t('label.million') }})</span>
+            <span>{{ $t('label.operation') }}</span>
           </div>
           <div class="xs-body">
             <div class="xs-item" v-for="(item, index) in list" :key="item.id">
@@ -67,32 +67,32 @@
                   <img :src="item.logoUrl" height="30" class="img-rounded">
                   <b>{{ item.nameCn }}<i class="text-gray small">{{ item.tokenSymbol }}</i></b>
                 </span>
-                <span>{{ getInterest(10000, item.interestRate, item.lockTime) }}枚</span>
+                <span>{{ getInterest(10000, item.interestRate, item.lockTime) }} {{ $t('label.coin_amount') }}</span>
                 <span>
-                  <router-link class="btn btn-primary btn-sm btn-nocorner" :to="{path: '/candyRoom/candyBuy', query: item}">立即抢购</router-link>
+                  <router-link class="btn btn-primary btn-sm btn-nocorner" :to="{path: '/candyRoom/candyBuy', query: item}">{{ $t('label.buy') }}</router-link>
                 </span>
               </div>
               <div class="xs-detail" v-if="item.isDetail">
                 <p>
-                  <span>锁仓期：</span>
-                  {{ item.lockTime }}个月
+                  <span>{{ $t('label.lock') }}: </span>
+                  {{ item.lockTime }} {{ $t('label.month') }}
                 </p>
                 <p>
-                  <span>起始额度：</span>
-                  {{ item.minAmount }}枚
+                  <span>{{ $t('label.start_amount') }}: </span>
+                  {{ item.minAmount }} {{ $t('label.coin_amount') }}
                 </p>
                 <p>
-                  <span>剩余额度：</span>
-                  {{ item.remainAmount }}枚
+                  <span>{{ $t('label.leave_amount') }}</span>
+                  {{ item.remainAmount }} {{ $t('label.coin_amount') }}
 
-                  <b class="b-hidden" @click="handleHidden(index)">收起</b>
+                  <b class="b-hidden" @click="handleHidden(index)">{{ $t('label.shouqi') }}</b>
                 </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div v-else class="nodat">暂无数据</div>
+      <div v-else class="nodat">{{ $t('label.no_data') }}</div>
     </div>
     <div class="text-right">
       <pagination :total="total" :current-page="currentPage" @onPageClick="onPageClick"></pagination>
