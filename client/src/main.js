@@ -26,6 +26,7 @@ const messages = {
       home: '主页',
       discover: '发现',
       ybb: '余币宝',
+      dfb: '代发宝',
       login: '登录',
       registered: '注册',
       section_title: '更多的机构，遇见更多的财富',
