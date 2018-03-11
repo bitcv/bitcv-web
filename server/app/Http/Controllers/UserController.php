@@ -372,9 +372,7 @@ class UserController extends Controller
                 'jsonrpc' => '2.0',
                 'id' => 1,
             ];
-            echo 'start';
             $resJson = \App\Utils\BaseUtil::curlPost('http://139.219.98.23:10332', $data);
-            echo 'end';exit;
             $resArr = json_decode($resJson, true);
             if (!isset($resArr['result']['isvalid']) || !$resArr['result']['isvalid']) {
                 return $this->error(212);
