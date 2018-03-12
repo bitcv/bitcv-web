@@ -379,15 +379,18 @@ class UserController extends Controller
             }
         } else if ($tokenProtocol == 5) {
             // KCASH钱包地址校验
-            $data = [
-                'jsonrpc' => '2.0',
-                'params' => [$walletAddr],
-                'id' => 20,
-                'method' => 'wallet_check_address',
-            ];
-            $resJson = self::post('http://40.125.205.96:34942/rpc', $data);
+            $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/checkWalletAddr', [
+                'symbol' => 'KCASH',
+                'walletAddr' => $walletAddr
+            ]);
+
             $resArr = json_decode($resJson, true);
-            if (!isset($resArr['result']) || !$resArr['result']) {
+            if (!$resArr || $resArr['errcode'] !== 0) {
+                // 调用接口失败
+                return $this->error(104);
+            }
+
+            if (!$resArr['data']['result']) {
                 return $this->error(212);
             }
         } else {
@@ -596,29 +599,6 @@ class UserController extends Controller
         }
 
         return true;
-    }
-
-    public static function post($url, Array $dataArr = []) {
-        $dataJson = json_encode($dataArr);
-        $length = strlen($dataJson);
-        $curlObj = curl_init();
-        curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($curlObj, CURLOPT_HEADER, 0);
-        curl_setopt($curlObj, CURLOPT_POST, 1);
-        curl_setopt($curlObj, CURLOPT_URL, $url);
-        curl_setopt($curlObj, CURLOPT_POSTFIELDS, $dataJson);
-        $auth = "000000" . base64_encode('bitcv:bitcv#0304');
-        curl_setopt($curlObj, CURLOPT_HTTPHEADER, array(
-            "Content-type: application/json; charset=utf-8",
-            "Content-length: $length",
-            "Authorization: $auth"
-        ));
-        //curl_setopt($curlObj, CURLOPT_USERPWD, 'bitcv:bitcv#0304');
-
-        $result = curl_exec($curlObj);
-        curl_close($curlObj);
-        return $result;
     }
 }
         
