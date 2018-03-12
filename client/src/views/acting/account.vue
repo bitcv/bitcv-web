@@ -244,4 +244,42 @@ export default {
     }
   }
 }
+@media (max-width: 767px) {
+  .account{
+    padding: 10px 0;
+    .recharge-top{
+      .left{
+        width: 100%;
+        p{
+          padding: 0;
+        }
+        div{
+          padding: 0px;
+          span{
+            width: 84%;
+            display: inline-block;
+            overflow: hidden;
+          }
+          i{
+            width: calc(16% - 10px);
+            display: inline-block;
+            vertical-align: super;
+          }
+        }
+      }
+      .right{
+        width: 100%;
+        text-align: center;
+        .qrcode{
+          margin: 0 auto;
+        }
+      }
+    }
+    .recharge-bottom{
+      .el-row{
+        padding: 10px 0;
+      }
+    }
+  }
+}
 </style>

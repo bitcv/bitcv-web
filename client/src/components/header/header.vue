@@ -52,7 +52,7 @@
           <router-link tag="li" active-class="active" exact to="/" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.home')}}</a></router-link>
           <router-link tag="li" active-class="active" to="/discover" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.discover')}}</a></router-link>
           <router-link tag="li" active-class="active" to="/candyRoom" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.ybb')}}</a></router-link>
-          <!--<router-link tag="li" active-class="active" to="/acting" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.dfb')}}</a></router-link>-->
+          <router-link tag="li" active-class="active" to="/acting" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.dfb')}}</a></router-link>
         </ul>
       </div>
     </div>

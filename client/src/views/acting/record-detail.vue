@@ -9,22 +9,22 @@
       style="width: 100%">
       <el-table-column
         prop="id"
-        label="序号"
-        width="100">
+        label="序号">
       </el-table-column>
       <el-table-column
         prop="address"
         label="地址">
+        <template slot-scope="scope">
+          {{maskStr(scope.row.address, 3)}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="number"
-        label="数量"
-        width="180">
+        label="数量">
       </el-table-column>
       <el-table-column
         prop="status"
-        label="状态"
-        width="180">
+        label="状态">
         <template slot-scope="scope">
           <span :class="scope.row.status === 1 ? 'text-success' : ''">
             {{['验证中', '已完成'][scope.row.status]}}
@@ -56,6 +56,7 @@
 
 <script>
 import {mapState} from 'vuex'
+import {maskStr} from '@/utils/utils'
 export default {
   data () {
     return {
@@ -91,6 +92,9 @@ export default {
     console.log(this.$route.query)
   },
   methods: {
+    maskStr (str, number) {
+      return maskStr(str, number)
+    }
   }
 }
 </script>

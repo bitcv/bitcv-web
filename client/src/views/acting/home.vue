@@ -36,12 +36,15 @@ export default {
   },
   methods: {
     handleFinshed (index) {
-      if (index < 2) this.active = index + 1
+      if (index < 2) {
+        this.active = index + 1
+      } else {
+        this.active = 0
+      }
     }
   }
 }
 </script>
 
 <style lang="scss">
-@import '~@/styles/variables';
 </style>

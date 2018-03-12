@@ -4,6 +4,10 @@
       <el-menu-item v-for="item in menus" :index="item.key" :route="item.route" :key="item.key">{{ item.text }}</el-menu-item>
     </el-menu>
 
+    <el-menu mode="horizontal" router :default-active="activeIndex" active-text-color="#ee9429" class="menu-samll">
+      <el-menu-item v-for="item in menus" :index="item.key" :route="item.route" :key="item.key">{{ item.text }}</el-menu-item>
+    </el-menu>
+
     <router-view class="content"></router-view>
   </div>
 </template>
@@ -44,7 +48,7 @@ export default {
   overflow: hidden;
   background: #fff;
   .menu{
-    width: 150px;
+    width: 190px;
     height: 100%;
     text-align: center;
     float: left;
@@ -52,8 +56,27 @@ export default {
   }
   .content{
     border-left: 1px solid #e6e6e6;
-    margin-left: 150px;
-    padding: 30px 50px;
+    margin-left: 190px;
+    padding: 40px 55px;
+  }
+  .menu-samll{
+    display: none;
+  }
+  @media (max-width: 767px) {
+    .menu{
+      display: none;
+    }
+    .menu-samll{
+      display: block;
+      .el-menu-item{
+        padding: 0 10px;
+      }
+    }
+    .content{
+      border-left: none;
+      margin-left: 0;
+      padding: 40px 0;
+    }
   }
 }
 </style>
