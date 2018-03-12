@@ -33,7 +33,7 @@ class UserController extends Controller
     public function signup (Request $request) {
         // 获取请求参数
         $params = $this->validation($request, [
-            'mobile' => 'required|numeric',
+            'mobile' => 'required|string',
             'passwd' => 'required|string',
             'vcode' => 'required|string',
             'nation' => 'nullable|numeric',
@@ -75,7 +75,7 @@ class UserController extends Controller
     public function signin (Request $request) {
         // 获取请求参数
         $params = $this->validation($request, [
-            'mobile' => 'required|numeric',
+            'mobile' => 'required|string',
             'passwd' => 'required|string',
         ]);
         if ($params === false) {
@@ -225,8 +225,8 @@ class UserController extends Controller
 
     public function checkVcode(Request $request){
         $params = $this->validation($request,[
-            'mobile' => 'required|numeric',
-            'vcode' => 'required|numeric',
+            'mobile' => 'required|string',
+            'vcode' => 'required|string',
         ]);
         if($params === false){
             return $this->error(100);
