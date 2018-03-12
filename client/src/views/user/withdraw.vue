@@ -111,7 +111,7 @@ export default {
       if (this.protocol === '1') {
         reg = /^0x[0-9a-f]{40}$/i
       } else if (this.protocol === '2' || this.protocol === '3' || this.protocol === '4' || this.protocol === '5') {
-        reg = /^[0-9a-z]{30,40}$/i
+        reg = /^[0-9a-z]{30,80}$/i
       } else {
         if (this.language === 'cn') {
           alert('未知错误')

@@ -241,7 +241,7 @@ class UserController extends Controller
 
     public function resetPwd(Request $request){
         $params = $this->validation($request,[
-            'mobile' => 'required|numeric',
+            'mobile' => 'required|string',
             'vcode' => 'required|string',
             'passwd' =>'required|string',
             'nation' => 'nullable|numeric',
@@ -265,7 +265,10 @@ class UserController extends Controller
 
         $passwd = Service::getPwd($passwd);
 
-        $flag = Model\User::where('mobile', $mobile)->update(['passwd' => $passwd]);
+        $flag = Model\User::where('mobile', $mobile)->update([
+            'nation' => $nation,
+            'passwd' => $passwd,
+        ]);
         if ($flag === 0) {
             return $this->error(203);
         }
