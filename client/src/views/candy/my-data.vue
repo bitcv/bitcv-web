@@ -43,7 +43,11 @@
               <td>
                 <img v-if="language === 'cn'" class="small-image" :src="item.logoUrl" alt="图片" height="30">
                 <img v-else class="small-image" :src="item.logoUrl" alt="Image" height="30">
-                <span>{{ item.nameCn }}<span class="text-gray small">{{ item.tokenSymbol }}</span></span>
+                <span>
+                  {{ item.nameCn }}
+                  <span class="text-gray small">{{ item.tokenSymbol }}
+                  </span>
+                </span>
               </td>
               <td>{{convertDate(item.orderTime)}}</td>
               <td>{{item.orderAmount}}</td>

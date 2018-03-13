@@ -1,10 +1,10 @@
 <template>
   <div class="step1">
-    <el-form v-if="!isUpload" :model="form" :rules="rules" ref="form" label-width="120px" class="form">
+    <el-form v-if="!isUpload" :model="form" :rules="rules" ref="form" label-width="100px" class="form">
       <el-form-item label="" prop="type">
         <el-radio-group v-model="form.type">
           <el-radio :label="0">正式发放</el-radio>
-          <el-radio :label="1" disabled>测试发放<small style="color: #ccc;">（测试时仅向前两个地址发放代币）</small></el-radio>
+          <el-radio :label="1">测试发放<small style="color: #ccc;">（测试时仅向前两个地址发放代币）</small></el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="智能合约地址" prop="address">
@@ -22,8 +22,7 @@
         style="width: 100%">
         <el-table-column
           prop="id"
-          label="序号"
-          width="180">
+          label="序号">
         </el-table-column>
         <el-table-column
           prop="address"
@@ -31,13 +30,11 @@
         </el-table-column>
         <el-table-column
           prop="number"
-          label="数量"
-          width="180">
+          label="数量">
         </el-table-column>
         <el-table-column
           prop="status"
-          label="状态"
-          width="180">
+          label="状态">
         </el-table-column>
       </el-table>
       <footer class="footer">
@@ -161,6 +158,28 @@ export default {
     }
     .el-col-10{
       line-height: 60px;
+    }
+  }
+  @media (max-width: 767px) {
+    .el-form-item__content{
+      &:nth-child(1) {
+        margin-left: 10px!important;
+      }
+    }
+    .el-radio+.el-radio{
+      margin-left: 0;
+    }
+    .footer{
+      padding: 0;
+      .el-row{
+        padding: 10px;
+      }
+      .el-button+.el-button{
+        margin-left: 0;
+      }
+      .btn-primary{
+        padding: 8px 14px;
+      }
     }
   }
 }

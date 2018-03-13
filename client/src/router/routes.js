@@ -48,6 +48,12 @@ export default [{
     // component: getComponent('candyRoom/CandyList')
     component: getViews('candy/list')
   }, {
+    path: 'candyListAssets', // 资产明细
+    component: getViews('candy/list-assets')
+  }, {
+    path: 'candyListPlan', // 已购计划列表
+    component: getViews('candy/list-plan')
+  }, {
     path: 'candyBuy',
     // component: getComponent('candyRoom/CandyBuy'),
     component: getViews('candy/buying'),
