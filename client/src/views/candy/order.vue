@@ -19,7 +19,7 @@
 
         <div class="col-md-5">
           <b>{{bitcv.lockTime}}</b>
-          {{ $t('label.month') }} {{ $t('label.getback') }}
+          {{ $t('label.day') }} {{ $t('label.getback') }}
           <b>{{bitcv.report}}</b>
           {{ $t('label.coin_amount') }}
         </div>

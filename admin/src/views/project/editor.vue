@@ -55,8 +55,8 @@
       </div>
     </el-dialog>
     <!--Pagination-->
-    <el-pagination class="footer-page-box" @size-change="onSizeChange" @current-change="onCurChange" :current-page="pageno" :page-sizes="[10, 20, 30, 40]" :page-size="perpage" layout="total, sizes, prev, pager, next, jumper" :total="dataCount">
-    </el-pagination>
+    <!-- <el-pagination class="footer-page-box" @size-change="onSizeChange" @current-change="onCurChange" :current-page="pageno" :page-sizes="[10, 20, 30, 40]" :page-size="perpage" layout="total, sizes, prev, pager, next, jumper" :total="dataCount">
+    </el-pagination> -->
   </div>
 </template>
 <script>
@@ -75,10 +75,56 @@ export default {
       dataCount: 0
     }
   },
+  created () {
+    this.fetch()
+  },
   mounted () {
     this.updateData()
   },
   methods: {
+    ...mapActions(['getAdminList',  'cancelOperate', 'authOperate']),
+    fetch () {
+      this.getAdminList()
+        .then(({dataList = []} = {}) => {
+          this.perList = dataList
+        }) 
+    },
+    handleCancel (mId) {
+      this.$confirm('删除后无法恢复， 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        center: true
+      }).then(() => {
+        this.loading = true
+        this.cancelOperate({advisorId: mId})
+          .then((data = {}) => {
+            this.loading = false
+            this.$message({ type: 'success', message: '删除成功' })
+            this.fetch()
+          })
+          .catch(() => {
+            this.loading = false
+          })
+      }).catch(() => {})
+    },
+    handleauth (mId) {
+      this.$confirm('删除后无法恢复， 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        center: true
+      }).then(() => {
+        this.loading = true
+        this.delProjAdvisor({advisorId: mId})
+          .then((data = {}) => {
+            this.loading = false
+            this.$message({ type: 'success', message: '删除成功' })
+            this.fetch()
+          })
+          .catch(() => {
+            this.loading = false
+          })
+      }).catch(() => {})
+    },
     updateData () {
       this.$http.post('/api/getAdminList', {
         pageno: this.pageno,
@@ -96,7 +142,7 @@ export default {
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '取消授权成功!' })
-          this.updateData()
+          
         }
       })
     },
