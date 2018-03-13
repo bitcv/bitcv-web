@@ -103,7 +103,7 @@ exports.install = function (Vue, options) {
     return result;
   }
   Vue.prototype.getInterest = function (amount, interestRate, lockTime) {
-    return amount * interestRate * lockTime / 12
+    return Math.round(amount * interestRate * lockTime / 365 * 1000) / 1000
   }
   Vue.prototype.mediaClass = function () {
     var width = document.body.clientWidth
