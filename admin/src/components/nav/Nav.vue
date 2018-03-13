@@ -31,58 +31,58 @@ export default {
           var user = resData.data
           // 超级管理员
           if (user['isSys'] === 1) {
-            this.$router.push('/admin/project')
+            this.$router.push('/project')
             this.itemList = [{
               icon: 'el-icon-menu',
-              url: '/admin/project',
+              url: '/project',
               text: '项目管理'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/depositBox',
+              url: '/depositBox',
               text: '余币宝'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/token',
+              url: '/token',
               text: '通证配置'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/social',
+              url: '/social',
               text: '社群配置'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/media',
+              url: '/media',
               text: '媒体配置'
             // }, {
               // icon: 'el-icon-menu',
-              // url: '/admin/module',
+              // url: '/module',
               // text: '运营工具管理'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/mediareport',
+              url: '/mediareport',
               text: '项目动态'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/perlist',
+              url: '/perlist',
               text: '成员配置'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/institution',
+              url: '/institution',
               text: '机构管理'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/exchange',
+              url: '/exchange',
               text: '交易所管理'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/editor',
+              url: '/editor',
               text: '运营人员'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/user',
+              url: '/user',
               text: '用户管理'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/vcode',
+              url: '/vcode',
               text: '验证码'
             }]
           // 项目管理员
@@ -90,23 +90,23 @@ export default {
             this.$router.push('/admin/project')
             this.itemList = [{
               icon: 'el-icon-menu',
-              url: '/admin/project',
+              url: '/project',
               text: '项目管理'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/depositBox',
+              url: '/depositBox',
               text: '余币宝'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/token',
+              url: '/token',
               text: '通证配置'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/social',
+              url: '/social',
               text: '社群配置'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/media',
+              url: '/media',
               text: '媒体配置'
             // }, {
               // icon: 'el-icon-menu',
@@ -114,38 +114,38 @@ export default {
               // text: '运营工具管理'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/mediareport',
+              url: '/mediareport',
               text: '项目动态'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/perlist',
+              url: '/perlist',
               text: '成员配置'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/institution',
+              url: '/institution',
               text: '机构管理'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/exchange',
+              url: '/exchange',
               text: '交易所管理'
             }]
           } else if (user['projId'] > 0) {
-            this.$router.push('/admin/editProject/' + user['projId'])
+            this.$router.push('/editProject/' + user['projId'])
             this.itemList = [{
               icon: 'el-icon-menu',
-              url: '/admin/editProject/' + user['projId'],
+              url: '/editProject/' + user['projId'],
               text: '项目信息'
             }, {
               icon: 'el-icon-menu',
-              url: '/admin/projDepositBox/' + user['projId'],
+              url: '/projDepositBox/' + user['projId'],
               text: '余币宝'
             }]
           // 个人
           } else {
-            this.$router.push('/admin/setting')
+            this.$router.push('/setting')
             this.itemList = [{
               icon: 'el-icon-menu',
-              url: '/admin/setting',
+              url: '/setting',
               text: '个人中心'
             }]
           }

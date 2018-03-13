@@ -289,6 +289,45 @@ class ProjectController extends Controller
             'stage' => array('label' => '阶段', 'default' => 0, 'optionList' => $stageOptionList),
         ]);
     }
+    //英文版
+    public function getEnProjTagList (Request $request) {
+        $regionOptionList = [
+            array('label' => 'All', 'value' => 0),
+            array('label' => 'United States', 'value' => 1),
+            array('label' => 'Japan and South Korea', 'value' => 2),
+            array('label' => 'Europe', 'value' => 3),
+            array('label' => 'Southeast Asia', 'value' => 4),
+            array('label' => 'Other regions', 'value' => 5),
+        ];
+        $buzOptionList = [
+            array('label' => 'All', 'value' => 0),
+            array('label' => 'Financial', 'value' => 1),
+            array('label' => 'Digital assets', 'value' => 2),
+            array('label' => 'Entertainment', 'value' => 3),
+            array('label' => 'Supply Chain Management', 'value' => 4),
+            array('label' => 'Legal service', 'value' => 5),
+            array('label' => 'Medical', 'value' => 6),
+            array('label' => 'Energy Services', 'value' => 7),
+            array('label' => 'Public welfare', 'value' => 8),
+            array('label' => 'Internet of Things', 'value' => 9),
+            array('label' => 'Agriculture', 'value' => 10),
+            array('label' => 'Social', 'value' => 11),
+            array('label' => 'Other', 'value' => 100),
+        ];
+        $stageOptionList = [
+            array('label' => 'All', 'value' => 0),
+            array('label' => 'Pre-fundraising', 'value' => 1),
+            array('label' => 'Fundraising', 'value' => 2),
+            array('label' => 'IPO', 'value' => 3),
+            array('label' => 'Product landing', 'value' => 4),
+        ];
+
+        return $this->output([
+            'enregion' => array('label' => 'Area', 'default' => 0, 'optionList' => $regionOptionList),
+            'enbuzType' => array('label' => 'Sector', 'default' => 0, 'optionList' => $buzOptionList),
+            'enstage' => array('label' => 'Stage', 'default' => 0, 'optionList' => $stageOptionList),
+        ]);
+    }
 
     public function index(){
         $projectList = Model\Project::where('id',1)->get()->toArray();

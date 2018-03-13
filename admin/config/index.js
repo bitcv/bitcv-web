@@ -12,16 +12,14 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://0.0.0.0:8888',
-        /*pathRewrite: {
-          '^/api': ''
-        }*/
+         target: 'http://0.0.0.0:8888'
+        //target: 'http://192.168.31.252:8888'
+        // target: 'https://www.bitcv.com/'
       },
       '/storage': {
-        target: 'http://0.0.0.0:8888',
-        /*pathRewrite: {
-          '^/storage': ''
-        }*/
+         target: 'http://0.0.0.0:8888'
+        //target: 'http://192.168.31.252:8888'
+        // target: 'https://www.bitcv.com/'
       }
     },
 

@@ -48,10 +48,10 @@ class AdminController extends Controller
 
         $params = $this->validation($request, [
             'projId' => 'required|numeric',
-            'minAmount' => 'required|string',
+            'minAmount' => 'required|numeric',
             'lockTime' => 'required|numeric',
-            'totalAmount' => 'required|string',
-            'interestRate' => 'required|string',
+            'totalAmount' => 'required|numeric',
+            'interestRate' => 'required|numeric',
             'fromAddr' => 'required|string',
         ]);
         if ($params === false) {
@@ -1725,7 +1725,7 @@ class AdminController extends Controller
 
     public function addProjExchange(Request $request){
         $params = $this->validation($request, [
-            'projId' => 'required|string',
+            'projId' => 'required|numeric',
             'memberId' => 'required|numeric',
 //            'name' => 'required|string',
 //            'photoUrl' => 'nullable|string',

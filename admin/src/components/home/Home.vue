@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import vueHeader from '@/components/header/Header.vue'
+import vueHeader from '@/components/header/header.vue'
 import vueNav from '@/components/nav/Nav.vue'
 
 export default {

@@ -1,10 +1,10 @@
 <template>
   <form class="search-bar" @submit="onSubmit">
     <div class="input-group input-group-lg">
-      <input type="text" v-model="keywords" class="form-control" placeholder="通证名称、符号、项目名称" @input="onInput">
+      <input type="text" v-model="keywords" class="form-control" :placeholder="$t('label.search_bar')" @input="onInput">
       <span class="icon-bcv icon-search"></span>
       <span class="input-group-btn">
-        <button type="button" class="btn btn-primary" @click="onSubmit">搜索</button>
+        <button type="button" class="btn btn-primary" @click="onSubmit">{{ $t('label.search_btn') }}</button>
       </span>
     </div>
   </form>

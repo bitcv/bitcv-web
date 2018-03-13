@@ -31,6 +31,7 @@ Route::any('getProjList', 'ProjectController@getProjList');
 Route::any('getProjTopList', 'ProjectController@getProjTopList');
 Route::any('getProjDetail', 'ProjectController@getProjDetail');
 Route::any('getProjTagList', 'ProjectController@getProjTagList');
+Route::any('getEnProjTagList', 'ProjectController@getEnProjTagList');
 
 Route::any('getDepositBoxList', 'DepositController@getDepositBoxList');
 Route::any('addDepositOrder', 'DepositController@addDepositOrder');
@@ -142,7 +143,7 @@ Route::group(['middleware' => 'checkAdmin'], function () {
 
 
 //项目管理员只能操作自己的projId
-Route::group(['middleware' => 'checkProj'], function () {
+//Route::group(['middleware' => 'checkProj'], function () {
 
     Route::any('getSocialList', 'AdminController@getSocialList');
     
@@ -195,5 +196,5 @@ Route::group(['middleware' => 'checkProj'], function () {
     Route::any('delProjAdvisor','AdminController@delProjAdvisor');
 
 
-});
+//});
 

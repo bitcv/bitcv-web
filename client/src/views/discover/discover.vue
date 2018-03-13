@@ -8,7 +8,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="panel panel-custom">
-          <div class="panel-body filter-list">
+          <div class="panel-body filter-list" v-if="language === 'cn'">
             <dl class="dl-horizontal">
               <dt>{{ region.label }}</dt>
               <dd>
@@ -43,22 +43,63 @@
               </dd>
             </dl>
           </div>
+
+          <div class="panel-body filter-list" v-else>
+            <dl class="dl-horizontal">
+              <dt>{{ enregion.label }}</dt>
+              <dd>
+                <a href="javascript:;"
+                   v-for="item in enregion.optionList"
+                   :key="item.value"
+                   :class="{active: region.default == item.value}"
+                   @click="onFilterClick(region, item.value)"
+                >{{ item.label }}</a>
+              </dd>
+            </dl>
+            <dl class="dl-horizontal">
+              <dt>{{ enbuzType.label }}</dt>
+              <dd>
+                <a href="javascript:;"
+                   v-for="item in enbuzType.optionList"
+                   :key="item.value"
+                   :class="{active: buzType.default == item.value}"
+                   @click="onFilterClick(buzType, item.value)"
+                >{{ item.label }}</a>
+              </dd>
+            </dl>
+            <dl class="dl-horizontal">
+              <dt>{{ enstage.label }}</dt>
+              <dd>
+                <a href="javascript:;"
+                   v-for="item in enstage.optionList"
+                   :key="item.value"
+                   :class="{active: stage.default == item.value}"
+                   @click="onFilterClick(stage, item.value)"
+                >{{ item.label }}</a>
+              </dd>
+            </dl>
+          </div>
         </div>
         <div style="background-color: #fff;" v-loading="loading">
           <table class="table">
             <thead>
               <tr class="text-dark">
                 <th style="width:50px;">&nbsp;</th>
-                <th>公司名称</th>
-                <th>通证符号</th>
-                <th>所属行业</th>
-                <th style="width:100px">融资状态</th>
+                <th>{{ $t('label.pro_train_name') }}</th>
+                <th>{{ $t('label.pro_train_type') }}</th>
+                <th>{{ $t('label.pro_train_industry') }}</th>
+                <th style="width:100px">{{ $t('label.pro_train_status') }}</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="item in list" :key="item.id">
-                <td class="text-center">
+                <td class="text-center" v-if="language === 'cn'">
                   <a href="javascript:;" :style="item.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" :title="['关注', '取消关注'][item.focusStatus]" @click="handleFav(item)">
+                    <i class="icon-bcv" :class="{'icon-heart': item.focusStatus == 0, 'icon-heart-fill': item.focusStatus == 1}"></i>
+                  </a>
+                </td>
+                <td class="text-center" v-else>
+                  <a href="javascript:;" :style="item.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" :title="['follow', 'unfollow'][item.focusStatus]" @click="handleFav(item)">
                     <i class="icon-bcv" :class="{'icon-heart': item.focusStatus == 0, 'icon-heart-fill': item.focusStatus == 1}"></i>
                   </a>
                 </td>
@@ -69,21 +110,22 @@
                   </router-link>
                 </td>
                 <td><span class="text-primary">{{ item.tokenSymbol }}</span></td>
-                <td>{{ (item.buzType - 1) | buzType }}</td>
-                <td><span class="text-primary">{{ item.fundStage | fundStage }}</span></td>
+                <td>{{ (item.buzType - 1) | buzType(language) }}</td>
+                <td><span class="text-primary">{{ item.fundStage | fundStage(language) }}</span></td>
               </tr>
             </tbody>
           </table>
         </div>
         <div class="text-right">
-          <span class="pull-left" style="line-height:2">共{{ total }}项</span>
+          <span class="pull-left" style="line-height:2">{{ $t('label.project_sum') }} {{ total }} {{ $t('label.project_num') }}</span>
           <pagination :total="total" :current-page="currentPage" @onPageClick="onPageClick"></pagination>
         </div>
       </div>
       <div class="col-md-4">
         <div class="panel panel-custom text-darker" style="min-height:200px;">
           <div class="panel-heading">
-            <h4 class="panel-title">关注TOP10</h4>
+            <h4 v-if="language === 'cn'" class="panel-title">关注 TOP10</h4>
+            <h4 v-else class="panel-title">TOP10 Followings</h4>
           </div>
           <div class="list-group list-counter">
             <router-link class="list-group-item" v-for="item in focusList" :to="`/discover/detail/${item.projId}`" :key="item.projId">
@@ -94,7 +136,8 @@
         </div>
         <div class="panel panel-custom text-darker" style="min-height:200px;">
           <div class="panel-heading">
-            <h4 class="panel-title">浏览TOP10</h4>
+            <h4 v-if="language === 'cn'" class="panel-title">浏览 TOP10</h4>
+            <h4 v-else class="panel-title">TOP10 Browsings</h4>
           </div>
           <div class="list-group list-counter">
             <router-link class="list-group-item" v-for="item in viewList" :to="`/discover/detail/${item.projId}`" :key="item.projId">
@@ -130,13 +173,19 @@ export default {
       list: [],
       focusList: [],
       viewList: [],
-      currentPage: 1
+      currentPage: 1,
+      enbuzType: {},
+      enregion: {},
+      enstage: {}
     }
   },
   computed: {
     ...mapState({
       query: state => state.route.query
-    })
+    }),
+    language () {
+      return this.$i18n.locale
+    }
   },
   filters: {
     buzType: getBuzType,
@@ -169,7 +218,18 @@ export default {
         this.stage = stage
         this.loading = false
       })
+    this.getEnFilterParams()
+      .then((data = {}) => {
+        const {
+          enstage = {},
+          enregion = {},
+          enbuzType = {}
+        } = data
 
+        this.enbuzType = enbuzType
+        this.enregion = enregion
+        this.enstage = enstage
+      })
     // 关注top10
     this.getTop10({type: 'focus', count: 10})
       .then((data = []) => (this.focusList = data))
@@ -188,7 +248,8 @@ export default {
       'getTop10',
       'getProList',
       'updateFocus',
-      'getFilterParams'
+      'getFilterParams',
+      'getEnFilterParams'
     ]),
     // 翻页
     onPageClick (page) {

@@ -33,7 +33,7 @@ class UserController extends Controller
     public function signup (Request $request) {
         // 获取请求参数
         $params = $this->validation($request, [
-            'mobile' => 'required|numeric',
+            'mobile' => 'required|string',
             'passwd' => 'required|string',
             'vcode' => 'required|string',
             'nation' => 'nullable|numeric',
@@ -75,7 +75,7 @@ class UserController extends Controller
     public function signin (Request $request) {
         // 获取请求参数
         $params = $this->validation($request, [
-            'mobile' => 'required|numeric',
+            'mobile' => 'required|string',
             'passwd' => 'required|string',
         ]);
         if ($params === false) {
@@ -93,6 +93,7 @@ class UserController extends Controller
         }
         $uid = $userData->id;
         $user = (new Model\User())->getUser($uid);
+        $userPer = Model\Admin::where('id',$user['id'])->first();
         try {
             \App\Utils\Auth::setLogin($user);            
         } catch (\Exception $ex) {
@@ -103,7 +104,8 @@ class UserController extends Controller
         return $this->output([
             'userId' => $userData->id,
             'mobile' => $userData->mobile,
-            'avatarUrl' => $userData->avatar_url
+            'avatarUrl' => $userData->avatar_url,
+            'is_sys' => $userPer->is_sys,
         ]);
     }
 
@@ -207,20 +209,26 @@ class UserController extends Controller
 
     public function getVcode(Request $request){
         $params = $this->validation($request,[
-            'mobile' => 'required|numeric',
+            'mobile' => 'required|string',
             'nation' => 'nullable|numeric'
         ]);
         if($params === false){
             return $this->error(100);
         }
         extract($params);
+        if (!$nation) {
+            $userModel = Model\User::where('mobile', $mobile)->first();
+            if ($userModel) {
+                $nation = $userModel->nation;
+            }
+        }
         return self::vcode($mobile, $nation);
     }
 
     public function checkVcode(Request $request){
         $params = $this->validation($request,[
-            'mobile' => 'required|numeric',
-            'vcode' => 'required|numeric',
+            'mobile' => 'required|string',
+            'vcode' => 'required|string',
         ]);
         if($params === false){
             return $this->error(100);
@@ -235,7 +243,7 @@ class UserController extends Controller
 
     public function resetPwd(Request $request){
         $params = $this->validation($request,[
-            'mobile' => 'required|numeric',
+            'mobile' => 'required|string',
             'vcode' => 'required|string',
             'passwd' =>'required|string',
             'nation' => 'nullable|numeric',
@@ -259,7 +267,10 @@ class UserController extends Controller
 
         $passwd = Service::getPwd($passwd);
 
-        $flag = Model\User::where('mobile', $mobile)->update(['passwd' => $passwd]);
+        $flag = Model\User::where('mobile', $mobile)->update([
+            'nation' => $nation,
+            'passwd' => $passwd,
+        ]);
         if ($flag === 0) {
             return $this->error(203);
         }
@@ -308,6 +319,7 @@ class UserController extends Controller
             'dataList' => $dataList,
             'protocolDict' => DictUtil::Token_Protocol,
             'statusDict' => DictUtil::UserAsset_Status,
+            'enstatusDist' => DictUtil::UserAsset_EnStatus
         ]);
     }
 
@@ -328,7 +340,7 @@ class UserController extends Controller
 
     public function addUserWallet (Request $request) {
         $params = $this->validation($request,[
-            'tokenProtocol' => 'required|string',
+            'tokenProtocol' => 'required|numeric',
             'walletAddr' => 'required|string',
             'mobile' => 'required|string',
             'vcode' => 'required|string',
@@ -338,8 +350,55 @@ class UserController extends Controller
         }
         extract($params);
         // 正则校验钱包地址
-        $walletAddr = strtolower($walletAddr);
-        if (!preg_match('/^0x[0-9a-f]{40}$/', $walletAddr)) {
+        if ($tokenProtocol == 1) {
+            // ERC20钱包地址校验
+            $walletAddr = strtolower($walletAddr);
+            $reg = '/^0x[0-9a-f]{40}$/';
+            if (!preg_match($reg, $walletAddr)) {
+                return $this->error(212);
+            }
+        } else if ($tokenProtocol == 2) {
+            // 比特币钱包地址校验
+            $balance = @file_get_contents("https://blockchain.info/q/addressbalance/$walletAddr");
+            if (!is_numeric($balance)) {
+                return $this->error(212);
+            }
+        } else if ($tokenProtocol == 3) {
+            // 狗狗币钱包地址校验
+            $result = @file_get_contents("https://dogechain.info/api/v1/address/balance/$walletAddr");
+            if ($result === false) {
+                return $this->error(212);
+            }
+        } else if ($tokenProtocol == 4) {
+            // NEO钱包地址校验
+            $data = [
+                'method' => 'validateaddress',
+                'params' => [$walletAddr],
+                'jsonrpc' => '2.0',
+                'id' => 1,
+            ];
+            $resJson = \App\Utils\BaseUtil::curlPost('http://139.219.98.23:10332', $data);
+            $resArr = json_decode($resJson, true);
+            if (!isset($resArr['result']['isvalid']) || !$resArr['result']['isvalid']) {
+                return $this->error(212);
+            }
+        } else if ($tokenProtocol == 5) {
+            // KCASH钱包地址校验
+            $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/checkWalletAddr', [
+                'symbol' => 'KCASH',
+                'walletAddr' => $walletAddr
+            ]);
+
+            $resArr = json_decode($resJson, true);
+            if (!$resArr || $resArr['errcode'] !== 0) {
+                // 调用接口失败
+                return $this->error(104);
+            }
+
+            if (!$resArr['data']['result']) {
+                return $this->error(212);
+            }
+        } else {
             return $this->error(100);
         }
         // 获取用户ID
@@ -354,13 +413,18 @@ class UserController extends Controller
         }
         // 验证验证码
         $ret = Service::checkVCode('reg', $mobile, $vcode);
-        if (false && $ret['err'] > 0) {
+        if ($ret['err'] > 0) {
             return $this->error(206);
         }
         // 验证钱包地址是否为其它用户所有
         $isExist = Model\UserWallet::where('addr', $walletAddr)->count();
         if ($isExist) {
             return $this->error(210);
+        }
+        // 验证用户是否已经有此类型的钱包地址
+        $isExist = Model\UserWallet::where([['user_id', $userId], ['token_protocol', $tokenProtocol]])->count();
+        if ($isExist) {
+            return $this->error(211);
         }
         // 添加用户钱包地址
         Model\UserWallet::create([
@@ -400,8 +464,8 @@ class UserController extends Controller
         $tokenSymbol = strtoupper($userAssetData->symbol);
         $amount = $userAssetData->amount;
 
-        // 暂时只支持ERC20协议的提现
-        $tokenSymbolArr = ['BCV', 'EOS', 'PXC', 'ICST', 'ETH'];
+        // 检查是否已开放提现
+        $tokenSymbolArr = ['BCV', 'EOS', 'PXC', 'ICST', 'ETH', 'BTC', 'DOGE', 'KCASH', 'NEO'];
         if (!in_array($tokenSymbol, $tokenSymbolArr)) {
             return $this->error(103);
         }
@@ -423,8 +487,9 @@ class UserController extends Controller
         // 调用提现接口
         $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/withdraw', [
             'toAddr' => $walletAddr,
-            'amount' => $amount,
-            'tokenSymbol' => $tokenSymbol,
+            // 如果是NEO则发4倍的GAS
+            'amount' => $tokenSymbol === 'NEO' ? $amount * 4 : $amount,
+            'tokenSymbol' => $tokenSymbol === 'NEO' ? 'GAS' : $tokenSymbol,
         ]);
         
         $resArr = json_decode($resJson, true);
@@ -441,7 +506,7 @@ class UserController extends Controller
             'record_id' => $transferRecordId,
             'asset_id' => $assetId,
             'token_id' => $tokenId,
-            'amount' => $amount,
+            'amount' => $tokenSymbol === 'NEO' ? $amount * 4 : $amount,
             'status' => 1,
         ]);
 
@@ -480,6 +545,7 @@ class UserController extends Controller
             'dataCount' => $dataCount,
             'dataList' => $dataList,
             'statusDict' => DictUtil::UserTransferRecord_Status,
+            'enstatusDict' => DictUtil::UserTransferRecord_EnStatus,
         ]);
     }
 
@@ -514,8 +580,13 @@ class UserController extends Controller
                 $recordModel->save();
                 // 更新用户资产为提现成功
                 $assetModel = Model\UserAsset::find($assetId);
+                $tokenModel = Model\Token::find($assetModel->token_id);
                 $assetModel->status = 3;
-                $assetModel->amount = $assetModel->amount - $record['actualAmount'];
+                if ($tokenModel->symbol === 'NEO') {
+                    $assetModel->amount = $assetModel->amount - $record['actualAmount'] / 4;
+                } else {
+                    $assetModel->amount = $assetModel->amount - $record['actualAmount'];
+                }
                 $assetModel->save();
             }
             // 转账失败
