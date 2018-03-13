@@ -44,7 +44,7 @@
                 <span>{{ item.nameCn }}<span class="text-gray small">{{ item.tokenSymbol }}</span></span>
               </td>
               <td><span class="text-danger">{{ getInterest(10000, item.interestRate, item.lockTime) }} {{ $t('label.coin_amount') }}</span></td>
-              <td>{{ item.lockTime }} {{ $t('label.month') }}</td>
+              <td>{{ item.lockTime }} {{ $t('label.day') }}</td>
               <td>{{ item.minAmount }} {{ $t('label.coin_amount') }}</td>
               <td><span class="text-primary">{{ item.remainAmount }} {{ $t('label.coin_amount') }}</span></td>
               <td>
@@ -75,7 +75,7 @@
               <div class="xs-detail" v-if="item.isDetail">
                 <p>
                   <span>{{ $t('label.lock') }}: </span>
-                  {{ item.lockTime }} {{ $t('label.month') }}
+                  {{ item.lockTime }} {{ $t('label.day') }}
                 </p>
                 <p>
                   <span>{{ $t('label.start_amount') }}: </span>
@@ -115,17 +115,17 @@ export default {
         value: 0,
         items: [
           {label: '全部', value: 0},
-          {label: '1个月', value: 1},
-          {label: '3个月', value: 3},
-          {label: '6个月', value: 6},
-          {label: '12个月', value: 12}
+          {label: '30天', value: 30},
+          {label: '90天', value: 90},
+          {label: '180天', value: 180},
+          {label: '1年', value: 365}
         ],
         e_items: [
           {label: 'ALL', value: 0},
-          {label: 'One month', value: 1},
-          {label: 'Three month', value: 3},
-          {label: 'Six month', value: 6},
-          {label: 'Twelve month', value: 12}
+          {label: '30 day', value: 30},
+          {label: '90 day', value: 90},
+          {label: '180 day', value: 180},
+          {label: '1 year', value: 365}
         ]
       },
       total: 0,
@@ -164,9 +164,6 @@ export default {
         .catch(() => {
           this.loading = false
         })
-    },
-    getInterest (amount, interestRate, lockTime) {
-      return parseInt(amount * interestRate * lockTime / 12 * 100) / 100
     },
     onFilterClick (val) {
       this.lockTime.value = val

@@ -14,7 +14,7 @@
           </div>
           <div class="row">
             <div class="col-md-3"><span>{{ $t('label.in_amount') }}：</span><b>{{orderData.orderAmount}}</b><i> {{ $t('label.coin_amount') }}</i></div>
-            <div class="col-md-3"><span>{{ $t('label.lock') }}：</span><b>{{orderData.lockTime}}</b><i> {{ $t('label.month') }}</i></div>
+            <div class="col-md-3"><span>{{ $t('label.lock') }}：</span><b>{{orderData.lockTime}}</b><i> {{ $t('label.day') }}</i></div>
             <div class="col-md-3"><span>{{ $t('label.return') }}：</span><b> {{getInterest(orderData.orderAmount, orderData.interestRate, orderData.lockTime)}}</b><i> {{ $t('label.coin_amount') }}</i></div>
           </div>
           <div>
@@ -37,7 +37,7 @@
       <div class="buying-details-form" v-if="!isFinish">
         <div class="form-group" :class="confirmError">
           <input type="checkbox" id="confirm" v-model="form.confirm">
-          <label for="confirm">{{ $t('label.my_goal') }}{{orderData.orderAmount}} {{ $t('label.coin_amount') }}</label><br>
+          <label for="confirm">{{ $t('label.my_goal') }} {{orderData.orderAmount}} {{ $t('label.coin_amount') }}</label><br>
           <span v-if="confirmError">{{ $t('label.confirm_recharge') }}</span>
         </div>
         <div class="col-md-10 buying-details-form-submit">

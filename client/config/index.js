@@ -12,14 +12,24 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
+<<<<<<< HEAD
         // target: 'http://www.kingco.com'
         // target: 'http://192.168.31.252:8888'
+=======
+         target: 'http://www.kingco.com'
+        //target: 'http://192.168.31.252:8888'
+>>>>>>> 479ff059e489b380e9a7c6a106f222f5dfe8b5be
         // target: 'https://www.bticv.com'
         target: 'http://0.0.0.0:8888'
       },
       '/storage': {
+<<<<<<< HEAD
         // target: 'http://www.kingco.com'
         // target: 'http://192.168.31.252:8888'
+=======
+         target: 'http://www.kingco.com'
+        //target: 'http://192.168.31.252:8888'
+>>>>>>> 479ff059e489b380e9a7c6a106f222f5dfe8b5be
         // target: 'https://www.bticv.com'
         target: 'http://0.0.0.0:8888'
       }

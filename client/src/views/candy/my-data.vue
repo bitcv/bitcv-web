@@ -47,7 +47,7 @@
               </td>
               <td>{{convertDate(item.orderTime)}}</td>
               <td>{{item.orderAmount}}</td>
-              <td>{{item.lockTime}} {{ $t('label.month') }}</td>
+              <td>{{item.lockTime}} {{ $t('label.day') }}</td>
               <td>{{item.interestRate * item.orderAmount * item.lockTime / 12}} {{ $t('label.coin_amount') }}</td>
               <td>
                 <span v-if="item.status === 0" class="btn-box">
@@ -99,7 +99,7 @@
               <div class="xs-detail" v-if="item.isDetail">
                 <p>
                   <span>{{ $t('label.order_time') }}：</span>
-                  {{ convertDate(item.orderTime) }} {{ $t('label.month') }}
+                  {{ convertDate(item.orderTime) }} {{ $t('label.day') }}
                 </p>
                 <p>
                   <span>{{ $t('label.lock') }}：</span>

@@ -25,7 +25,7 @@
         <p>{{ $t('label.start_amount') }}</p>
       </div>
       <div class="col-xs-3 col-md-3">
-        <b>{{bitcv.lockTime}}<span> {{ $t('label.month') }}</span></b>
+        <b>{{bitcv.lockTime}}<span> {{ $t('label.day') }}</span></b>
         <p>{{ $t('label.lock') }}</p>
       </div>
     </div>
