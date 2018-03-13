@@ -135,10 +135,12 @@ export default {
     this.getProList({
       pageno: 1,
       perpage: 10
-    }).then((data = {}) => {
+    })
+      .then((data = {}) => {
         this.list = [...data.projList]
         this.loading = false
-      }).catch(() => {
+      })
+      .catch(() => {
         this.loading = false
       })
 
