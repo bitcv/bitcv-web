@@ -49,6 +49,7 @@ Route::any('getProjDepositOrderList', 'AdminController@getProjDepositOrderList')
 
 Route::any('adminSignin', 'AdminController@signin');
 Route::any('adminSignout', 'AdminController@signout');
+Route::any('inspectCode','AdminController@inspectCode');
 //Route::any('adminSignin', 'AdminController@signin');
 //Route::any('adminSignout', 'AdminController@signout');
 //min program api
@@ -128,6 +129,17 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('getExchangeNameList','AdminController@getExchangeNameList');
     Route::any('getProjReportList', 'AdminController@getProjReportList');
     Route::any('getMediaList', 'AdminController@getMediaList');
+
+    Route::any('getAdminList','AdminController@getAdminList');
+    Route::any('addAdmin','AdminController@addAdmin');
+    Route::any('delAdmin','AdminController@delAdmin');
+    Route::any('updAdmin','AdminController@updAdmin');
+    Route::any('getUserList','AdminController@getUserList');
+    Route::any('cancelOperate','AdminController@cancelOperate');
+    Route::any('authOperate','AdminController@authOperate');
+    Route::any('getUserSearch','AdminController@getUserSearch');
+    
+
 
 //项目管理员只能操作自己的projId
 Route::group(['middleware' => 'checkProj'], function () {

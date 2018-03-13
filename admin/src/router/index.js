@@ -16,6 +16,9 @@ import Token from '@/components/token/Token'
 import PerList from '@/components/person/PerList'
 import InstituList from '@/components/institution/InstituList'
 import ExchangeList from '@/components/exchange/ExchanList'
+import EditorList from '@/components/editor/EditorList'
+import UserList from '@/components/user/UserList'
+import Code from '@/components/vcode/vcode'
 
 Vue.use(Router)
 
@@ -63,6 +66,15 @@ export default new Router({
     }, {
       path: '/admin/exchange',
       component: ExchangeList
+    }, {
+      path: '/admin/editor',
+      component: EditorList
+    }, {
+      path: '/admin/user',
+      component: UserList
+    }, {
+      path: '/admin/vcode',
+      component: Code
     }]
   }, {
     path: '/signin',

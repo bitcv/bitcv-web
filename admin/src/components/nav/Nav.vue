@@ -72,8 +72,63 @@ export default {
               icon: 'el-icon-menu',
               url: '/admin/exchange',
               text: '交易所管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/editor',
+              text: '运营人员'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/user',
+              text: '用户管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/vcode',
+              text: '验证码'
             }]
           // 项目管理员
+          } else if (user['isSys'] === 2) {
+            this.$router.push('/admin/project')
+            this.itemList = [{
+              icon: 'el-icon-menu',
+              url: '/admin/project',
+              text: '项目管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/depositBox',
+              text: '余币宝'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/token',
+              text: '通证配置'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/social',
+              text: '社群配置'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/media',
+              text: '媒体配置'
+            // }, {
+              // icon: 'el-icon-menu',
+              // url: '/admin/module',
+              // text: '运营工具管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/mediareport',
+              text: '项目动态'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/perlist',
+              text: '成员配置'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/institution',
+              text: '机构管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/exchange',
+              text: '交易所管理'
+            }]
           } else if (user['projId'] > 0) {
             this.$router.push('/admin/editProject/' + user['projId'])
             this.itemList = [{

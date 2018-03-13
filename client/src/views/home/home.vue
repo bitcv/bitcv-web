@@ -14,7 +14,7 @@
         </div>
 
         <h4 class="section-title">发现新项目</h4>
-        <div class="figure-group">
+        <div class="figure-group" v-loading="loading">
           <div class="row">
             <div class="col-md-2 col-xs-4" v-for="item in disList" :key="item.id">
               <router-link class="figure" :to="`/discover/detail/${item.id}`">
@@ -26,7 +26,7 @@
         </div>
 
         <h4 class="section-title">项目直通车</h4>
-        <div style="background-color: #fff;">
+        <div style="background-color: #fff;" v-loading="loading">
           <table class="table">
             <thead>
               <tr class="text-dark">
@@ -104,7 +104,8 @@ export default {
     return {
       keywords: '',
       list: [],
-      news: []
+      news: [],
+      loading: false
     }
   },
   computed: {
@@ -124,12 +125,15 @@ export default {
     fundStage: getFundStage
   },
   created () {
+    this.loading = true
     this.getProList({
       pageno: 1,
       perpage: 10
-    })
-      .then((data = {}) => {
+    }).then((data = {}) => {
         this.list = [...data.projList]
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
 
     this.getNewsList({
