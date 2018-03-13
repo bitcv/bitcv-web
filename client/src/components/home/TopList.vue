@@ -1,7 +1,7 @@
 <template>
   <div class="top-list">
     <h3 class="panel-title">推荐项目</h3>
-    <div class="info-container">
+    <div class="info-container" v-loading="loading">
       <router-link :to="{ path: 'projDetail/' + project.id}" v-for="project in projList" :key="project.id" class="info-area">
           <span>{{ project.tokenName }}</span>
           <span>{{ project.tokenPrice }}</span>
@@ -14,11 +14,13 @@
 export default {
   data () {
     return {
-      projList: []
+      projList: [],
+      loading: false
     }
   },
   mounted () {
     var that = this
+    this.loading = true
     this.$http.post('/api/getProjList', {
       pageno: 1,
       perpage: 3
@@ -27,6 +29,9 @@ export default {
       if (resData.errcode === 0) {
         that.projList = resData.data.projList
       }
+      this.loading = false
+    }).catch(() => {
+      this.loading = false
     })
   }
 }

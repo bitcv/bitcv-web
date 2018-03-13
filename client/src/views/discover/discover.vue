@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" >
     <div class="row" style="margin-bottom:20px">
       <div class="col-md-8">
         <search-bar v-model="keywords" @submit="onSearch"></search-bar>
@@ -80,7 +80,7 @@
             </dl>
           </div>
         </div>
-        <div style="background-color: #fff;">
+        <div style="background-color: #fff;" v-loading="loading">
           <table class="table">
             <thead>
               <tr class="text-dark">
@@ -165,6 +165,7 @@ export default {
   data () {
     return {
       keywords: '',
+      loading: false,
       buzType: {},
       region: {},
       stage: {},
@@ -203,6 +204,7 @@ export default {
     }
   },
   created () {
+    this.loading = true
     this.getFilterParams()
       .then((data = {}) => {
         const {
@@ -214,6 +216,7 @@ export default {
         this.buzType = buzType
         this.region = region
         this.stage = stage
+        this.loading = false
       })
     this.getEnFilterParams()
       .then((data = {}) => {
@@ -276,6 +279,7 @@ export default {
     },
     // 加载数据
     handleFilter () {
+      this.loading = true
       this.getProList(this.getParams())
         .then((data = {}) => {
           const {
@@ -285,6 +289,9 @@ export default {
 
           this.total = dataCount
           this.list = projList
+          this.loading = false
+        }).catch(() => {
+          this.loading = false
         })
     },
     // 关注|取消关注

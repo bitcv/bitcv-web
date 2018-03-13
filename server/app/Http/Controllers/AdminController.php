@@ -7,6 +7,7 @@ use App\Models as Model;
 use Illuminate\Support\Facades\DB;
 use App\Utils\BaseUtil;
 use App\Utils\DictUtil;
+use App\Utils\Service;
 
 class AdminController extends Controller
 {
@@ -345,7 +346,8 @@ class AdminController extends Controller
     }
 
     public function getMediaList (Request $request) {
-        $mediaList = Model\Media::select('id', 'name', 'logo_url', 'title_reg', 'release_time_reg', 'banner_url_reg', 'content_reg')->get()->toArray();
+        $mediaList = Model\Media::select('id', 'name', 'logo_url', 'title_reg', 'release_time_reg', 'banner_url_reg', 'content_reg')
+            ->get()->toArray();
 
         return $this->output(['dataList' => $mediaList]);
     }
@@ -1629,7 +1631,8 @@ class AdminController extends Controller
 
     public function getExchangeNameList(Request $request){
 
-        $exchangeList = Model\Exchange::select('id', 'name', 'logo_url','home_url','intro')->get()->toArray();
+        $exchangeList = Model\Exchange::select('id', 'name', 'logo_url','home_url','intro')
+            ->get()->toArray();
         return $this->output(['exchangeList' => $exchangeList]);
     }
 
@@ -1928,5 +1931,191 @@ class AdminController extends Controller
 //
 //        return $this->output();
 //    }
+
+    public function getAdminList(Request $request){
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $proj = Model\User::join('admin','admin.id','=','user.id')
+            ->where('admin.is_sys','2');
+        $projList = $proj->offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = $proj->count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+    }
+
+    public function addAdmin(Request $request){
+
+        $params = $this->validation($request, [
+//         'projId' => 'required|string',
+//         'memberId' => 'required|numeric',
+           'name' => 'required|string',
+           'logoUrl' => 'nullable|string',
+           'position' => 'required|string',
+           'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $memberData = [
+            'nickname' => $name,
+            'mobile' => $intro,
+            'passwd' => Service::getPwd($position),
+            'avatar_url' => $logoUrl,
+        ];
+
+        $result = Model\User::firstOrCreate($memberData);
+        $data = [
+            'id' => $result->id,
+            'is_sys' => 2,
+        ];
+        Model\Admin::firstOrCreate($data);
+
+        return $this->output();
+    }
+
+    public function delAdmin(Request $request){
+
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\User::where('id', $mediaId)->delete();
+
+        return $this->output();
+    }
+
+    public function updAdmin(Request $request){
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric',
+            'name' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'position' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $memberData = [
+            'nickname' => $name,
+            'mobile' => $intro,
+            'passwd' => Service::getPwd($position),
+            'avatar_url' => $logoUrl,
+        ];
+
+        Model\User::where('id', $mediaId)->update($memberData);
+
+        return $this->output();
+    }
+
+    public function getUserList(Request $request){
+
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\User::join('admin','admin.id','=','user.id')
+            ->offset($offset)->limit($perpage)
+            ->get()->toArray();
+        $dataCount = Model\User::count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+    }
+
+    public function getUserSearch(Request $request){
+        $params = $this->validation($request, [
+            'mobile' => 'required',
+        ]);
+
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $projList = Model\User::join('admin','admin.id','=','user.id')
+            ->where('user.mobile','=',$mobile)
+            ->get()->toArray();
+        $dataCount = Model\User::join('admin','admin.id','=','user.id')
+            ->where('user.mobile','=',$mobile)
+            ->count();
+
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+    }
+
+    public function authOperate(Request $request){
+        $params = $this->validation($request,[
+            'id' => 'required',
+        ]);
+        if ($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        Model\Admin::where('id', $id)->update(['is_sys' => 2]);
+
+        return $this->output();
+    }
+
+    public function cancelOperate(Request $request){
+
+        $params = $this->validation($request,[
+            'id' => 'required|numeric',
+        ]);
+        if ($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        Model\Admin::where('id', $id)->update(['is_sys' => 0]);
+
+        return $this->output();
+    }
+
+    public function inspectCode(Request $request){
+        $params = $this->validation($request,[
+            'mobile' => 'required',
+        ]);
+        if ($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        $ret = Service::inspect('reg', $mobile);
+
+        if ($ret['err'] > 0) {
+            return $this->error(206);
+        }
+
+        return $this->output(['code' => $ret['data']]);
+    }
+
+    
 
 }

@@ -245,3 +245,40 @@ export const getBoxTxRecordList = (store, params) => {
 export const confirmBoxTx = (store, params) => {
   return post('/api/confirmBoxTx', params)
 }
+
+/* ===========媒体报道=========== */
+//获取授权人员
+export const getAdminList = (store, params) => {
+  return post('/api/getAdminList')
+}
+//取消授权
+export const cancelOperate = (store, params) => {
+  return post('/api/cancelOperate', params)
+}
+//授权
+export const authOperate = (store, params) => {
+  return post('/api/authOperate', params)
+}
+/* ===========用户人员=========== */
+export const getUserList = (store, params) => {
+  return post('/api/getUserList', params)
+}
+
+export const getUserSearch = (store , params) => {
+  return post('/api/getUserSearch', params)
+}
+
+// export const authOperate = (store, params) => {
+//   return post('/api/authOperate', params)
+// }
+/* ===========用户人员=========== */
+
+export const inspectCode = (store, params) => {
+  return post('/api/inspectCode', params)
+}
+
+
+
+
+
+
