@@ -54,7 +54,6 @@ export default {
 
 <style lang="scss">
   @import 'styles/index';
-  @import 'element-ui/lib/theme-chalk/display.css';
   // @import "./App.scss";
 </style>
 
