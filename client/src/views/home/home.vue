@@ -136,11 +136,11 @@ export default {
       pageno: 1,
       perpage: 10
     }).then((data = {}) => {
-        this.list = [...data.projList]
-        this.loading = false
-      }).catch(() => {
-        this.loading = false
-      })
+      this.list = [...data.projList]
+      this.loading = false
+    }).catch(() => {
+      this.loading = false
+    })
 
     this.getNewsList({
       pageno: 1,

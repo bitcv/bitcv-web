@@ -11,7 +11,16 @@
         <el-input v-model="form.address"></el-input>
       </el-form-item>
       <el-form-item label="上传发放地址">
-        <el-button type="warning" class="btn-primary" @click="submit">点击上传</el-button>
+        <!-- <el-button type="warning" class="btn-primary" @click="submit">点击上传</el-button> -->
+        <el-upload
+          class="upload-btn"
+          action="https://0.0.0.8:8080"
+          :before-upload="handleBefore"
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :show-file-list="false">
+          <el-button slot="trigger" type="warning" class="btn-primary">上传文件</el-button>
+        </el-upload>
         <el-button type="warning" plain @click="fetch">获取模板</el-button>
       </el-form-item>
     </el-form>
@@ -46,7 +55,7 @@
             <h5>总数量</h5>
             <div>
               {{total.number}}
-              <small>枚</small>
+              <small>枚90990</small>
             </div>
           </el-col>
           <el-col :span="7">
@@ -110,6 +119,21 @@ export default {
     }
   },
   methods: {
+    handleBefore (file) {
+      const isExcel = /xls/.test(file.name)
+      // if (!isExcel) {
+      //   this.$message.error('请选择Excel文件')
+      // }
+      return isExcel
+    },
+    handleSuccess (res) {
+      if (res.statusCode === 200) { // 成功时
+        // 成功操作
+      }
+    },
+    handleError (res) {
+      this.$message.error('上传失败，请重试')
+    },
     submit () {
       this.$refs.form.validate((valid) => {
         if (valid) {
@@ -138,6 +162,12 @@ export default {
     &::after, &::before{
       display: none;
     }
+  }
+  .el-upload__input{
+    display: none;
+  }
+  .upload-btn{
+    display: inline-block;
   }
   .el-button--text:focus, .el-button--text:hover{
     color: orange;
