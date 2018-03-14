@@ -8,8 +8,7 @@
       style="width: 100%">
       <el-table-column
         prop="id"
-        label="序号"
-        width="100">
+        label="序号">
       </el-table-column>
       <el-table-column
         prop="currency"
@@ -17,13 +16,11 @@
       </el-table-column>
       <el-table-column
         prop="number"
-        label="数量"
-        width="180">
+        label="数量">
       </el-table-column>
       <el-table-column
         prop="status"
-        label="状态"
-        width="180">
+        label="状态">
         <template slot-scope="scope">
           <span :class="scope.row.status === 1 ? 'text-success' : ''">
             {{['验证中', '已完成'][scope.row.status]}}
@@ -41,8 +38,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        label=""
-        width="50">
+        label="">
         <template slot-scope="scope">
           <router-link :to="{path: '/acting/actingRecord/detail', query: {id: scope.row.id}}">
             <i class="el-icon-arrow-right"></i>
@@ -165,6 +161,15 @@ export default {
     cursor: pointer;
     &:hover{
       color: $primary-color;
+    }
+  }
+  @media (max-width: 767px) {
+    .footer{
+      padding: 20px 0;
+      .el-col-4{
+        padding-top: 15px;
+        line-height: 20px;
+      }
     }
   }
 }

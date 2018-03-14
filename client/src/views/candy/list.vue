@@ -1,8 +1,41 @@
 <template>
   <div v-loading="loading">
+    <div class="assets-panel">
+      <div class="assets-box">
+        <div class="assets-nav">
+          <router-link :to="{path: 'candyRoom/candyListPlan'}">已购余币宝计划 >></router-link>
+        </div>
+        <div class="assets-title">
+          <router-link :to="{path: 'candyRoom/candyListAssets'}">
+            <img src="/static/logo/github-hover.png" alt="logo">
+            我的资产总量 >
+          </router-link>
+        </div>
+        <div class="assets-total">
+          {{assets.total.toFixed(2)}}
+        </div>
+        <div class="assets-profit">
+          <el-row>
+            <el-col :span="11" class="left">
+              <h6>昨日收益（BCV）</h6>
+              <p>{{assets.yesterdayProfit.toFixed(2)}}</p>
+            </el-col>
+            <el-col :span="2" class="line">
+              <div></div>
+            </el-col>
+            <el-col :span="11" class="right">
+              <h6>
+                <router-link :to="'/'">累计收益 ></router-link>
+              </h6>
+              <p>{{assets.totalProfit.toFixed(2)}}</p>
+            </el-col>
+          </el-row>
+        </div>
+      </div>
+    </div>
     <div class="panel panel-custom">
       <div class="panel-body filter-list">
-        <div><h3 style="margin:20px 0 30px;">{{ $t('label.ybb_plan') }}</h3></div>
+        <div><h3 style="margin:20px 0 30px; padding: 20px 0; border-bottom: 2px solid #ccc;">{{ $t('label.ybb_plan') }}</h3></div>
         <dl class="dl-horizontal">
           <dt>{{ $t('label.lock') }}</dt>
           <dd  v-if="language === 'cn'">
@@ -24,7 +57,7 @@
         </dl>
       </div>
     </div>
-    <div class="panel panel-custom">
+    <div class="">
       <div class="table-responsive" v-if="list.length">
         <table class="table hidden-xs">
           <thead>
@@ -130,7 +163,12 @@ export default {
       },
       total: 0,
       currentPage: 1,
-      list: []
+      list: [],
+      assets: {
+        total: 1020202.298899,
+        yesterdayProfit: 32.332,
+        totalProfit: 3287.89298
+      }
     }
   },
   computed: {
@@ -189,6 +227,98 @@ export default {
 
 <style lang="scss" scoped>
 @import '~@/styles/variables';
+
+// 资产面板
+.assets-panel{
+  position: relative;
+  background: #fff;
+  height: 150px;
+  width: 100%;
+  margin-top: 150px;
+  color: #fff;
+  text-align: center;
+  a{
+    color: #fff;
+  }
+}
+.assets-box{
+  position: absolute;
+  top: -158px;
+  left: 10%;
+  width: 80%;
+  height:308px;
+  background:linear-gradient(rgba(255,141,58,1),rgba(255,181,60,1));
+  box-shadow:0px 6px 9px 0px rgba(255,153,112,0.28);
+  margin: 0 auto;
+  font-weight: 200;
+  .assets-nav{
+    text-align: right;
+    font-size: 14px;
+    line-height: 25px;
+    padding: 15px 30px 0 0;
+  }
+  .assets-title{
+      margin: 10px auto 0;
+    a{
+      width:245px;
+      height:30px;
+      line-height:30px;
+      background:rgba(255,255,255,1);
+      box-shadow: 0px 1px 7px 0px rgba(233,178,88,0.64);
+      border-radius: 16px ;
+      font-size: 14px;
+      color: #FC9E3C;
+      padding: 5px 20px;
+    }
+    img{
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+  }
+  .assets-total{
+    font-size: 40px;
+    margin: 20px 0;
+  }
+  .assets-profit{
+    h6{
+      font-weight: 200;
+      font-size: 14px;
+    }
+    p{
+      font-size: 34px;
+    }
+    .left{
+      p{
+        margin-top: 18px;
+      }
+    }
+    .right{
+      h6{
+        width:122px;
+        height: 30px;
+        line-height: 30px;
+        background:rgba(255,255,255,1);
+        box-shadow: 0px 1px 7px 0px rgba(233,178,88,0.64);
+        border-radius: 15px;
+        padding: 0 20px;
+        margin: 0 auto;
+        a{
+          color: #FC9E3C;
+        }
+      }
+      p{
+        margin-top: 15px;
+      }
+    }
+    .line{
+      margin: 20px auto 0;
+      background: #fff;
+      width: 1px;
+      height: 47px;
+    }
+  }
+}
 
 .filter-list {
   padding-bottom: 0;

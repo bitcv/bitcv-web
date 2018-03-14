@@ -38,6 +38,8 @@
                   <img src="/static/logo/bcv.png" alt="logo">
                   <span>{{info.BCVnumber}}</span>
                   <small>枚</small>
+                  <br>
+                  <i v-if="info.total > info.BCVnumber">余额不足，请先充值</i>
                 </p>
               </el-col>
               <el-col :span="12">
@@ -48,21 +50,16 @@
                   <small>
                     枚
                   </small>
+                  <br>
+                  <i v-if="info.cost > info.ETHnumber">余额不足，请先充值</i>
                 </p>
               </el-col>
             </el-row>
           </div>
         </div>
         <footer class="confirm-footer">
-          <el-row>
-            <el-col :span="14">
-              您的余额不足，请先充值
-            </el-col>
-            <el-col :span="10">
-              <el-button type="warning" plain @click="handleRecharge">去充值</el-button>
-              <el-button type="warning" class="btn-primary" @click="handleConfirm">确认发放</el-button>
-            </el-col>
-          </el-row>
+          <el-button type="warning" plain @click="handleRecharge">去充值</el-button>
+          <el-button type="warning" class="btn-primary" @click="handleConfirm">确认发放</el-button>
         </footer>
       </div>
     </div>
@@ -73,7 +70,7 @@
           <el-col :span="18" class="left">
             <h5>充值地址</h5>
             <div>
-              <span>{{recData.address}}</span>
+              <el-input v-model="recData.address" readonly ref="copyInput"></el-input>
               <i class="el-icon-document" @click="handleCopy"></i>
             </div>
             <p>
@@ -125,10 +122,10 @@ export default {
   },
   data () {
     return {
-      isRecharge: true, // 是否确认充值
+      isRecharge: false, // 是否确认充值
       info: {
         total: 30000,
-        cost: 16,
+        cost: 1699999,
         type: 0,
         itype: 1,
         BCVnumber: 5000,
@@ -164,7 +161,10 @@ export default {
       this.$emit('finished')
     },
     handleCopy () {
-      console.log('copy')
+      let eInput = this.$refs.copyInput.$el.firstElementChild
+      eInput.select()
+      document.execCommand('Copy')
+      this.$message.success('复制成功!')
     },
     handleRefresh () {
       console.log('刷新')
@@ -247,38 +247,46 @@ export default {
       img{
         vertical-align: sub;
       }
+      i{
+        font-size: 12px;
+        font-style: normal;
+        color: salmon;
+      }
     }
     .confirm-footer{
       margin: 30px 0;
-      line-height: 40px;
-      .el-col-14{
-        line-height: 40px;
-        color: salmon;
-        font-size: 12px;
-      }
+      text-align: center;
     }
   }
 
   .recharge-top{
     .left{
-      div{
+      & > div{
         padding: 30px;
-        span{
+        overflow: hidden;
+        .el-input{
+          width: 80%;
+          float: left;
+        }
+        span, input{
           background: #fcf7f1;
           border: 1px solid $primary-color;
           height: 40px;
           line-height: 40px;
-          display: inline-block;
           padding: 0 20px;
         }
         i{
           color: $primary-color;
           font-size: 30px;
-          vertical-align: bottom;
+          float: left;
+          margin-left: 10px;
+          margin-top: 10px;
+          cursor: pointer;
         }
       }
       p{
         padding: 0 0 30px 30px;
+        margin-top: 10px;
         color: $gray;
         font-size: 12px;
         span{
@@ -322,6 +330,56 @@ export default {
   .recharge-footer{
     text-align: right;
     padding: 20px;
+  }
+}
+@media (max-width: 767px) {
+  .step2{
+    padding: 10px 0;
+    .confirm{
+      .confirm-box{
+        width: 90%;
+        margin: 0 5%;
+        padding: 0;
+      }
+      .confirm-top{
+        padding: 20px 10px;
+        b{
+          font-size: 20px;
+        }
+        .el-radio-group{
+          margin-left: 0;
+        }
+        p{
+          margin: 0;
+        }
+      }
+      .confirm-bottom{
+        padding: 15px 10px;
+      }
+    }
+    .recharge-top{
+      .left{
+        width: 100%;
+        p{
+          padding: 0;
+        }
+        div{
+          padding: 0px;
+        }
+      }
+      .right{
+        width: 100%;
+        text-align: center;
+        .qrcode{
+          margin: 0 auto;
+        }
+      }
+    }
+    .recharge-bottom{
+      .el-row{
+        padding: 10px 0;
+      }
+    }
   }
 }
 </style>

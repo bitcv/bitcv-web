@@ -12,6 +12,9 @@
       <el-table-column
         prop="address"
         label="地址">
+        <template slot-scope="scope">
+          {{maskStr(scope.row.address, 3)}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="number"
@@ -43,6 +46,7 @@
 
 <script>
 import {mapState} from 'vuex'
+import {maskStr} from '@/utils/utils'
 
 export default {
   data () {
@@ -62,6 +66,11 @@ export default {
     ...mapState({
       path: state => state.route.path
     })
+  },
+  methods: {
+    maskStr (str, number) {
+      return maskStr(str, number)
+    }
   }
 }
 </script>

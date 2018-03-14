@@ -6,7 +6,8 @@
           <el-col :span="18" class="left">
             <h5>充值地址</h5>
             <div>
-              <span>{{recData.address}}</span>
+              <!-- <span>{{recData.address}}</span> -->
+              <el-input v-model="recData.address" readonly ref="copyInput"></el-input>
               <i class="el-icon-document" @click="handleCopy"></i>
             </div>
             <p>
@@ -150,7 +151,10 @@ export default {
   },
   methods: {
     handleCopy () {
-      console.log('copy')
+      let eInput = this.$refs.copyInput.$el.firstElementChild
+      eInput.select()
+      document.execCommand('Copy')
+      this.$message.success('复制成功!')
     },
     handleRefresh () {
       console.log('刷新')
@@ -168,24 +172,32 @@ export default {
   padding: 80px 0;
   .recharge-top{
     .left{
-      div{
+      & > div{
         padding: 30px;
-        span{
+        overflow: hidden;
+        .el-input{
+          width: 80%;
+          float: left;
+        }
+        span, input{
           background: #fcf7f1;
           border: 1px solid $primary-color;
           height: 40px;
           line-height: 40px;
-          display: inline-block;
           padding: 0 20px;
         }
         i{
           color: $primary-color;
           font-size: 30px;
-          vertical-align: bottom;
+          float: left;
+          margin-left: 10px;
+          margin-top: 10px;
+          cursor: pointer;
         }
       }
       p{
         padding: 0 0 30px 30px;
+        margin-top: 10px;
         color: $gray;
         font-size: 12px;
         span{
@@ -241,6 +253,34 @@ export default {
     .active{
       color: #fff;
       background-color: $primary-color;
+    }
+  }
+}
+@media (max-width: 767px) {
+  .account{
+    padding: 10px 0;
+    .recharge-top{
+      .left{
+        width: 100%;
+        p{
+          padding: 0;
+        }
+        div{
+          padding: 0px;
+        }
+      }
+      .right{
+        width: 100%;
+        text-align: center;
+        .qrcode{
+          margin: 0 auto;
+        }
+      }
+    }
+    .recharge-bottom{
+      .el-row{
+        padding: 10px 0;
+      }
     }
   }
 }
