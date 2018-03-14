@@ -20,18 +20,20 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in list" :key="item.id">
-              <th>{{item.id}}</th>
+            <tr v-for="(item, index) in list" :key="index">
+              <th>{{ index + 1 }}</th>
               <td>
                 <img :src="item.logoUrl" height="30" class="img-rounded">
-                <span>{{ item.nameCn }}<span class="text-gray small">{{ item.tokenSymbol }}</span></span>
+                <span>{{ item.nameCn }}<span class="text-gray small">{{ item.symbol }}</span></span>
               </td>
               <td><span class="text-danger">{{ getInterest(10000, item.interestRate, item.lockTime) }}</span></td>
-              <td>{{item.number}}</td>
-              <td>{{item.remainderTime}}/<span class="text-gray">{{item.lockTime}}个月前</span></td>
-              <td><span class="text-gray small">{{item.buyTime}}个月</span></td>
+              <td>{{item.amount}}</td>
+              <td>{{item.remainTime}}天 / <span class="text-gray">{{item.lockTime}}天</span></td>
+              <td><span class="text-gray small">{{item.buyTime}}</span></td>
               <td>
-                <button class="btn btn-warning">提取</button>
+                <span v-if="item.status === 1">等待中</span>
+                <button v-else-if="item.status === 2" class="btn btn-warning">提取</button>
+                <span v-else-if="item.status === 3">已提取</span>
               </td>
             </tr>
           </tbody>
@@ -93,7 +95,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 import Pagination from '@/components/pagination'
 
 export default {
@@ -105,20 +107,7 @@ export default {
       loading: false,
       total: 0,
       currentPage: 1,
-      list: [
-        // {
-        //   id: 1,
-        //   logoUrl: '/static/logo/bcv.png',
-        //   nameCn: '币威',
-        //   tokenSymbol: '(BCV)',
-        //   interestRate: 200,
-        //   lockTime: 3,
-        //   number: 2999,
-        //   remainderTime: '30天',
-        //   buyTime: 8,
-        //   isDetail: false
-        // }
-      ]
+      list: []
     }
   },
   computed: {
@@ -136,22 +125,19 @@ export default {
     this.fetch()
   },
   methods: {
-    ...mapActions(['getCandyList']),
+    ...mapActions(['getUserDepositBoxList']),
     fetch () {
       // 请求数据
-      // this.loading = true
-      // this.getCandyList(this.params)
-      //   .then(({dataCount = 0, dataList = []} = {}) => {
-      //     this.total = dataCount
-      //     this.list = dataList
-      //     this.list.map((item) => {
-      //       this.$set(item, 'isDetail', false)
-      //     })
-      //     this.loading = false
-      //   })
-      //   .catch(() => {
-      //     this.loading = false
-      //   })
+      this.loading = true
+      this.getUserDepositBoxList(this.params)
+        .then(({dataCount = 0, dataList = []} = {}) => {
+          this.total = dataCount
+          this.list = dataList
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     handleShow (index) {
       console.log(index)

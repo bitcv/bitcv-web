@@ -40,6 +40,10 @@ Route::any('cancelDepositOrder', 'DepositController@cancelDepositOrder');
 Route::any('getOrderTxRecordList', 'DepositController@getOrderTxRecordList');
 Route::any('confirmDepositTx', 'DepositController@confirmDepositTx');
 Route::any('getUserOrderList', 'DepositController@getUserOrderList');
+Route::any('getUserDepositBoxList', 'DepositController@getUserDepositBoxList');
+Route::any('getUserDepositAsset', 'DepositController@getUserDepositAsset');
+Route::any('getUserDepositFinanceList', 'DepositController@getUserDepositFinanceList');
+Route::any('getUserDepositProfitList', 'DepositController@getUserDepositProfitList');
 
 Route::any('addDepositBox', 'AdminController@addDepositBox');
 Route::any('delDepositBox', 'AdminController@delDepositBox');
@@ -143,7 +147,7 @@ Route::group(['middleware' => 'checkAdmin'], function () {
 
 
 //项目管理员只能操作自己的projId
-//Route::group(['middleware' => 'checkProj'], function () {
+Route::group(['middleware' => 'checkProj'], function () {
 
     Route::any('getSocialList', 'AdminController@getSocialList');
     
@@ -196,5 +200,5 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('delProjAdvisor','AdminController@delProjAdvisor');
 
 
-//});
+});
 

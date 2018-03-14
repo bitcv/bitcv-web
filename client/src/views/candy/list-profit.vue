@@ -2,22 +2,22 @@
   <div v-loading="loading">
     <div class="nav">
       <router-link :to="{path: '/candyRoom/candyList'}">余币宝</router-link> >
-      <router-link :to="'/'">资产明细</router-link>
+      <router-link :to="'/'">收益明细</router-link>
     </div>
     <div class="panel panel-custom list-plan">
-      <h3>资产明细</h3>
+      <h3>收益明细</h3>
       <div class="list-box" v-if="list.length">
         <ul>
           <li v-for="item in list" :key="item.id">
             <span class="left">
               <img :src="item.logoUrl" alt="logo">
               <i>
-                <b>{{typeDict[item.type]}}</b> <br>
+                <b>{{item.symbol}}</b> <br>
                 <small>{{item.createdAt}}</small>
               </i>
             </span>
             <span class="right">
-              <b>{{item.amount > 0 ? '+' : ''}}{{item.amount.toFixed(2)}}</b> <br>
+              <b>+{{item.amount.toFixed(2)}}</b> <br>
               <small>≈ ${{(item.amount.toFixed(2) * item.price).toFixed(2)}}</small>
             </span>
           </li>
@@ -47,8 +47,7 @@ export default {
       loading: false,
       total: 0,
       currentPage: 1,
-      list: [],
-      typeDict: {}
+      list: []
     }
   },
   computed: {
@@ -66,15 +65,14 @@ export default {
     this.fetch()
   },
   methods: {
-    ...mapActions(['getUserDepositFinanceList']),
+    ...mapActions(['getUserDepositProfitList']),
     fetch () {
       // 请求数据
       this.loading = true
-      this.getUserDepositFinanceList(this.params)
-        .then(({dataCount = 0, dataList = [], typeDict = {}} = {}) => {
+      this.getUserDepositProfitList(this.params)
+        .then(({dataCount = 0, dataList = []} = {}) => {
           this.total = dataCount
           this.list = dataList
-          this.typeDict = typeDict
           this.loading = false
         })
         .catch(() => {

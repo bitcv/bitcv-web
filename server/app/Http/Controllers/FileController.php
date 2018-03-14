@@ -27,4 +27,15 @@ class FileController extends Controller
 
         return $this->output(['url' => $path]);
     }
+
+    public function parseAddrFile (Request $request) {
+        if ($request->file('addr') && $request->file('addr')->isValid) {
+            $path = $request->file('addr')->store('excel/addr', 'public');
+        }
+        if ($path === null) {
+            return $this->error(100);
+        }
+        $path = '/storage/' . $path;
+        $content = @file_get_contents($path);
+    }
 }

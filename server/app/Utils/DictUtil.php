@@ -53,4 +53,10 @@ class DictUtil
         '2' => '已取消',
         '3' => '已过期',
     ];
+
+    const DepositFinance_Type = [
+        '1' => '购买',
+        '2' => '收益',
+        '3' => '提取',
+    ];
 }

@@ -1,33 +1,34 @@
 <template>
-  <div v-loading="loading">
+  <div>
     <div class="assets-panel">
       <div class="assets-box">
         <div class="assets-nav">
-          <router-link :to="{path: 'candyRoom/candyListPlan'}">已购余币宝计划 >></router-link>
+          <router-link :to="{path: '/candyRoom/candyMyData'}">我的余币宝订单 >></router-link>
         </div>
         <div class="assets-title">
-          <router-link :to="{path: 'candyRoom/candyListAssets'}">
-            <img src="/static/logo/github-hover.png" alt="logo">
-            我的资产总量 >
+          <router-link :to="{path: '/candyRoom/candyListAssets'}">
+            <!--<img src="/static/logo/github-hover.png" alt="logo">-->
+            我的资产 >
           </router-link>
         </div>
         <div class="assets-total">
-          {{assets.total.toFixed(2)}}
+          ≈ ${{asset.totalAsset.toFixed(2)}}
+          <router-link :to="{path: '/candyRoom/candyListPlan'}">提取 ></router-link>
         </div>
         <div class="assets-profit">
           <el-row>
             <el-col :span="11" class="left">
-              <h6>昨日收益（BCV）</h6>
-              <p>{{assets.yesterdayProfit.toFixed(2)}}</p>
+              <h6>昨日收益</h6>
+              <p>≈ ${{asset.lastDayProfit.toFixed(2)}}</p>
             </el-col>
             <el-col :span="2" class="line">
               <div></div>
             </el-col>
             <el-col :span="11" class="right">
               <h6>
-                <router-link :to="'/'">累计收益 ></router-link>
+                <router-link :to="{path: '/candyRoom/candyListProfit'}">累计收益 ></router-link>
               </h6>
-              <p>{{assets.totalProfit.toFixed(2)}}</p>
+              <p>≈ ${{asset.totalProfit.toFixed(2)}}</p>
             </el-col>
           </el-row>
         </div>
@@ -39,25 +40,25 @@
         <dl class="dl-horizontal">
           <dt>{{ $t('label.lock') }}</dt>
           <dd  v-if="language === 'cn'">
-            <a href="javascript:;"
-              v-for="item in lockTime.items"
-              :key="item.value"
-              :class="{active: lockTime.value == item.value}"
-              @click="onFilterClick(item.value)"
-            >{{ item.label }}</a>
+          <a href="javascript:;"
+             v-for="item in lockTime.items"
+             :key="item.value"
+             :class="{active: lockTime.value == item.value}"
+             @click="onFilterClick(item.value)"
+             >{{ item.label }}</a>
           </dd>
           <dd v-else>
-            <a href="javascript:;"
-               v-for="item in lockTime.e_items"
-               :key="item.value"
-               :class="{active: lockTime.value == item.value}"
-               @click="onFilterClick(item.value)"
-            >{{ item.label }}</a>
+          <a href="javascript:;"
+             v-for="item in lockTime.e_items"
+             :key="item.value"
+             :class="{active: lockTime.value == item.value}"
+             @click="onFilterClick(item.value)"
+             >{{ item.label }}</a>
           </dd>
         </dl>
       </div>
     </div>
-    <div class="">
+    <div>
       <div class="table-responsive" v-if="list.length">
         <table class="table hidden-xs">
           <thead>
@@ -73,8 +74,8 @@
           <tbody>
             <tr v-for="item in list" :key="item.id">
               <td>
-                <img :src="item.logoUrl" height="30" class="img-rounded">
-                <span>{{ item.nameCn }}<span class="text-gray small">{{ item.tokenSymbol }}</span></span>
+                <img :src="item.logoUrl" height="40" class="img-rounded">
+                <span>{{ item.nameCn }}<span class="text-gray small"> ({{ item.tokenSymbol }})</span></span>
               </td>
               <td><span class="text-danger">{{ getInterest(10000, item.interestRate, item.lockTime) }} {{ $t('label.coin_amount') }}</span></td>
               <td>{{ item.lockTime }} {{ $t('label.day') }}</td>
@@ -107,18 +108,18 @@
               </div>
               <div class="xs-detail" v-if="item.isDetail">
                 <p>
-                  <span>{{ $t('label.lock') }}: </span>
-                  {{ item.lockTime }} {{ $t('label.day') }}
+                <span>{{ $t('label.lock') }}: </span>
+                {{ item.lockTime }} {{ $t('label.day') }}
                 </p>
                 <p>
-                  <span>{{ $t('label.start_amount') }}: </span>
-                  {{ item.minAmount }} {{ $t('label.coin_amount') }}
+                <span>{{ $t('label.start_amount') }}: </span>
+                {{ item.minAmount }} {{ $t('label.coin_amount') }}
                 </p>
                 <p>
-                  <span>{{ $t('label.leave_amount') }}</span>
-                  {{ item.remainAmount }} {{ $t('label.coin_amount') }}
+                <span>{{ $t('label.leave_amount') }}</span>
+                {{ item.remainAmount }} {{ $t('label.coin_amount') }}
 
-                  <b class="b-hidden" @click="handleHidden(index)">{{ $t('label.shouqi') }}</b>
+                <b class="b-hidden" @click="handleHidden(index)">{{ $t('label.shouqi') }}</b>
                 </p>
               </div>
             </div>
@@ -164,10 +165,11 @@ export default {
       total: 0,
       currentPage: 1,
       list: [],
-      assets: {
-        total: 1020202.298899,
-        yesterdayProfit: 32.332,
-        totalProfit: 3287.89298
+      projId: 1,
+      asset: {
+        totalAsset: 0,
+        lastDayProfit: 0,
+        totalProfit: 0
       }
     }
   },
@@ -183,11 +185,12 @@ export default {
       return this.$i18n.locale
     }
   },
-  created () {
+  mounted () {
     this.fetch()
+    this.updateUserAsset()
   },
   methods: {
-    ...mapActions(['getCandyList']),
+    ...mapActions(['getCandyList', 'getUserDepositAsset']),
     fetch () {
       this.loading = true
       this.getCandyList(this.params)
@@ -201,6 +204,14 @@ export default {
         })
         .catch(() => {
           this.loading = false
+        })
+    },
+    updateUserAsset () {
+      this.getUserDepositAsset({projId: this.projId})
+        .then(({totalAsset = 0, totalProfit = 0, lastDayProfit = 0} = {}) => {
+          this.asset.totalAsset = totalAsset
+          this.asset.totalProfit = totalProfit
+          this.asset.lastDayProfit = lastDayProfit
         })
     },
     onFilterClick (val) {
@@ -258,7 +269,7 @@ export default {
     padding: 15px 30px 0 0;
   }
   .assets-title{
-      margin: 10px auto 0;
+    margin: 10px auto 0;
     a{
       width:245px;
       height:30px;
@@ -277,8 +288,19 @@ export default {
     }
   }
   .assets-total{
-    font-size: 40px;
+    font-size: 48px;
     margin: 20px 0;
+    a {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      vertical-align: middle;
+      width: 80px;
+      height: 30px;
+      border: 1px solid #FFF;
+      border-radius: 15px;
+      font-size: 14px;
+    }
   }
   .assets-profit{
     h6{
@@ -354,13 +376,13 @@ export default {
   }
 }
 .table > thead > tr > th {
-  padding-top: 12px;
-  padding-bottom: 12px;
+  background-color: #FFF;
+  padding: 12px 8px;
   font-weight: normal;
 }
 .table > tbody > tr > td {
+  background-color: #FFF;
   vertical-align: middle;
-
   .text-danger {
     color: darken($primary-color, 20%);
   }

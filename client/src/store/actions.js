@@ -64,6 +64,26 @@ export const getCandyList = (store, params) => {
   return post('/api/getDepositBoxList', params)
 }
 
+// 获取用户余币宝列表
+export const getUserDepositBoxList = (store, params) => {
+  return post('/api/getUserDepositBoxList', params)
+}
+
+// 获取用户余币宝资产
+export const getUserDepositAsset = (store, params) => {
+  return post('/api/getUserDepositAsset', params)
+}
+
+// 获取用户余币宝资产明细列表
+export const getUserDepositFinanceList = (store, params) => {
+  return post('/api/getUserDepositFinanceList', params)
+}
+
+// 获取用户余币宝收益列表
+export const getUserDepositProfitList = (store, params) => {
+  return post('/api/getUserDepositProfitList', params)
+}
+
 // 提交充值订单
 export const postCandyOrder = (store, params) => {
   return post('/api/addDepositOrder', params)

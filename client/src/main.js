@@ -101,7 +101,7 @@ const messages = {
       records: '交易记录',
       hash: '交易哈希',
       r_time: '交易时间',
-      my_list: '我的余币宝清单',
+      my_list: '我的余币宝订单',
       order_status: '订单状态',
       order_time: '下单时间',
       in_amount: '充值数量',

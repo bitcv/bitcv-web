@@ -11,7 +11,13 @@
         <el-input v-model="form.address"></el-input>
       </el-form-item>
       <el-form-item label="上传发放地址">
-        <el-button type="warning" class="btn-primary" @click="submit">点击上传</el-button>
+        <!--<el-upload action="/api/parseAddrFile" :limit="1">-->
+          <el-button type="warning" class="btn-primary">点击上传</el-button>
+        <!--</el-upload>-->
+        <el-upload class="upload-box" name="logo" action="/api/uploadFile" :on-success="onUploadSuccess" :show-file-list="false">
+          <el-button type="warning" class="btn-primary">点击上传</el-button>
+        </el-upload>
+        <!--<input type="file" name="addrFile" value="" id="">-->
         <el-button type="warning" plain @click="fetch">获取模板</el-button>
       </el-form-item>
     </el-form>

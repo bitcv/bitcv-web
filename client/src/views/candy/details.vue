@@ -70,7 +70,7 @@
               </tr>
             </tbody>
             <div v-else class="nodata">
-                {{ $t('label.no_t') }}<span class="update-btn" @click="fetch"> {{ $t('label.refresh_data') }}</span> {{ $t('label.retry') }}！
+                {{ $t('label.no_t') }}<span class="update-btn" @click="fetchList"> {{ $t('label.refresh_data') }}</span> {{ $t('label.retry') }}！
             </div>
           </table>
         </div>
@@ -167,22 +167,25 @@ export default {
     },
     handleFinish () {
       this.loading = true
+      var txRecordIdList = []
       this.list.map(item => {
         if (item.checked) {
-          this.txRecordIdList.push(item.id)
+          txRecordIdList.push(item.id)
         }
       })
-      this.confirmDepositTx({depositOrderId: this.orderData.id, txRecordIdList: this.txRecordIdList})
-        .then((data = {}) => {
-          this.$router.push({
-            path: '/candyRoom/candyMyData',
-            query: this.bitcv
-          })
-          this.loading = false
+      this.txRecordIdList = txRecordIdList
+      this.confirmDepositTx({
+        depositOrderId: this.orderData.id,
+        txRecordIdList: this.txRecordIdList
+      }).then((data = {}) => {
+        this.$router.push({
+          path: '/candyRoom/candyMyData',
+          query: this.bitcv
         })
-        .catch((err = '') => {
-          this.loading = false
-        })
+        this.loading = false
+      }).catch((err = '') => {
+        this.loading = false
+      })
     }
   }
 }

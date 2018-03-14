@@ -51,6 +51,9 @@ export default [{
     path: 'candyListAssets', // 资产明细
     component: getViews('candy/list-assets')
   }, {
+    path: 'candyListProfit', // 收益明细
+    component: getViews('candy/list-profit')
+  }, {
     path: 'candyListPlan', // 已购计划列表
     component: getViews('candy/list-plan')
   }, {
