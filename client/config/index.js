@@ -13,16 +13,16 @@ module.exports = {
     proxyTable: {
       '/api': {
         // target: 'http://www.kingco.com'
-         target: 'http://www.kingco.com'
-        //target: 'http://192.168.31.252:8888'
+         //target: 'http://www.kingco.com'
+        target: 'http://127.0.0.1:8888'
         // target: 'https://www.bticv.com'
         //target: 'http://0.0.0.0:8888'
       },
       '/storage': {
 
         // target: 'http://www.kingco.com'
-         target: 'http://www.kingco.com'
-        //target: 'http://192.168.31.252:8888'
+         //target: 'http://www.kingco.com'
+        target: 'http://127.0.0.1:8888'
         // target: 'https://www.bticv.com'
         //target: 'http://0.0.0.0:8888'
       }
@@ -30,7 +30,7 @@ module.exports = {
 
     // Various Dev Server settings
 
-    host: '0.0.0.0', // can be overwritten by process.env.HOST
+    host: '127.0.0.1', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

@@ -24,8 +24,8 @@
         </ul>
       </div>
       <div v-else class="nodat">
-        <img src="/static/img/nodata.png" alt="无数据">
-        您未购买余币宝计划
+        <!--<img src="/static/img/nodata.png" alt="无数据">-->
+        暂无收益
       </div>
     </div>
     <div class="text-right">
@@ -139,13 +139,8 @@ export default {
 }
 .nodat{
   width: 100%;
-  line-height: 500px;
+  line-height: 50px;
   text-align: center;
-  min-height: 500px;
-  img{
-    width: 147px;
-    height: 96px;
-  }
 }
 .panel-custom {
   margin-bottom: 0;

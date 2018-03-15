@@ -84,7 +84,7 @@
         </div>
       </div>
       <div v-else class="nodat">
-        <img src="/static/img/nodata.png" alt="无数据">
+        <!--<img src="/static/img/nodata.png" alt="无数据">-->
         您未购买余币宝计划
       </div>
     </div>
@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex'
+import {mapActions} from 'vuex'
 import Pagination from '@/components/pagination'
 
 export default {
@@ -229,13 +229,8 @@ export default {
 }
 .nodat{
   width: 100%;
-  line-height: 500px;
+  line-height: 50px;
   text-align: center;
-  min-height: 500px;
-  img{
-    width: 147px;
-    height: 96px;
-  }
 }
 .panel-custom {
   margin-bottom: 0;

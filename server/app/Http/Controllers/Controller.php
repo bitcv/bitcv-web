@@ -24,6 +24,7 @@ class Controller extends BaseController
         '103' => ['errcode' => 103, 'errmsg' => '暂未开通', 'errmsgen' => 'Not yet open'],
         '104' => ['errcode' => 104, 'errmsg' => 'api调用失败', 'errmsgen' => 'Api failed to call'],
         '110' => ['errcode' => 110, 'errmsg' => '文件名称错误', 'errmsgen' => 'File name error'],
+        '111' => ['errcode' => 111, 'errmsg' => '文件解析错误', 'errmsgen' => 'File parse error'],
         // 用户错误码
         '201' => ['errcode' => 201, 'errmsg' => '用户名已注册', 'errmsgen' => 'User name is registered'],
         '202' => ['errcode' => 202, 'errmsg' => '用户名或密码错误', 'errmsgen' => 'Wrong user name or password'],
@@ -52,6 +53,11 @@ class Controller extends BaseController
         '401' => ['errcode' => 401, 'errmsg' => '未找到订单', 'errmsgen' => 'No order found'],
         '402' => ['errcode' => 402, 'errmsg' => '无法取消该订单', 'errmsgen' => 'Can\'t cancel this order'],
         '403' => ['errcode' => 403, 'errmsg' => '订单额度小于起始额度', 'errmsgen' => 'Order limit is less than starting limit'],
+        // 代发宝相关错误码
+        '501' => ['errcode' => 501, 'errmsg' => '未上传代发列表', 'errmsgen' => 'no dispense list'],
+        '502' => ['errcode' => 502, 'errmsg' => '账户余额不足', 'errmsgen' => 'Insufficient funds'],
+        '503' => ['errcode' => 503, 'errmsg' => '未找到钱包', 'errmsgen' => 'no wallet'],
+        '504' => ['errcode' => 504, 'errmsg' => '钱包锁定失败', 'errmsgen' => 'lock wallet error'],
     ];
 
     public function validation(Request $request, Array $rules)

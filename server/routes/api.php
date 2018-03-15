@@ -20,12 +20,16 @@ Route::any('getUserTransferRecord','UserController@getUserTransferRecord');
 Route::any('withdraw','UserController@withdraw');
 Route::any('addUserWallet','UserController@addUserWallet');
 
+// 代发宝接口
+Route::any('getDispenseBalance','DispenseController@getDispenseBalance');
+
 //Route::group(['middleware' => 'checkLogin'], function () {
 Route::any('getUserInfo', 'UserController@getUserInfo');
 Route::any('updateUserInfo', 'UserController@updateUserInfo');
 Route::any('toggleFocus', 'UserController@toggleFocus');
 //});
 Route::any('uploadFile', 'FileController@uploadFile');
+Route::any('parseAddrFile', 'FileController@parseAddrFile');
 
 Route::any('getProjList', 'ProjectController@getProjList');
 Route::any('getProjTopList', 'ProjectController@getProjTopList');

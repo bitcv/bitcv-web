@@ -11,57 +11,56 @@
         <el-input v-model="form.address"></el-input>
       </el-form-item>
       <el-form-item label="上传发放地址">
-        <!--<el-upload action="/api/parseAddrFile" :limit="1">-->
-          <el-button type="warning" class="btn-primary">点击上传</el-button>
-        <!--</el-upload>-->
-        <el-upload class="upload-box" name="logo" action="/api/uploadFile" :on-success="onUploadSuccess" :show-file-list="false">
-          <el-button type="warning" class="btn-primary">点击上传</el-button>
+        <el-upload
+          class="upload-btn"
+          name="addr"
+          action="/api/parseAddrFile"
+          :before-upload="handleBefore"
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :show-file-list="false">
+          <el-button slot="trigger" type="warning" class="btn-primary">点击上传</el-button>
         </el-upload>
-        <!--<input type="file" name="addrFile" value="" id="">-->
         <el-button type="warning" plain @click="fetch">获取模板</el-button>
       </el-form-item>
     </el-form>
     <div v-else>
       <h4>上传成功</h4>
-      <el-table
-        :data="list"
-        style="width: 100%">
-        <el-table-column
-          prop="id"
-          label="序号">
-        </el-table-column>
-        <el-table-column
-          prop="address"
-          label="地址">
-        </el-table-column>
-        <el-table-column
-          prop="number"
-          label="数量">
-        </el-table-column>
-        <el-table-column
-          prop="status"
-          label="状态">
-        </el-table-column>
+      <el-table :data="list" height="400" style="width: 100%">
+        <el-table-column type="index"></el-table-column>
+        <el-table-column prop="address" width="400" label="地址"></el-table-column>
+        <el-table-column prop="amount" label="数量"></el-table-column>
+        <el-table-column prop="status" label="状态"></el-table-column>
       </el-table>
       <footer class="footer">
         <el-row>
-          <el-col :span="7">
+          <el-col :span="5">
             <h5>总数量</h5>
             <div>
-              {{total.number}}
+              {{totalAmount}}
               <small>枚</small>
             </div>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="5">
             <h5>总地址</h5>
             <div>
-              {{total.address}}
+              {{dataCount}}
               <small>条</small>
             </div>
           </el-col>
-          <el-col :span="10" class="text-center">
+          <el-col :span="5">
+            <h5>错误数据</h5>
+            <div>
+              {{wrongCount}}
+              <small>条</small>
+            </div>
+          </el-col>
+          <el-col :span="9" class="text-center">
             <el-button type="warning" class="btn-primary" @click="confirm">确定</el-button>
-            <el-button type="text" class="text-primary" @click="isUpload = false">重新上传</el-button>
+            <el-upload class="upload-btn" name="addr" action="/api/parseAddrFile" :before-upload="handleBefore" :on-success="handleSuccess" :on-error="handleError" :show-file-list="false">
+              <el-button type="text" class="text-primary">重新上传</el-button>
+              <!--<el-button slot="trigger" type="warning" class="btn-primary">点击上传</el-button>-->
+            </el-upload>
           </el-col>
         </el-row>
       </footer>
@@ -98,21 +97,30 @@ export default {
         type: [{validator: valid}]
       },
       isUpload: false,
-      list: [
-        {
-          id: 1,
-          address: '0xsjksjdn',
-          number: 3,
-          status: 0
-        }
-      ],
-      total: {
-        number: 10000,
-        address: 300
-      }
+      list: [],
+      dataCount: 0,
+      uniqueCount: 0,
+      wrongCount: 0,
+      totalAmount: 0
     }
   },
   methods: {
+    handleBefore (file) {
+      console.log('before')
+    },
+    handleSuccess (res) {
+      console.log(res)
+      if (res.errcode === 0) {
+        this.isUpload = true
+        this.list = res.data.dataList
+        this.dataCount = res.data.dataCount
+        this.totalAmount = res.data.totalAmount
+        this.wrongCount = res.data.wrongCount
+      }
+    },
+    handleError (res) {
+      this.$message.error('上传失败，请重试')
+    },
     submit () {
       this.$refs.form.validate((valid) => {
         if (valid) {
@@ -141,6 +149,12 @@ export default {
     &::after, &::before{
       display: none;
     }
+  }
+  .el-upload__input{
+    display: none;
+  }
+  .upload-btn{
+    display: inline-block;
   }
   .el-button--text:focus, .el-button--text:hover{
     color: orange;

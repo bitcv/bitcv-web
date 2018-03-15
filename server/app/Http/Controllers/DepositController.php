@@ -237,6 +237,7 @@ class DepositController extends Controller
         ]);
 
         // 获取余币宝信息
+        $orderId = $depositOrderData->id;
         $depositBoxId = $depositOrderData->deposit_box_id;
         $depositBoxModel = Model\DepositBox::find($depositBoxId);
         $lockTime = $depositBoxModel->lock_time;
@@ -245,7 +246,8 @@ class DepositController extends Controller
         // 添加用户余币宝
         $startTime = date('Y-m-d 00:00:00', time() + 24 * 3600); // 从下一天凌晨0点开始计算利息
         $endTime = date('Y-m-d 00:00:00', time() + ($lockTime + 1) * 24 * 3600);
-        Model\UserDepositBox::create([
+        $userDepositBoxData = Model\UserDepositBox::create([
+            'deposit_order_id' => $orderId,
             'deposit_box_id' => $depositBoxId,
             'user_id' => $userId,
             'amount' => $amount,
@@ -259,6 +261,7 @@ class DepositController extends Controller
             'user_id' => $userId,
             'type' => 1, // 购买余币宝
             'deposit_box_id' => $depositBoxId,
+            'user_deposit_box_id' => $userDepositBoxData->id,
             'amount' => $amount,
         ]);
 

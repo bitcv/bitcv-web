@@ -18,6 +18,8 @@ class Kernel extends ConsoleKernel
         //
         //Commands\SendSMS::class,
         //Commands\CrawlData::class,
+        Commands\UpdateDb::class,
+        Commands\AddProfit::class,
     ];
 
     /**
@@ -35,6 +37,7 @@ class Kernel extends ConsoleKernel
 //        $schedule->call(function () {
 //            $this->crawlPrice();
 //        })->everyMinute();
+        $schedule->command('add:profit')->dailyAt('00:00');
     }
 
     /**
