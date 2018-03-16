@@ -6,9 +6,9 @@
       <el-step title="发放"></el-step>
     </el-steps>
 
-    <step1 v-if="active === 0" @finished="handleFinshed(0)"></step1>
-    <step2 v-if="active === 1" @finished="handleFinshed(1)"></step2>
-    <step3 v-if="active === 2" @finished="handleFinshed(2)"></step3>
+    <step1 v-if="active === 0" @finished="handleFinished(0)"></step1>
+    <step2 v-if="active === 1" @finished="handleFinished(1)"></step2>
+    <step3 v-if="active === 2" @finished="handleFinished(2)"></step3>
   </div>
 </template>
 
@@ -35,7 +35,7 @@ export default {
     })
   },
   methods: {
-    handleFinshed (index) {
+    handleFinished (index) {
       if (index < 2) {
         this.active = index + 1
       } else {

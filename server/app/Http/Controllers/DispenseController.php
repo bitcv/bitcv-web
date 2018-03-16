@@ -12,6 +12,50 @@ use App\Utils\Auth;
 
 class DispenseController extends Controller
 {
+    public function getTokenInfo (Request $request) {
+        $params = $this->validation($request, [
+            'contractAddr' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $contractAddr = strtolower($contractAddr);
+        // 查询token数据库
+        $tokenObj = Model\Token::where('contract_addr', $contractAddr)->first();
+        if (!$tokenObj) {
+            // 数据库中没有则抓取
+            $url = "https://etherscan.io/searchHandler?t=t&term=$contractAddr";
+            $result = file_get_contents($url);
+            $result = json_decode($result, true);
+            $isExist = false;
+            foreach ($result as $item) {
+                preg_match('/(0x.*?)\\s.*TOKEN: (.*) \\((.*)\\)/is', $item, $match);
+                $resContractAddr = $match[1];
+                if ($contractAddr === strtolower($resContractAddr)) {
+                    $tokenName = $match[2];
+                    $tokenSymbol = $match[3];
+                    $isExist = true;
+                    break;
+                }
+            }
+            if (!$isExist) {
+                return $this->error(213);
+            }
+            // 抓取到后填充值数据库
+            $tokenObj = Model\Token::create([
+                'name' => $tokenName,
+                'symbol' => $tokenSymbol,
+                'contract_addr' => $contractAddr,
+            ]);
+        }
+
+        return $this->output([
+            'tokenSymbol' => $tokenObj->symbol,
+            'tokenId' => $tokenObj->id,
+        ]);
+    }
+
     public function getDispenseWallet (Request $request) {
         $params = $this->validation($request, [
             'tokenProtocol' => 'required|numeric',

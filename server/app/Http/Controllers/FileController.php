@@ -47,9 +47,6 @@ class FileController extends Controller
         //$path = '/storage/' . $path;
         //$path = __DIR__ . '/../../../storage/app/public/' . $path;
         $path = "/Users/JunK/ucai/lianbi/server/app/Http/Controllers/../../../storage/app/public/excel/addr/3vDA0gExfAILC2NhlyoqRTEtsnnAA38Oh96LrtKz.xls";
-        //var_dump($path);exit;
-        //var_dump($path);
-        //echo phpinfo();exit;
         $dataList = [];
         \Excel::selectSheetsByIndex(0)->load($path, function($reader) use (&$dataList) {
             $dataList = $reader->select(['address', 'amount'])->get()->toArray();

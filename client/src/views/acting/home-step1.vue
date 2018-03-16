@@ -18,6 +18,7 @@
           :before-upload="handleBefore"
           :on-success="handleSuccess"
           :on-error="handleError"
+          :data="tokenInfo"
           :show-file-list="false">
           <el-button slot="trigger" type="warning" class="btn-primary">点击上传</el-button>
         </el-upload>
@@ -57,7 +58,7 @@
           </el-col>
           <el-col :span="9" class="text-center">
             <el-button type="warning" class="btn-primary" @click="confirm">确定</el-button>
-            <el-upload class="upload-btn" name="addr" action="/api/parseAddrFile" :before-upload="handleBefore" :on-success="handleSuccess" :on-error="handleError" :show-file-list="false">
+            <el-upload class="upload-btn" name="addr" action="/api/parseAddrFile" :data="tokenInfo" :before-upload="handleBefore" :on-success="handleSuccess" :on-error="handleError" :show-file-list="false">
               <el-button type="text" class="text-primary">重新上传</el-button>
               <!--<el-button slot="trigger" type="warning" class="btn-primary">点击上传</el-button>-->
             </el-upload>
@@ -69,7 +70,7 @@
 </template>
 
 <script>
-import bus from '@/utils/bus'
+// import bus from '@/utils/bus'
 export default {
   data () {
     let valid = (rule, val, callback) => {
@@ -98,6 +99,9 @@ export default {
       },
       isUpload: false,
       list: [],
+      tokenInfo: {
+        tokenId: 1
+      },
       dataCount: 0,
       uniqueCount: 0,
       wrongCount: 0,
@@ -135,8 +139,7 @@ export default {
       console.log('获取')
     },
     confirm () {
-      this.$emit('finished', true)
-      bus.$emit('handleEmit', this.form)
+      this.$emit('finished')
     }
   }
 }

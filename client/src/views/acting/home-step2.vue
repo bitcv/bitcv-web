@@ -141,10 +141,8 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapState({
-      path: state => state.route.path
-    })
+  updated () {
+    console.log('updated')
   },
   methods: {
     handleChange (val) {
