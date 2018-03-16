@@ -11,6 +11,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "accounting": "^0.4.1",
     "axios": "^0.17.1",
     "element-ui": "^2.0.11",
     "es6-promise": "^4.2.4",

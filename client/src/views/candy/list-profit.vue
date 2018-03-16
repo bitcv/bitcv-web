@@ -17,8 +17,8 @@
               </i>
             </span>
             <span class="right">
-              <b>+{{item.amount.toFixed(2)}}</b> <br>
-              <small>≈ ${{(item.amount.toFixed(2) * item.price).toFixed(2)}}</small>
+              <b>+{{item.amount|currency}}</b>  <small>{{item.tokenSymbol}}</small><br>
+              <small>≈ ${{(item.amount * item.price)|currency}}</small>
             </span>
           </li>
         </ul>
@@ -72,7 +72,7 @@ export default {
       this.getUserDepositProfitList(this.params)
         .then(({dataCount = 0, dataList = []} = {}) => {
           this.total = dataCount
-          this.list = dataList
+          // this.list = dataList
           this.loading = false
         })
         .catch(() => {
@@ -106,6 +106,7 @@ export default {
     ul{
       li{
         padding: 20px 30px;
+        padding-right: 0;
         border-bottom: 1px solid #EAEAEA;
         overflow: hidden;
         small{

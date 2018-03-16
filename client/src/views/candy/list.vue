@@ -1,34 +1,56 @@
 <template>
-  <div>
+  <div class="candy-list">
     <div class="assets-panel">
       <div class="assets-box">
         <div class="assets-nav">
           <router-link :to="{path: '/candyRoom/candyMyData'}">我的余币宝订单 >></router-link>
         </div>
-        <div class="assets-title">
-          <router-link :to="{path: '/candyRoom/candyListAssets'}">
-            <!--<img src="/static/logo/github-hover.png" alt="logo">-->
-            我的资产 >
-          </router-link>
-        </div>
-        <div class="assets-total">
-          ≈ ${{asset.totalAsset.toFixed(2)}}
-          <router-link :to="{path: '/candyRoom/candyListPlan'}">提取 ></router-link>
+        <div class="assets-top">
+          <div class="assets-top-left">
+            <div class="assets-total">
+              ≈
+            </div>
+          </div>
+          <div class="assets-top-center">
+            <div class="assets-title">
+              <router-link :to="{path: '/candyRoom/candyListAssets'}">
+                我的资产 >
+              </router-link>
+            </div>
+            <div class="assets-total">
+              ${{asset.totalAsset|currency}}
+            </div>
+          </div>
+          <router-link :to="{path: '/candyRoom/candyListPlan'}" class="assets-top-right">提取 ></router-link>
         </div>
         <div class="assets-profit">
           <el-row>
             <el-col :span="11" class="left">
-              <h6>昨日收益</h6>
-              <p>≈ ${{asset.lastDayProfit.toFixed(2)}}</p>
+              <div class="assets-profit-box">
+                <div class="assets-profit-left">
+                ≈
+                </div>
+                <div class="assets-profit-right">
+                  <h6>昨日收益</h6>
+                  <p>${{asset.lastDayProfit|currency}}</p>
+                </div>
+              </div>
             </el-col>
             <el-col :span="2" class="line">
               <div></div>
             </el-col>
             <el-col :span="11" class="right">
-              <h6>
-                <router-link :to="{path: '/candyRoom/candyListProfit'}">累计收益 ></router-link>
-              </h6>
-              <p>≈ ${{asset.totalProfit.toFixed(2)}}</p>
+              <div class="assets-profit-box">
+                <div class="assets-profit-left">
+                ≈
+                </div>
+                <div class="assets-profit-right">
+                  <h6>
+                    <router-link :to="{path: '/candyRoom/candyListProfit'}">累计收益 ></router-link>
+                  </h6>
+                  <p>${{asset.totalProfit|currency}}</p>
+                </div>
+              </div>
             </el-col>
           </el-row>
         </div>
@@ -236,215 +258,289 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '~@/styles/variables';
-
-// 资产面板
-.assets-panel{
-  position: relative;
-  background: #fff;
-  height: 150px;
-  width: 100%;
-  margin-top: 150px;
-  color: #fff;
-  text-align: center;
-  a{
+.candy-list{
+  // 资产面板
+  .assets-panel{
+    position: relative;
+    background: #fff;
+    height: 150px;
+    width: 100%;
+    margin-top: 150px;
     color: #fff;
-  }
-}
-.assets-box{
-  position: absolute;
-  top: -158px;
-  left: 10%;
-  width: 80%;
-  height:308px;
-  background:linear-gradient(rgba(255,141,58,1),rgba(255,181,60,1));
-  box-shadow:0px 6px 9px 0px rgba(255,153,112,0.28);
-  margin: 0 auto;
-  font-weight: 200;
-  .assets-nav{
-    text-align: right;
-    font-size: 14px;
-    line-height: 25px;
-    padding: 15px 30px 0 0;
-  }
-  .assets-title{
-    margin: 10px auto 0;
+    text-align: center;
     a{
-      width:245px;
-      height:30px;
-      line-height:30px;
-      background:rgba(255,255,255,1);
-      box-shadow: 0px 1px 7px 0px rgba(233,178,88,0.64);
-      border-radius: 16px ;
-      font-size: 14px;
-      color: #FC9E3C;
-      padding: 5px 20px;
-    }
-    img{
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
+      color: #fff;
     }
   }
-  .assets-total{
-    font-size: 48px;
-    margin: 20px 0;
-    a {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      vertical-align: middle;
-      width: 80px;
-      height: 30px;
-      border: 1px solid #FFF;
-      border-radius: 15px;
+  .assets-box{
+    position: absolute;
+    top: -158px;
+    left: 10%;
+    width: 80%;
+    height:308px;
+    background:linear-gradient(rgba(255,141,58,1),rgba(255,181,60,1));
+    box-shadow:0px 6px 9px 0px rgba(255,153,112,0.28);
+    margin: 0 auto;
+    font-weight: 200;
+    .assets-nav{
+      text-align: right;
       font-size: 14px;
+      line-height: 25px;
+      padding: 15px 30px 0 0;
     }
-  }
-  .assets-profit{
-    h6{
-      font-weight: 200;
-      font-size: 14px;
-    }
-    p{
-      font-size: 34px;
-    }
-    .left{
-      p{
-        margin-top: 18px;
+    .assets-top{
+      display: inline-block;
+      // margin: 0 auto;
+      margin-left: 50px;
+      overflow: hidden;
+      .assets-top-left{
+        float: left;
+        .assets-total{
+          margin: 60px 10px 0 0;
+        }
       }
-    }
-    .right{
-      h6{
-        width:122px;
+      .assets-top-center{
+        float: left;
+        text-align: center;
+      }
+      .assets-top-right{
+        float: left;
+        margin-left: 24px;
+        text-align: center;
+        vertical-align: middle;
+        width: 80px;
         height: 30px;
         line-height: 30px;
+        border: 1px solid #FFF;
+        border-radius: 15px;
+        font-size: 14px;
+        margin-top: 80px;
+      }
+    }
+    .assets-title{
+      margin: 10px auto 0;
+      a{
+        width:245px;
+        height:30px;
+        line-height:30px;
         background:rgba(255,255,255,1);
         box-shadow: 0px 1px 7px 0px rgba(233,178,88,0.64);
-        border-radius: 15px;
-        padding: 0 20px;
-        margin: 0 auto;
-        a{
-          color: #FC9E3C;
-        }
+        border-radius: 16px ;
+        font-size: 14px;
+        color: #FC9E3C;
+        padding: 5px 20px;
       }
-      p{
-        margin-top: 15px;
+      img{
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
       }
     }
-    .line{
-      margin: 20px auto 0;
-      background: #fff;
-      width: 1px;
-      height: 47px;
-    }
-  }
-}
-
-.filter-list {
-  padding-bottom: 0;
-
-  > .dl-horizontal {
-    > dt {
-      width: 80px;
-      float: left;
-      text-align: left;
-      font-weight: normal;
-      color: $gray-darker;
-      line-height: 30px;
-    }
-
-    > dd {
-      margin-left: 80px;
-
+    .assets-total{
+      font-size: 48px;
+      margin: 20px 0;
       a {
-        display: inline-block;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
         vertical-align: middle;
-        padding: 6px 12px;
-        margin-bottom: 10px;
-        margin-right: 10px;
-        line-height: 1.4;
-        color: $black-light;
-
-        &.active {
-          color: #fff;
-          background-color: $primary-color;
+        width: 80px;
+        height: 30px;
+        border: 1px solid #FFF;
+        border-radius: 15px;
+        font-size: 14px;
+      }
+    }
+    .assets-profit{
+      h6{
+        font-weight: 200;
+        font-size: 14px;
+      }
+      p{
+        font-size: 34px;
+      }
+      .left{
+        p{
+          margin-top: 18px;
         }
       }
-    }
-  }
-}
-.table > thead > tr > th {
-  background-color: #FFF;
-  padding: 12px 8px;
-  font-weight: normal;
-}
-.table > tbody > tr > td {
-  background-color: #FFF;
-  vertical-align: middle;
-  .text-danger {
-    color: darken($primary-color, 20%);
-  }
-}
-.xs-box{
-  background: #fff;
-  .xs-header, .xs-row{
-    display: flex;
-    padding: 0 15px;
-    line-height: 50px;
-    border-bottom: 1px solid #ccc;
-    span{
-      flex: 2;
-      &:last-child{
-        flex: 1;
+      .right{
+        h6{
+          width:122px;
+          height: 30px;
+          line-height: 30px;
+          background:rgba(255,255,255,1);
+          box-shadow: 0px 1px 7px 0px rgba(233,178,88,0.64);
+          border-radius: 15px;
+          padding: 0 20px;
+          margin: 4px auto 0;
+          a{
+            color: #FC9E3C;
+          }
+        }
+        p{
+          margin-top: 10px;
+        }
       }
-    }
-  }
-  .xs-header{
-    border-bottom: 1px solid #ccc;
-    line-height: 50px;
-  }
-  .xs-body{
-    .xs-row{
-      &:active{
-        background: #eee;
-      }
-      b{
-        font-weight: 500;
-      }
-      i{
-        font-style: normal;
-      }
-    }
-    .xs-detail{
-      padding: 10px 20px;
-      background: #f5f5f5;
-      line-height: 30px;
-      p{
-        margin: 0;
+      .assets-profit-box{
+        display: inline-block;
+        margin: 0 auto;
         overflow: hidden;
       }
-      .b-hidden{
-        float: right;
-        padding: 0 10px;
-        color: #999;
+      .assets-profit-left{
+        float: left;
+        font-size: 34px;
+        margin-top: 43px;
+        margin-right: 10px;
+      }
+      .assets-profit-right{
+        float: left;
+      }
+      .line{
+        div{
+          margin: 20px auto 0;
+          background: #fff;
+          width: 1px;
+          height: 47px;
+        }
       }
     }
   }
-}
-.nodat{
-  width: 100%;
-  line-height: 50px;
-  text-align: center;
-}
-.panel-custom {
-  margin-bottom: 0;
 
-  & ~ .panel-custom,
-  & + .panel-custom {
-    margin-bottom: 15px;
-    border-top: 1px solid $gray-light;
+  .filter-list {
+    padding-bottom: 0;
+
+    > .dl-horizontal {
+      > dt {
+        width: 80px;
+        float: left;
+        text-align: left;
+        font-weight: normal;
+        color: $gray-darker;
+        line-height: 30px;
+      }
+
+      > dd {
+        margin-left: 80px;
+
+        a {
+          display: inline-block;
+          vertical-align: middle;
+          padding: 6px 12px;
+          margin-bottom: 10px;
+          margin-right: 10px;
+          line-height: 1.4;
+          color: $black-light;
+
+          &.active {
+            color: #fff;
+            background-color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+  .table > thead > tr > th {
+    background-color: #FFF;
+    padding: 12px 8px;
+    font-weight: normal;
+  }
+  .table > tbody > tr > td {
+    background-color: #FFF;
+    vertical-align: middle;
+    .text-danger {
+      color: darken($primary-color, 20%);
+    }
+  }
+  .xs-box{
+    background: #fff;
+    .xs-header, .xs-row{
+      display: flex;
+      padding: 0 15px;
+      line-height: 50px;
+      border-bottom: 1px solid #ccc;
+      span{
+        flex: 2;
+        &:last-child{
+          flex: 1;
+        }
+      }
+    }
+    .xs-header{
+      border-bottom: 1px solid #ccc;
+      line-height: 50px;
+    }
+    .xs-body{
+      .xs-row{
+        &:active{
+          background: #eee;
+        }
+        b{
+          font-weight: 500;
+        }
+        i{
+          font-style: normal;
+        }
+      }
+      .xs-detail{
+        padding: 10px 20px;
+        background: #f5f5f5;
+        line-height: 30px;
+        p{
+          margin: 0;
+          overflow: hidden;
+        }
+        .b-hidden{
+          float: right;
+          padding: 0 10px;
+          color: #999;
+        }
+      }
+    }
+  }
+  .nodat{
+    width: 100%;
+    line-height: 50px;
+    text-align: center;
+  }
+  .panel-custom {
+    margin-bottom: 0;
+
+    & ~ .panel-custom,
+    & + .panel-custom {
+      margin-bottom: 15px;
+      border-top: 1px solid $gray-light;
+    }
+  }
+  @media (max-width: 767px) {
+    .assets-box{
+      .assets-top{
+        margin-left: 0;
+        .assets-top-right{
+          margin-top: 68px;
+          margin-left: 0;
+        }
+      }
+      .assets-total{
+        font-size: 34px;
+      }
+      .assets-profit{
+        .assets-profit-left{
+          margin: 0;
+          font-size: 20px;
+          margin-top: 43px;
+        }
+        p{
+          font-size: 20px;
+        }
+        .right h6{
+          padding: 0;
+          width: 80px;
+        }
+      }
+    }
   }
 }
 </style>

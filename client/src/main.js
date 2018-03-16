@@ -7,6 +7,8 @@ import store from './store'
 import router from './router'
 import {sync} from 'vuex-router-sync'
 
+import accounting from 'accounting'
+
 import 'nprogress/nprogress.css'
 import NProgress from 'nprogress'
 
@@ -327,6 +329,10 @@ const i18n = new VueI18n({
   messages
 })
 
+const isNumber = (n) => {
+  return !isNaN(n) && typeof n === 'number'
+}
+
 Vue.use(common)
 
 require('es6-promise').polyfill()
@@ -360,6 +366,17 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+// accounting
+Vue.prototype.accounting = accounting
+// 千位分隔符
+Vue.filter('currency', (val, symbol = '', precision = 2, thousand = ',', decimal = '.', format = '%s%v') => {
+  let n = val - 0
+  if (!isNaN(n) && isNumber(n)) {
+    return accounting.formatMoney(n, symbol, precision, thousand, decimal, format)
+  }
+  return val
+})
 
 // 同步缓存中的用户信息
 const syncUserInfo = () => store.commit('updateUserInfo')

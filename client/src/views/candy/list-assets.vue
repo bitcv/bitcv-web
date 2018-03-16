@@ -12,13 +12,13 @@
             <span class="left">
               <img :src="item.logoUrl" alt="logo">
               <i>
-                <b>{{typeDict[item.type]}}</b> <br>
+                <b>{{typeDict[item.type]}}</b><br>
                 <small>{{item.createdAt}}</small>
               </i>
             </span>
             <span class="right">
-              <b>{{item.amount > 0 ? '+' : ''}}{{item.amount.toFixed(2)}}</b> <br>
-              <small>≈ ${{(item.amount.toFixed(2) * item.price).toFixed(2)}}</small>
+              <b>{{item.amount > 0 ? '+' : ''}}{{item.amount|currency}}</b>  <small>{{item.tokenSymbol}}</small><br>
+              <small>≈ ${{(item.amount * item.price)|currency}}</small>
             </span>
           </li>
         </ul>
@@ -108,6 +108,7 @@ export default {
     ul{
       li{
         padding: 20px 30px;
+        padding-right: 0;
         border-bottom: 1px solid #EAEAEA;
         overflow: hidden;
         small{
