@@ -93,7 +93,7 @@ class UserController extends Controller
         }
         $uid = $userData->id;
         $user = (new Model\User())->getUser($uid);
-        $userPer = Model\Admin::where('id',$user['id'])->first();
+
         try {
             \App\Utils\Auth::setLogin($user);            
         } catch (\Exception $ex) {
@@ -105,7 +105,6 @@ class UserController extends Controller
             'userId' => $userData->id,
             'mobile' => $userData->mobile,
             'avatarUrl' => $userData->avatar_url,
-            'is_sys' => $userPer->is_sys,
         ]);
     }
 
