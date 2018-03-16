@@ -7,8 +7,18 @@
           <el-radio :label="1">测试发放<small style="color: #ccc;">（测试时仅向前两个地址发放代币）</small></el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="智能合约地址" prop="address">
-        <el-input v-model="form.address"></el-input>
+      <el-form-item class="step1-input-group" label="智能合约地址" prop="currency">
+        <el-select v-model="form.currency" placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <el-input class="step1-input" v-if="form.currency !== 1" v-model="form.address">
+          <i slot="suffix">BCV</i>
+        </el-input>
       </el-form-item>
       <el-form-item label="上传发放地址">
         <el-upload
@@ -90,7 +100,8 @@ export default {
     return {
       form: {
         address: '',
-        type: 0
+        type: 0,
+        currency: 0
       },
       rules: {
         address: [ {validator: validAddr} ],
@@ -101,7 +112,17 @@ export default {
       dataCount: 0,
       uniqueCount: 0,
       wrongCount: 0,
-      totalAmount: 0
+      totalAmount: 0,
+      options: [
+        {
+          value: 0,
+          label: 'ERC20'
+        },
+        {
+          value: 1,
+          label: 'ETH'
+        }
+      ]
     }
   },
   methods: {
@@ -158,6 +179,24 @@ export default {
   }
   .el-button--text:focus, .el-button--text:hover{
     color: orange;
+  }
+  .step1-input-group{
+    overflow: hidden;
+    .el-select{
+      width: 30%;
+      float: left;
+    }
+    .step1-input{
+      width: 60%;
+      float: left;
+      margin-left: 5%;
+      .el-input__suffix{
+        padding: 0 10px;
+      }
+      i{
+        font-style: normal;
+      }
+    }
   }
   .footer{
     background: #fdf6ec;
