@@ -12,14 +12,14 @@
           </router-link>
         </div>
         <div class="assets-total">
-          ≈ ${{asset.totalAsset.toFixed(2)}}
+          ≈ ${{asset.totalAsset|currency}}
           <router-link :to="{path: '/candyRoom/candyListPlan'}">提取 ></router-link>
         </div>
         <div class="assets-profit">
           <el-row>
             <el-col :span="11" class="left">
               <h6>昨日收益</h6>
-              <p>≈ ${{asset.lastDayProfit.toFixed(2)}}</p>
+              <p>≈ ${{asset.lastDayProfit|currency}}</p>
             </el-col>
             <el-col :span="2" class="line">
               <div></div>
@@ -28,7 +28,7 @@
               <h6>
                 <router-link :to="{path: '/candyRoom/candyListProfit'}">累计收益 ></router-link>
               </h6>
-              <p>≈ ${{asset.totalProfit.toFixed(2)}}</p>
+              <p>≈ ${{asset.totalProfit|currency}}</p>
             </el-col>
           </el-row>
         </div>
@@ -324,20 +324,22 @@ export default {
         box-shadow: 0px 1px 7px 0px rgba(233,178,88,0.64);
         border-radius: 15px;
         padding: 0 20px;
-        margin: 0 auto;
+        margin: 4px auto 0;
         a{
           color: #FC9E3C;
         }
       }
       p{
-        margin-top: 15px;
+        margin-top: 10px;
       }
     }
     .line{
-      margin: 20px auto 0;
-      background: #fff;
-      width: 1px;
-      height: 47px;
+      div{
+        margin: 20px auto 0;
+        background: #fff;
+        width: 1px;
+        height: 47px;
+      }
     }
   }
 }
