@@ -245,3 +245,45 @@ export const getBoxTxRecordList = (store, params) => {
 export const confirmBoxTx = (store, params) => {
   return post('/api/confirmBoxTx', params)
 }
+
+/* ===========币财报=========== */
+// 获取币财报列表
+export const getFinanceList = (store, params) => {
+  return post('/api/getFinanceList', params)
+}
+
+// 获取数量
+export const getFinanceCount = (store, params) => {
+  return post('/api/getFinanceCount', params)
+}
+
+// 更改交易记录用途
+export const updateRecords = (store, params) => {
+  return post('/api/updateRecords', params)
+}
+
+// 导出财务记录 excel
+export const exportRecords = (store, params) => {
+  return post('/api/exportRecords', params)
+}
+
+// 配置钱包
+export const addWallets = (store, params) => {
+  return post('/api/addWallets', params)
+}
+
+// 钱包列表
+export const getWalletList = (store, params) => {
+  return post('/api/getWalletList', params)
+}
+
+// 删除钱包地址
+export const delWalletAddr = (store, params) => {
+  return post('/api/delWalletAddr', params)
+}
+
+/* ============用户管理=============== */
+// 添加用户
+export const addUser = (store, params) => {
+  return post('/api/addUser', params)
+}

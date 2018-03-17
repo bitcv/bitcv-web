@@ -63,6 +63,34 @@ export default [{
       component: getView('candy/order'),
       meta: {requiresAuth: true}
     }]
+  }, { // 币财报
+    path: 'finance',
+    component: getView('finance/finance'),
+    meta: {requiresAuth: true},
+    redirect: '/finance/list',
+    children: [{ // 币财报列表
+      path: 'list',
+      component: getView('finance/list'),
+      meta: {requiresAuth: true}
+    }, {
+      path: 'configwallet',
+      component: getView('finance/configwallet'),
+      meta: {requiresAuth: true}
+    }]
+  }, { // 用户管理
+    path: 'user',
+    component: getView('user/user'),
+    meta: {requiresAuth: true},
+    redirect: '/user/list',
+    children: [{
+      path: 'list',
+      component: getView('user/list'),
+      meta: {requiresAuth: true}
+    }, {
+      path: 'adduser',
+      component: getView('user/adduser'),
+      meta: {requiresAuth: true}
+    }]
   }]
 }, {
   path: '/signin',

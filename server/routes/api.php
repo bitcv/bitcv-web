@@ -61,7 +61,6 @@ Route::any('getNewsDetail/{id?}','NewsController@getNewsDetail');
 Route::any('getWeChatList','NewsController@getWeChatList');
 Route::any('articleLists','NewsController@articleList');
 
-
 //Route::any('articleList','NewsController@articleList');
 
 //获取自己的登录信息
@@ -114,6 +113,15 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('delExchange','AdminController@delExchange');
     Route::any('addExchange','AdminController@addExchange');
     Route::any('updExchange','AdminController@updExchange');
+
+    //财务交易记录
+    Route::any('getFinanceList','FinanceController@getFinanceList');
+    Route::any('getFinanceCount', 'FinanceController@getFinanceCount');
+    Route::any('updateRecords', 'FinanceController@updateRecords');
+    Route::any('exportRecords','FinanceController@exportRecords');
+    Route::any('addWallets', 'FinanceController@addWallets');
+    Route::any('getWalletList','FinanceController@getWalletList');
+    Route::any('delWalletAddr', 'FinanceController@delWalletAddr');
 
 
 });

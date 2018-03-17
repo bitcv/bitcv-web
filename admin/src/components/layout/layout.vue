@@ -35,7 +35,9 @@ export default {
     return {
       menus: [
         {key: '1', text: '项目信息', icon: 'el-icon-tickets', route: {path: '/project'}},
-        {key: '2', text: '余币宝', icon: 'el-icon-news', route: {path: '/candy'}}
+        {key: '2', text: '余币宝', icon: 'el-icon-news', route: {path: '/candy'}},
+        {key: '3', text: '币财报', icon: 'el-icon-news', route: {path: '/finance'}}
+        // {key: '4', text: '用户管理', icon: 'el-icon-news', route: {path: '/user'}}
       ]
     }
   },
