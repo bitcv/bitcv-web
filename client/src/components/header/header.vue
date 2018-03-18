@@ -1,10 +1,10 @@
 <template>
   <nav class="navbar navbar-inverse navbar-static-top">
-    <div class="container">
+    <div class="container"  v-click-outside="onClickOutside">
       <div @click="toggleLang" class="switchlang" style="position:absolute;right:240px;top:15px"><span :class="{ activeaa : language === 'cn' }">CN</span>／<span :class="{ activeaa : language === 'en' }">EN</span></div>
       <!--<a href="javascrpt:''" @click="toggleLang" style="position:absolute;right:280px;top:15px;color:#FFF">{{ $t('label.lang') }}</a>-->
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle" :class="{collapsed: !showSide}" @click.stop="navbarToggle">
+        <button type="button" class="navbar-toggle" :class="{collapsed: !showSide}" @click="navbarToggle">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -30,6 +30,7 @@
           href="javascript:;"
           class="dropdown-toggle"
           :class="{'hidden-md': !hasToken, 'hidden-lg': !hasToken}"
+          @click="dropdownToggle"
         >
           <img :src="avatar" class="img-circle">
           <span>{{ mobile }}</span>
@@ -47,7 +48,7 @@
         </ul>
       </div>
 
-      <div class="collapse navbar-collapse" :class="{'in': showSide}" v-click-outside="onClickOutside">
+      <div class="collapse navbar-collapse" :class="{'in': showSide}">
         <ul class="nav navbar-nav">
           <router-link tag="li" active-class="active" exact to="/" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.home')}}</a></router-link>
           <router-link tag="li" active-class="active" to="/discover" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.discover')}}</a></router-link>
@@ -70,7 +71,7 @@ export default {
   data () {
     return {
       showSide: false,
-      showDropdown: false
+      showDropdown: false,
     }
   },
   computed: {
@@ -111,9 +112,13 @@ export default {
     toggleLang () {
       this.$i18n.locale = this.$i18n.locale === 'en' ? 'cn' : 'en'
     },
+    dropdownToggle () {
+      this.showSide = false
+      this.showDropdown = !this.showDropdown
+    },
     navbarToggle () {
-      this.showDropdown = false
       this.showSide = !this.showSide
+      this.showDropdown = false
     },
     onMouseenter () {
       this.showSide = false
@@ -122,7 +127,7 @@ export default {
         this.__timer = null
       }
 
-      this.showDropdown = true
+      // this.showDropdown = true
     },
     onMouseleave () {
       if (this.__timer) {
