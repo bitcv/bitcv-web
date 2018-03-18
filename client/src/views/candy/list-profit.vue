@@ -72,7 +72,7 @@ export default {
       this.getUserDepositProfitList(this.params)
         .then(({dataCount = 0, dataList = []} = {}) => {
           this.total = dataCount
-          // this.list = dataList
+          this.list = dataList
           this.loading = false
         })
         .catch(() => {
