@@ -1,33 +1,22 @@
 <template>
   <div class="record-detail">
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/acting/actingRecord' }">发放记录</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/acting/record' }">发放记录</el-breadcrumb-item>
       <el-breadcrumb-item>发放详情</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-table
-      :data="list"
-      style="width: 100%">
-      <el-table-column
-        prop="id"
-        label="序号">
+    <el-table :data="dataList" style="width: 100%">
+      <el-table-column type="index" label="序号">
       </el-table-column>
-      <el-table-column
-        prop="address"
-        label="地址">
+      <el-table-column prop="toAddr" label="地址">
+        <!--<template slot-scope="scope">-->
+          <!--{{maskStr(scope.row.toAddr, 3)}}-->
+        <!--</template>-->
+      </el-table-column>
+      <el-table-column prop="amount" label="数量"></el-table-column>
+      <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
-          {{maskStr(scope.row.address, 3)}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="number"
-        label="数量">
-      </el-table-column>
-      <el-table-column
-        prop="status"
-        label="状态">
-        <template slot-scope="scope">
-          <span :class="scope.row.status === 1 ? 'text-success' : ''">
-            {{['验证中', '已完成'][scope.row.status]}}
+          <span :class="scope.row.status === 4 ? 'text-success' : ''">
+            {{['', '待发送', '待发送', '发送中', '已完成'][scope.row.status]}}
           </span>
         </template>
       </el-table-column>
@@ -38,14 +27,14 @@
         <el-col :span="6">
           <h5>总数量</h5>
           <div>
-            {{total.number}}
+            {{totalAmount}}
             <small>枚</small>
           </div>
         </el-col>
         <el-col :span="6">
           <h5>总地址</h5>
           <div>
-            {{total.address}}
+            {{dataCount}}
             <small>条</small>
           </div>
         </el-col>
@@ -55,27 +44,15 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 import {maskStr} from '@/utils/utils'
 export default {
   data () {
     return {
-      list: [
-        {
-          id: 9,
-          address: 'ajdssajsdasn8988899',
-          number: 300,
-          status: 1,
-          time: '2017-09-09'
-        },
-        {
-          id: 9,
-          address: 'ajdssajsdasn8988899',
-          number: 300,
-          status: 0,
-          time: '2017-09-09'
-        }
-      ],
+      dataList: [],
+      dataCount: 0,
+      process: 0,
+      totalAmount: 0,
       total: {
         number: 200,
         address: 100,
@@ -85,13 +62,35 @@ export default {
   },
   computed: {
     ...mapState({
-      path: state => state.route.path
+      taskId: state => state.route.params.taskId
     })
   },
-  created () {
-    console.log(this.$route.query)
+  mounted () {
+    this.fetch()
+    if (!this.timerId) {
+      this.timerId = setInterval(() => {
+        this.fetch()
+      }, 30000)
+    }
+  },
+  beforeDestroy () {
+    if (this.timerId) {
+      clearInterval(this.timerId)
+    }
   },
   methods: {
+    ...mapActions(['getDispenseList']),
+    fetch () {
+      console.log('fetch')
+      this.getDispenseList({
+        taskId: this.taskId
+      }).then((data = {}) => {
+        this.dataList = data.dataList
+        this.dataCount = data.dataCount
+        this.process = data.process
+        this.totalAmount = data.totalAmount
+      })
+    },
     maskStr (str, number) {
       return maskStr(str, number)
     }

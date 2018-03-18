@@ -113,3 +113,38 @@ export const getUserOrderList = (store, params) => {
 export const cancelDepositOrder = (store, params) => {
   return post('/api/cancelDepositOrder', params)
 }
+
+// 添加用户代发宝资产
+export const addUserDispenseAsset = (store, params) => {
+  return post('/api/addUserDispenseAsset', params)
+}
+
+// 获取代发宝钱包信息
+export const getDispenseWallet = (store, params) => {
+  return post('/api/getDispenseWallet', params)
+}
+
+// 获取代发宝账户余额
+export const getDispenseBalance = (store, params) => {
+  return post('/api/getDispenseBalance', params)
+}
+
+// 获取通证信息
+export const getTokenInfo = (store, params) => {
+  return post('/api/getTokenInfo', params)
+}
+
+// 确定代发
+export const confirmDispense = (store, params) => {
+  return post('/api/confirmDispense', params)
+}
+
+// 获取代发状态
+export const getDispenseList = (store, params) => {
+  return post('/api/getDispenseList', params)
+}
+
+// 获取用户任务列表
+export const getUserTaskList = (store, params) => {
+  return post('/api/getUserTaskList', params)
+}

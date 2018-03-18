@@ -1,5 +1,5 @@
 <template>
-  <div class="account">
+  <div class="account" v-loading="loading">
     <div>
       <div class="recharge-top">
         <el-row>
@@ -7,16 +7,16 @@
             <h5>充值地址</h5>
             <div>
               <!-- <span>{{recData.address}}</span> -->
-              <el-input v-model="recData.address" readonly ref="copyInput"></el-input>
+              <el-input v-model="walletAddr" readonly ref="copyInput"></el-input>
               <i class="el-icon-document" @click="handleCopy"></i>
             </div>
-            <p>
-              提示：<span>单笔充值不得低于0.003BCV</span>，
-              我们不会处理少于该金额的BCV充值要求。
-            </p>
+            <!--<p>-->
+            <!--提示：<span>单笔充值不得低于0.003{{tokenData.symbol}}</span>，-->
+            <!--我们不会处理少于该金额的{{tokenData.symbol}}充值要求。-->
+            <!--</p>-->
           </el-col>
           <el-col :span="6" class="right">
-            <vue-qr :text="recData.address || ''" :margin="10" class="qrcode"></vue-qr>
+            <vue-qr :text="walletAddr" :margin="10" class="qrcode"></vue-qr>
             <p>或扫二维码立即充值</p>
           </el-col>
         </el-row>
@@ -27,69 +27,46 @@
           资产余额<i class="el-icon-refresh" @click="handleRefresh"></i>
         </h5>
         <el-row>
-          <el-col :span="8">
-            <span>{{assets.BVC}}</span>
-            <small>BVC</small>
+          <el-col :span="12" v-for="(asset, index) in assetList" :key="index">
+            <span>{{asset.amount}}</span>
+            <small>{{asset.symbol}}</small>
           </el-col>
-          <el-col :span="8">
-            <span>{{assets.EHT}}</span>
-            <small>EHT</small>
-          </el-col>
-          <el-col :span="8">
-            <span>{{assets.BTC}}</span>
-            <small>BTC</small>
-          </el-col>
+          <!--<el-col :span="12">-->
+            <!--<span>{{ethData.amount}}</span>-->
+            <!--<small>EHT</small>-->
+          <!--</el-col>-->
         </el-row>
       </div>
 
-      <div>
-        <h5 class="title">
-          充值记录<i class="el-icon-refresh" @click="handleRefresh"></i>
-        </h5>
-        <ul class="filter">
-          <li v-for="item  in option.list" :key="item.value" :class="{active: option.value === item.value}" @click="handleCLick(item.value)">
-              {{item.name}}
-          </li>
-        </ul>
-        <el-table
-          :data="list"
-          style="width: 100%">
-          <el-table-column
-            prop="id"
-            label="序号"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="address"
-            label="地址">
-          </el-table-column>
-          <el-table-column
-            prop="number"
-            label="数量"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="status"
-            label="状态"
-            width="180">
-            <template slot-scope="scope">
-              <span :class="scope.row.status === 1 ? 'text-success' : ''">
-                {{['验证中', '已完成'][scope.row.status]}}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="time"
-            label="时间">
-          </el-table-column>
-        </el-table>
-      </div>
+      <!--<div>-->
+        <!--<h5 class="title">-->
+          <!--充值记录<i class="el-icon-refresh" @click="handleRefresh"></i>-->
+        <!--</h5>-->
+        <!--<ul class="filter">-->
+          <!--<li v-for="item  in option.list" :key="item.value" :class="{active: option.value === item.value}" @click="handleCLick(item.value)">-->
+              <!--{{item.name}}-->
+          <!--</li>-->
+        <!--</ul>-->
+        <!--<el-table :data="list" style="width: 100%">-->
+          <!--<el-table-column prop="id" label="序号" width="100"></el-table-column>-->
+          <!--<el-table-column prop="address" label="地址"></el-table-column>-->
+          <!--<el-table-column prop="number" label="数量" width="180"></el-table-column>-->
+          <!--<el-table-column prop="status" label="状态" width="180">-->
+            <!--<template slot-scope="scope">-->
+              <!--<span :class="scope.row.status === 1 ? 'text-success' : ''">-->
+                <!--{{['验证中', '已完成'][scope.row.status]}}-->
+              <!--</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+          <!--<el-table-column prop="time" label="时间"></el-table-column>-->
+        <!--</el-table>-->
+      <!--</div>-->
     </div>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 import VueQr from 'vue-qr'
 import bus from '@/utils/bus'
 export default {
@@ -106,42 +83,61 @@ export default {
         EHT: 378,
         BTC: 288
       },
-      list: [
-        {
-          id: 9,
-          address: 'sjjdhdhd',
-          number: 300,
-          status: 1,
-          time: '2017-09-09'
-        }
-      ],
+      list: [{
+        id: 9,
+        address: 'sjjdhdhd',
+        number: 300,
+        status: 1,
+        time: '2017-09-09'
+      }],
       option: {
         value: 0,
-        list: [
-          {
-            value: 0,
-            name: '全部'
-          },
-          {
-            value: 1,
-            name: 'BCV'
-          },
-          {
-            value: 2,
-            name: 'ETH'
-          },
-          {
-            value: 3,
-            name: 'BTC'
-          }
-        ]
-      }
+        list: [{
+          value: 0,
+          name: '全部'
+        }, {
+          value: 1,
+          name: 'BCV'
+        }, {
+          value: 2,
+          name: 'ETH'
+        }, {
+          value: 3,
+          name: 'BTC'
+        }]
+      },
+      tokenProtocol: 1,
+      assetList: [],
+      walletAddr: '',
+      loading: false
     }
   },
   computed: {
     ...mapState({
       path: state => state.route.path
-    })
+    }),
+    /*tokenData () {
+      let tokenData = {}
+      console.log('tokendata')
+      this.assetList.forEach(item => {
+        if (item.tokenId == this.orderData.tokenId) {
+          return tokenData = item
+        }
+      }, this)
+      console.log(tokenData)
+      return tokenData
+    },
+    ethData () {
+      let ethData = {}
+      console.log('ethdata')
+      this.assetList.forEach(item => {
+        if (item.symbol === 'ETH') {
+          return ethData = item
+        }
+      })
+      console.log(ethData)
+      return ethData
+    }*/
   },
   created () {
     let that = this
@@ -149,7 +145,32 @@ export default {
       if (data) that.recData = data
     })
   },
+  mounted () {
+    console.log('mounted')
+    this.fetchBalance()
+    this.getWallet()
+  },
+  destroy () {
+    console.log('destroy')
+  },
   methods: {
+    ...mapActions(['getDispenseBalance', 'getDispenseWallet']),
+    fetchBalance () {
+      this.getDispenseBalance({ 
+        tokenProtocol: this.tokenProtocol
+      }).then((data = {}) => {
+        this.assetList = data.dataList
+      })
+    },
+    getWallet () {
+      this.loading = true
+      this.getDispenseWallet({
+        tokenProtocol: this.tokenProtocol
+      }).then((data = {}) => {
+        this.loading = false
+        this.walletAddr = data.walletAddr
+      })
+    },
     handleCopy () {
       let eInput = this.$refs.copyInput.$el.firstElementChild
       eInput.select()
@@ -157,7 +178,7 @@ export default {
       this.$message.success('复制成功!')
     },
     handleRefresh () {
-      console.log('刷新')
+      this.fetchBalance()
     },
     handleCLick (val) {
       this.option.value = val

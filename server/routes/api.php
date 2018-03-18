@@ -21,7 +21,13 @@ Route::any('withdraw','UserController@withdraw');
 Route::any('addUserWallet','UserController@addUserWallet');
 
 // 代发宝接口
+Route::any('addUserDispenseAsset','DispenseController@addUserDispenseAsset');
+Route::any('getDispenseWallet','DispenseController@getDispenseWallet');
 Route::any('getDispenseBalance','DispenseController@getDispenseBalance');
+Route::any('getTokenInfo','DispenseController@getTokenInfo');
+Route::any('confirmDispense','DispenseController@confirmDispense');
+Route::any('getDispenseList','DispenseController@getDispenseList');
+Route::any('getUserTaskList','DispenseController@getUserTaskList');
 
 //Route::group(['middleware' => 'checkLogin'], function () {
 Route::any('getUserInfo', 'UserController@getUserInfo');

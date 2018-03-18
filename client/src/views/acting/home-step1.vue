@@ -2,25 +2,21 @@
   <div class="step1">
     <el-form v-if="!isUpload" :model="form" :rules="rules" ref="form" label-width="100px" class="form">
       <el-form-item label="" prop="type">
-        <el-radio-group v-model="form.type">
+        <el-radio-group v-model="tokenInfo.isTest">
           <el-radio :label="0">正式发放</el-radio>
           <el-radio :label="1">测试发放<small style="color: #ccc;">（测试时仅向前两个地址发放代币）</small></el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item class="step1-input-group" label="智能合约地址" prop="currency">
+      <el-form-item class="step1-input-group" label="发放类别" prop="currency">
         <el-select v-model="form.currency" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
-        <el-input class="step1-input" v-if="form.currency !== 1" v-model="form.address">
-          <i slot="suffix">BCV</i>
+        <el-input class="step1-input" placeholder="请输入合约地址" @blur="getToken" v-if="form.currency !== 1" v-model="tokenInfo.contractAddr">
+          <i slot="suffix">{{tokenInfo.tokenSymbol}}</i>
         </el-input>
       </el-form-item>
-      <el-form-item label="上传发放地址">
+      <el-form-item label="上传地址">
+          <el-tooltip class="item" effect="dark" content="请输入合约地址" :disabled="tokenInfo.tokenId ? true : false" placement="bottom">
         <el-upload
           class="upload-btn"
           name="addr"
@@ -29,9 +25,11 @@
           :on-success="handleSuccess"
           :on-error="handleError"
           :data="tokenInfo"
+          :disabled="tokenInfo.tokenId ? false : true"
           :show-file-list="false">
-          <el-button slot="trigger" type="warning" class="btn-primary">点击上传</el-button>
+            <el-button slot="trigger" type="warning" class="btn-primary">点击上传</el-button>
         </el-upload>
+          </el-tooltip>
         <el-button type="warning" plain @click="fetch">获取模板</el-button>
       </el-form-item>
     </el-form>
@@ -81,6 +79,7 @@
 
 <script>
 // import bus from '@/utils/bus'
+import {mapActions} from 'vuex'
 export default {
   data () {
     let valid = (rule, val, callback) => {
@@ -111,7 +110,10 @@ export default {
       isUpload: false,
       list: [],
       tokenInfo: {
-        tokenId: 1
+        isTest: 0,
+        tokenId: 0,
+        tokenSymbol: '',
+        contractAddr: ''
       },
       dataCount: 0,
       uniqueCount: 0,
@@ -130,11 +132,15 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['addUserDispenseAsset', 'getTokenInfo']),
     handleBefore (file) {
-      console.log('before')
+      if (!this.tokenInfo.tokenId) {
+        alert('请填写合约地址')
+        return false
+      }
     },
     handleSuccess (res) {
-      console.log(res)
+      console.log('success')
       if (res.errcode === 0) {
         this.isUpload = true
         this.list = res.data.dataList
@@ -157,10 +163,30 @@ export default {
       })
     },
     fetch () {
-      console.log('获取')
+      console.log('download')
+      downloadFile('/static/file/sample.xls')
+    },
+    getToken () {
+      if (!this.tokenInfo.contractAddr) {
+        return
+      }
+      this.getTokenInfo({
+        contractAddr: this.tokenInfo.contractAddr
+      }).then((data = {}) => {
+        this.tokenInfo.tokenId = data.tokenId
+        this.tokenInfo.tokenSymbol = data.tokenSymbol
+      })
     },
     confirm () {
-      this.$emit('finished')
+      this.addUserDispenseAsset({
+        tokenId: this.tokenInfo.tokenId
+      }).then(() => {
+        this.$emit('finished', {
+          tokenId: this.tokenInfo.tokenId,
+          totalAmount: this.totalAmount,
+          totalCount: this.dataCount - this.wrongCount
+        })
+      })
     }
   }
 }

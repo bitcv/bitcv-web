@@ -126,7 +126,7 @@ export default [{
     component: getViews('acting/record'),
     meta: {requiresAuth: true}
   }, { // 发放记录-详情
-    path: 'record/detail',
+    path: 'record/detail/:taskId',
     component: getViews('acting/record-detail'),
     meta: {requiresAuth: true}
   }, { // 帮助说明

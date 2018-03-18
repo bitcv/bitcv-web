@@ -46,6 +46,7 @@ class DispenseController extends Controller
             $tokenObj = Model\Token::create([
                 'name' => $tokenName,
                 'symbol' => $tokenSymbol,
+                'protocol' => 1,
                 'contract_addr' => $contractAddr,
             ]);
         }
@@ -75,8 +76,10 @@ class DispenseController extends Controller
             return $this->error(207);
         }
 
-        $walletData = Model\UserDispenseWallet::where([['user_id', $userId], ['token_protocol', $tokenProtocol]])
-            ->first();
+        $walletData = Model\UserDispenseWallet::where([
+            ['user_id', $userId],
+            ['token_protocol', $tokenProtocol],
+        ])->first();
         if (!$walletData) {
             // 如果没有钱包则创建钱包
             $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/createWallet', array(
@@ -103,32 +106,84 @@ class DispenseController extends Controller
         ]);
     }
 
-    public function getDispenseBalance (Request $request) {
 
-        // 获取请求参数
+    public function addUserDispenseAsset (Request $request) {
         $params = $this->validation($request, [
-            'lockTime' => 'nullable|numeric',
-            'pageno' => 'required|numeric',
-            'perpage' => 'required|numeric',
+            'tokenId' => 'required|numeric',
         ]);
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
 
+        // 验证用户是否登录
         $userId = Auth::getUserId();
         if (!$userId) {
             return $this->error(207);
         }
 
-        // 更新用户资产信息
-        $this->updateDispenseBalance($userId);
+        // 验证tokenId是否存在
+        $tokenObj = Model\Token::find($tokenId);
+        if (!$tokenObj) {
+            return $this->error(100);
+        }
+        if ($tokenObj->protocol != 1) {
+            // 暂时只支持ERC20的token
+            return $this->error(100);
+        }
+
+        Model\UserDispenseAsset::firstOrCreate([
+            'user_id' => $userId,
+            'token_id' => $tokenId,
+        ]);
+
+        // 获取以太坊的tokenId
+        $tokenObj = Model\Token::where(['symbol' => 'ETH'])->first();
+        $ethTokenId = $tokenObj->id;
+
+        if ($tokenId != $ethTokenId) {
+            // 添加手续费以太坊资产
+            Model\UserDispenseAsset::firstOrCreate([
+                'user_id' => $userId,
+                'token_id' => $ethTokenId,
+            ]);
+        }
+
+        return $this->output();
+    }
+
+    public function getDispenseBalance (Request $request) {
+
+        $params = $this->validation($request, [
+            'tokenProtocol' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        if ($tokenProtocol != 1) {
+            // 暂时只支持ETH和ERC20的钱包
+            return $this->error(100);
+        }
+
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+
+        $walletData = Model\UserDispenseWallet::where([['user_id', $userId], ['token_protocol', $tokenProtocol]])
+            ->first();
+        if ($walletData != null) {
+            // 更新用户资产信息
+            $this->updateDispenseBalance($userId);
+        }
 
         // 获取数据库中用户资产
         $assetList = Model\UserDispenseAsset::from('user_dispense_asset as A')
             ->join('token as B', 'A.token_id', '=', 'B.id')
             ->select('B.logo_url', 'B.symbol', 'A.amount', 'A.token_id')
-            ->where('user_id', $userId)
+            ->where('A.user_id', $userId)
             ->get()->toArray();
 
         return $this->output([
@@ -167,12 +222,13 @@ class DispenseController extends Controller
         $totalEth = 0;
         foreach ($dispenseList as $index => $data) {
             if ($data['status'] === 0) {
-                $totalAmount += $data['amount'];
+                $totalAmount += $data['amount'] * pow(10, 8);
                 $totalEth += 0.0016;
             } else {
                 unset($dispenseList[$index]);
             }
         }
+        $totalAmount /= pow(10, 8);
 
         // 更新用户余额表
         $this->updateDispenseBalance($userId);
@@ -210,16 +266,35 @@ class DispenseController extends Controller
         $tokenSymbol = $tokenData->symbol;
         $tokenProtocol = $tokenData->protocol;
         $contractAddr = $tokenData->contract_addr;
+        $decimal = $tokenData->decimal;
 
         // 获取用户代发钱包信息
         $walletData = Model\UserDispenseWallet::where([
             ['user_id', $userId],
             ['token_protocol', $tokenProtocol],
-            ['status', 1],
         ])->first();
         if ($walletData == null) {
             return $this->error(503);
+        } else if ($walletData->status != 1) {
+            // 更新钱包状态
+            $walletId = $walletData->wallet_id;
+            $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/getTaskStatus', [
+                'walletId' => $walletId,
+            ]);
+
+            $resArr = json_decode($resJson, true);
+            if (!$resArr || $resArr['errcode'] !== 0) {
+                return $this->error(104);
+            }
+
+            $status = $resArr['data']['status'];
+            if ($status == 0) {
+                return $this->error(505);
+            }
+            $walletData->status = 1;
+            $walletData->save();
         }
+
         $walletId = $walletData->wallet_id;
 
         // 锁定用户钱包
@@ -234,10 +309,11 @@ class DispenseController extends Controller
         }
 
         // 调用接口启动代发
-        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/startDispense', [
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/addDispense', [
             'walletId' => $walletId,
             'tokenSymbol' => $tokenSymbol,
             'contractAddr' => $contractAddr,
+            'decimal' => $decimal,
             'dispenseList' => $dispenseList,
         ]);
         
@@ -252,7 +328,79 @@ class DispenseController extends Controller
             return $this->error(104);
         }
 
-        return $this->output();
+        // 保存任务信息
+        $taskId = $resArr['data']['taskId'];
+        Model\UserDispenseTask::create([
+            'user_id' => $userId,
+            'task_id' => $taskId,
+            'status' => 1,
+        ]);
+
+        return $this->output(['taskId' => $taskId]);
+    }
+
+    public function getUserTaskList (Request $request) {
+        $userId = Auth::getUserId();
+        if (!$userId) {
+            return $this->error(207);
+        }
+
+        // 获取未完成的任务进度
+        $taskIdArr = Model\UserDispenseTask::where([['user_id', $userId], ['status', 1]])->pluck('task_id')->toArray();
+        if ($taskIdArr != null) {
+            // 调用接口更新状态
+            $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/getTaskProcess', [
+                'taskIdArr' => $taskIdArr,
+            ]);
+
+            $resArr = json_decode($resJson, true);
+            if (!$resArr || $resArr['errcode'] !== 0) {
+                return $this->error(104);
+            }
+            $taskList = $resArr['data']['dataList'];
+            foreach ($taskList as $task) {
+                $status = $task['process'] == 1 ? 2 : 1;
+                $flag = Model\UserDispenseTask::where('task_id', $task['taskId'])
+                    ->update(['process' => $task['process'], 'status' => $status]);
+            }
+        }
+
+        $dataList = Model\UserDispenseTask::from('user_dispense_task as A')
+            ->join('token as B', 'A.token_id', '=', 'B.id')
+            ->where('A.user_id', $userId)
+            ->select('A.task_id', 'A.process', 'A.status', 'B.symbol', 'B.logo_url')
+            ->get()->toArray();
+
+        return $this->output(['dataList' => $dataList]);
+    }
+
+    public function getDispenseList (Request $request) {
+        // 获取请求参数
+        $params = $this->validation($request, [
+            'taskId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        // 判断taskId是否存在
+        $taskObj = Model\UserDispenseTask::where('task_id', $taskId)->first();
+        if (!$taskObj) {
+            return $this->error(100);
+        }
+
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/getDispenseList', [
+            'taskId' => $taskId,
+        ]);
+
+        $resArr = json_decode($resJson, true);
+        if (!$resArr || $resArr['errcode'] !== 0) {
+            return $this->error(104);
+        }
+        $resData = $resArr['data'];
+
+        return $this->output($resData);
     }
 
     private function updateDispenseBalance ($userId) {
@@ -268,23 +416,23 @@ class DispenseController extends Controller
         // 获取用户代发资产种类
         $assetList = Model\UserDispenseAsset::from('user_dispense_asset as A')
             ->join('token as B', 'A.token_id', '=', 'B.id')
-            ->select('B.symbol', 'B.contract_addr', 'B.token_protocol', 'A.id')
+            ->select('B.symbol', 'B.contract_addr', 'B.protocol', 'B.decimal', 'A.id')
             ->where('user_id', $userId)
             ->get()->toArray();
 
         // 更新资产余额
         foreach ($assetList as $assetData) {
-            if ($assetData['token_protocol'] == 1 && $assetData['symbol'] === 'ETH') {
-                $walletAddr = $walletDict[$assetData['token_protocol']];
+            if ($assetData['protocol'] == 1 && $assetData['symbol'] === 'ETH') {
+                $walletAddr = $walletDict[$assetData['protocol']];
                 $resJson = @file_get_contents("https://api.etherscan.io/api?module=account&action=balance&address=$walletAddr&tag=latest&apikey=3IV46D5P2XE6PA7R9KCMJEIW1YR5VEECIU");
                 $resArr = json_decode($resJson, true);
                 if ($resArr && $resArr['status'] == 1) {
                     Model\UserDispenseAsset::where('id', $assetData['id'])->update([
-                        'amount' => $resArr['result'],
+                        'amount' => $resArr['result'] / pow(10, $assetData['decimal']),
                     ]);
                 }
-            } else if ($assetData['token_protocol'] == 1) {
-                $walletAddr = $walletDict[$assetData['token_protocol']];
+            } else if ($assetData['protocol'] == 1) {
+                $walletAddr = $walletDict[$assetData['protocol']];
                 $contractAddr = $assetData['contract_addr'];
                 if (!$walletAddr || !$contractAddr) {
                     continue;
@@ -293,7 +441,7 @@ class DispenseController extends Controller
                 $resArr = json_decode($resJson, true);
                 if ($resArr && $resArr['status'] == 1) {
                     Model\UserDispenseAsset::where('id', $assetData['id'])->update([
-                        'amount' => $resArr['result'],
+                        'amount' => $resArr['result'] / pow(10, $assetData['decimal']),
                     ]);
                 }
             }

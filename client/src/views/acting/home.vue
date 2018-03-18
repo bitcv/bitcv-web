@@ -6,9 +6,9 @@
       <el-step title="发放"></el-step>
     </el-steps>
 
-    <step1 v-if="active === 0" @finished="handleFinished(0)"></step1>
-    <step2 v-if="active === 1" @finished="handleFinished(1)"></step2>
-    <step3 v-if="active === 2" @finished="handleFinished(2)"></step3>
+    <step1 v-if="active === 0" @finished="finishStep1"></step1>
+    <step2 v-if="active === 1" :orderData="orderData" @finished="finishStep2"></step2>
+    <step3 v-if="active === 2" :taskId='taskId' @finished="handleFinished(2)"></step3>
   </div>
 </template>
 
@@ -26,7 +26,13 @@ export default {
   },
   data () {
     return {
-      active: 0
+      active: 0,
+      orderData: {
+        tokenId: 0,
+        totalAmount: 0,
+        totalCount: 0
+      },
+      taskId: 0
     }
   },
   computed: {
@@ -35,6 +41,16 @@ export default {
     })
   },
   methods: {
+    finishStep1 (data) {
+      this.orderData.tokenId = data.tokenId
+      this.orderData.totalAmount = data.totalAmount
+      this.orderData.totalCount = data.totalCount
+      this.active = 1
+    },
+    finishStep2 (data) {
+      this.taskId = data.taskId
+      this.active = 2
+    },
     handleFinished (index) {
       if (index < 2) {
         this.active = index + 1

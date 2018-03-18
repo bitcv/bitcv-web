@@ -1,6 +1,6 @@
 <template>
   <div class="step2">
-    <div v-if="!isRecharge" class="confirm">
+    <div v-if="!isRecharge" v-loading="loading" class="confirm">
       <h5>确认发放</h5>
       <div class="confirm-box">
         <div class="confirm-content">
@@ -9,22 +9,17 @@
               <el-col :span="12">
                 <h6>发币总量</h6>
                 <p>
-                  <img src="/static/logo/bcv.png" alt="logo">
-                  <b>{{info.total}}</b>
-                  <small>{{['ETH', 'BCV'][info.itype]}}</small>
+                  <img :src="tokenData.logoUrl" alt="logo">
+                  <b>{{orderData.totalAmount}}</b>
+                  <small>{{tokenData.symbol}}</small>
                 </p>
               </el-col>
               <el-col :span="12">
                 <h6>手续费</h6>
                 <p>
-                  <img src="/static/logo/bcv.png" alt="logo">
-                  <b>{{info.cost}}</b>
-                  <small>
-                    <el-radio-group v-model="info.type" @change="handleChange">
-                      <el-radio :label="0">ETH</el-radio>
-                      <el-radio :label="1">BCV</el-radio>
-                    </el-radio-group>
-                  </small>
+                  <img :src="ethData.logoUrl" alt="logo">
+                  <b>{{orderData.totalCount * 0.0016}}</b>
+                  <small>ETH</small>
                 </p>
               </el-col>
             </el-row>
@@ -33,25 +28,25 @@
           <div class="confirm-bottom">
             <el-row>
               <el-col :span="12">
-                <h6>可用BCV余额</h6>
+                <h6>可用{{tokenData.symbol}}余额</h6>
                 <p>
-                  <img src="/static/logo/bcv.png" alt="logo">
-                  <span>{{info.BCVnumber}}</span>
+                  <img :src="tokenData.logoUrl" alt="logo">
+                  <span>{{tokenData.amount}}</span>
                   <small>枚</small>
                   <br>
-                  <i v-if="info.total > info.BCVnumber">余额不足，请先充值</i>
+                  <i v-if="tokenData.amount < orderData.totalAmount">余额不足，请先充值</i>
                 </p>
               </el-col>
               <el-col :span="12">
                 <h6>可用ETH余额</h6>
                 <p>
-                  <img src="/static/logo/bcv.png" alt="logo">
-                  <span>{{info.ETHnumber}}</span>
+                  <img :src="ethData.logoUrl" alt="logo">
+                  <span>{{ethData.amount}}</span>
                   <small>
                     枚
                   </small>
                   <br>
-                  <i v-if="info.cost > info.ETHnumber">余额不足，请先充值</i>
+                  <i v-if="ethData.amount < orderData.totalCount * 0.0016">余额不足，请先充值</i>
                 </p>
               </el-col>
             </el-row>
@@ -70,16 +65,16 @@
           <el-col :span="18" class="left">
             <h5>充值地址</h5>
             <div>
-              <el-input v-model="recData.address" readonly ref="copyInput"></el-input>
+              <el-input v-model="walletAddr" readonly ref="copyInput"></el-input>
               <i class="el-icon-document" @click="handleCopy"></i>
             </div>
             <p>
-              提示：<span>单笔充值不得低于0.003BCV</span>，
+            提示：<span>单笔充值不得低于0.003{{tokenData.symbol}}</span>，
               我们不会处理少于该金额的BCV充值要求。
             </p>
           </el-col>
           <el-col :span="6" class="right">
-            <vue-qr :text="recData.address || ''" :margin="10" class="qrcode"></vue-qr>
+            <vue-qr :text="walletAddr" :margin="10" class="qrcode"></vue-qr>
             <p>或扫二维码立即充值</p>
           </el-col>
         </el-row>
@@ -90,17 +85,13 @@
           资产余额<i class="el-icon-refresh" @click="handleRefresh"></i>
         </h5>
         <el-row>
-          <el-col :span="8">
-            <span>{{assets.BVC}}</span>
-            <small>BVC</small>
+          <el-col :span="12">
+            <span>{{tokenData.amount}}</span>
+            <small>{{tokenData.symbol}}</small>
           </el-col>
-          <el-col :span="8">
-            <span>{{assets.EHT}}</span>
-            <small>EHT</small>
-          </el-col>
-          <el-col :span="8">
-            <span>{{assets.BTC}}</span>
-            <small>BTC</small>
+          <el-col :span="12">
+            <span>{{ethData.amount}}</span>
+            <small>{{ethData.symbol}}</small>
           </el-col>
         </el-row>
       </div>
@@ -113,12 +104,15 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 import VueQr from 'vue-qr'
 import bus from '@/utils/bus'
 export default {
   components: {
     VueQr
+  },
+  props: {
+    orderData: Object
   },
   data () {
     return {
@@ -138,25 +132,74 @@ export default {
         BVC: 2000,
         EHT: 378,
         BTC: 288
-      }
+      },
+      tokenProtocol: 1,
+      assetList: [],
+      walletAddr: '',
+      loading: false
     }
   },
+  mounted () {
+    this.fetchBalance()
+  },
   updated () {
-    console.log('updated')
+    console.log('update')
+    // this.fetchBalance()
+  },
+  computed: {
+    tokenData () {
+      let tokenData = {}
+      console.log('tokendata')
+      this.assetList.forEach(item => {
+        if (item.tokenId == this.orderData.tokenId) {
+          return tokenData = item
+        }
+      }, this)
+      console.log(tokenData)
+      return tokenData
+    },
+    ethData () {
+      let ethData = {}
+      console.log('ethdata')
+      this.assetList.forEach(item => {
+        if (item.symbol === 'ETH') {
+          return ethData = item
+        }
+      })
+      console.log(ethData)
+      return ethData
+    }
   },
   methods: {
+    ...mapActions(['getDispenseBalance', 'getDispenseWallet', 'confirmDispense']),
+    fetchBalance () {
+      this.getDispenseBalance({ 
+        tokenProtocol: this.tokenProtocol
+      }).then((data = {}) => {
+        this.assetList = data.dataList
+      })
+    },
     handleChange (val) {
       this.info.itype = val === 0 ? 1 : 0
     },
     handleRecharge () {
-      let that = this
-      bus.$on('handleEmit', (data) => {
-        if (data) that.recData = data
+      this.getDispenseWallet({
+        tokenProtocol: this.tokenProtocol
+      }).then((data = {}) => {
+        this.walletAddr = data.walletAddr
+        this.isRecharge = true
       })
-      this.isRecharge = true
     },
     handleConfirm () {
-      this.$emit('finished')
+      this.loading = true
+      this.confirmDispense({}).then((data = {}) => {
+        this.loading = false
+        this.$emit('finished', {
+          taskId: data.taskId
+        })
+      }).catch((error) => {
+        this.loading = false
+      })
     },
     handleCopy () {
       let eInput = this.$refs.copyInput.$el.firstElementChild
@@ -165,9 +208,10 @@ export default {
       this.$message.success('复制成功!')
     },
     handleRefresh () {
-      console.log('刷新')
+      this.fetchBalance()
     },
     handleFinished () {
+      this.fetchBalance()
       this.isRecharge = false
     }
   }

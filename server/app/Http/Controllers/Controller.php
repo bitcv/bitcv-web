@@ -59,6 +59,7 @@ class Controller extends BaseController
         '502' => ['errcode' => 502, 'errmsg' => '账户余额不足', 'errmsgen' => 'Insufficient funds'],
         '503' => ['errcode' => 503, 'errmsg' => '未找到钱包', 'errmsgen' => 'no wallet'],
         '504' => ['errcode' => 504, 'errmsg' => '钱包锁定失败', 'errmsgen' => 'lock wallet error'],
+        '505' => ['errcode' => 505, 'errmsg' => '上一笔发放正在进行中', 'errmsgen' => 'last transaction in process'],
     ];
 
     public function validation(Request $request, Array $rules)
