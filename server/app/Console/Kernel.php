@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
         //
         //Commands\SendSMS::class,
         Commands\CrawlData::class,
+        Commands\CrawlRecords::class,
     ];
 
     /**
@@ -44,6 +45,7 @@ class Kernel extends ConsoleKernel
 //        $schedule->call(function () {
 //            $this->getCoinOfOk();
 //        })->everyMinute();
+        $schedule->command("crawl:data crawlRecords")->daily()->withoutOverlapping();
     }
 
     /**

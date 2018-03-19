@@ -76,7 +76,7 @@ export default {
               icon: 'el-icon-menu',
               url: '/admin/finance',
               text: '币财报'
-            },{
+            }, {
               icon: 'el-icon-menu',
               url: '/admin/editor',
               text: '运营人员'

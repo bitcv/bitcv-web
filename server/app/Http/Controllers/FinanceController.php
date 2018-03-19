@@ -20,19 +20,43 @@ class FinanceController extends Controller
             'pageno' => 'required|numeric',
             'perpage' => 'required|numeric',
         ]);
+
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
+        $allparams = $request->all();
         $offset = $perpage * ($pageno - 1);
-        $fmodel = DB::table('finance')->select('*');
-        $dataList = $fmodel->orderBy('transaction_time', 'desc')->offset($offset)
+
+        $query = DB::table('finance');
+        $query = $query->select('finance.*');
+        if (array_key_exists('jyhash', $allparams) && $allparams['jyhash']) {
+            $query = $query->where('finance.transaction_hash',$allparams['jyhash']);
+        }
+        if (array_key_exists('faddr', $allparams) && $allparams['faddr']) {
+            $query = $query->where('finance.from_addr',$allparams['faddr']);
+        }
+        if (array_key_exists('taddr', $allparams) && $allparams['taddr']) {
+            $query = $query->where('finance.to_addr',$allparams['taddr']);
+        }
+        if (array_key_exists('recordstyp', $allparams) && $allparams['recordstyp'] && $allparams['recordstyp'] != 99) {
+            $query = $query->where('finance.type',$allparams['recordstyp']);
+        }
+        if (array_key_exists('feetype', $allparams) && $allparams['feetype'] && $allparams['feetype'] != 99) {
+            $query = $query->where('finance.used',$allparams['feetype']);
+        }
+        if (array_key_exists('conintype',$allparams) && $allparams['conintype'] && $allparams['conintype'] !=99) {
+            $query = $query->where('cointype','like',$allparams['conintype']);
+        }
+        $dataList = $query->orderBy('transaction_time', 'desc')->offset($offset)
             ->limit($perpage)
             ->get()->toArray();
 
+        $datacount = $query->count();
+
         foreach ($dataList as $key => $value)
         {
-            $dataList[$key]->timeformat = date('Y-m-d H:i:s',($value->transaction_time) - (8 * 3600) );
+            $dataList[$key]->timeformat = substr(date('Y-m-d H:i:s',($value->transaction_time) - (8 * 3600) ),5);
             $dataList[$key]->walletName = $value->walletname;
             $dataList[$key]->usedname = ($value->used) ? DictUtil::TokenUsed[$value->used] : '';
             $dataList[$key]->typename = ($value->type) ? DictUtil::TokenType[$value->type] : '';
@@ -43,9 +67,12 @@ class FinanceController extends Controller
 
         return $this->output([
             'dataList' => $dataList,
+            'totalCount' => $datacount,
             'options' => DictUtil::TokenUsed,
             'tokentype' => DictUtil::TokenType,
             'tokensubject' => DictUtil::TokenSubject,
+            'cointypes' => DictUtil::CoinType,
+            'recordstype' => DictUtil::TokenType,
         ]);
     }
 
@@ -135,6 +162,7 @@ class FinanceController extends Controller
             return $this->error(100);
         }
         extract($params);
+
         $data['wname'] = $params['walletname'];
         $data['waddress'] = $params['walletaddr'];
         $walletparams = $request->all();
@@ -145,7 +173,7 @@ class FinanceController extends Controller
                 return $this->output();
             }
         } else {
-            $result = DB::table('configwalletaddr')->insert($data);
+            $result = DB::table('configwalletaddr')->insertGetId(['wname' => $params['walletname'], 'waddress' => $params['walletaddr']]);
             if ($result)
             {
                 return $this->output();
@@ -182,9 +210,6 @@ class FinanceController extends Controller
             'walletId' => 'required|numeric',
             'walletname' => 'required',
             'walletaddr' => 'required',
-//            'photoUrl' => 'nullable|string',
-//            'position' => 'required|string',
-//            'intro' => 'required|string',
         ]);
         if ($params === false) {
             return $this->error(100);
