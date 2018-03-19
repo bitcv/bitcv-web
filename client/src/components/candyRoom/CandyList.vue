@@ -18,8 +18,8 @@
       <div class="table-box" v-if="depositBoxList.length">
         <table>
           <tr class="table-header">
-            <th colspan="2">项目</th>
-            <th>回报（每万枚）</th>
+            <th colspan="2">{{ $t('label.candy_project') }}</th>
+            <th>{{ $t('label.return') }}（{{ $t('label.million') }})</th>
             <th class="mobile-hide">锁仓期</th>
             <th class="mobile-hide">起始额度</th>
             <th class="mobile-hide">剩余额度</th>
@@ -37,8 +37,8 @@
             </td>
             <td>
               <div class="table-cell" :class="mediaClass()">
-                <span class="main">{{ getInterest(10000, depositBox.interestRate, depositBox.lockTime) }}枚</span>
-                <span class="footer">{{ depositBox.lockTime }}个月</span>
+                <span class="main">{{ getInterest(10000, depositBox.interestRate, depositBox.lockTime) }} {{ $t('label.coin_amount') }}</span>
+                <span class="footer">{{ depositBox.lockTime }} {{ $t('label.month') }}</span>
               </div>
             </td>
             <td class="mobile-hide">{{ depositBox.lockTime }}个月</td>
@@ -46,13 +46,13 @@
             <td class="mobile-hide">{{ depositBox.remainAmount }}枚</td>
             <td>
               <div>
-                <span :class="mediaClass()" @click="toDeposit(depositBox)">立即抢购</span>
+                <span :class="mediaClass()" @click="toDeposit(depositBox)">{{ $t('label.buy') }}</span>
               </div>
             </td>
           </tr>
         </table>
       </div>
-      <div class="message" v-else>暂时没有人发起余币宝计划</div>
+      <div class="message" v-else>{{ $t('label.nopeople') }}</div>
     </div>
   </div>
 </template>

@@ -121,7 +121,6 @@
   </div>
 </template>
 
-
 <script>
 export default {
   data () {
@@ -284,7 +283,7 @@ export default {
       this.updateData()
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 

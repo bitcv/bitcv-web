@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-8">
-        <h4 class="section-title">更多的机构，遇见更多的财富</h4>
+        <h4 class="section-title">{{ $t('label.section_title') }}</h4>
       </div>
     </div>
     <div class="row">
@@ -13,7 +13,7 @@
           </div>
         </div>
 
-        <h4 class="section-title">发现新项目</h4>
+        <h4 class="section-title">{{ $t('label.find_project') }}</h4>
         <div class="figure-group">
           <div class="row">
             <div class="col-md-2 col-xs-4" v-for="item in disList" :key="item.id">
@@ -25,22 +25,27 @@
           </div>
         </div>
 
-        <h4 class="section-title">项目直通车</h4>
+        <h4 class="section-title">{{ $t('label.pro_train') }}</h4>
         <div style="background-color: #fff;">
           <table class="table">
             <thead>
               <tr class="text-dark">
                 <th style="width:50px;">&nbsp;</th>
-                <th>公司名称</th>
-                <th>通证符号</th>
-                <th>所属行业</th>
-                <th style="width:100px">融资状态</th>
+                <th>{{ $t('label.pro_train_name') }}</th>
+                <th>{{ $t('label.pro_train_type') }}</th>
+                <th>{{ $t('label.pro_train_industry') }}</th>
+                <th style="width:100px">{{ $t('label.pro_train_status') }}</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="item in list" :key="item.id">
-                <td class="text-center">
+                <td class="text-center" v-if="language === 'cn'">
                   <a href="javascript:;" :style="item.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" :title="['关注', '取消关注'][item.focusStatus]" @click="handleFav(item)">
+                    <i class="icon-bcv" :class="{'icon-heart': item.focusStatus == 0, 'icon-heart-fill': item.focusStatus == 1}"></i>
+                  </a>
+                </td>
+                <td class="text-center" v-else>
+                  <a href="javascript:;" :style="item.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" :title="['follow', 'unfollow'][item.focusStatus]" @click="handleFav(item)">
                     <i class="icon-bcv" :class="{'icon-heart': item.focusStatus == 0, 'icon-heart-fill': item.focusStatus == 1}"></i>
                   </a>
                 </td>
@@ -51,8 +56,8 @@
                   </router-link>
                 </td>
                 <td><span class="text-primary">{{ item.tokenSymbol }}</span></td>
-                <td>{{ item.buzType | buzType }}</td>
-                <td><span class="text-primary">{{ item.fundStage | fundStage }}</span></td>
+                <td>{{ item.buzType | buzType(language) }}</td>
+                <td><span class="text-primary">{{ item.fundStage | fundStage(language) }}</span></td>
               </tr>
             </tbody>
           </table>
@@ -61,7 +66,7 @@
       <div class="col-md-4">
         <div class="panel panel-custom text-darker" style="min-height:150px;">
           <div class="panel-heading">
-            <h4 class="panel-title">推荐项目</h4>
+            <h4 class="panel-title">{{ $t('label.re_project') }}</h4>
           </div>
           <div class="panel-body">
             <p class="recommend" v-for="item in recommend" :key="item.id">
@@ -73,7 +78,7 @@
           </div>
         </div>
         <p style="margin-bottom:20px;">
-          <router-link to="/apply" class="btn btn-primary btn-block btn-outline btn-lg btn-nocorner" style="line-height:2;">立即创建项目</router-link>
+          <router-link to="/apply" class="btn btn-primary btn-block btn-outline btn-lg btn-nocorner" style="line-height:2;">{{ $t('label.create_project') }}</router-link>
         </p>
         <!--<div class="panel panel-custom text-darker" style="min-height:150px;">
           <div class="panel-heading">
@@ -117,6 +122,9 @@ export default {
       let list = [].concat(this.list)
 
       return list.splice(0, 3)
+    },
+    language () {
+      return this.$i18n.locale
     }
   },
   filters: {

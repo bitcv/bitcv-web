@@ -4,30 +4,29 @@
     <!-- 路径导航 -->
     <ol class="breadcrumb">
       <li class="active">
-        <router-link :to="{path: '/candyRoom/candyList'}">余币宝</router-link>
+        <router-link :to="{path: '/candyRoom/candyList'}"> {{ $t('label.ybb') }}</router-link>
       </li>
-      <li>抢购额度</li>
+      <li>{{ $t('label.buy_c') }}</li>
     </ol>
 
     <!-- 币威 -->
     <div class="row bitcv">
       <div class="col-xs-3 col-md-3">
-        <!-- <img src="/static/logo/bcv.png" alt="BitCV" height="60"> -->
         <img :src="bitcv.logoUrl" alt="BitCV" height="60">
         <div class="clear">&nbsp;</div>
         <b>{{bitcv.tokenSymbol}}<span>{{bitcv.nameCn}}</span></b>
       </div>
       <div class="col-xs-3 col-md-3">
         <b>{{bitcv.remainAmount}}</b>
-        <p>剩余额度</p>
+        <p>{{ $t('label.leave_amount') }}</p>
       </div>
       <div class="col-xs-3 col-md-3">
         <b>{{bitcv.minAmount}}</b>
-        <p>起始额度</p>
+        <p>{{ $t('label.start_amount') }}</p>
       </div>
       <div class="col-xs-3 col-md-3">
-        <b>{{bitcv.lockTime}}<span>个月</span></b>
-        <p>锁仓期</p>
+        <b>{{bitcv.lockTime}}<span> {{ $t('label.month') }}</span></b>
+        <p>{{ $t('label.lock') }}</p>
       </div>
     </div>
 
@@ -35,18 +34,18 @@
     <div class="content">
       <div class="form-inline row buying-form">
         <div class="form-group col-md-4" :class="numberError">
-           <label for="number">您要充值的数量？</label>
-          <input type="number" class="form-control" id="number" placeholder="请输入" min="1" v-model="form.number">
-          <span v-if="numberError">下单数量必须大于起始额度</span>
+           <label for="number">{{ $t('label.recharge_a') }}？</label>
+          <input type="number" class="form-control" id="number" :placeholder="$t('label.p_in')" min="1" v-model="form.number">
+          <span v-if="numberError">{{ $t('label.bigger') }}</span>
         </div>
         <div class="col-md-2">——></div>
         <div class="form-group col-md-4">
-           <label for="report">余币宝回报</label>
+           <label for="report">{{ $t('label.ybbhuibao') }}</label>
           <!-- <input type="number" class="form-control" id="report" placeholder="请输入" min="1" v-model="form.report"> -->
-          <input type="number" class="form-control" id="report" placeholder="请输入" min="1" readonly :value="getInterest(form.number, bitcv.interestRate, bitcv.lockTime)">
+          <input type="number" class="form-control" id="report" :placeholder="$t('label.p_in')" min="1" readonly :value="getInterest(form.number, bitcv.interestRate, bitcv.lockTime)">
         </div>
         <div class="col-md-10 buying-form-submit">
-          <button class="btn btn-warning" @click="handleSubmit">立即下单</button>
+          <button class="btn btn-warning" @click="handleSubmit">{{ $t('label.order_now') }}</button>
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@
         <router-link tag="li" active-class="active" to="/" exact><a href="javascript:;">首页</a></router-link>
         <router-link tag="li" active-class="active" to="/projList"><a href="javascript:;">发现</a></router-link>
         <router-link tag="li" active-class="active" to="/candyRoom"><a href="javascript:;">余币宝</a></router-link>
+        <router-link tag="li" active-class="active" to="/acting"><a href="javascript:;">代发宝</a></router-link>
         <router-link tag="li" active-class="active" to="/newslist"><a href="javascript:;">资讯</a></router-link>
       </ul>
       <div class="navbar-right">

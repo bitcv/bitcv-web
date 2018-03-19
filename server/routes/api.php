@@ -31,6 +31,7 @@ Route::any('getProjList', 'ProjectController@getProjList');
 Route::any('getProjTopList', 'ProjectController@getProjTopList');
 Route::any('getProjDetail', 'ProjectController@getProjDetail');
 Route::any('getProjTagList', 'ProjectController@getProjTagList');
+Route::any('getEnProjTagList', 'ProjectController@getEnProjTagList');
 
 Route::any('getDepositBoxList', 'DepositController@getDepositBoxList');
 Route::any('addDepositOrder', 'DepositController@addDepositOrder');
@@ -59,7 +60,6 @@ Route::any('getNewsList','NewsController@getNewsList');
 Route::any('getNewsDetail/{id?}','NewsController@getNewsDetail');
 Route::any('getWeChatList','NewsController@getWeChatList');
 Route::any('articleLists','NewsController@articleList');
-
 
 //Route::any('articleList','NewsController@articleList');
 
@@ -114,6 +114,15 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('addExchange','AdminController@addExchange');
     Route::any('updExchange','AdminController@updExchange');
 
+    //财务交易记录
+    Route::any('getFinanceList','FinanceController@getFinanceList');
+    Route::any('getFinanceCount', 'FinanceController@getFinanceCount');
+    Route::any('updateRecords', 'FinanceController@updateRecords');
+    Route::any('exportRecords','FinanceController@exportRecords');
+    Route::any('addWallets', 'FinanceController@addWallets');
+    Route::any('getWalletList','FinanceController@getWalletList');
+    Route::any('delWalletAddr', 'FinanceController@delWalletAddr');
+
     Route::any('getProjWxNum','AdminController@getProjWxNum');
     Route::any('getProjWbNum','AdminController@getProjWbNum');
     Route::any('getProjGitNum','AdminController@getProjGitNum');
@@ -144,6 +153,8 @@ Route::group(['middleware' => 'checkAdmin'], function () {
 
 
 });
+
+
     Route::any('getAdminDepositBoxList', 'AdminController@getAdminDepositBoxList');
     Route::any('getInstituNameList','AdminController@getInstituNameList');
     Route::any('getProjAdvisorList', 'AdminController@getProjAdvisorList');
@@ -166,9 +177,17 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('eachDynamic','AdminController@eachDynamic');
     Route::any('getDynamic','AdminController@getDynamic');
 
+    Route::any('getInstituNameList','AdminController@getInstituNameList');
+    Route::any('getProjAdvisorList', 'AdminController@getProjAdvisorList');
+    Route::any('getProjPartnerList', 'AdminController@getProjPartnerList');
+    Route::any('getProjExchangeList','AdminController@getProjExchangeList');
+
+    Route::any('getExchangeNameList','AdminController@getExchangeNameList');
+    Route::any('getProjReportList', 'AdminController@getProjReportList');
+    Route::any('getMediaList', 'AdminController@getMediaList');
 
 //项目管理员只能操作自己的projId
-Route::group(['middleware' => 'checkProj'], function () {
+//Route::group(['middleware' => 'checkProj'], function () {
 
     Route::any('getSocialList', 'AdminController@getSocialList');
     
@@ -220,5 +239,5 @@ Route::group(['middleware' => 'checkProj'], function () {
     Route::any('delProjAdvisor','AdminController@delProjAdvisor');
 
 
-});
+//});
 

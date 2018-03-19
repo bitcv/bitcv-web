@@ -6,11 +6,11 @@
         <div class="logo"><img :src="projDetail.logoUrl" alt=""></div>
         <div class="share-content-container">
           <div class="share-content-item">
-            <span class="title">项目名称：</span>
+            <span class="title">{{ $t('label.p_n') }}：</span>
             <span class="content">{{ projDetail.nameCn }}</span>
           </div>
           <div class="share-content-item">
-            <span class="title">代币符号：</span>
+            <span class="title">{{ $t('label.coin_sys') }}：</span>
             <span class="content">{{ projDetail.tokenSymbol }}</span>
           </div>
           <!--<div class="share-content-item">-->
@@ -18,11 +18,11 @@
             <!--<span class="content">数字资管平台</span>-->
           <!--</div>-->
           <div class="share-content-item">
-            <span class="title">项目介绍：</span>
+            <span class="title">{{ $t('label.p_intr') }}：</span>
             <span class="multi-content">{{ projDetail.abstract }}</span>
           </div>
         </div>
-        <div class="more-info">（登陆<a class="link" href="http://www.bitcv.com">bitcv.com</a>获取更多项目详细信息）</div>
+        <div class="more-info">（{{ $t('label.login') }} <a class="link" href="http://www.bitcv.com">bitcv.com</a> {{ $t('label.p_getmore') }}）</div>
       </div>
       <div class="footer-box">
         <img src="/static/img/share-footer.jpg" alt="" class="share-img">

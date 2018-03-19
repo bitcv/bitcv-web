@@ -3,7 +3,7 @@
     <div class="poptips" :class="{'poptips-show': showTips}">
       <div class="container">
         <i class="icon poptips-icon"></i>
-        <span>提示：本次矿工费由币威平台承担</span>
+        <span>{{ $t('label.tips') }}</span>
       </div>
     </div>
 
@@ -16,27 +16,27 @@
         <div class="col-md-6 col-md-offset-3">
           <form class="form-horizontal">
             <div class="form-group no-corner">
-              <label class="control-label col-md-4">收款地址:</label>
+              <label class="control-label col-md-4">{{symbol}} {{ $t('label.shoukuan') }}:</label>
               <div class="col-md-8">
-                <input type="text" class="form-control" v-model="walletAddr">
+                <input type="text" class="form-control" v-model="walletAddr" :placeholder="$t('label.coin_address')">
               </div>
             </div>
             <div class="form-group no-corner">
-              <label class="control-label col-md-4">输入手机号:</label>
+              <label class="control-label col-md-4">{{ $t('label.login_mobile_ph') }}:</label>
               <div class="col-md-8">
                 <div class="input-group">
                   <input disabled type="text" class="form-control" :value="userInfo.mobile">
                   <span class="input-group-btn">
                     <button :disabled="disableSms" type="button" class="btn btn-gray-light" @click="getVcode">
-                      <span v-if="disableSms"> 请等待({{ countDown }}s)</span>
-                      <span v-else>获取验证码</span>
+                      <span v-if="disableSms"> {{ $t('label.wait') }} ({{ countDown }}s)</span>
+                      <span v-else>{{ $t('label.get_sms') }}</span>
                     </button>
                   </span>
                 </div>
               </div>
             </div>
             <div class="form-group no-corner">
-              <label class="control-label col-md-4">输入手机验证码:</label>
+              <label class="control-label col-md-4">{{ $t('label.sms') }}:</label>
               <div class="col-md-8">
                 <input type="text" class="form-control" v-model="vcode">
               </div>
@@ -45,8 +45,8 @@
             <p><br></p>
             <div class="form-group">
               <div class="col-md-8 col-md-offset-4">
-                <button type="button" class="btn btn-primary" @click="onSubmit" style="padding:6px 20px;">提交</button>
-                <button type="button" class="btn btn-gray" @click="onCancel" style="margin-left:20px;padding:6px 20px;color:#fff;">取消</button>
+                <button type="button" class="btn btn-primary" @click="onSubmit" style="padding:6px 20px;">{{ $t('label.sub') }}</button>
+                <button type="button" class="btn btn-gray" @click="onCancel" style="margin-left:20px;padding:6px 20px;color:#fff;">{{ $t('label.can_btn') }}</button>
               </div>
             </div>
           </form>
@@ -62,11 +62,14 @@ import {mapState} from 'vuex'
 export default {
   computed: {
     ...mapState({
-      id: state => state.route.params.id
-    }),
-    ...mapState({
+      id: state => state.route.params.id,
+      protocol: state => state.route.params.protocol,
+      symbol: state => state.route.query.symbol,
       userInfo: state => state.userInfo
-    })
+    }),
+    language () {
+      return this.$i18n.locale
+    }
   },
   data () {
     return {
@@ -103,14 +106,33 @@ export default {
       })
     },
     onSubmit () {
-      if (!/^0x[0-9a-f]{40}/i.test(this.walletAddr)) {
-        return alert('请填写正确的收币钱包地址')
+      // 钱包地址正则校验
+      var reg = ''
+      if (this.protocol === '1') {
+        reg = /^0x[0-9a-f]{40}$/i
+      } else if (this.protocol === '2' || this.protocol === '3' || this.protocol === '4' || this.protocol === '5') {
+        reg = /^[0-9a-z]{30,40}$/i
+      } else {
+        if (this.language === 'cn') {
+          alert('未知错误')
+          return false
+        } else {
+          alert('Unknown error')
+          return false
+        }
+      }
+      if (!reg.test(this.walletAddr)) {
+        if (this.language === 'cn') {
+          return alert('请填写正确的收币钱包地址')
+        } else {
+          return alert('Please enter the wallet address for the currency')
+        }
       }
       // 创建钱包
       this.$http.post('/api/addUserWallet', {
         mobile: this.userInfo.mobile,
         vcode: this.vcode,
-        tokenProtocol: '1',
+        tokenProtocol: this.protocol,
         walletAddr: this.walletAddr
       }).then(res => {
         if (res.data.errcode === 0) {
@@ -122,7 +144,7 @@ export default {
             if (res.data.errcode === 0) {
               this.$message({
                 type: 'success',
-                message: '提交成功!'
+                message: this.language === 'cn' ? '提交成功!' : 'Submitted successfully'
               })
               this.$router.push('/wallet')
             } else {

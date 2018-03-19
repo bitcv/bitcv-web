@@ -20,16 +20,16 @@ export default {
     }
   },
   methods: {
-    inspectCode(){
+    inspectCode () {
       this.$http.post('/api/inspectCode', {
         mobile: this.mobile
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.inputCode = res.data.data.code
-        }else{
+        } else {
           alert(res.data.errmsg)
         }
-      })  
+      })
     }
   }
 }

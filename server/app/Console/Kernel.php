@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
         //
         //Commands\SendSMS::class,
         Commands\CrawlData::class,
+        Commands\CrawlRecords::class,
     ];
 
     /**
@@ -34,6 +35,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //$schedule->command("crawl:data weibo")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:data weibo")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:data facebook")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:data twitter")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:data crawlRecords")->daily()->withoutOverlapping();
         //$schedule->command("crawl:data facebook")->everyMinute()->withoutOverlapping();
         //$schedule->command("crawl:data twitter")->everyMinute()->withoutOverlapping();
         //$schedule->command("crawl:data price")->everyMinute()->withoutOverlapping();

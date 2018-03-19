@@ -19,10 +19,24 @@ class DictUtil
         '3' => '已提取',
     ];
 
+    //英文版
+    const UserAsset_EnStatus = [
+        '1' => 'Extractable',
+        '2' => 'Transfer',
+        '3' => 'Extracted',
+    ];
+
     const UserTransferRecord_Status = [
         '1' => '进行中',
         '2' => '交易成功',
         '3' => '交易失败',
+    ];
+
+    //英文版
+    const UserTransferRecord_EnStatus = [
+        '1' => 'Processing',
+        '2' => 'Successful transaction',
+        '3' => 'Transaction failed',
     ];
 
     const DepositBox_Status = [
@@ -39,36 +53,37 @@ class DictUtil
         '2' => '已取消',
         '3' => '已过期',
     ];
+
     //钱包地址
     const WalletAddress = [
-        '0' => '0xaed0363f76e4b906ef818b0f3199c580b5b01a43',
-        '1' => '0x9eD38CAfc071f12f2a73c311f9F5c6D153A1A131'
+         '0' => '0xaed0363f76e4b906ef818b0f3199c580b5b01a43',
+         '1' => '0x9eD38CAfc071f12f2a73c311f9F5c6D153A1A131'
     ];
 
     //钱包地址用途名称
     const WalletAddressName = [
-        '0' => '奖金福利',
-        '1' => '基金投资'
+      '0' => '奖金福利',
+      '1' => '基金投资'
     ];
 
     //费用性质
     const TokenUsed = [
-        '1' => '工资',
-        '2' => '奖金',
-        '3' => '福利',
+      '1' => '工资',
+      '2' => '奖金',
+      '3' => '福利',
     ];
 
     //类型
     const TokenType = [
-        '1' => '收入',
-        '2' => '支出',
-        '3' => '账户互转',
+      '1' => '收入',
+      '2' => '支出',
+      '3' => '账户互转',
     ];
 
     //项目主体
     const TokenSubject = [
-        '1' => '员工',
-        '2' => '投资人',
-        '3' => 'A 类',
+      '1' => '员工',
+      '2' => '投资人',
+      '3' => 'A 类',
     ];
 }

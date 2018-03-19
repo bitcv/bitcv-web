@@ -44,6 +44,11 @@ export const getFilterParams = (store, params) => {
   return post('/api/getProjTagList', params)
 }
 
+// 获取英文筛选条件
+export const getEnFilterParams = (store, params) => {
+  return post('/api/getEnProjTagList', params)
+}
+
 // 获取TOP10
 export const getTop10 = (store, params) => {
   return post('/api/getProjTopList', params)
@@ -77,4 +82,14 @@ export const getOrderTxRecordList = (store, params) => {
 // 确认记录完成
 export const confirmDepositTx = (store, params) => {
   return post('/api/confirmDepositTx', params)
+}
+
+// 获取用户订单列表
+export const getUserOrderList = (store, params) => {
+  return post('/api/getUserOrderList', params)
+}
+
+// 取消订单
+export const cancelDepositOrder = (store, params) => {
+  return post('/api/cancelDepositOrder', params)
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="signin">
-      <h2 class="panel-title center-title" style="text-align: center;font-size: 23px;margin-bottom: 50px;">登录</h2>
+      <h2 class="panel-title center-title" style="text-align: center;font-size: 23px;margin-bottom: 50px;">{{ $t('label.login') }}</h2>
       <!--<div class="nav">-->
         <!--<span class="passwd" :class="{active : curIndex === 0}" @click="curIndex = 0">密码登录</span>-->
         <!--<span class="qrcode" :class="{active : curIndex === 1}" @click="curIndex = 1">扫码登录</span>-->
@@ -9,17 +9,17 @@
       <template v-if="curIndex === 0">
         <!--<span class="prompt">lianbi会员可直接使用会员名登录</span>-->
         <form>
-          <input v-model="mobile" type="text" placeholder="请输入手机号">
-          <input v-model="passwd" type="password" placeholder="请输入密码">
-          <h5 style="margin-top: 10px;"><span style="color: #ddd;">春节期间参加活动的用户请先<a href="/findpwd" style="cursor: pointer;"><span style="color: #ff8b13;">重置密码</span></a></span></h5>
-          <button @click.prevent="signin">立即登录</button>
+          <input v-model="mobile" type="text" :placeholder="$t('label.login_mobile_ph')">
+          <input v-model="passwd" type="password" :placeholder="$t('label.login_pwd_ph')">
+          <h5 style="margin-top: 10px;"><span style="color: #ddd;">{{ $t('label.festival') }}<router-link to="findpwd"><a style="cursor: pointer;"><span style="color: #ff8b13;"> {{ $t('label.reset_pwd') }}</span></a></router-link></span></h5>
+          <button @click.prevent="signin">{{ $t('label.login') }}</button>
         </form>
         <div class="btn-area">
           <router-link to="findPwd">
-            <a style="float: left">重置密码?</a>
+            <a style="float: left">{{ $t('label.reset_pwd') }}?</a>
           </router-link>
           <router-link to="signup">
-            <a style="float: right;">注册</a>
+            <a style="float: right;">{{ $t('label.registered') }}</a>
           </router-link>
         </div>
       </template>
@@ -42,15 +42,28 @@ export default {
       passwd: ''
     }
   },
+  computed: {
+    language () {
+      return this.$i18n.locale
+    }
+  },
   methods: {
     ...mapMutations(['updateUserInfo']),
     signin () {
       var mobileReg = new RegExp(/^\d{7,11}$/)
       if (!mobileReg.test(this.mobile)) {
-        return alert('请填写正确的手机号')
+        if (this.language === 'cn') {
+          return alert('请填写正确的手机号')
+        } else {
+          return alert('Please fill in the correct phone number')
+        }
       }
       if (this.passwd.length < 6) {
-        return alert('账号或密码错误')
+        if (this.language === 'cn') {
+          return alert('账号或密码错误')
+        } else {
+          return alert('Account or password is wrong')
+        }
       }
       var that = this
       this.$http.post('/api/signin', {

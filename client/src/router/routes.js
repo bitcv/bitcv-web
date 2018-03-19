@@ -1,9 +1,9 @@
 function getComponent (path) {
-  return () => import(`@/components/${path}.vue`)
+  return () => import(`@/components/${path}.vue`).catch(e => location.reload())
 }
 
 function getViews (path) {
-  return () => import(`@/views/${path}.vue`)
+  return () => import(`@/views/${path}.vue`).catch(e => location.reload())
 }
 
 export default [{
@@ -26,7 +26,7 @@ export default [{
   }
 }, {
   // 提现
-  path: '/wallet/withdraw/:id',
+  path: '/wallet/withdraw/:id/:protocol',
   component: getViews('user/withdraw'),
   meta: {
     requiresAuth: true
@@ -56,42 +56,74 @@ export default [{
     }
   }, {
     path: 'candyOrder',
-    // component: getComponent('candyRoom/CandyBuy'),
     component: getViews('candy/order'),
     meta: {
       requiresAuth: true
     }
   }, {
     path: 'candyDetails',
-    // component: getComponent('candyRoom/CandyBuy'),
     component: getViews('candy/details'),
     meta: {
       requiresAuth: true
     }
   }, {
-    path: 'candyOrder',
-    component: getComponent('candyRoom/CandyOrder'),
+    path: 'candyMyData',
+    component: getViews('candy/my-data'),
     meta: {
       requiresAuth: true
     }
-  }, {
-    path: 'candyOrderDetail/:id',
-    component: getComponent('candyRoom/CandyOrderDetail'),
-    meta: {
-      requiresAuth: true
-    }
-  }, {
-    path: 'candyOrderConfirm/:id',
-    component: getComponent('candyRoom/CandyOrderConfirm'),
-    meta: {
-      requiresAuth: true
-    }
-  }, {
-    path: 'myCandyOrder',
-    component: getComponent('candyRoom/MyCandyOrder'),
-    meta: {
-      requiresAuth: true
-    }
+  }
+  // {
+  //   path: 'candyOrder',
+  //   component: getComponent('candyRoom/CandyOrder'),
+  //   meta: {
+  //     requiresAuth: true
+  //   }
+  // }, {
+  //   path: 'candyOrderDetail/:id',
+  //   component: getComponent('candyRoom/CandyOrderDetail'),
+  //   meta: {
+  //     requiresAuth: true
+  //   }
+  // }, {
+  //   path: 'candyOrderConfirm/:id',
+  //   component: getComponent('candyRoom/CandyOrderConfirm'),
+  //   meta: {
+  //     requiresAuth: true
+  //   }
+  // }, {
+    // path: 'myCandyOrder',
+    // component: getComponent('candyRoom/MyCandyOrder'),
+    // meta: {
+    //   requiresAuth: true
+    // }
+  // }
+  ]
+}, { // 代发宝
+  path: '/acting',
+  component: getViews('acting/acting'),
+  meta: {requiresAuth: true},
+  redirect: '/acting/home',
+  children: [{ // 首页
+    path: 'home',
+    component: getViews('acting/home'),
+    meta: {requiresAuth: true}
+  }, { // 代发账户
+    path: 'account',
+    component: getViews('acting/account'),
+    meta: {requiresAuth: true}
+  }, { // 发放记录
+    path: 'record',
+    component: getViews('acting/record'),
+    meta: {requiresAuth: true}
+  }, { // 发放记录-详情
+    path: 'record/detail',
+    component: getViews('acting/record-detail'),
+    meta: {requiresAuth: true}
+  }, { // 帮助说明
+    path: 'explain',
+    component: getViews('acting/explain'),
+    meta: {requiresAuth: true}
   }]
 }, {
   // 创建项目
