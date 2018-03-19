@@ -16,9 +16,9 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
-        Commands\SendSMS::class,
-        Commands\CrawlData::class,
-        Commands\CrawlRecords::class,
+        //Commands\SendSMS::class,
+        //Commands\CrawlData::class,
+        //Commands\CrawlRecords::class,
     ];
 
     /**
