@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div id="shareBox" v-show="showShare" class="share-container" @click="showShare = false">
+    <div id="share-box" v-show="showShare" class="share-container" @click="showShare = false">
       <share id="shareCard" :proj-detail="info"></share>
     </div>
     <!-- <div id="infoBox" class="info-box">
@@ -250,7 +250,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 col">
+        <!-- <div class="col-md-4 col">
           <div class="panel-body text-darker" style="padding-top: 0">
             <h4>{{ $t('label.claim_co') }}</h4>
             <p class="text-center" style="height:200px;">
@@ -261,7 +261,7 @@
               <p><span class="icon-bcv icon-loufang01"></span> {{ address }}</p>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -286,6 +286,7 @@ export default {
   data () {
     return {
       info: {},
+      viewNum: {},
       activeName: 'info',
       swiperOption: {
         autoplay: true
@@ -346,9 +347,13 @@ export default {
   created () {
     this.fetch()
   },
+  mounted () {
+    this.viewProjectd()
+  },
   methods: {
     ...mapActions([
       'getProDetail',
+      'viewProject',
       'updateFocus'
     ]),
     swiperPrev () {
@@ -367,6 +372,10 @@ export default {
     fetch () {
       this.getProDetail({projId: this.proId})
         .then((data = {}) => (this.info = data))
+    },
+    viewProjectd () {
+      this.viewProject({projId: this.proId})
+        .then((data = {}) => ( this.viewNum = data))
     },
     handleFocus () {
       this.updateFocus({projId: this.proId})

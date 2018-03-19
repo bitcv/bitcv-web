@@ -146,7 +146,7 @@ export default {
     .qrcode-box {
       position: absolute;
       right: 10px;
-      top: 5px;
+      top: 1px;
     }
   }
   .share-img {
