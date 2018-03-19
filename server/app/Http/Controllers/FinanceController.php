@@ -197,4 +197,31 @@ class FinanceController extends Controller
     		return $this->output();
     	}
     }
+
+    public function updWallets(Request $request){
+        $params = $this->validation($request, [
+            'walletId' => 'required|numeric',
+            'walletname' => 'required',
+            'walletaddr' => 'required',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $memberData = [
+            'id' => $walletId,
+            'wname' => $walletname,
+            'waddress' => $walletaddr,
+        ];
+
+        $result = DB::table('configwalletaddr')->where('id', '=', $walletId)->update($memberData);
+        if ($result)
+        {
+            return $this->output();
+        }
+
+        return $this->output();
+    }
+
 }
