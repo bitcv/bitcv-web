@@ -2052,8 +2052,7 @@ class AdminController extends Controller
         }
         extract($params);
         $offset = $perpage * ($pageno - 1);
-        $projList = Model\User::join('admin','admin.id','=','user.id')
-            ->offset($offset)->limit($perpage)
+        $projList = Model\User::offset($offset)->limit($perpage)
             ->get()->toArray();
         $dataCount = Model\User::count();
         return $this->output([
