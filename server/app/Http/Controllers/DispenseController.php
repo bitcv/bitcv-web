@@ -385,7 +385,7 @@ class DispenseController extends Controller
         $dataList = Model\UserDispenseTask::from('user_dispense_task as A')
             ->join('token as B', 'A.token_id', '=', 'B.id')
             ->where('A.user_id', $userId)
-            ->select('A.task_id', 'A.process', 'A.total_amount', 'A.status', 'B.symbol', 'B.logo_url')
+            ->select('A.task_id', 'A.process', 'A.total_amount', 'A.status', 'A.created_at', 'B.symbol', 'B.logo_url')
             ->get()->toArray();
 
         return $this->output(['dataList' => $dataList]);

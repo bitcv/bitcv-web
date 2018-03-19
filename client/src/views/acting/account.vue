@@ -1,7 +1,7 @@
 <template>
-  <div class="account" v-loading="loading">
+  <div class="account">
     <div>
-      <div class="recharge-top">
+      <div class="recharge-top" v-loading="loading">
         <el-row>
           <el-col :span="18" class="left">
             <h5>充值地址</h5>
@@ -22,7 +22,7 @@
         </el-row>
       </div>
 
-      <div class="recharge-bottom">
+      <div class="recharge-bottom" v-loading="balanceLoad">
         <h5 class="title">
           资产余额<i class="el-icon-refresh" @click="handleRefresh"></i>
         </h5>
@@ -109,7 +109,8 @@ export default {
       tokenProtocol: 1,
       assetList: [],
       walletAddr: '',
-      loading: false
+      loading: false,
+      balanceLoad: false
     }
   },
   computed: {
@@ -156,10 +157,14 @@ export default {
   methods: {
     ...mapActions(['getDispenseBalance', 'getDispenseWallet']),
     fetchBalance () {
+      this.balanceLoad = true
       this.getDispenseBalance({ 
         tokenProtocol: this.tokenProtocol
       }).then((data = {}) => {
         this.assetList = data.dataList
+        this.balanceLoad = false
+      }).catch(err => {
+        this.balanceLoad = false
       })
     },
     getWallet () {

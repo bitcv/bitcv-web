@@ -22,6 +22,7 @@
           <el-progress :percentage="scope.row.process * 100"></el-progress>
         </template>
       </el-table-column>
+      <el-table-column prop="createdAt" label="创建时间" width="170"></el-table-column>
       <el-table-column label="">
         <template slot-scope="scope">
           <router-link :to="{path: '/acting/record/detail/' + scope.row.taskId}">

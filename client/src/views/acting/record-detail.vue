@@ -22,7 +22,7 @@
           </a>
         </template>
       </el-table-column>
-      <el-table-column prop="txTime" label="交易时间"></el-table-column>
+      <el-table-column prop="txTime" label="交易时间" width="170"></el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <span :class="scope.row.status === 4 ? 'text-success' : ''">
