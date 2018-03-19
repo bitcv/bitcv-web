@@ -29,6 +29,7 @@ Route::any('getTokenBySymbol','DispenseController@getTokenBySymbol');
 Route::any('confirmDispense','DispenseController@confirmDispense');
 Route::any('getDispenseList','DispenseController@getDispenseList');
 Route::any('getUserTaskList','DispenseController@getUserTaskList');
+Route::any('getDispenseReport','FileController@getDispenseReport');
 
 //Route::group(['middleware' => 'checkLogin'], function () {
 Route::any('getUserInfo', 'UserController@getUserInfo');

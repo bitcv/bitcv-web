@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models as Model;
 use Illuminate\Support\Facades\Cookie;
+use App\Utils\BaseUtil;
 
 class FileController extends Controller
 {
@@ -91,5 +92,58 @@ class FileController extends Controller
             'totalAmount' => $totalAmount / pow(10, 8),
             'wrongCount' => $wrongCount,
         ]);
+    }
+
+    public function getDispenseReport (Request $request) {
+
+        // 获取请求参数
+        $params = $this->validation($request, [
+            'taskId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        //$userId = Auth::getUserId();
+        //if (!$userId) {
+            //return $this->error(207);
+        //}
+
+        // 调用接口获取报表数据
+        $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/getDispenseList', array(
+            'taskId' => $taskId,
+        ));
+        $resArr = json_decode($resJson, true);
+        if (!$resArr || $resArr['errcode'] !== 0) {
+            return $this->error(104);
+        }
+
+        $dataList = $resArr['data']['dataList'];
+        $statusArr = array_column($dataList, 'status');
+        $unique = array_unique($statusArr);
+        if ($unique != [4]) {
+            return $this->error(506);
+        }
+
+        $resultList = [];
+        foreach ($dataList as $index => $data) {
+            $resultList[] = [
+                '序号' => $index + 1,
+                '用户地址' => $data['toAddr'],
+                '应发数量' => floatval($data['amount']),
+                '实发数量' => floatval($data['actualAmount']),
+                '交易哈希' => $data['txHash'],
+                '交易时间' => $data['txTime'],
+            ];
+        }
+
+        // 导出excel
+        $fileName = '代发宝发放报表';
+        \Excel::create($fileName, function ($excel) use ($resultList) {
+            $excel->sheet('发放报表', function ($sheet) use ($resultList) {
+                $sheet->fromArray($resultList);
+            });
+        })->export('xls');
     }
 }

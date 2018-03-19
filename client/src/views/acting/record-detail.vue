@@ -42,6 +42,10 @@
           <h5>总地址</h5>
           <div>{{dataCount}}<small>条</small></div>
         </el-col>
+        <el-col :span="8" class="text-warning">
+          <h5> </h5>
+          <a :href="'/api/getDispenseReport?taskId=' + taskId">下载完成报告</a>
+        </el-col>
       </el-row>
     </footer>
   </div>
@@ -136,6 +140,10 @@ export default {
           color: #ccc;
         }
       }
+    }
+    .text-warning{
+      color: orange;
+      text-align: center;
     }
   }
 }
