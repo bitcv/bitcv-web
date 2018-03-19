@@ -12,7 +12,6 @@
     </el-menu>
   </div>
 </template>
-
 <script>
 export default {
   data () {
@@ -52,7 +51,7 @@ export default {
               icon: 'el-icon-menu',
               url: '/media',
               text: '媒体配置'
-            // }, {
+              // }, {
               // icon: 'el-icon-menu',
               // url: '/module',
               // text: '运营工具管理'
@@ -72,8 +71,36 @@ export default {
               icon: 'el-icon-menu',
               url: '/exchange',
               text: '交易所管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/finance',
+              text: '币财报'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/editor',
+              text: '运营人员'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/user',
+              text: '用户管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/vcode',
+              text: '验证码'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/data',
+              text: '内容运营'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/permission',
+              text: '权限管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/projdata',
+              text: '项目更新'
             }]
-          // 项目管理员
+            // 项目管理员
           } else if (user['projId'] > 0) {
             this.$router.push('/editProject/' + user['projId'])
             this.itemList = [{
@@ -85,7 +112,7 @@ export default {
               url: '/projDepositBox/' + user['projId'],
               text: '余币宝'
             }]
-          // 个人
+            // 个人
           } else {
             this.$router.push('/setting')
             this.itemList = [{
@@ -101,8 +128,8 @@ export default {
     }
   }
 }
-</script>
 
+</script>
 <style lang="scss" scoped>
 .container {
   width: 100%;
@@ -117,4 +144,5 @@ export default {
     }
   }
 }
+
 </style>

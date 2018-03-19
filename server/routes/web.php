@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+use App\Alarm;
 Route::group(['prefix'=>'admin'], function() {
     Route::pattern('path', '.+');
     Route::any('{path}',function($path){ 
