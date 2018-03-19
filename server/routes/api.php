@@ -123,7 +123,6 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('getWalletList','FinanceController@getWalletList');
     Route::any('delWalletAddr', 'FinanceController@delWalletAddr');
 
-
 });
 
     Route::any('eachDynamic','AdminController@eachDynamic');

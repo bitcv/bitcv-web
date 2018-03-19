@@ -1988,7 +1988,6 @@ class AdminController extends Controller
 
     }
 
-
     public function eachDynamic(Request $request){
 
         $params = $this->validation($request, [
@@ -2080,6 +2079,128 @@ class AdminController extends Controller
             'dataList' => $projList
         ]);
     }
+
+    public function addAdmin(Request $request){
+        $params = $this->validation($request, [
+//         'projId' => 'required|string',
+//         'memberId' => 'required|numeric',
+            'name' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'position' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $memberData = [
+            'nickname' => $name,
+            'mobile' => $intro,
+            'passwd' => Service::getPwd($position),
+            'avatar_url' => $logoUrl,
+        ];
+        $result = Model\User::firstOrCreate($memberData);
+        $data = [
+            'id' => $result->id,
+            'is_sys' => 2,
+        ];
+        Model\Admin::firstOrCreate($data);
+        return $this->output();
+    }
+    public function delAdmin(Request $request){
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        Model\User::where('id', $mediaId)->delete();
+        return $this->output();
+    }
+    public function updAdmin(Request $request){
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric',
+            'name' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'position' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $memberData = [
+            'nickname' => $name,
+            'mobile' => $intro,
+            'passwd' => Service::getPwd($position),
+            'avatar_url' => $logoUrl,
+        ];
+        Model\User::where('id', $mediaId)->update($memberData);
+        return $this->output();
+    }
+
+
+    public function getUserSearch(Request $request){
+        $params = $this->validation($request, [
+            'mobile' => 'required',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $projList = Model\User::join('admin','admin.id','=','user.id')
+            ->where('user.mobile','=',$mobile)
+            ->get()->toArray();
+        $dataCount = Model\User::join('admin','admin.id','=','user.id')
+            ->where('user.mobile','=',$mobile)
+            ->count();
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+    }
+    public function authOperate(Request $request){
+        $params = $this->validation($request,[
+            'id' => 'required',
+        ]);
+        if ($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        Model\Admin::where('id', $id)->update(['is_sys' => 2]);
+        return $this->output();
+    }
+    public function cancelOperate(Request $request){
+        $params = $this->validation($request,[
+            'id' => 'required|numeric',
+        ]);
+        if ($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        Model\Admin::where('id', $id)->update(['is_sys' => 0]);
+        return $this->output();
+    }
+
+    public function inspectCode(Request $request){
+        $params = $this->validation($request,[
+            'mobile' => 'required|string',
+        ]);
+        if ($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        $ret = Service::inspect('reg', $mobile);
+        if ($ret['err'] > 0) {
+            return $this->error(211);
+        }
+        return $this->output(['code' => $ret['data']]);
+    }
+
+
+
+
 
 
 }
