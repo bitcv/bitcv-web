@@ -150,7 +150,18 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('inspectCode','AdminController@inspectCode');
 
 
-    Route::any('eachDynamic','AdminController@eachDynamic');
+    //财务交易记录
+    Route::any('getFinanceList','FinanceController@getFinanceList');
+    Route::any('getFinanceCount', 'FinanceController@getFinanceCount');
+    Route::any('updateRecords', 'FinanceController@updateRecords');
+    Route::any('exportRecords','FinanceController@exportRecords');
+    Route::any('addWallets', 'FinanceController@addWallets');
+    Route::any('getWalletList','FinanceController@getWalletList');
+    Route::any('delWalletAddr', 'FinanceController@delWalletAddr');
+    Route::any('updWallets','FinanceController@updWallets');
+
+
+Route::any('eachDynamic','AdminController@eachDynamic');
     Route::any('getDynamic','AdminController@getDynamic');
 
 
