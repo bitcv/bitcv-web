@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
         //Commands\CrawlData::class,
         Commands\UpdateDb::class,
         Commands\AddProfit::class,
-        //Commands\CrawlRecords::class,
+        Commands\CrawlRecords::class,
     ];
 
     /**
