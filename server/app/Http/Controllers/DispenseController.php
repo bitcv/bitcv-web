@@ -24,30 +24,24 @@ class DispenseController extends Controller
         // 查询token数据库
         $tokenObj = Model\Token::where('contract_addr', $contractAddr)->first();
         if (!$tokenObj) {
-            // 数据库中没有则抓取
-            $url = "https://etherscan.io/searchHandler?t=t&term=$contractAddr";
-            $result = file_get_contents($url);
-            $result = json_decode($result, true);
-            $isExist = false;
-            foreach ($result as $item) {
-                preg_match('/(0x.*?)\\s.*TOKEN: (.*) \\((.*)\\)/is', $item, $match);
-                $resContractAddr = $match[1];
-                if ($contractAddr === strtolower($resContractAddr)) {
-                    $tokenName = $match[2];
-                    $tokenSymbol = $match[3];
-                    $isExist = true;
-                    break;
-                }
-            }
-            if (!$isExist) {
+            $content = file_get_contents("https://etherscan.io/token/$contractAddr");
+            preg_match('/title>\s*(.*)\s+\((.*)\)\s*(.*)\s*\<\/title>[\s\S]*\<td>Token Decimals.*\s*\<\/td>\s*\<td>\s*(\d*)\s*\<\/td>/', $content, $match);
+            $name = @$match[1];
+            $symbol = @$match[2];
+            $type = @$match[3];
+            $decimal = @$match[4];
+            if ($name === null || $symbol === null || $type === null || $decimal === null) {
                 return $this->error(213);
             }
-            // 抓取到后填充值数据库
-            $tokenObj = Model\Token::create([
-                'name' => $tokenName,
-                'symbol' => $tokenSymbol,
+            // 查询数据库中有没有相同symbol的token
+            $symbol = strtoupper($symbol);
+            $tokenObj = Model\Token::updateOrCreate([
+                'symbol' => $symbol,
+            ], [
+                'name' => $name,
                 'protocol' => 1,
                 'contract_addr' => $contractAddr,
+                'decimal' => $decimal,
             ]);
         }
 
