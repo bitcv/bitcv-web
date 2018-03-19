@@ -24,7 +24,7 @@ class AdminController extends Controller
         }
         extract($params);
 
-        Model\Project::where('id', $projId)->update(['status' => 1]);
+        Model\Project::where('id', $projId)->update(['status' => 1, 'auth_time' => date("Y-m-d")]);
 
         return $this->output();
     }
@@ -773,6 +773,8 @@ class AdminController extends Controller
             'buz_type' => $buzType,
             'stage' => $stage,
             'fund_stage' => $fundStage,
+            'edited' => 1,
+            'edited_time' => date("Y-m-d"),
         ];
 
         if ($contractAddr) {
