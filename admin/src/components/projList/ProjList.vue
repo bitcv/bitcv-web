@@ -28,8 +28,8 @@
               <el-button size="mini">编辑</el-button>
             </router-link>
             <el-button size="mini" type="danger" @click="showDel(scope.row.id)">删除</el-button>
-            <el-button v-if="scope.row.status===0" size="mini" type="primary" @click="authProject(scope.row.id)">审核通过</el-button>
-            <el-button v-else size="mini" type="warning" @click="clearAuth(scope.row.id)">取消授权</el-button>
+            <el-button v-if="scope.row.status===0 && user['isSys'] === 1" size="mini" type="primary" @click="authProject(scope.row.id)">审核通过</el-button>
+            <el-button v-if="scope.row.status===1 && user['isSys'] === 1" size="mini" type="warning" @click="clearAuth(scope.row.id)">取消授权</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -48,11 +48,13 @@ export default {
       projList: [],
       pageno: 1,
       perpage: 10,
-      dataCount: 0
+      dataCount: 0,
+      user: []
     }
   },
   mounted () {
     this.updateData()
+    this.getUser()
   },
   methods: {
     updateData () {
@@ -64,6 +66,14 @@ export default {
         if (resData.errcode === 0) {
           this.projList = resData.data.dataList
           this.dataCount = resData.data.dataCount
+        }
+      })
+    },
+    getUser () {
+      this.$http.post('/api/getUser').then((res) => {
+        if (res.data.errcode === 0) {
+          this.user = res.data.data
+          //console.log(this.user)
         }
       })
     },

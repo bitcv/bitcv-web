@@ -9,9 +9,8 @@
 </template>
 
 <script>
-import vueHeader from '@/components/header/header.vue'
+import vueHeader from '@/components/header/Header.vue'
 import vueNav from '@/components/nav/Nav.vue'
-
 export default {
   name: 'App',
   components: {
