@@ -1929,4 +1929,157 @@ class AdminController extends Controller
 //        return $this->output();
 //    }
 
+    //一天抓取的全部动态
+    public function getDynamic(Request $request){
+
+
+        for ($key = 1; $key < 5; $key++ ){
+
+            $projPass = Model\Project::where([
+                ['project.auth_time', date("Y-m-d",strtotime('-'.$key.' day'))],
+                ['project.status', 1],
+            ])->count();
+
+            $projEdited = Model\Project::where([
+                ['project.edited_time', date("Y-m-d")],
+                ['project.edited', 1],
+            ])->count();
+
+            $newProj = Model\Project::where('project.created_at',date("Y-m-d"))->count();
+
+            $projAllPass = Model\Project::where('project.status', 1)->count();
+
+            //项目的总数量
+            $dataCount = Model\Project::count();
+
+            $dynTw = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.post_time', date("Y-m-d")],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+
+            $dynFb = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.post_time', date("Y-m-d")],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+
+            $dynWb = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.post_time', date("Y-m-d")],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+
+            //有更新的项目数量
+            $dyn = Model\Project::whereDate('updated_at', date("Y-m-d"))->count();
+
+            $data[$key]['post_time'] = date("Y-m-d",strtotime('-'.$key.' day'));
+            $data[$key]['projPass'] = $projPass;
+            $data[$key]['projEdited'] = $projEdited;
+            $data[$key]['newProj'] = $newProj;
+            $data[$key]['projAllPass'] = $projAllPass;
+            $data[$key]['dataCount'] = $dataCount;
+            $data[$key]['dyn'] = $dyn;
+            $data[$key]['dynTw'] = $dynTw;
+            $data[$key]['dynFb'] = $dynFb;
+            $data[$key]['dynWb'] = $dynWb;
+        }
+
+        return $this->output([
+            'dataList' => $data,
+        ]);
+
+    }
+
+
+    public function eachDynamic(Request $request){
+
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $offset = $perpage * ($pageno - 1);
+        $projs = Model\Project::select()->offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = Model\Project::count();
+        $data = array();
+        foreach ($projs as $key => $proj){
+            //print_r($proj);
+            $wb = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day"))],
+                ['crawler_socialnews.proj_id', $proj['id']],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+            $fb = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day"))],
+                ['crawler_socialnews.proj_id', $proj['id']],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+            $wx = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day"))],
+                ['crawler_socialnews.proj_id', $proj['id']],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+            $tw = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day"))],
+                ['crawler_socialnews.proj_id', $proj['id']],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+            $data[$key]['proj_id'] = $proj['id'];
+            $data[$key]['name'] = $proj['name_cn'];
+            $data[$key]['post_time'] = date("Y-m-d",strtotime("-1 day"));
+            $data[$key]['wb'] = $wb;
+            $data[$key]['fb'] = $fb;
+            $data[$key]['wx'] = $wx;
+            $data[$key]['tw'] = $tw;
+            $data[$key]['count'] = $wb + $fb + $wx + $tw;
+        }
+
+        return $this->output([
+            'dataList' => $data,
+            'dataCount' => $dataCount,
+        ]);
+    }
+
+    public function getUserList(Request $request){
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\User::join('admin','admin.id','=','user.id')
+            ->offset($offset)->limit($perpage)
+            ->get()->toArray();
+        $dataCount = Model\User::count();
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+    }
+
+    public function getAdminList(Request $request){
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $offset = $perpage * ($pageno - 1);
+        $proj = Model\User::join('admin','admin.id','=','user.id')
+            ->where('admin.is_sys','2');
+        $projList = $proj->offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = $proj->count();
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+    }
+
+
 }
