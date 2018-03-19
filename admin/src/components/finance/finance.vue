@@ -46,7 +46,7 @@
         <el-pagination class="footer-page-box" @size-change="onBoxSizeChange" @current-change="onBoxCurChange" :current-page="boxPageno" :page-sizes="[10, 20, 30, 40]" :page-size="boxPerpage" layout="total, sizes, prev, pager, next, jumper" :total="boxDataCount">
         </el-pagination>
 
-        <el-dialog title="交易记录" :visible.sync="showDialog" center>
+        <el-dialog title="交易记录" :visible.sync="showList" center>
           <el-form label-width="120px">
             <el-form-item label="交易哈希 : ">
               {{ editObj.transaction_hash}}
@@ -129,6 +129,7 @@ export default {
       walletList: [],
       financeList: [],
       showDialog: false,
+      showList: false,
       inputName: '',
       inputLogoUrl: '',
       inputHomeUrl: '',
@@ -194,7 +195,7 @@ export default {
     editShow (row, _index) {
       this.editObj = row
       this.hash = this.financeList[_index].transaction_hash
-      this.showDialog = true
+      this.showList = true
     },
     showEdit (index) {
       var instituData = this.walletList[index]
@@ -220,7 +221,7 @@ export default {
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.$message({ type: 'success', message: '添加成功!' })
-          this.showDialog = false
+          this.showList = false
           this.updateData()
         }
       })
