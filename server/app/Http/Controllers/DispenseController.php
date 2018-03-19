@@ -322,7 +322,6 @@ class DispenseController extends Controller
             // 调用接口失败，将用户资产钱包状态重置
             Model\UserDispenseWallet::where([
                 ['user_id', $userId],
-                ['token_id', $tokenId],
                 ['token_protocol', $tokenProtocol],
                 ['status', 2],
             ])->update(['status' => 1]);
@@ -334,6 +333,7 @@ class DispenseController extends Controller
         Model\UserDispenseTask::create([
             'user_id' => $userId,
             'task_id' => $taskId,
+            'token_id' => $tokenId,
             'status' => 1,
         ]);
 
