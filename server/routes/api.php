@@ -78,7 +78,6 @@ Route::any('getNewsDetail/{id?}','NewsController@getNewsDetail');
 Route::any('getWeChatList','NewsController@getWeChatList');
 Route::any('articleLists','NewsController@articleList');
 
-
 //Route::any('articleList','NewsController@articleList');
 
 //获取自己的登录信息
@@ -132,20 +131,37 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('addExchange','AdminController@addExchange');
     Route::any('updExchange','AdminController@updExchange');
 
+    //财务交易记录
+    Route::any('getFinanceList','FinanceController@getFinanceList');
+    Route::any('getFinanceCount', 'FinanceController@getFinanceCount');
+    Route::any('updateRecords', 'FinanceController@updateRecords');
+    Route::any('exportRecords','FinanceController@exportRecords');
+    Route::any('addWallets', 'FinanceController@addWallets');
+    Route::any('getWalletList','FinanceController@getWalletList');
+    Route::any('delWalletAddr', 'FinanceController@delWalletAddr');
 
 });
 
+    Route::any('eachDynamic','AdminController@eachDynamic');
+    Route::any('getDynamic','AdminController@getDynamic');
 
     Route::any('getAdminDepositBoxList', 'AdminController@getAdminDepositBoxList');
-
     Route::any('getInstituNameList','AdminController@getInstituNameList');
     Route::any('getProjAdvisorList', 'AdminController@getProjAdvisorList');
     Route::any('getProjPartnerList', 'AdminController@getProjPartnerList');
     Route::any('getProjExchangeList','AdminController@getProjExchangeList');
-
     Route::any('getExchangeNameList','AdminController@getExchangeNameList');
     Route::any('getProjReportList', 'AdminController@getProjReportList');
     Route::any('getMediaList', 'AdminController@getMediaList');
+    Route::any('getAdminList','AdminController@getAdminList');
+    Route::any('addAdmin','AdminController@addAdmin');
+    Route::any('delAdmin','AdminController@delAdmin');
+    Route::any('updAdmin','AdminController@updAdmin');
+    Route::any('getUserList','AdminController@getUserList');
+    Route::any('cancelOperate','AdminController@cancelOperate');
+    Route::any('authOperate','AdminController@authOperate');
+    Route::any('getUserSearch','AdminController@getUserSearch');
+    Route::any('inspectCode','AdminController@inspectCode');
 
     Route::any('getAdminList','AdminController@getAdminList');
     Route::any('addAdmin','AdminController@addAdmin');

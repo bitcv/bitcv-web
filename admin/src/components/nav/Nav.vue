@@ -31,58 +31,74 @@ export default {
           var user = resData.data
           // 超级管理员
           if (user['isSys'] === 1) {
-            this.$router.push('/project')
+            this.$router.push('/admin/project')
             this.itemList = [{
               icon: 'el-icon-menu',
-              url: '/project',
+              url: '/admin/project',
               text: '项目管理'
             }, {
               icon: 'el-icon-menu',
-              url: '/depositBox',
+              url: '/admin/depositBox',
               text: '余币宝'
             }, {
               icon: 'el-icon-menu',
-              url: '/token',
+              url: '/admin/token',
               text: '通证配置'
             }, {
               icon: 'el-icon-menu',
-              url: '/social',
+              url: '/admin/social',
               text: '社群配置'
             }, {
               icon: 'el-icon-menu',
-              url: '/media',
+              url: '/admin/media',
               text: '媒体配置'
             // }, {
               // icon: 'el-icon-menu',
-              // url: '/module',
+              // url: '/admin/module',
               // text: '运营工具管理'
             }, {
               icon: 'el-icon-menu',
-              url: '/mediareport',
+              url: '/admin/mediareport',
               text: '项目动态'
             }, {
               icon: 'el-icon-menu',
-              url: '/perlist',
+              url: '/admin/perlist',
               text: '成员配置'
             }, {
               icon: 'el-icon-menu',
-              url: '/institution',
+              url: '/admin/institution',
               text: '机构管理'
             }, {
               icon: 'el-icon-menu',
-              url: '/exchange',
+              url: '/admin/exchange',
               text: '交易所管理'
             }, {
               icon: 'el-icon-menu',
-              url: '/editor',
-              text: '运营人员'
+              url: '/admin/finance',
+              text: '币财报'
             }, {
               icon: 'el-icon-menu',
-              url: '/user',
+              url: '/admin/data',
+              text: '内容运营'
+            },{
+              icon: 'el-icon-menu',
+              url: '/admin/projdata',
+              text: '项目更新'
+            },{
+              icon: 'el-icon-menu',
+              url: '/admin/user',
               text: '用户管理'
-            }, {
+            },{
               icon: 'el-icon-menu',
-              url: '/vcode',
+              url: '/admin/editor',
+              text: '运营人员'
+            },{
+              icon: 'el-icon-menu',
+              url: '/admin/permission',
+              text: '权限管理'
+            },{
+              icon: 'el-icon-menu',
+              url: '/admin/vcode',
               text: '验证码'
             }]
           // 项目管理员
@@ -130,22 +146,22 @@ export default {
               text: '交易所管理'
             }]
           } else if (user['projId'] > 0) {
-            this.$router.push('/editProject/' + user['projId'])
+            this.$router.push('/admin/editProject/' + user['projId'])
             this.itemList = [{
               icon: 'el-icon-menu',
-              url: '/editProject/' + user['projId'],
+              url: '/admin/editProject/' + user['projId'],
               text: '项目信息'
             }, {
               icon: 'el-icon-menu',
-              url: '/projDepositBox/' + user['projId'],
+              url: '/admin/projDepositBox/' + user['projId'],
               text: '余币宝'
             }]
           // 个人
           } else {
-            this.$router.push('/setting')
+            this.$router.push('/admin/setting')
             this.itemList = [{
               icon: 'el-icon-menu',
-              url: '/setting',
+              url: '/admin/setting',
               text: '个人中心'
             }]
           }

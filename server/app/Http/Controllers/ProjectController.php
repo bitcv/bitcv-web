@@ -49,7 +49,7 @@ class ProjectController extends Controller
         $offset = $perpage * ($pageno - 1);
         $dataCount = $projModel->count();
         $projList = $projModel->select('project.id', 'name_cn', 'name_en', 'short_desc', 'project.logo_url', 'status', 'found_date', 'buz_type', 'fund_stage', 'token.name as tokenName', 'token.symbol as tokenSymbol', 'token.price as tokenPrice')
-            ->offset($offset)->limit($perpage)->orderBy('project.created_at', 'desc')->get()->toArray();
+            ->offset($offset)->limit($perpage)->orderBy('project.updated_at', 'desc')->get()->toArray();
 
         // 获取用户关注状态
         //$userId = isset($_COOKIE['userId']) ? $_COOKIE['userId'] : null;

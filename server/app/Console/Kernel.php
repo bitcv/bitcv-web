@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         //Commands\CrawlData::class,
         Commands\UpdateDb::class,
         Commands\AddProfit::class,
+        //Commands\CrawlRecords::class,
     ];
 
     /**
@@ -38,6 +39,10 @@ class Kernel extends ConsoleKernel
 //            $this->crawlPrice();
 //        })->everyMinute();
         $schedule->command('add:profit')->dailyAt('00:00');
+        $schedule->command("crawl:data weibo")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:data facebook")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:data twitter")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:data crawlRecords")->daily()->withoutOverlapping();
     }
 
     /**
