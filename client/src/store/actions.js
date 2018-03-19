@@ -54,6 +54,11 @@ export const getTop10 = (store, params) => {
   return post('/api/getProjTopList', params)
 }
 
+//浏览项目
+export const viewProject = (store, params) => {
+  return post('/api/viewProject', params)
+}
+
 // 关注|取消关注
 export const updateFocus = (store, params) => {
   return post('/api/toggleFocus', params)
