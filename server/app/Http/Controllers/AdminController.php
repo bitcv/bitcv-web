@@ -7,6 +7,8 @@ use App\Models as Model;
 use Illuminate\Support\Facades\DB;
 use App\Utils\BaseUtil;
 use App\Utils\DictUtil;
+use App\Utils\Service;
+use PhpParser\Node\Expr\AssignOp\Mod;
 
 class AdminController extends Controller
 {
@@ -24,7 +26,7 @@ class AdminController extends Controller
         }
         extract($params);
 
-        Model\Project::where('id', $projId)->update(['status' => 1]);
+        Model\Project::where('id', $projId)->update(['status' => 1, 'auth_time' => date("Y-m-d")]);
 
         return $this->output();
     }
@@ -38,7 +40,7 @@ class AdminController extends Controller
         }
         extract($params);
 
-        Model\Project::where('id', $projId)->update(['status' => 0]);
+        Model\Project::where('id', $projId)->update(['status' => 0, 'auth_time' => date("Y-m-d")]);
 
         return $this->output();
     }
@@ -608,6 +610,8 @@ class AdminController extends Controller
 
         $offset = $perpage * ($pageno - 1);
         $projList = Model\Project::offset($offset)->limit($perpage)->get()->toArray();
+
+        //项目的总数量
         $dataCount = Model\Project::count();
 
         return $this->output([
@@ -773,6 +777,8 @@ class AdminController extends Controller
             'buz_type' => $buzType,
             'stage' => $stage,
             'fund_stage' => $fundStage,
+            'edited' => 1,
+            'edited_time' => date("Y-m-d"),
         ];
 
         if ($contractAddr) {
@@ -1918,5 +1924,457 @@ class AdminController extends Controller
 //
 //        return $this->output();
 //    }
+    public function getUserList(Request $request){
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $offset = $perpage * ($pageno - 1);
+        $projList = Model\User::join('admin','admin.id','=','user.id')
+            ->offset($offset)->limit($perpage)
+            ->get()->toArray();
+        $dataCount = Model\User::count();
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+    }
+
+    public function getAdminList(Request $request){
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $offset = $perpage * ($pageno - 1);
+        $proj = Model\User::join('admin','admin.id','=','user.id')
+            ->where('admin.is_sys','2');
+        $projList = $proj->offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = $proj->count();
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+    }
+
+    public function addAdmin(Request $request){
+        $params = $this->validation($request, [
+//         'projId' => 'required|string',
+//         'memberId' => 'required|numeric',
+            'name' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'position' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $memberData = [
+            'nickname' => $name,
+            'mobile' => $intro,
+            'passwd' => Service::getPwd($position),
+            'avatar_url' => $logoUrl,
+        ];
+        $result = Model\User::firstOrCreate($memberData);
+        $data = [
+            'id' => $result->id,
+            'is_sys' => 2,
+        ];
+        Model\Admin::firstOrCreate($data);
+        return $this->output();
+    }
+    public function delAdmin(Request $request){
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric'
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        Model\User::where('id', $mediaId)->delete();
+        return $this->output();
+    }
+    public function updAdmin(Request $request){
+        $params = $this->validation($request, [
+            'mediaId' => 'required|numeric',
+            'name' => 'required|string',
+            'logoUrl' => 'nullable|string',
+            'position' => 'required|string',
+            'intro' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $memberData = [
+            'nickname' => $name,
+            'mobile' => $intro,
+            'passwd' => Service::getPwd($position),
+            'avatar_url' => $logoUrl,
+        ];
+        Model\User::where('id', $mediaId)->update($memberData);
+        return $this->output();
+    }
+
+    public function getUserSearch(Request $request){
+        $params = $this->validation($request, [
+            'mobile' => 'required',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $projList = Model\User::join('admin','admin.id','=','user.id')
+            ->where('user.mobile','=',$mobile)
+            ->get()->toArray();
+        $dataCount = Model\User::join('admin','admin.id','=','user.id')
+            ->where('user.mobile','=',$mobile)
+            ->count();
+        return $this->output([
+            'dataCount' => $dataCount,
+            'dataList' => $projList
+        ]);
+    }
+    public function authOperate(Request $request){
+        $params = $this->validation($request,[
+            'id' => 'required',
+        ]);
+        if ($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        Model\Admin::where('id', $id)->update(['is_sys' => 2]);
+        return $this->output();
+    }
+    public function cancelOperate(Request $request){
+        $params = $this->validation($request,[
+            'id' => 'required|numeric',
+        ]);
+        if ($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        Model\Admin::where('id', $id)->update(['is_sys' => 0]);
+        return $this->output();
+    }
+
+    public function inspectCode(Request $request){
+        $params = $this->validation($request,[
+            'mobile' => 'required|string',
+        ]);
+        if ($params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        $ret = Service::inspect('reg', $mobile);
+        if ($ret['err'] > 0) {
+            return $this->error(211);
+        }
+        return $this->output(['code' => $ret['data']]);
+    }
+
+    //获取某一个项目的更新
+    public function getProjWxNum(Request $request){
+        $params = $this->validation($request,[
+            'projId' => 'required|numeric',
+        ]);
+
+        if( $params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        $count = Model\CrawlerSocialNews::where([['crawler_socialnews.proj_id', $projId], ['crawler_socialnews.social_id', 5],])->count();
+
+        return $this->output(['count' =>$count]);
+    }
+
+    public function getProjWbNum(Request $request){
+
+        $params = $this->validation($request,[
+            'projId' => 'required|numeric',
+        ]);
+
+        if( $params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        $count = Model\CrawlerSocialNews::where([['crawler_socialnews.proj_id', $projId], ['crawler_socialnews.social_id', 6],])->count();
+
+        return $this->output(['count' =>$count]);
+
+    }
+
+    public function getProjGitNum(Request $request){
+
+        $params = $this->validation($request,[
+            'projId' => 'required|numeric',
+        ]);
+
+        if( $params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        $count = Model\CrawlerSocialNews::where([['crawler_socialnews.proj_id', $projId], ['crawler_socialnews.social_id', 1],])->count();
+
+        return $this->output(['count' =>$count]);
+    }
+
+    public function getProjFbNum(Request $request){
+
+        $params = $this->validation($request,[
+            'projId' => 'required|numeric',
+        ]);
+
+        if( $params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        $count = Model\CrawlerSocialNews::where([['crawler_socialnews.proj_id', $projId], ['crawler_socialnews.social_id', 2],])->count();
+
+        return $this->output(['count' =>$count]);
+    }
+
+    public function getProjTwNum(Request $request){
+        $params = $this->validation($request,[
+            'projId' => 'required|numeric',
+        ]);
+
+        if( $params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        $count = Model\CrawlerSocialNews::where([['crawler_socialnews.proj_id', $projId], ['crawler_socialnews.social_id', 3],])->count();
+
+        return $this->output(['count' =>$count]);
+    }
+
+    public function getProjNum(Request $request){
+        $params = $this->validation($request,[
+            '' => '',
+        ]);
+
+        if( $params === false){
+            return $this->error(100);
+        }
+        extract($params);
+
+        $count = Model\Project::count();
+        return $this->output(['count' => $count]);
+    }
+    //获取审核通过的项目
+    public function getProjPass(Request $request){
+        $params = $this->validation($request, [
+            '' => '',
+        ]);
+
+        if($params === false){
+            return $this->error(100);
+        }
+
+        extract($params);
+        $count = Model\Project::where('project.status',1)->count();
+
+        return $this->output(['count' => $count]);
+    }
+
+    //当天完成编辑
+
+    public function getEdited(Request $request){
+
+        $count = Model\Project::where('project.',1)->count();
+        return $this->output(['count' => $count]);
+    }
+
+    //当天动态更新的项目数
+
+    public function getUpdated(Request $request){
+
+        $count = Model\Project::where('',4)->orWhere('',5)
+            ->orWhere('',6)->count();
+        return $this->output(['count' => $count]);
+
+    }
+
+    public function getAllPermission(){
+
+        $permiss = Model\User::select('')->get()->toArray();
+        return $this->output(['permiss' => $permiss]);
+    }
+
+    public function addUser(Request $request){
+
+        $params = $this->validation($request,[
+            '' => '',
+        ]);
+
+        if( $params === false){
+            return $this->error(100);
+        }
+        extract($params);
+        Model\User::create([
+            'mobile' => $mobile,
+            'pwd' => $passwd,
+            'permiss' => $permiss,
+        ]);
+        return $this->error();
+    }
+
+    public function updUser(Request $request){
+
+        $params = $this->validation($request,[
+            'Id' => 'required|string',
+        ]);
+
+        if( $params === false){
+            return $this->error(200);
+        }
+        extract($params);
+
+        $data = [
+            'name' => $name,
+            'passwd' => $passwd,
+            'persmiss' => $permiss,
+        ];
+
+        Model\User::where('id',$Id)->update($data);
+
+        return $this->error();
+    }
+
+    public function delUser(Request $request){
+
+        $params = $this->validation($request, [
+            'Id' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\User::where('id', $Id)->delete();
+
+        return $this->output();
+
+    }
+
+    //一天抓取的全部动态
+    public function getDynamic(Request $request){
+
+
+        for ($key = 1; $key < 5; $key++ ){
+
+            $projPass = Model\Project::where([
+                ['project.auth_time', date("Y-m-d",strtotime('-'.$key.' day'))],
+                ['project.status', 1],
+            ])->count();
+
+            $projEdited = Model\Project::where([
+                ['project.edited_time', date("Y-m-d")],
+                ['project.edited', 1],
+            ])->count();
+
+            $newProj = Model\Project::where('project.created_at',date("Y-m-d"))->count();
+
+            $projAllPass = Model\Project::where('project.status', 1)->count();
+
+            //项目的总数量
+            $dataCount = Model\Project::count();
+
+            $dynTw = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.post_time', date("Y-m-d")],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+
+            $dynFb = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.post_time', date("Y-m-d")],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+
+            $dynWb = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.post_time', date("Y-m-d")],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+
+            //有更新的项目数量
+            $dyn = Model\Project::whereDate('updated_at', date("Y-m-d"))->count();
+
+            $data[$key]['post_time'] = date("Y-m-d",strtotime('-'.$key.' day'));
+            $data[$key]['projPass'] = $projPass;
+            $data[$key]['projEdited'] = $projEdited;
+            $data[$key]['newProj'] = $newProj;
+            $data[$key]['projAllPass'] = $projAllPass;
+            $data[$key]['dataCount'] = $dataCount;
+            $data[$key]['dyn'] = $dyn;
+            $data[$key]['dynTw'] = $dynTw;
+            $data[$key]['dynFb'] = $dynFb;
+            $data[$key]['dynWb'] = $dynWb;
+        }
+
+        return $this->output([
+            'dataList' => $data,
+        ]);
+
+    }
+
+
+    public function eachDynamic(Request $request){
+
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $offset = $perpage * ($pageno - 1);
+        $projs = Model\Project::select()->offset($offset)->limit($perpage)->get()->toArray();
+        $dataCount = Model\Project::count();
+        $data = array();
+        foreach ($projs as $key => $proj){
+            //print_r($proj);
+            $wb = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day"))],
+                ['crawler_socialnews.proj_id', $proj['id']],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+            $fb = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day"))],
+                ['crawler_socialnews.proj_id', $proj['id']],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+            $wx = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day"))],
+                ['crawler_socialnews.proj_id', $proj['id']],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+            $tw = Model\CrawlerSocialNews::where([
+                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day"))],
+                ['crawler_socialnews.proj_id', $proj['id']],
+                ['crawler_socialnews.social_id', 1],
+            ])->count();
+            $data[$key]['proj_id'] = $proj['id'];
+            $data[$key]['name'] = $proj['name_cn'];
+            $data[$key]['post_time'] = date("Y-m-d",strtotime("-1 day"));
+            $data[$key]['wb'] = $wb;
+            $data[$key]['fb'] = $fb;
+            $data[$key]['wx'] = $wx;
+            $data[$key]['tw'] = $tw;
+            $data[$key]['count'] = $wb + $fb + $wx + $tw;
+        }
+
+        return $this->output([
+            'dataList' => $data,
+            'dataCount' => $dataCount,
+        ]);
+    }
 
 }

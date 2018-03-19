@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use App\Alarm;
 
 class Handler extends ExceptionHandler
 {
@@ -44,6 +45,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        Alarm::send(sprintf("[Time] %s\n[Api] %s\n[File] %s:%d\n[Message] %s\n[Class](%d) %s\n", date('Y-m-d H:i:s'), $request->url(), $exception->getFile(), $exception->getLine(), $exception->getMessage(), $exception->getCode(), get_class($exception)));
         return parent::render($request, $exception);
     }
 

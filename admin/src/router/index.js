@@ -16,6 +16,13 @@ import Token from '@/components/token/Token'
 import PerList from '@/components/person/PerList'
 import InstituList from '@/components/institution/InstituList'
 import ExchangeList from '@/components/exchange/ExchanList'
+import Editor from '@/components/editor/EditorList'
+import User from '@/components/user/UserList'
+import Vcode from '@/components/vcode/vcode'
+import Data from '@/components/data/dataList'
+import Permission from '@/components/permission/permission'
+import ProjData from '@/components/projdata/projdata'
+import Finance from '@/components/finance/finance'
 
 Vue.use(Router)
 
@@ -63,6 +70,27 @@ export default new Router({
     }, {
       path: '/admin/exchange',
       component: ExchangeList
+    }, {
+      path: '/admin/finance',
+      component: Finance
+    }, {
+      path: '/admin/editor',
+      component: Editor
+    }, {
+      path: '/admin/user',
+      component: User
+    }, {
+      path: '/admin/vcode',
+      component: Vcode
+    }, {
+      path: '/admin/data',
+      component: Data
+    }, {
+      path: '/admin/permission',
+      component: Permission
+    }, {
+      path: '/admin/projdata',
+      component: ProjData
     }]
   }, {
     path: '/signin',

@@ -72,6 +72,34 @@ export default {
               icon: 'el-icon-menu',
               url: '/admin/exchange',
               text: '交易所管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/finance',
+              text: '币财报'
+            },{
+              icon: 'el-icon-menu',
+              url: '/admin/editor',
+              text: '运营人员'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/user',
+              text: '用户管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/vcode',
+              text: '验证码'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/data',
+              text: '内容运营'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/permission',
+              text: '权限管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/projdata',
+              text: '项目更新'
             }]
           // 项目管理员
           } else if (user['projId'] > 0) {

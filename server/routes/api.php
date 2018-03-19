@@ -100,7 +100,6 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('getMediaReportCount','AdminController@getMediaReportCount');
 
     Route::any('getInstituList','AdminController@getInstituList');
-    Route::any('getInstituNameList','AdminController@getInstituNameList');
     Route::any('delInstitu','AdminController@delInstitu');
     Route::any('addInstitu','AdminController@addInstitu');
     Route::any('updInstitu','AdminController@updInstitu');
@@ -115,14 +114,49 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('addExchange','AdminController@addExchange');
     Route::any('updExchange','AdminController@updExchange');
 
+    Route::any('getProjWxNum','AdminController@getProjWxNum');
+    Route::any('getProjWbNum','AdminController@getProjWbNum');
+    Route::any('getProjGitNum','AdminController@getProjGitNum');
+    Route::any('getProjFbNum','AdminController@getProjFbNum');
+    Route::any('getProjTwNum','AdminController@getProjTwNum');
+
+    Route::any('getProjNum','AdminController@getProjNum');
+    Route::any('getProjPass','AdminController@getProjPass');
+    Route::any('getEdited','AdminController@getEdited');
+    Route::any('getUpdated','AdminController@getUpdated');
+
+    Route::any('getAllPermission','AdminController@getAllPermission');
+    Route::any('addUser','AdminController@addUser');
+    Route::any('updUser','AdminController@updUser');
+    Route::any('delUser','AdminController@delUser');
+
 });
     Route::any('getAdminDepositBoxList', 'AdminController@getAdminDepositBoxList');
+    Route::any('getInstituNameList','AdminController@getInstituNameList');
+    Route::any('getProjAdvisorList', 'AdminController@getProjAdvisorList');
+    Route::any('getProjPartnerList', 'AdminController@getProjPartnerList');
+    Route::any('getProjExchangeList','AdminController@getProjExchangeList');
+    Route::any('getExchangeNameList','AdminController@getExchangeNameList');
+    Route::any('getProjReportList', 'AdminController@getProjReportList');
+    Route::any('getMediaList', 'AdminController@getMediaList');
+    Route::any('getAdminList','AdminController@getAdminList');
+    Route::any('addAdmin','AdminController@addAdmin');
+    Route::any('delAdmin','AdminController@delAdmin');
+    Route::any('updAdmin','AdminController@updAdmin');
+    Route::any('getUserList','AdminController@getUserList');
+    Route::any('cancelOperate','AdminController@cancelOperate');
+    Route::any('authOperate','AdminController@authOperate');
+    Route::any('getUserSearch','AdminController@getUserSearch');
+    Route::any('inspectCode','AdminController@inspectCode');
+
+
+    Route::any('eachDynamic','AdminController@eachDynamic');
+    Route::any('getDynamic','AdminController@getDynamic');
 
 
 //项目管理员只能操作自己的projId
 Route::group(['middleware' => 'checkProj'], function () {
 
-    Route::any('getMediaList', 'AdminController@getMediaList');
     Route::any('getSocialList', 'AdminController@getSocialList');
     
     Route::any('getProjBasicInfo', 'AdminController@getProjBasicInfo');
@@ -145,28 +179,27 @@ Route::group(['middleware' => 'checkProj'], function () {
     Route::any('delProjSocial', 'AdminController@delProjSocial');
     Route::any('updProjSocial', 'AdminController@updProjSocial');
 
-    Route::any('getProjAdvisorList', 'AdminController@getProjAdvisorList');
     Route::any('addProjAdvisor', 'AdminController@addProjAdvisor');
     Route::any('delProjAdvisor', 'AdminController@delProjAdvisor');
     Route::any('updProjAdvisor', 'AdminController@updProjAdvisor');
 
-    Route::any('getProjPartnerList', 'AdminController@getProjPartnerList');
+
     Route::any('addProjPartner', 'AdminController@addProjPartner');
     Route::any('addProjIPartner','AdminController@addProjIPartner');
     Route::any('delProjPartner', 'AdminController@delProjPartner');
     Route::any('updProjPartner', 'AdminController@updProjPartner');
 
-    Route::any('getProjReportList', 'AdminController@getProjReportList');
+
     Route::any('addProjReport', 'AdminController@addProjReport');
     Route::any('delProjReport', 'AdminController@delProjReport');
     Route::any('updProjReport', 'AdminController@updProjReport');
 
-    Route::any('getProjExchangeList','AdminController@getProjExchangeList');
+
     Route::any('addProjExchange','AdminController@addProjExchange');
     Route::any('addProjIExchange','AdminController@addProjIExchange');
     Route::any('delProjExchange','AdminController@delProjExchange');
     Route::any('updProjExchange','AdminController@updProjExchange');
-    Route::any('getExchangeNameList','AdminController@getExchangeNameList');
+
 
     Route::any('getAdvList','AdminController@getAdvList');
     Route::any('addProjAdvisor','AdminController@addProjAdvisor');
