@@ -1,11 +1,13 @@
 <template>
-  <div class="step3">
-    <h5>{{isFinished ? '发放完成' : '发放中'}}</h5>
+  <div class="step3" v-loading="tableLoad">
+    <h5>{{isFinished ? '发放完成' : '发放中'}}<i class="el-icon-refresh" @click="fetch"></i></h5>
     <el-table :data="dataList" style="width: 100%">
       <el-table-column type="index" label="序号" width="100"></el-table-column>
       <el-table-column prop="toAddr" label="地址">
         <template slot-scope="scope">
-          {{maskStr(scope.row.toAddr, 3)}}
+          <a :href="'https://etherscan.io/token/' + contractAddr + '?a=' + scope.row.toAddr" target="_blank">
+            {{maskStr(scope.row.toAddr, 5)}}
+          </a>
         </template>
       </el-table-column>
       <el-table-column prop="amount" label="数量" width="180"></el-table-column>
@@ -16,6 +18,13 @@
           </span>
         </template>
       </el-table-column>
+      <el-table-column prop="txHash" label="交易哈希">
+        <template slot-scope="scope">
+          <a :href="'https://etherscan.io/tx/' + scope.row.txHash" target="_blank">
+            {{maskStr(scope.row.txHash, 5)}}
+          </a>
+        </template>
+      </el-table-column>
     </el-table>
 
     <footer>
@@ -23,7 +32,7 @@
         <el-col :span="16">
           <el-progress :percentage="process * 100"></el-progress>
         </el-col>
-        <el-col :span="8" class="text-warning">下载完成报告</el-col>
+        <el-col v-if="isFinished" :span="8" class="text-warning">下载完成报告</el-col>
       </el-row>
     </footer>
   </div>
@@ -49,11 +58,17 @@ export default {
         }
       ],
       dataList: [],
+      dataCount: 0,
       process: 0,
+      totalAmount: 0,
+      contractAddr: '',
+      tokenSymbol: '',
+      tableLoad: false,
       timerId: ''
     }
   },
   mounted () {
+    this.tableLoad = true
     this.fetch()
     if (!this.timerId) {
       this.timerId = setInterval(() => {
@@ -74,12 +89,18 @@ export default {
   methods: {
     ...mapActions(['getDispenseList']),
     fetch () {
-      console.log('fetch')
       this.getDispenseList({
         taskId: this.taskId
       }).then((data = {}) => {
+        this.tableLoad = false
         this.dataList = data.dataList
+        this.dataCount = data.dataCount
         this.process = data.process
+        this.totalAmount = data.totalAmount
+        this.contractAddr = data.contractAddr
+        this.tokenSymbol = data.tokenSymbol
+      }).catch(err => {
+        this.tableLoad = false
       })
     },
     maskStr (str, number) {

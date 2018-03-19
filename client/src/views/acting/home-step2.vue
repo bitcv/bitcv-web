@@ -1,6 +1,6 @@
 <template>
-  <div class="step2">
-    <div v-if="!isRecharge" v-loading="loading" class="confirm">
+  <div class="step2" v-loading="loading">
+    <div v-if="!isRecharge" v-loading="balanceLoad" class="confirm">
       <h5>确认发放</h5>
       <div class="confirm-box">
         <div class="confirm-content">
@@ -60,7 +60,7 @@
     </div>
 
     <div v-else>
-      <div class="recharge-top">
+      <div class="recharge-top" v-loading="rechareLoad">
         <el-row>
           <el-col :span="18" class="left">
             <h5>充值地址</h5>
@@ -70,7 +70,7 @@
             </div>
             <p>
             提示：<span>单笔充值不得低于0.003{{tokenData.symbol}}</span>，
-              我们不会处理少于该金额的BCV充值要求。
+              我们不会处理少于该金额的充值要求。
             </p>
           </el-col>
           <el-col :span="6" class="right">
@@ -80,7 +80,7 @@
         </el-row>
       </div>
 
-      <div class="recharge-bottom">
+      <div class="recharge-bottom" v-loading="balanceLoad">
         <h5>
           资产余额<i class="el-icon-refresh" @click="handleRefresh"></i>
         </h5>
@@ -91,6 +91,18 @@
           </el-col>
           <el-col :span="12">
             <span>{{ethData.amount}}</span>
+            <small>{{ethData.symbol}}</small>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <span style="display:block;font-size:20px">还需充值</span>
+            <span>{{needTokenAmount}}</span>
+            <small>{{tokenData.symbol}}</small>
+          </el-col>
+          <el-col :span="12">
+            <span style="display:block;font-size:20px">还需充值</span>
+            <span>{{needEthAmount}}</span>
             <small>{{ethData.symbol}}</small>
           </el-col>
         </el-row>
@@ -136,6 +148,8 @@ export default {
       tokenProtocol: 1,
       assetList: [],
       walletAddr: '',
+      balanceLoad: false,
+      rechareLoad: false,
       loading: false
     }
   },
@@ -168,26 +182,42 @@ export default {
       })
       console.log(ethData)
       return ethData
+    },
+    needTokenAmount () {
+      let diffAmount = this.orderData.totalAmount - this.tokenData.amount
+      return diffAmount > 0 ? diffAmount : 0
+    },
+    needEthAmount () {
+      let diffAmount = (this.orderData.totalCount * 0.0016 * Math.pow(10, 18) - this.ethData.amount * Math.pow(10, 18)) / Math.pow(10, 18)
+      return diffAmount > 0 ? diffAmount : 0
     }
   },
   methods: {
     ...mapActions(['getDispenseBalance', 'getDispenseWallet', 'confirmDispense']),
     fetchBalance () {
+      this.balanceLoad = true
       this.getDispenseBalance({ 
         tokenProtocol: this.tokenProtocol
       }).then((data = {}) => {
         this.assetList = data.dataList
+        this.balanceLoad = false
+      }).catch(err => {
+        this.balanceLoad = false
       })
     },
     handleChange (val) {
       this.info.itype = val === 0 ? 1 : 0
     },
     handleRecharge () {
+      this.rechargeLoad = true
       this.getDispenseWallet({
         tokenProtocol: this.tokenProtocol
       }).then((data = {}) => {
         this.walletAddr = data.walletAddr
         this.isRecharge = true
+        this.rechargeLoad = false
+      }).catch(err => {
+        this.rechargeLoad = false
       })
     },
     handleConfirm () {

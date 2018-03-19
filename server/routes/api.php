@@ -25,6 +25,7 @@ Route::any('addUserDispenseAsset','DispenseController@addUserDispenseAsset');
 Route::any('getDispenseWallet','DispenseController@getDispenseWallet');
 Route::any('getDispenseBalance','DispenseController@getDispenseBalance');
 Route::any('getTokenInfo','DispenseController@getTokenInfo');
+Route::any('getTokenBySymbol','DispenseController@getTokenBySymbol');
 Route::any('confirmDispense','DispenseController@confirmDispense');
 Route::any('getDispenseList','DispenseController@getDispenseList');
 Route::any('getUserTaskList','DispenseController@getUserTaskList');

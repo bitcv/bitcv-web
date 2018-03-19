@@ -51,6 +51,27 @@ class DispenseController extends Controller
         ]);
     }
 
+    public function getTokenBySymbol (Request $request) {
+        $params = $this->validation($request, [
+            'tokenSymbol' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $tokenSymbol = strtoupper($tokenSymbol);
+        $tokenData = Model\Token::where('symbol', $tokenSymbol)->first();
+        if ($tokenData == null) {
+            return $this->error(214);
+        }
+
+        return $this->output([
+            'tokenId' => $tokenData->id,
+            'tokenSymbol' => $tokenData->symbol,
+        ]);
+    }
+
     public function getDispenseWallet (Request $request) {
         $params = $this->validation($request, [
             'tokenProtocol' => 'required|numeric',
@@ -328,6 +349,7 @@ class DispenseController extends Controller
             'user_id' => $userId,
             'task_id' => $taskId,
             'token_id' => $tokenId,
+            'total_amount' => $totalAmount,
             'status' => 1,
         ]);
 
@@ -363,7 +385,7 @@ class DispenseController extends Controller
         $dataList = Model\UserDispenseTask::from('user_dispense_task as A')
             ->join('token as B', 'A.token_id', '=', 'B.id')
             ->where('A.user_id', $userId)
-            ->select('A.task_id', 'A.process', 'A.status', 'B.symbol', 'B.logo_url')
+            ->select('A.task_id', 'A.process', 'A.total_amount', 'A.status', 'B.symbol', 'B.logo_url')
             ->get()->toArray();
 
         return $this->output(['dataList' => $dataList]);

@@ -134,6 +134,11 @@ export const getTokenInfo = (store, params) => {
   return post('/api/getTokenInfo', params)
 }
 
+// 获取通证信息
+export const getTokenBySymbol = (store, params) => {
+  return post('/api/getTokenBySymbol', params)
+}
+
 // 确定代发
 export const confirmDispense = (store, params) => {
   return post('/api/confirmDispense', params)

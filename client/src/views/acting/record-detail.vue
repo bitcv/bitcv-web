@@ -1,5 +1,5 @@
 <template>
-  <div class="record-detail">
+  <div class="record-detail" v-loading="tableLoad">
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/acting/record' }">发放记录</el-breadcrumb-item>
       <el-breadcrumb-item>发放详情</el-breadcrumb-item>
@@ -8,11 +8,21 @@
       <el-table-column type="index" label="序号">
       </el-table-column>
       <el-table-column prop="toAddr" label="地址">
-        <!--<template slot-scope="scope">-->
-          <!--{{maskStr(scope.row.toAddr, 3)}}-->
-        <!--</template>-->
+        <template slot-scope="scope">
+          <a :href="'https://etherscan.io/token/' + contractAddr + '?a=' + scope.row.toAddr" target="_blank">
+            {{maskStr(scope.row.toAddr, 5)}}
+          </a>
+        </template>
       </el-table-column>
       <el-table-column prop="amount" label="数量"></el-table-column>
+      <el-table-column prop="txHash" label="交易哈希">
+        <template slot-scope="scope">
+          <a :href="'https://etherscan.io/tx/' + scope.row.txHash" target="_blank">
+            {{maskStr(scope.row.txHash, 5)}}
+          </a>
+        </template>
+      </el-table-column>
+      <el-table-column prop="txTime" label="交易时间"></el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <span :class="scope.row.status === 4 ? 'text-success' : ''">
@@ -26,17 +36,11 @@
       <el-row>
         <el-col :span="6">
           <h5>总数量</h5>
-          <div>
-            {{totalAmount}}
-            <small>枚</small>
-          </div>
+          <div>{{totalAmount}}<small>枚</small></div>
         </el-col>
         <el-col :span="6">
           <h5>总地址</h5>
-          <div>
-            {{dataCount}}
-            <small>条</small>
-          </div>
+          <div>{{dataCount}}<small>条</small></div>
         </el-col>
       </el-row>
     </footer>
@@ -53,6 +57,9 @@ export default {
       dataCount: 0,
       process: 0,
       totalAmount: 0,
+      contractAddr: '',
+      tokenSymbol: '',
+      tableLoad: false,
       total: {
         number: 200,
         address: 100,
@@ -81,14 +88,19 @@ export default {
   methods: {
     ...mapActions(['getDispenseList']),
     fetch () {
-      console.log('fetch')
+      this.tableLoad = true
       this.getDispenseList({
         taskId: this.taskId
       }).then((data = {}) => {
+        this.tableLoad = false
         this.dataList = data.dataList
         this.dataCount = data.dataCount
         this.process = data.process
         this.totalAmount = data.totalAmount
+        this.contractAddr = data.contractAddr
+        this.tokenSymbol = data.tokenSymbol
+      }).catch(err => {
+        this.tableLoad = false
       })
     },
     maskStr (str, number) {

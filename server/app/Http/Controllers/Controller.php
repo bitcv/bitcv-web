@@ -39,6 +39,7 @@ class Controller extends BaseController
         '211' => ['errcode' => 211, 'errmsg' => '已有此类型的钱包地址', 'errmsgen' => 'There is already this type of wallet address'],
         '212' => ['errcode' => 212, 'errmsg' => '钱包地址错误', 'errmsgen' => 'Wrong wallet address'],
         '213' => ['errcode' => 213, 'errmsg' => '合约地址不存在', 'errmsgen' => 'wrong contract address'],
+        '214' => ['errcode' => 214, 'errmsg' => '未找到相关通证', 'errmsgen' => 'token not found'],
         // 项目错误码
         '301' => ['errcode' => 301, 'errmsg' => '项目不存在', 'errmsgen' => 'Project does not exist'],
         '302' => ['errcode' => 302, 'errmsg' => '社交ID不存在', 'errmsgen' => 'Social ID does not exist'],

@@ -1,12 +1,12 @@
 <template>
-  <div class="record">
+  <div class="record" v-loading="tableLoad">
     <h5 class="title">
       发放记录
     </h5>
     <el-table :data="dataList" style="width: 100%">
       <el-table-column type="index" label="序号"></el-table-column>
       <el-table-column prop="symbol" label="币种"></el-table-column>
-      <el-table-column prop="number" label="数量"></el-table-column>
+      <el-table-column prop="totalAmount" label="数量"></el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <span :class="scope.row.status === 1 ? 'text-success' : ''">
@@ -60,7 +60,8 @@ import {mapState, mapActions} from 'vuex'
 export default {
   data () {
     return {
-      dataList: []
+      dataList: [],
+      tableLoad: false
     }
   },
   computed: {
@@ -74,8 +75,12 @@ export default {
   methods: {
     ...mapActions(['getUserTaskList']),
     fetch () {
+      this.tableLoad = true
       this.getUserTaskList().then((data = {}) => {
         this.dataList = data.dataList
+        this.tableLoad = false
+      }).catch(err => {
+        this.tableLoad = false
       })
     }
   }
