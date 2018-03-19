@@ -54,7 +54,7 @@ export const getTop10 = (store, params) => {
   return post('/api/getProjTopList', params)
 }
 
-//浏览项目
+// 浏览项目
 export const viewProject = (store, params) => {
   return post('/api/viewProject', params)
 }

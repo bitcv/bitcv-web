@@ -80,8 +80,6 @@ export default {
       this.getUserTaskList().then((data = {}) => {
         this.dataList = data.dataList
         this.tableLoad = false
-      }).catch(err => {
-        this.tableLoad = false
       })
     }
   }

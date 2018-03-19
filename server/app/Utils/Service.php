@@ -77,18 +77,6 @@ class Service {
         }
         return array('err' => 0);
     }
-    //后台查询
-    public static function inspect($type,$id) {
-        if (!($type && $id)) {
-            return array('err' => 1, 'msg' => 'no vcode');
-        }
-        $code = Redis::get("{$type}_{$id}");
-        if ($code){
-            return array('err' => 0, 'data' => $code);
-        }else{
-            return array('err' => 1, 'msg' => 'code is invalid');
-        }
-    }
 
     //后台查询
     public static function inspect($type,$id) {
