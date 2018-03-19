@@ -118,8 +118,6 @@ export default {
           this.formData.tokenSymbol = data.tokenSymbol
           this.uploadDisable = false
           this.selectLoad = false
-        }).catch(err => {
-          this.selectLoad = false
         })
       }
     }
@@ -145,7 +143,7 @@ export default {
       this.$message.error('上传失败，请重试')
     },
     fetchSample () {
-      downloadFile('/static/file/sample.xls')
+      window.downloadFile('/static/file/sample.xls')
     },
     getToken () {
       if (!/^0x[0-9a-fA-F]{40}$/.test(this.formData.contractAddr)) return
@@ -157,8 +155,6 @@ export default {
         this.formData.tokenId = data.tokenId
         this.formData.tokenSymbol = data.tokenSymbol
         this.uploadDisable = false
-        this.tokenLoad = false
-      }).catch(err => {
         this.tokenLoad = false
       })
     },

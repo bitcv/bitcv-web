@@ -375,7 +375,7 @@ export default {
     },
     viewProjectd () {
       this.viewProject({projId: this.proId})
-        .then((data = {}) => ( this.viewNum = data))
+        .then((data = {}) => (this.viewNum = data))
     },
     handleFocus () {
       this.updateFocus({projId: this.proId})
