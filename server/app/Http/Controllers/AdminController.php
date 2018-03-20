@@ -1949,34 +1949,43 @@ class AdminController extends Controller
             ])->count();
 
             $projEdited = Model\Project::where([
-                ['project.edited_time', date("Y-m-d")],
+                ['project.edited_time', date("Y-m-d",strtotime('-'.$key.' day'))],
                 ['project.edited', 1],
             ])->count();
 
-            $newProj = Model\Project::where('project.created_at',date("Y-m-d"))->count();
+            $newProj = Model\Project::where('project.created_at',date("Y-m-d",strtotime('-'.$key.' day') ))->count();
 
             $projAllPass = Model\Project::where('project.status', 1)->count();
 
             //项目的总数量
             $dataCount = Model\Project::count();
+            //print_r(substr('2018-02-05 18:14:02','0','10'));die;
+//            $dynTw = Model\CrawlerSocialNews::where([
+//                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime('-'.$key.' day') )],
+//                ['crawler_socialnews.social_id', 3],
+//            ])->count();
 
-            $dynTw = Model\CrawlerSocialNews::where([
-                ['crawler_socialnews.post_time', date("Y-m-d")],
-                ['crawler_socialnews.social_id', 1],
-            ])->count();
+            $dynTw = Model\CrawlerSocialNews::whereDate('crawler_socialnews.updated_at',date("Y-m-d",strtotime('-'.$key.' day') ))
+                ->where('crawler_socialnews.social_id',3)->count();
 
-            $dynFb = Model\CrawlerSocialNews::where([
-                ['crawler_socialnews.post_time', date("Y-m-d")],
-                ['crawler_socialnews.social_id', 1],
-            ])->count();
+//            $dynFb = Model\CrawlerSocialNews::where([
+//                ['crawler_socialnews.updated_at', date("Y-m-d", strtotime('-'.$key.' day'))],
+//                ['crawler_socialnews.social_id', 2],
+//            ])->count();
 
-            $dynWb = Model\CrawlerSocialNews::where([
-                ['crawler_socialnews.post_time', date("Y-m-d")],
-                ['crawler_socialnews.social_id', 1],
-            ])->count();
+            $dynFb = Model\CrawlerSocialNews::whereDate('crawler_socialnews.updated_at',date("Y-m-d",strtotime('-'.$key.' day') ))
+                ->where('crawler_socialnews.social_id',2)->count();
+
+            $dynWb = Model\CrawlerSocialNews::whereDate('crawler_socialnews.updated_at',date("Y-m-d",strtotime('-'.$key.' day') ))
+                ->where('crawler_socialnews.social_id',6)->count();
+
+//            $dynWb = Model\CrawlerSocialNews::where([
+//                ['crawler_socialnews.updated_at', date("Y-m-d", strtotime('-'.$key.' day'))],
+//                ['crawler_socialnews.social_id', 6],
+//            ])->count();
 
             //有更新的项目数量
-            $dyn = Model\Project::whereDate('updated_at', date("Y-m-d"))->count();
+            $dyn = Model\Project::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->count();
 
             $data[$key]['post_time'] = date("Y-m-d",strtotime('-'.$key.' day'));
             $data[$key]['projPass'] = $projPass;
@@ -2008,30 +2017,28 @@ class AdminController extends Controller
         extract($params);
         $offset = $perpage * ($pageno - 1);
         $projs = Model\Project::select()->offset($offset)->limit($perpage)->get()->toArray();
+
         $dataCount = Model\Project::count();
         $data = array();
         foreach ($projs as $key => $proj){
-            //print_r($proj);
-            $wb = Model\CrawlerSocialNews::where([
-                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day"))],
-                ['crawler_socialnews.proj_id', $proj['id']],
-                ['crawler_socialnews.social_id', 1],
-            ])->count();
-            $fb = Model\CrawlerSocialNews::where([
-                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day"))],
-                ['crawler_socialnews.proj_id', $proj['id']],
-                ['crawler_socialnews.social_id', 1],
-            ])->count();
-            $wx = Model\CrawlerSocialNews::where([
-                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day"))],
-                ['crawler_socialnews.proj_id', $proj['id']],
-                ['crawler_socialnews.social_id', 1],
-            ])->count();
-            $tw = Model\CrawlerSocialNews::where([
-                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day"))],
-                ['crawler_socialnews.proj_id', $proj['id']],
-                ['crawler_socialnews.social_id', 1],
-            ])->count();
+
+            $wb = Model\CrawlerSocialNews::whereDate('crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day")))
+                ->where('crawler_socialnews.proj_id', $proj['id'])
+                ->where('crawler_socialnews.social_id', 6)
+                ->count();
+
+            $fb = Model\CrawlerSocialNews::whereDate('crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day")))
+                ->where('crawler_socialnews.proj_id', $proj['id'])
+                ->where('crawler_socialnews.social_id', 2)
+                ->count();
+            $wx = Model\CrawlerSocialNews::whereDate('crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day")))
+                ->where('crawler_socialnews.proj_id', $proj['id'])
+                ->where('crawler_socialnews.social_id', 5)
+                ->count();
+            $tw = Model\CrawlerSocialNews::whereDate('crawler_socialnews.updated_at', date("Y-m-d",strtotime("-1 day")))
+                ->where('crawler_socialnews.proj_id', $proj['id'])
+                ->where('crawler_socialnews.social_id', 3)
+                ->count();
             $data[$key]['proj_id'] = $proj['id'];
             $data[$key]['name'] = $proj['name_cn'];
             $data[$key]['post_time'] = date("Y-m-d",strtotime("-1 day"));
