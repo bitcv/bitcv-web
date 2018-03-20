@@ -54,7 +54,7 @@ class FinanceController extends Controller
             $dataList[$key]->usedname = ($value->used) ? DictUtil::TokenUsed[$value->used] : '';
             $dataList[$key]->typename = ($value->type) ? DictUtil::TokenType[$value->type] : '';
             $dataList[$key]->tokensubjectname = ($value->tokensubject) ? $value->tokensubject : '';
-            $dataList[$key]->realamount = $value->amount / pow(10,18);
+            $dataList[$key]->realamount = $value->amount;
             $dataList[$key]->actualgasprice = (($value->gasprice) / pow(10,18)) * $value->gasused;
         }
         return $this->output([
@@ -223,5 +223,65 @@ class FinanceController extends Controller
         {
             return $this->output();
         }
+    }
+
+    //查询
+    public function searchFinanceList(Request $request)
+    {
+        //获取请求参数
+        $params = $this->validation($request, [
+            'pageno' => 'required|numeric',
+            'perpage' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+        $allparams = $request->all();
+        $offset = $perpage * ($pageno - 1);
+        $query = DB::table('finance');
+        $query = $query->select('finance.*');
+        if (array_key_exists('jyhash', $allparams) && $allparams['jyhash']) {
+            $query = $query->where('finance.transaction_hash',$allparams['jyhash']);
+        }
+        if (array_key_exists('faddr', $allparams) && $allparams['faddr']) {
+            $query = $query->where('finance.from_addr',$allparams['faddr']);
+        }
+        if (array_key_exists('taddr', $allparams) && $allparams['taddr']) {
+            $query = $query->where('finance.to_addr',$allparams['taddr']);
+        }
+        if (array_key_exists('recordstyp', $allparams) && $allparams['recordstyp'] && $allparams['recordstyp'] != 99) {
+            $query = $query->where('finance.type',$allparams['recordstyp']);
+        }
+        if (array_key_exists('feetype', $allparams) && $allparams['feetype'] && $allparams['feetype'] != 99) {
+            $query = $query->where('finance.used',$allparams['feetype']);
+        }
+        if (array_key_exists('conintype',$allparams) && $allparams['conintype'] && $allparams['conintype'] !=99) {
+            $query = $query->where('cointype','like',$allparams['conintype']);
+        }
+        $dataList = $query->orderBy('transaction_time', 'desc')->offset($offset)
+            ->limit($perpage)
+            ->get()->toArray();
+        $datacount = $query->count();
+        foreach ($dataList as $key => $value)
+        {
+            $dataList[$key]->timeformat = substr(date('Y-m-d H:i:s',($value->transaction_time) - (8 * 3600) ),5);
+            $dataList[$key]->walletName = $value->walletname;
+            $dataList[$key]->usedname = ($value->used) ? DictUtil::TokenUsed[$value->used] : '';
+            $dataList[$key]->typename = ($value->type) ? DictUtil::TokenType[$value->type] : '';
+            $dataList[$key]->tokensubjectname = ($value->tokensubject) ? $value->tokensubject : '';
+//            $dataList[$key]->realamount = $value->amount / pow(10,18);
+            $dataList[$key]->realamount = $value->amount;
+            $dataList[$key]->actualgasprice = (($value->gasprice) / pow(10,18)) * $value->gasused;
+        }
+        return $this->output([
+            'dataList' => $dataList,
+            'totalCount' => $datacount,
+            'options' => DictUtil::TokenUsed,
+            'tokentype' => DictUtil::TokenType,
+            'tokensubject' => DictUtil::TokenSubject,
+            'cointypes' => DictUtil::CoinType,
+            'recordstype' => DictUtil::TokenType,
+        ]);
     }
 }
