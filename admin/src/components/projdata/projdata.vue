@@ -31,6 +31,9 @@
       <el-table-column label="weibo总数">
         <template slot-scope="scope">{{ scope.row.wb }}</template>
       </el-table-column>
+      <el-table-column label="wechat总数">
+        <template slot-scope="scope">{{ scope.row.wx }}</template>
+      </el-table-column>
       <!-- <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" @click="showEdit(scope.$index)">编辑</el-button>
