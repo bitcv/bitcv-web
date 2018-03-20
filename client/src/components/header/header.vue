@@ -71,7 +71,7 @@ export default {
   data () {
     return {
       showSide: false,
-      showDropdown: false,
+      showDropdown: false
     }
   },
   computed: {

@@ -73,7 +73,7 @@ export default {
       this.$http.post('/api/getUser').then((res) => {
         if (res.data.errcode === 0) {
           this.user = res.data.data
-          //console.log(this.user)
+          // console.log(this.user)
         }
       })
     },

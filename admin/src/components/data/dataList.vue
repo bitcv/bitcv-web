@@ -105,7 +105,6 @@ export default {
         if (res.data.errcode === 0) {
           this.perList = res.data.data.dataList
           this.dataCount = res.data.data.dataCount
-
         }
       })
     },

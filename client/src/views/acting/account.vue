@@ -117,28 +117,25 @@ export default {
     ...mapState({
       path: state => state.route.path
     }),
-    /*tokenData () {
+    tokenData () {
       let tokenData = {}
       console.log('tokendata')
       this.assetList.forEach(item => {
-        if (item.tokenId == this.orderData.tokenId) {
-          return tokenData = item
+        if (parseInt(item.tokenId) === parseInt(this.orderData.tokenId)) {
+          tokenData = item
         }
       }, this)
-      console.log(tokenData)
       return tokenData
     },
     ethData () {
       let ethData = {}
-      console.log('ethdata')
       this.assetList.forEach(item => {
         if (item.symbol === 'ETH') {
-          return ethData = item
+          ethData = item
         }
       })
-      console.log(ethData)
       return ethData
-    }*/
+    }
   },
   created () {
     let that = this
@@ -158,12 +155,10 @@ export default {
     ...mapActions(['getDispenseBalance', 'getDispenseWallet']),
     fetchBalance () {
       this.balanceLoad = true
-      this.getDispenseBalance({ 
+      this.getDispenseBalance({
         tokenProtocol: this.tokenProtocol
       }).then((data = {}) => {
         this.assetList = data.dataList
-        this.balanceLoad = false
-      }).catch(err => {
         this.balanceLoad = false
       })
     },
