@@ -263,11 +263,12 @@ export default {
       if (!this.walletaddr) {
         return alert('请输入账户地址')
       }
-      if (this.walletId) {
-        this.updWallet()
-      } else {
-        this.addWallet()
-      }
+      // if (this.walletId) {
+      //   this.updWallet()
+      // } else {
+      //   this.addWallet()
+      // }
+      this.addWallet()
     },
     fork () {
       this.$http.post('/api/updateRecords', {
@@ -286,6 +287,7 @@ export default {
     },
     addWallet () {
       this.$http.post('/api/addWallets', {
+        walletId: this.walletId,
         walletaddr: this.walletaddr,
         walletname: this.walletname
       }).then((res) => {
