@@ -18,8 +18,8 @@ class Kernel extends ConsoleKernel
         //
         //Commands\SendSMS::class,
         //Commands\CrawlData::class,
-        Commands\UpdateDb::class,
-        Commands\AddProfit::class,
+        //Commands\UpdateDb::class,
+        //Commands\AddProfit::class,
         //Commands\CrawlRecords::class,
     ];
 
