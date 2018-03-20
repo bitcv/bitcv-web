@@ -198,7 +198,7 @@ export default {
   mounted () {
     this.updateData()
     this.financeData()
-    // this.getCount()
+    this.getCount()
   },
   methods: {
     updateData () {
@@ -221,19 +221,19 @@ export default {
           this.options = res.data.data.options
           this.tokensubject = res.data.data.tokensubject
           this.tokentype = res.data.data.tokentype
-          this.dataCount = res.data.data.totalCount
+          // this.dataCount = res.data.data.totalCount
           this.cointypes = res.data.data.cointypes
           this.recordstype = res.data.data.recordstype
         }
       })
     },
-    // getCount () {
-    //   this.$http.post('/api/getFinanceCount').then((res) => {
-    //     if (res.data.errcode === 0) {
-    //       this.dataCount = res.data.data.totalCount
-    //     }
-    //   })
-    // },
+    getCount () {
+      this.$http.post('/api/getFinanceCount').then((res) => {
+        if (res.data.errcode === 0) {
+          this.dataCount = res.data.data.totalCount
+        }
+      })
+    },
     showAdd () {
       this.walletId = ''
       this.walletname = ''
@@ -263,11 +263,12 @@ export default {
       if (!this.walletaddr) {
         return alert('请输入账户地址')
       }
-      if (this.walletId) {
-        this.updWallet()
-      } else {
-        this.addWallet()
-      }
+      // if (this.walletId) {
+      //   this.updWallet()
+      // } else {
+      //   this.addWallet()
+      // }
+      this.addWallet()
     },
     fork () {
       this.$http.post('/api/updateRecords', {
@@ -286,11 +287,12 @@ export default {
     },
     addWallet () {
       this.$http.post('/api/addWallets', {
+        walletId: this.walletId,
         walletaddr: this.walletaddr,
         walletname: this.walletname
       }).then((res) => {
         if (res.data.errcode === 0) {
-          this.$message({ type: 'success', message: '添加成功!' })
+          this.$message({ type: 'success', message:  this.walletId ? '更新成功!' : '添加成功' })
           this.showDialog = false
           this.updateData()
         }
@@ -342,7 +344,7 @@ export default {
       this.financeData()
     },
     search () {
-      this.$http.post('/api/getFinanceList', {
+      this.$http.post('/api/searchFinanceList', {
         pageno: this.pageno,
         perpage: this.perpage,
         jyhash: this.jyhash,

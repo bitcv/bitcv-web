@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //
         //Commands\SendSMS::class,
-        //Commands\CrawlData::class,
+        Commands\CrawlData::class,
         Commands\UpdateDb::class,
         Commands\AddProfit::class,
         Commands\CrawlRecords::class,
@@ -34,14 +34,14 @@ class Kernel extends ConsoleKernel
         //$schedule->command("crawl:data weibo")->everyMinute()->withoutOverlapping();
         //$schedule->command("crawl:data facebook")->everyMinute()->withoutOverlapping();
         //$schedule->command("crawl:data twitter")->everyMinute()->withoutOverlapping();
-        $schedule->command("crawl:data news")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:data news")->daily()->withoutOverlapping();
 //        $schedule->call(function () {
 //            $this->crawlPrice();
 //        })->everyMinute();
         $schedule->command('add:profit')->dailyAt('00:00');
-        $schedule->command("crawl:data weibo")->everyMinute()->withoutOverlapping();
-        $schedule->command("crawl:data facebook")->everyMinute()->withoutOverlapping();
-        $schedule->command("crawl:data twitter")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:data weibo")->daily()->withoutOverlapping();
+        $schedule->command("crawl:data facebook")->daily()->withoutOverlapping();
+        $schedule->command("crawl:data twitter")->daily()->withoutOverlapping();
         $schedule->command("crawl:data crawlRecords")->daily()->withoutOverlapping();
     }
 
