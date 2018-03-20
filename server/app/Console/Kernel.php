@@ -17,10 +17,10 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //
         //Commands\SendSMS::class,
-//        Commands\CrawlData::class,
-//        Commands\UpdateDb::class,
-//        Commands\AddProfit::class,
-//        Commands\CrawlRecords::class,
+        Commands\CrawlData::class,
+        Commands\UpdateDb::class,
+        Commands\AddProfit::class,
+        Commands\CrawlRecords::class,
     ];
 
     /**
