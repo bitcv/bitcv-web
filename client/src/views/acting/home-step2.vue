@@ -18,7 +18,7 @@
                 <h6>手续费</h6>
                 <p>
                   <img :src="ethData.logoUrl" alt="logo">
-                  <b>{{orderData.totalCount * 0.0016}}</b>
+                  <b>{{(orderData.totalCount + 1) * 0.0016}}</b>
                   <small>ETH</small>
                 </p>
               </el-col>
@@ -46,7 +46,7 @@
                     枚
                   </small>
                   <br>
-                  <i v-if="ethData.amount < orderData.totalCount * 0.0016">余额不足，请先充值</i>
+                  <i v-if="ethData.amount < (orderData.totalCount + 1) * 0.0016">余额不足，请先充值</i>
                 </p>
               </el-col>
             </el-row>
@@ -186,7 +186,7 @@ export default {
       return diffAmount > 0 ? diffAmount : 0
     },
     needEthAmount () {
-      let diffAmount = (this.orderData.totalCount * 0.0016 * Math.pow(10, 18) - this.ethData.amount * Math.pow(10, 18)) / Math.pow(10, 18)
+      let diffAmount = ((this.orderData.totalCount + 1) * 0.0016 * Math.pow(10, 18) - this.ethData.amount * Math.pow(10, 18)) / Math.pow(10, 18)
       return diffAmount > 0 ? diffAmount : 0
     }
   },

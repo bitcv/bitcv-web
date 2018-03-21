@@ -50,11 +50,11 @@
         </template>
       </el-table-column> -->
     </el-table>
-    <el-dialog title="人物信息" :visible.sync="showDialog" center>
+    <!-- <el-dialog title="人物信息" :visible.sync="showDialog" center>
       <el-form label-width="80px">
-        <!-- <el-form-item label="头像">
+        <el-form-item label="头像">
           <el-input v-model="inputLogoUrl" placeholder="请输入人物头像"></el-input>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="头像">
           <el-upload class="upload-box" name="logo" action="/api/uploadFile" :on-success="onLogoSuccess" :show-file-list="false">
             <i class="el-icon-plus"></i>
@@ -75,7 +75,7 @@
         <el-button @click="showDialog = false">取消</el-button>
         <el-button type="primary" @click="submit">确定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <!--Pagination-->
     <!-- <el-pagination class="footer-page-box" @size-change="onSizeChange" @current-change="onCurChange" :current-page="pageno" :page-sizes="[10, 20, 30, 40]" :page-size="perpage" layout="total, sizes, prev, pager, next, jumper" :total="dataCount">
     </el-pagination> -->
@@ -117,13 +117,13 @@ export default {
       this.showDialog = true
     },
     showEdit (index) {
-      var perData = this.perList[index]
-      this.mediaId = perData.id
-      this.inputName = perData.name
-      this.inputLogoUrl = perData.logoUrl
-      this.inputPosition = perData.company
-      this.inputIntro = perData.intro
-      this.showDialog = true
+      // var perData = this.perList[index]
+      // this.mediaId = perData.id
+      // this.inputName = perData.name
+      // this.inputLogoUrl = perData.logoUrl
+      // this.inputPosition = perData.company
+      // this.inputIntro = perData.intro
+      // this.showDialog = true
     },
     onLogoSuccess (res) {
       if (res.errcode === 0) {

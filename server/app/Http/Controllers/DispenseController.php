@@ -237,13 +237,13 @@ class DispenseController extends Controller
         $totalEth = 0;
         foreach ($dispenseList as $index => $data) {
             if ($data['status'] === 0) {
-                $totalAmount += $data['amount'] * pow(10, 8);
+                $totalAmount += $data['amount'] * pow(10, 5);
                 $totalEth += 0.0016;
             } else {
                 unset($dispenseList[$index]);
             }
         }
-        $totalAmount /= pow(10, 8);
+        $totalAmount /= pow(10, 5);
 
         // 更新用户余额表
         $this->updateDispenseBalance($userId);
