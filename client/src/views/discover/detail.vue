@@ -212,7 +212,7 @@
                     <img :src="report.logoUrl" alt="" class="media-object" width="160">
                   </div>
                   <div class="media-body">
-                    <p class="media-heading">{{report.title }}</p>
+                    <p class="media-heading"><a :href="report.linkUrl" target="_blank">{{report.title }}</a></p>
                     <p class="text-darker" v-html="report.content"></p>
                     <p class="text-darker text-right">
                       <span>{{ report.name }}</span>
@@ -228,7 +228,7 @@
                 <ul class="list-unstyled notice-list">
                   <li class="clearfix" v-for="(notice, index) in info.publicList" :key="index">
                     <span class="date">{{ notice.postTime | formatDate }}</span>
-                    <p class="content"><span v-html="notice.title"></span></p>
+                    <p class="content"><a :href="notice.referUrl" target="_blank" class="more"><span v-html="notice.title"></span></a></p>
                   </li>
                 </ul>
               </div>
