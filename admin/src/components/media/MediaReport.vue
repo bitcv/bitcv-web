@@ -26,6 +26,9 @@
       <el-table-column label="发布时间">
         <template slot-scope="scope">{{ scope.row.postTime }}</template>
       </el-table-column>
+      <el-table-column label="更新时间">
+        <template slot-scope="scope">{{ scope.row.updateAt }}</template>
+      </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <!-- <el-button size="mini" @click="showEdit(scope.$index)">编辑</el-button> -->
