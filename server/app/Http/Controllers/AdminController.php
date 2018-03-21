@@ -1985,6 +1985,10 @@ class AdminController extends Controller
 //                ['crawler_socialnews.social_id', 6],
 //            ])->count();
 
+            $dynWx = Model\CrawlerSocialNews::whereDate('crawler_socialnews.updated_at',date("Y-m-d",strtotime('-'.$key.' day') ))
+                ->where('crawler_socialnews.social_id',5)->count();
+
+
             //有更新的项目数量
             $dyn = Model\Project::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->count();
 
@@ -1998,6 +2002,7 @@ class AdminController extends Controller
             $data[$key]['dynTw'] = $dynTw;
             $data[$key]['dynFb'] = $dynFb;
             $data[$key]['dynWb'] = $dynWb;
+            $data[$key]['dynWx'] = $dynWx;
         }
 
         return $this->output([
