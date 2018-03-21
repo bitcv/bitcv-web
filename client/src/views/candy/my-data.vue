@@ -52,7 +52,7 @@
               <td>{{convertDate(item.orderTime)}}</td>
               <td>{{item.orderAmount}}</td>
               <td>{{item.lockTime}} {{ $t('label.day') }}</td>
-              <td>{{item.interestRate * item.orderAmount * item.lockTime / 12}} {{ $t('label.coin_amount') }}</td>
+              <td>{{(item.interestRate * item.orderAmount * item.lockTime / 365).toFixed(3)}} {{ $t('label.coin_amount') }}</td>
               <td>
                 <span v-if="item.status === 0" class="btn-box">
                   <button class="btn btn-warning" @click="handleConfirm(item.id)">{{ $t('label.confirm_o') }}</button><br>
