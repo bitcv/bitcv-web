@@ -40,6 +40,9 @@
       <el-table-column label="weibo总数">
         <template slot-scope="scope">{{ scope.row.dynWb }}</template>
       </el-table-column>
+      <el-table-column label="wechat总数">
+        <template slot-scope="scope">{{ scope.row.dynWx }}</template>
+      </el-table-column>
       <!-- <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" @click="showEdit(scope.$index)">编辑</el-button>
