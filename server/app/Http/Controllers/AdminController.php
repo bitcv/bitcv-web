@@ -1400,7 +1400,8 @@ class AdminController extends Controller
         $projAdvisor = Model\CrawlerSocialNews::from('crawler_socialnews as A')->
         join('project as B','A.proj_id','=','B.id')
             ->join('social as C','A.social_id','=','C.id')
-            ->select("A.id as id",'B.name_cn as name_cn','A.official_name as official_name','A.title as title','C.font_class as font_class','A.logo_url as logo_url','A.post_time as post_time');
+            ->select("A.id as id",'B.name_cn as name_cn','A.official_name as official_name','A.title as title','C.font_class as font_class','A.logo_url as logo_url','A.post_time as post_time')
+            ->orderBy('A.updated_at','desc');
 
         $projAdvisorList = $projAdvisor->offset($offset)->limit($perpage)->get()->toArray();
         $dataCount = $projAdvisor->count();
