@@ -94,14 +94,15 @@ class FinanceController extends Controller
         //获取请求的参数
         $params = $this->validation($request, [
             'transaction_hash' => 'required',
-            'used' => 'required|numeric'
+            // 'used' => 'required|numeric'
         ]);
+
         if ($params === false) {
             return $this->error(100);
         }
         extract($params);
         $receive = $request -> all();
-        $data['used'] = $params['used'];
+        $data['used'] = $receive['used'];
         $data['type'] = $receive['type'];
         $data['tokensubject'] = $receive['tokensubject'];
         $data['memo'] = $receive['memo'];
