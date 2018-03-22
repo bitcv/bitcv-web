@@ -1400,7 +1400,8 @@ class AdminController extends Controller
         $projAdvisor = Model\CrawlerSocialNews::from('crawler_socialnews as A')->
         join('project as B','A.proj_id','=','B.id')
             ->join('social as C','A.social_id','=','C.id')
-            ->select("A.id as id",'B.name_cn as name_cn','A.official_name as official_name','A.title as title','C.font_class as font_class','A.logo_url as logo_url','A.post_time as post_time');
+            ->select("A.id as id",'A.updated_at as update_at','B.name_cn as name_cn','A.official_name as official_name','A.title as title','C.font_class as font_class','A.logo_url as logo_url','A.post_time as post_time')
+            ->orderBy('A.updated_at','desc');
 
         $projAdvisorList = $projAdvisor->offset($offset)->limit($perpage)->get()->toArray();
         $dataCount = $projAdvisor->count();
@@ -1984,6 +1985,10 @@ class AdminController extends Controller
 //                ['crawler_socialnews.social_id', 6],
 //            ])->count();
 
+            $dynWx = Model\CrawlerSocialNews::whereDate('crawler_socialnews.updated_at',date("Y-m-d",strtotime('-'.$key.' day') ))
+                ->where('crawler_socialnews.social_id',5)->count();
+
+
             //有更新的项目数量
             $dyn = Model\Project::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->count();
 
@@ -1997,6 +2002,7 @@ class AdminController extends Controller
             $data[$key]['dynTw'] = $dynTw;
             $data[$key]['dynFb'] = $dynFb;
             $data[$key]['dynWb'] = $dynWb;
+            $data[$key]['dynWx'] = $dynWx;
         }
 
         return $this->output([

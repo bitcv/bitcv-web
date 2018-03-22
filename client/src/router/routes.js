@@ -10,21 +10,21 @@ export default [{
   path: '/',
   component: getViews('home/home'),
   meta: {
-    title: '币威 - 区块链数字资产管理服务引擎'
+    title: '币威--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
   // 发现
   path: '/discover',
   component: getViews('discover/discover'),
   meta: {
-    title: '发现'
+    title: '发现--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
   // 项目详情
   path: '/discover/detail/:id',
   component: getViews('discover/detail'),
   meta: {
-    title: '项目详情'
+    title: '项目详情--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
   // 钱包
@@ -32,7 +32,7 @@ export default [{
   component: getViews('user/wallet'),
   meta: {
     requiresAuth: true,
-    title: '钱包'
+    title: '钱包--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
   // 提现
@@ -40,7 +40,7 @@ export default [{
   component: getViews('user/withdraw'),
   meta: {
     requiresAuth: true,
-    title: '提现'
+    title: '提现--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
   // 钱包记录
@@ -48,7 +48,7 @@ export default [{
   component: getViews('user/records'),
   meta: {
     requiresAuth: true,
-    title: '钱包记录'
+    title: '钱包记录--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
   // 余币宝
@@ -60,25 +60,25 @@ export default [{
     // component: getComponent('candyRoom/CandyList')
     component: getViews('candy/list'),
     meta: {
-      title: '余币包'
+      title: '余币宝--BitCV-区块链数字资产管理服务引擎'
     }
   }, {
     path: 'candyListAssets', // 资产明细
     component: getViews('candy/list-assets'),
     meta: {
-      title: '资产明细'
+      title: '资产明细--BitCV-区块链数字资产管理服务引擎'
     }
   }, {
     path: 'candyListProfit', // 收益明细
     component: getViews('candy/list-profit'),
     meta: {
-      title: '收益明细'
+      title: '收益明细--BitCV-区块链数字资产管理服务引擎'
     }
   }, {
     path: 'candyListPlan', // 已购计划列表
     component: getViews('candy/list-plan'),
     meta: {
-      title: '已购计划列表'
+      title: '已购计划列表--BitCV-区块链数字资产管理服务引擎'
     }
   }, {
     path: 'candyBuy',
@@ -86,28 +86,28 @@ export default [{
     component: getViews('candy/buying'),
     meta: {
       requiresAuth: true,
-      title: '购买'
+      title: '购买--BitCV-区块链数字资产管理服务引擎'
     }
   }, {
     path: 'candyOrder',
     component: getViews('candy/order'),
     meta: {
       requiresAuth: true,
-      title: '订单'
+      title: '订单--BitCV-区块链数字资产管理服务引擎'
     }
   }, {
     path: 'candyDetails',
     component: getViews('candy/details'),
     meta: {
       requiresAuth: true,
-      title: '详情'
+      title: '详情--BitCV-区块链数字资产管理服务引擎'
     }
   }, {
     path: 'candyMyData',
     component: getViews('candy/my-data'),
     meta: {
       requiresAuth: true,
-      title: '记录'
+      title: '明细--BitCV-区块链数字资产管理服务引擎'
     }
   }
   // {
@@ -146,35 +146,35 @@ export default [{
     component: getViews('acting/home'),
     meta: {
       requiresAuth: true,
-      title: '代发宝'
+      title: '代发宝--BitCV-区块链数字资产管理服务引擎'
     }
   }, { // 代发账户
     path: 'account',
     component: getViews('acting/account'),
     meta: {
       requiresAuth: true,
-      title: '代发账户'
+      title: '代发账户--BitCV-区块链数字资产管理服务引擎'
     }
   }, { // 发放记录
     path: 'record',
     component: getViews('acting/record'),
     meta: {
       requiresAuth: true,
-      title: '发送记录'
+      title: '发送记录--BitCV-区块链数字资产管理服务引擎'
     }
   }, { // 发放记录-详情
     path: 'record/detail/:taskId',
     component: getViews('acting/record-detail'),
     meta: {
       requiresAuth: true,
-      title: '记录详情'
+      title: '记录详情--BitCV-区块链数字资产管理服务引擎'
     }
   }, { // 帮助说明
     path: 'explain',
     component: getViews('acting/explain'),
     meta: {
       requiresAuth: true,
-      title: '帮助说明'
+      title: '帮助说明--BitCV-区块链数字资产管理服务引擎'
     }
   }]
 }, {
@@ -183,45 +183,45 @@ export default [{
   component: getComponent('apply/Apply'),
   meta: {
     requiresAuth: true,
-    title: '新建项目'
+    title: '新建项目--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
   // 注册
   path: '/signup',
   component: getComponent('sign/Signup'),
   meta: {
-    title: '注册'
+    title: '注册--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
   // 登录
   path: '/signin',
   component: getComponent('sign/Signin'),
   meta: {
-    title: '登录'
+    title: '登录--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
   path: '/share',
   component: getComponent('share/Share'),
   meta: {
-    title: '分享'
+    title: '分享--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
   path: '/protocol',
   component: getComponent('sign/Protocol'),
   meta: {
-    title: '协议'
+    title: '协议--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
   path: '/findpwd',
   component: getComponent('sign/FindPwd'),
   meta: {
-    title: '找回密码'
+    title: '找回密码--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
   path: '/resetpwd/:mobile',
   component: getComponent('sign/ResetPwd'),
   meta: {
-    title: '重置密码'
+    title: '重置密码--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
   // 404
