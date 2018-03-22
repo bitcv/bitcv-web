@@ -166,9 +166,6 @@ export default {
       walletList: [],
       financeList: [],
       showDialog: false,
-      inputName: '',
-      inputLogoUrl: '',
-      inputHomeUrl: '',
       pageno: 1,
       perpage: 10,
       dataCount: 0,
@@ -243,8 +240,8 @@ export default {
     editShow (row, _index) {
       this.editObj = row
       this.hash = this.financeList[_index].transaction_hash
-      this.tokentypeId = this.editObj.typename
-      this.usedId = this.editObj.usedname
+      this.tokentypeId = this.editObj.type + ''
+      this.usedId = this.editObj.used + ''
       this.tokensub = this.editObj.tokensubject
       this.memo = this.editObj.memo
       this.showDialog = true
@@ -292,7 +289,7 @@ export default {
         walletname: this.walletname
       }).then((res) => {
         if (res.data.errcode === 0) {
-          this.$message({ type: 'success', message:  this.walletId ? '更新成功!' : '添加成功' })
+          this.$message({ type: 'success', message: this.walletId ? '更新成功!' : '添加成功' })
           this.showDialog = false
           this.updateData()
         }
