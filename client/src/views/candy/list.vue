@@ -104,7 +104,8 @@
               <td>{{ item.minAmount }} {{ $t('label.coin_amount') }}</td>
               <td><span class="text-primary">{{ item.remainAmount }} {{ $t('label.coin_amount') }}</span></td>
               <td>
-                <router-link class="btn btn-primary btn-sm btn-nocorner" :to="{path: '/candyRoom/candyBuy', query: item}">{{  $t('label.buy')}}</router-link>
+                <button class="btn btn-primary btn-sm btn-nocorner" :disabled = "item.remainAmount < item.minAmount" @click="toNext(item)">{{$t('label.buy')}}</button>
+                <!--<router-link class="btn btn-primary btn-sm btn-nocorner" disabled :to="{path: '/candyRoom/candyBuy', query: item}">{{  $t('label.buy')}}</router-link>-->
               </td>
             </tr>
           </tbody>
@@ -253,6 +254,10 @@ export default {
     onPageClick (page) {
       this.currentPage = page
       this.fetch()
+    },
+    toNext (item) {
+      console.log('tonext')
+      this.$router.push({path: '/candyRoom/candyBuy', query: item})
     }
   }
 }
