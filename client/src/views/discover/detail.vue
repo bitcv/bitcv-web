@@ -204,31 +204,31 @@
             </div><!-- /#partner -->
           </div>
           <div v-if="activeName == 'dynamic'" class="tab-content">
-            <div id="media" class="panel-body">
+            <div id="offical" class="panel-body" v-if="info.reportList && info.reportList.length">
               <h4 class="sub-title">{{ $t('label.media') }}</h4>
-              <div class="sub-content" :href="report.bannerUrl" target="_blank" v-for="(report, index) in info.reportList" :key="index">
-                <div class="media">
-                  <div class="media-left">
-                    <img :src="report.logoUrl" alt="" class="media-object" width="160">
-                  </div>
-                  <div class="media-body">
-                    <p class="media-heading"><a :href="report.linkUrl" target="_blank">{{report.title }}</a></p>
-                    <p class="text-darker" v-html="report.content"></p>
-                    <p class="text-darker text-right">
-                      <span>{{ report.name }}</span>
-                      <span class="text-dark">{{ report.releaseTime}}</span>
-                    </p>
-                  </div>
-                </div>
+              <div class="sub-content">
+                <ul class="list-unstyled media-list">
+                  <li class="clearfix" v-for="(report, index) in info.reportList" :key="index">
+                    <p style="float: right;font-size:12px;color:#A1A1A1;margin-right:28px;">来自 {{ report.name }}</p>
+                    <p class="content"><span >{{ report.releaseTime | formatDate }}</span><a :href="report.linkUrl" target="_blank" class="more"><span class= "title" v-html="report.title"></span></a></p>
+                  </li>
+                </ul>
               </div>
+            </div>
+            <div v-else>
+              <div class="panel-body">
+                <h4>{{ $t('label.media') }}</h4>
+                <div style="height: 82px;">
+                  <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
+                </div>
+            </div>
             </div>
             <div id="offical" class="panel-body" v-if="info.publicList && info.publicList.length">
               <h4 class="sub-title">{{ $t('label.anno') }}</h4>
               <div class="sub-content">
                 <ul class="list-unstyled notice-list">
                   <li class="clearfix" v-for="(notice, index) in info.publicList" :key="index">
-                    <span class="date">{{ notice.postTime | formatDate }}</span>
-                    <p class="content"><a :href="notice.referUrl" target="_blank" class="more"><span v-html="notice.title"></span></a></p>
+                    <p class="content"><span class="date">{{ notice.postTime | formatDate }}</span><span style="margin-left:36px;" v-html="notice.title"></span></p>
                   </li>
                 </ul>
               </div>
@@ -238,41 +238,64 @@
               <div class="sub-content community">
                 <div class="media" v-for="(social, index) in info.dynamicList" :key="index">
                   <div class="media-left">
-                    <img :src="social.logoUrl" alt="" class="media-object" width="40">
+                    <img :src="social.logoUrl" alt=""  class="media-object" width="40">
                   </div>
                   <div class="media-body text-darker">
                     <p class="media-heading">{{ social.officialName }}</p>
                     <p class="small text-dark">{{ social.postTime }} 来自 {{ social.name }}</p>
-                    <p class="content"><span v-html="social.title"></span><a :href="social.referUrl" target="_blank" class="more">{{ $t('label.view_full') }}</a></p>
+                    <p class="content"><span v-html="social.title"></span></p>
+                    <a :href="social.referUrl" target="_blank" class="more">{{ $t('label.view_full') }}</a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <!-- <div class="col-md-4 col">
-          <div class="panel-body text-darker" style="padding-top: 0">
-            <h4>{{ $t('label.claim_co') }}</h4>
-            <p class="text-center" style="height:200px;">
-              <img src="https://placehold.it/100x100" style="width:100px;height100px;margin-top:50px;">
+        <div class="col-md-4 col">
+          <div class="panel-body text-darker score" style="padding-top: 0">
+            <h4 style="text-align:center;font-weight:bold;">{{ "币威指数" }}</h4>
+            <!-- <p class="text-center" style="width: 300px;margin-top: 40px;">
+              <span class = "score">{{score.score }}</span><br>
+            </p> -->
+            <p class="text-center" style="margin-top: 37px;">
+            <!-- <div class="circle_process">
+              <div class="wrapper right">
+                <div class="circle rightcircle"></div>
+              </div>
+              <div class="wrapper left">
+                <div class="circle leftcircle" id="leftcircle"></div>
+              </div>
+            </div> -->
+              <el-progress type="circle" width = "150" stroke-width= "12" :percentage="score.score" ></el-progress>
             </p>
-            <div v-if="address">
-              <h4>{{ $t('label.co_address') }}</h4>
-              <p><span class="icon-bcv icon-loufang01"></span> {{ address }}</p>
-            </div>
           </div>
-        </div> -->
+          <div >
+            <p class="text-center" style="margin-left:16px; margin-right:15px;">
+              <!-- <span style="font-size: 12px;">综合评价</span> -->
+              <img :src="'/static/img/question.png'" style="height:12px;width:12px;vertical-align:middle;" alt="">
+              <span style="font-size:12px;color:rgba(155,155,155,1);line-height:16px;text-align:center;margin-top:7px;margin-left:2px;margin-right:15px;">币威指数是根据项目动态更新频率产生的综合评分，我们将逐步完善更多评分选项。</span>
+            </p>
+          </div>
+        </div>
+        <!-- <div class="creditRating">
+					  <canvas class="arcBar" id="rating" width="300" height="260"></canvas>
+            <div class="creditScore">
+              <p><span class="grade">A</span><span class="status">信用优良</span></p>
+              <p><span class="value">700</span>分</p>
+              <p><img src="../images/loan/arrow.png"/></p>
+            </div>
+				</div> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex'
-import {swiper, swiperSlide} from 'vue-awesome-swiper'
-import {formatDate} from '@/utils/utils'
-import Share from '@/components/share/Share'
-import html2canvas from 'html2canvas'
+import { mapState, mapActions } from "vuex";
+import { swiper, swiperSlide } from "vue-awesome-swiper";
+import { formatDate } from "@/utils/utils";
+import Share from "@/components/share/Share";
+import html2canvas from "html2canvas";
 
 export default {
   props: {
@@ -283,148 +306,352 @@ export default {
     swiperSlide,
     Share
   },
-  data () {
+  data() {
     return {
       info: {},
+      score: {},
       viewNum: {},
-      activeName: 'info',
+      word: "",
+      reports: [],
+      ctx: "",
+      activeName: "info",
       swiperOption: {
         autoplay: true
       },
+      showAll: false,
       showShare: false,
-      shareUrl: '',
+      shareUrl: "",
       infoList: [
-        {text: '项目信息', target: '#info', active: true},
-        {text: '团队信息', target: '#team', active: false},
-        {text: '项目发展', target: '#develop', active: false},
-        {text: '合作伙伴', target: '#partner', active: false}
+        { text: "项目信息", target: "#info", active: true },
+        { text: "团队信息", target: "#team", active: false },
+        { text: "项目发展", target: "#develop", active: false },
+        { text: "合作伙伴", target: "#partner", active: false }
       ],
       e_infoList: [
-        {text: 'Project Information', target: '#info', active: true},
-        {text: 'Team Information', target: '#team', active: false},
-        {text: 'Project Development', target: '#develop', active: false},
-        {text: 'Cooperative Partner', target: '#partner', active: false}
+        { text: "Project Information", target: "#info", active: true },
+        { text: "Team Information", target: "#team", active: false },
+        { text: "Project Development", target: "#develop", active: false },
+        { text: "Cooperative Partner", target: "#partner", active: false }
       ],
       dynamicList: [
-        {text: '媒体报道', target: '#media', active: true},
-        {text: '官方发布', target: '#offical', active: false},
-        {text: '社区发布', target: '#community', active: false}
+        { text: "媒体报道", target: "#media", active: true },
+        { text: "官方发布", target: "#offical", active: false },
+        { text: "社区发布", target: "#community", active: false }
       ],
       e_dynamicList: [
-        {text: 'Media Coverage', target: '#media', active: true},
-        {text: 'Official Announcement', target: '#offical', active: false},
-        {text: 'Community Release', target: '#community', active: false}
+        { text: "Media Coverage", target: "#media", active: true },
+        { text: "Official Announcement", target: "#offical", active: false },
+        { text: "Community Release", target: "#community", active: false }
       ]
-    }
+    };
   },
   filters: {
-    formatDate (time) {
-      let date = new Date(time)
-      return formatDate(date, 'yyyy-MM-dd')
+    formatDate(time) {
+      let date = new Date(time);
+      return formatDate(date, "yyyy-MM-dd");
     }
   },
   computed: {
     ...mapState({
       proId: state => state.route.params.id
     }),
-    swiper () {
-      return this.$refs.swiper.swiper
+    swiper() {
+      return this.$refs.swiper.swiper;
     },
-    address () {
-      const {
-        companyAddr,
-        companyEmail
-      } = this.info
+    address() {
+      const { companyAddr, companyEmail } = this.info;
       if (companyAddr && companyEmail) {
-        return `${companyEmail} ${companyAddr}`
+        return `${companyEmail} ${companyAddr}`;
       }
-      return ''
+      return "";
     },
-    language () {
-      return this.$i18n.locale
+    language() {
+      return this.$i18n.locale;
     }
   },
-  created () {
-    this.fetch()
+  created() {
+    this.fetch();
   },
-  mounted () {
-    this.viewProjectd()
+  mounted() {
+    this.viewProjectd();
+    this.start();
   },
   methods: {
-    ...mapActions([
-      'getProDetail',
-      'viewProject',
-      'updateFocus'
-    ]),
-    swiperPrev () {
-      this.swiper.slidePrev()
+    ...mapActions(["getProDetail", "viewProject", "getScore", "updateFocus"]),
+    swiperPrev() {
+      this.swiper.slidePrev();
     },
-    swiperNext () {
-      this.swiper.slideNext()
+    swiperNext() {
+      this.swiper.slideNext();
     },
-    onTabItemClick (list, item) {
+    onTabItemClick(list, item) {
       list.map(item => {
-        item.active = false
-      })
+        item.active = false;
+      });
 
-      item.active = true
+      item.active = true;
     },
-    fetch () {
-      this.getProDetail({projId: this.proId})
-        .then((data = {}) => (this.info = data))
-    },
-    viewProjectd () {
-      this.viewProject({projId: this.proId})
-        .then((data = {}) => (this.viewNum = data))
-    },
-    handleFocus () {
-      this.updateFocus({projId: this.proId})
-        .then(data => {
-          // 修改关注状态
-          this.$set(this.info, 'focusStatus', this.info.focusStatus === 0 ? 1 : 0)
+    // 画弧线
+    sector(cx, cy, r, startAngle, endAngle, anti) {
+      var canvas = document.getElementById("rating");
+      var ctx = canvas.getContext("2d");
+      ctx.beginPath();
+      ctx.lineWidth = lineWidth;
 
-          // 修改关注数量
-          let {focusNum} = this.info
+      // 渐变色 - 可自定义
+      var linGrad = ctx.createLinearGradient(
+        circleX,
+        circleY - radius - lineWidth,
+        circleX,
+        circleY + radius + lineWidth
+      );
+      linGrad.addColorStop(0.0, "#1FD8B9"); // 绿色
+      linGrad.addColorStop(0.3, "#FAED30"); // 黄色
+      linGrad.addColorStop(0.4, "#F8C828"); // 橙色
+      linGrad.addColorStop(0.5, "#FAED30"); // 黄色
+      linGrad.addColorStop(0.8, "#FA4C20"); // 橙色
+      linGrad.addColorStop(1.0, "#15A49B"); // 红色
+      this.ctx.strokeStyle = linGrad;
 
-          this.$set(this.info, 'focusNum', this.info.focusStatus === 0 ? focusNum - 1 : focusNum + 1)
-        })
+      // 圆弧两端的样式
+      this.ctx.lineCap = "round";
+
+      // 圆弧
+      this.ctx.arc(
+        cx,
+        cy,
+        r,
+        startAngle,
+        endAngle * (Math.PI / 180.0) + Math.PI * 0.75
+      );
+      this.ctx.stroke();
     },
-    openShare: function () {
-      this.showShare = true
-      if (this.shareUrl) return
-      this.$nextTick(() => {
-        html2canvas(document.querySelector('#shareCard')).then(canvas => {
-          document.querySelector('#shareBox').innerHTML = ''
-          var url = canvas.toDataURL()
-          this.shareUrl = url
-          var newImg = document.createElement('img')
-          newImg.src = url
-          newImg.style.width = '90%'
-          newImg.class = 'share-img'
-          document.querySelector('#shareBox').appendChild(newImg)
-        })
-      })
+    circle(cx, cy, r) {
+      var canvas = document.getElementById("rating");
+      var ctx = canvas.getContext("2d");
+      ctx.beginPath();
+      ctx.lineWidth = lineWidth;
+      ctx.strokeStyle = "#0C786C";
+      ctx.arc(cx, cy, r, Math.PI * 0.75, Math.PI * 2.25);
+      ctx.stroke();
     },
-    toggleFocus: function () {
-      var userId = localStorage.getItem('userId')
-      if (!userId) {
-        return alert('请登录')
+    circleLine(cx, cy) {
+      var canvas = document.getElementById("rating");
+      var ctx = canvas.getContext("2d");
+      var R = 105;
+      ctx.beginPath();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "#C2F4F4";
+      ctx.arc(cx, cy, R, Math.PI * 0.75, Math.PI * 2.25);
+      ctx.stroke();
+    },
+    start() {
+      var process = 0.0; // 进度
+
+      var circleLoading = this.setInterval(function() {
+        this.loading();
+      }, 20);
+    },
+    loading() {
+      var canvas = document.getElementById("rating");
+      ctx = canvas.getContext("2d");
+      (percent = 85.0), // 最终百分比
+        (circleX = canvas.width / 2), // 中心x坐标
+        (circleY = canvas.height / 2), // 中心y坐标
+        (radius = 120), // 圆环半径
+        (lineWidth = 10), // 圆形线条的宽度
+        (fontSize = 50); // 字体大小
+
+      if (process >= percent) {
+        clearInterval(circleLoading);
       }
-      this.$http.post('/api/toggleFocus', {
-        projId: this.projDetail.id
-      }).then((res) => {
-        var resData = res.data
-        if (resData.errcode === 0) {
-          this.projDetail.focusStatus = resData.data.status
-        }
-      })
+
+      // 清除canvas内容
+      ctx.clearRect(0, 0, circleX * 2, circleY * 2);
+
+      // 弧圆
+      this.circle(circleX, circleY, radius);
+      // 里面的弧线
+      this.circleLine(circleX, circleY, radius);
+
+      // 圆弧
+      this.sector(
+        circleX,
+        circleY,
+        radius,
+        Math.PI * 0.75,
+        process / 100 * 270
+      );
+
+      // 控制结束时动画的速度
+      if (process / percent > 0.9) {
+        process += 0.3;
+      } else if (process / percent > 0.8) {
+        process += 0.55;
+      } else if (process / percent > 0.7) {
+        process += 0.75;
+      } else {
+        process += 1.0;
+      }
+    },
+    fetch() {
+      this.getProDetail({ projId: this.proId }).then(
+        (data = {}) => (this.info = data)
+      );
+      this.getScore({ id: this.proId }).then(
+        (data = {}) => (this.score = data)
+      );
+      this.circle(80);
+    },
+    viewProjectd() {
+      this.viewProject({ projId: this.proId }).then(
+        (data = {}) => (this.viewNum = data)
+      );
+    },
+    handleFocus() {
+      this.updateFocus({ projId: this.proId }).then(data => {
+        // 修改关注状态
+        this.$set(
+          this.info,
+          "focusStatus",
+          this.info.focusStatus === 0 ? 1 : 0
+        );
+
+        // 修改关注数量
+        let { focusNum } = this.info;
+
+        this.$set(
+          this.info,
+          "focusNum",
+          this.info.focusStatus === 0 ? focusNum - 1 : focusNum + 1
+        );
+      });
+    },
+    openShare: function() {
+      this.showShare = true;
+      if (this.shareUrl) return;
+      this.$nextTick(() => {
+        html2canvas(document.querySelector("#shareCard")).then(canvas => {
+          document.querySelector("#shareBox").innerHTML = "";
+          var url = canvas.toDataURL();
+          this.shareUrl = url;
+          var newImg = document.createElement("img");
+          newImg.src = url;
+          newImg.style.width = "90%";
+          newImg.class = "share-img";
+          document.querySelector("#shareBox").appendChild(newImg);
+        });
+      });
+    },
+    toggleFocus: function() {
+      var userId = localStorage.getItem("userId");
+      if (!userId) {
+        return alert("请登录");
+      }
+      this.$http
+        .post("/api/toggleFocus", {
+          projId: this.projDetail.id
+        })
+        .then(res => {
+          var resData = res.data;
+          if (resData.errcode === 0) {
+            this.projDetail.focusStatus = resData.data.status;
+          }
+        });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~@/styles/variables';
+@import "~@/styles/variables";
+.creditRating {
+  position: relative;
+}
+.arcBar {
+  display: block;
+  margin: 0 auto;
+}
+.creditScore {
+  width: 165px;
+  height: 190px;
+  margin: 0 auto;
+  margin-top: -190px;
+  background-color: transparent;
+}
+.creditScore p {
+  color: #fff;
+  font-size: 16px;
+  line-height: 40px;
+  text-align: center;
+}
+.creditScore p img {
+  width: 25px;
+  margin-top: 10px;
+}
+.creditScore p .grade {
+  margin-right: 5px;
+}
+.creditScore p .value {
+  font-size: 54px;
+}
+.circle_process {
+  position: relative;
+  width: 199px;
+  height: 200px;
+}
+.circle_process .wrapper {
+  width: 100px;
+  height: 200px;
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+}
+.circle_process .right {
+  right: 0;
+}
+.circle_process .left {
+  left: 0;
+}
+.circle_process .circle {
+  width: 160px;
+  height: 160px;
+  border: 20px solid transparent;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  transform: rotate(-135deg);
+}
+.circle_process .rightcircle {
+  border-top: 20px solid green;
+  border-right: 20px solid green;
+  right: 0;
+  -webkit-animation: circle_right 5s linear infinite;
+}
+.circle_process .leftcircle {
+  border-bottom: 20px solid green;
+  border-left: 20px solid green;
+  left: 0;
+  -webkit-animation: circle_left 5s linear infinite;
+}
+@-webkit-keyframes circle_right {
+  0% {
+    -webkit-transform: rotate(-135deg);
+  }
+  50%,
+  100% {
+    -webkit-transform: rotate(45deg);
+  }
+}
+@-webkit-keyframes circle_left {
+  0%,
+  50% {
+    -webkit-transform: rotate(-135deg);
+  }
+  100% {
+    -webkit-transform: rotate(45deg);
+  }
+}
 .span-group {
   margin-top: 15px;
   margin-bottom: 15px;
@@ -476,7 +703,8 @@ export default {
         border: none;
         border-radius: 0;
         border-bottom: 2px solid transparent;
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           color: $primary-color;
           background-color: transparent;
         }
@@ -508,7 +736,8 @@ export default {
       color: $gray-dark;
     }
   }
-  .swiper-button-prev, .swiper-button-next {
+  .swiper-button-prev,
+  .swiper-button-next {
     background-image: none;
     width: 30px;
     height: 30px;
@@ -591,7 +820,7 @@ export default {
   padding-top: 20px;
   overflow: hidden;
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     width: 1px;
     top: 0;
@@ -627,7 +856,7 @@ export default {
           left: 0;
           text-align: right;
           &:after {
-            content: '';
+            content: "";
             position: absolute;
             width: 10px;
             height: 10px;
@@ -653,6 +882,7 @@ export default {
     }
     .content {
       margin-right: 120px;
+      width: 586px;
       color: $gray-darker;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -660,14 +890,79 @@ export default {
     }
   }
 }
+.media-list {
+  li {
+    line-height: 2;
+    > .date {
+      width: 120px;
+      font-size: 12px;
+      color: #a1a1a1;
+    }
+    .content {
+      width: 560px;
+      color: $gray-darker;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .title {
+      margin-left: 36px;
+      margin-right: 36px;
+    }
+    .source {
+      font-size: 12px;
+      color: #a1a1a1;
+    }
+  }
+  .show-more {
+    cursor: pointer;
+    color: red;
+  }
+}
+.score {
+  border-bottom: 1px dashed $gray-light;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+// .score {
+//   width:2450px;
+//   height:600px;
+//   line-height:30px;
+//   background:rgba(255,255,255,1);
+//   // box-shadow: 1px 1px 1px 1px red;
+//   //border-style:solid;
+//   border-width:1px;
+//   border-radius: 6px ;
+//   font-size: 48px;
+//   color: #FC9E3C;
+//   padding: 5px 20px;
+// }
 .community .media {
   border-bottom: 1px dashed $gray-light;
+  margin-top: 16px;
   .content {
-    margin-top: 15px;
+    // letter-spacing:1px;
+    line-height: 24px;
+    letter-spacing: 1px;
+    font-size: 14px;
+    width: 550px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
     > a.more {
       float: right;
       color: $primary-color;
     }
+  }
+  .media-heading {
+    font-weight: bold;
+  }
+  .more {
+    float: right;
+    margin-right: 28px;
+    margin-bottom: 16px;
   }
 }
 @media (min-width: 992px) {
@@ -679,7 +974,7 @@ export default {
         position: relative;
         float: none;
         &:first-child:after {
-          content: '';
+          content: "";
           position: absolute;
           width: 2px;
           right: 0;
@@ -729,36 +1024,36 @@ export default {
   margin: 0 auto;
 }
 .share-box {
-    height: 46px;
-    display: flex;
-    position: absolute;
-    right: 40px;
-    bottom: 0;
-    align-items: center;
-    font-size: 14px;
-    line-height: 20px;
-    color: #000;
-    cursor: pointer;
-    img {
-      width: 23px;
-      height: 23px;
-      margin: 0 5px;
-    }
+  height: 46px;
+  display: flex;
+  position: absolute;
+  right: 40px;
+  bottom: 0;
+  align-items: center;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  cursor: pointer;
+  img {
+    width: 23px;
+    height: 23px;
+    margin: 0 5px;
   }
-  .share-container {
-    width: 400px;
-    position: fixed;
-    z-index: 10;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    cursor: pointer;
-    margin: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    &>img {
-      width: 100%;
-    }
+}
+.share-container {
+  width: 400px;
+  position: fixed;
+  z-index: 10;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & > img {
+    width: 100%;
   }
+}
 </style>

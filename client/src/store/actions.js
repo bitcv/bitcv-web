@@ -4,11 +4,11 @@ const handleErr = (msg) => {
   alert(msg)
 }
 
-export const reLogin = ({commit}) => {
+export const reLogin = ({ commit }) => {
   commit('cleanUserInfo')
 }
 
-const resolveResponse = ({errcode, data, errmsg = ''}) => {
+const resolveResponse = ({ errcode, data, errmsg = '' }) => {
   switch (errcode) {
     case 0: return data
     case 302:
@@ -62,6 +62,11 @@ export const viewProject = (store, params) => {
 // 关注|取消关注
 export const updateFocus = (store, params) => {
   return post('/api/toggleFocus', params)
+}
+
+//获取BV指数
+export const getScore = (store, params) => {
+  return post('/api/getAverageScore', params)
 }
 
 // 获取余币宝计划列表
