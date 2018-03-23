@@ -104,7 +104,7 @@
               <td>{{ item.minAmount }} {{ $t('label.coin_amount') }}</td>
               <td><span class="text-primary">{{ item.remainAmount }} {{ $t('label.coin_amount') }}</span></td>
               <td>
-                <button class="btn btn-primary btn-sm btn-nocorner" :disabled = "item.remainAmount < item.minAmount" @click="toNext(item)">{{$t('label.buy')}}</button>
+                <button class="btn btn-primary btn-sm btn-nocorner" :disabled = "item.remainAmount < item.minAmount" @click="toNext(item)">{{item.remainAmount >= item.minAmount ? $t('label.buy') : '已 售 罄'}}</button>
                 <!--<router-link class="btn btn-primary btn-sm btn-nocorner" disabled :to="{path: '/candyRoom/candyBuy', query: item}">{{  $t('label.buy')}}</router-link>-->
               </td>
             </tr>
