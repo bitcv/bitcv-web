@@ -228,7 +228,7 @@
               <div class="sub-content">
                 <ul class="list-unstyled notice-list">
                   <li class="clearfix" v-for="(notice, index) in info.publicList" :key="index">
-                    <p class="content"><span class="date">{{ notice.postTime | formatDate }}</span><span style="margin-left:36px;" v-html="notice.title"></span></p>
+                    <p class="content"><span class="date">{{ notice.postTime | formatDate }}</span><a :href="notice.referUrl" target="_blank" class="more"><span style="margin-left:36px;" v-html="notice.title"></span></a></p>
                   </li>
                 </ul>
               </div>
