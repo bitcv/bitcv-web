@@ -844,7 +844,7 @@ export default {
     }
     .content {
       margin-right: 120px;
-      width: calc(100% - 30px);
+      width: 85%;
       color: $gray-darker;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -907,7 +907,7 @@ export default {
     line-height: 24px;
     letter-spacing: 1px;
     font-size: 14px;
-    width: calc(100% - 20px);
+    width: 80%;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
