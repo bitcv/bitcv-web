@@ -227,10 +227,10 @@ class ProjectController extends Controller
             ->limit(5)->orderBy('crawler_socialnews.post_time','desc')
             ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.title','crawler_socialnews.refer_url')
             ->get()->toArray();
-        
+
         foreach ($projPublicList as $key => $PublicList){
-            $Public[$key]['created_at'] = $PublicList['created_at'];
-            $Public[$key]['post_time'] = $PublicList['post_time'];
+            $Public[$key]['created_at'] = str_replace('-','/',$PublicList['created_at']);
+            $Public[$key]['post_time'] = str_replace('-','/',$PublicList['post_time']);
             $Public[$key]['title'] = $PublicList['title'];
             $Public[$key]['refer_url'] = $PublicList['refer_url'];
         }
