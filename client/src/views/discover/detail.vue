@@ -409,14 +409,14 @@ export default {
       var width = canvas.width;
       var height = canvas.height;
       /*圆环中心文字*/
-      ctx.font = "28px PingFangSC bold";
+      ctx.font = "32px PingFangSC bold";
       ctx.fillStyle = '#FFD700';
       var ratioStr = deg;
-      var str = '综合评分'; 
+      var str = '综合评分';
       var text = ctx.measureText(ratioStr);
       var txt = ctxt.measureText(str);
      
-      ctxt.font = "18px PingFangSC";
+      ctxt.font = "12px PingFangSC";
       ctxt.fillStyle = '#FFD700';
       ctx.fillText(ratioStr, (150 - text.width) / 2,height/2 );
       ctxt.fillText(str, (180 - txt.width) / 2,height/2 + 92.48/4);
