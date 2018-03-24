@@ -268,12 +268,12 @@
             </div>
           </div>
         </div>
-        <!-- <div class="col-md-4 col">
+        <div class="col-md-4 col">
           <div class="panel-body text-darker score" style="padding-top: 0">
             <h4 style="text-align:center;font-weight:bold;">{{ "币威指数" }}</h4>
             <p class="text-center" style="margin-top: 37px;width:100%; height:155px;">
               <canvas id="redcircle" width="135" height="130"></canvas>
-              <el-progress type="circle" width = "150" stroke-width= "12" :percentage="score.score" ></el-progress>
+              <!-- <el-progress type="circle" width = "150" stroke-width= "12" :percentage="score.score" ></el-progress> -->
             </p>
           </div>
           <div>
@@ -282,7 +282,7 @@
               <span style="font-size:12px;color:rgba(155,155,155,1);line-height:16px;text-align:center;margin-top:7px;margin-left:2px;margin-right:15px;">币威指数是根据项目动态更新频率产生的综合评分，我们将逐步完善更多评分选项。</span>
             </p>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>
@@ -409,14 +409,14 @@ export default {
       var width = canvas.width;
       var height = canvas.height;
       /*圆环中心文字*/
-      ctx.font = "28px PingFangSC bold";
+      ctx.font = "32px PingFangSC bold";
       ctx.fillStyle = '#FFD700';
       var ratioStr = deg;
-      var str = '综合评分'; 
+      var str = '综合评分';
       var text = ctx.measureText(ratioStr);
       var txt = ctxt.measureText(str);
      
-      ctxt.font = "18px PingFangSC";
+      ctxt.font = "12px PingFangSC";
       ctxt.fillStyle = '#FFD700';
       ctx.fillText(ratioStr, (150 - text.width) / 2,height/2 );
       ctxt.fillText(str, (180 - txt.width) / 2,height/2 + 92.48/4);
@@ -844,7 +844,7 @@ export default {
     }
     .content {
       margin-right: 120px;
-      width: calc(100% - 80px);
+      width: 85%;
       color: $gray-darker;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -861,7 +861,7 @@ export default {
       color: #a1a1a1;
     }
     .content {
-      width: calc(100% - 120px);
+      width: calc(100% - 110px);
       color: $gray-darker;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -907,7 +907,7 @@ export default {
     line-height: 24px;
     letter-spacing: 1px;
     font-size: 14px;
-    width: calc(100% - 160px);
+    width: 80%;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -915,6 +915,7 @@ export default {
     -webkit-box-orient: vertical;
     > a.more {
       float: right;
+      margin-right: 16px;
       color: $primary-color;
     }
   }
@@ -923,7 +924,7 @@ export default {
   }
   .more {
     float: right;
-    margin-right: 28px;
+    margin-right: 16px;
     margin-bottom: 16px;
   }
 }
