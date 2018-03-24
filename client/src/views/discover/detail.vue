@@ -221,7 +221,7 @@
                 <div style="height: 82px;">
                   <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
                 </div>
-            </div>
+              </div>
             </div>
             <div id="offical" class="panel-body" v-if="info.publicList && info.publicList.length">
               <h4 class="sub-title">{{ $t('label.anno') }}</h4>
@@ -231,6 +231,14 @@
                     <p class="content"><span class="date">{{ notice.postTime | formatDate }}</span><a :href="notice.referUrl" target="_blank" class="more"><span style="margin-left:36px;" v-html="notice.title"></span></a></p>
                   </li>
                 </ul>
+              </div>
+            </div>
+            <div v-else>
+              <div class="panel-body">
+                <h4>{{ $t('label.anno') }}</h4>
+                <div style="height: 82px;">
+                  <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
+                </div>
               </div>
             </div>
             <div id="community" class="panel-body" v-if="info.dynamicList && info.dynamicList.length">
@@ -246,6 +254,14 @@
                     <p class="content"><span v-html="social.title"></span></p>
                     <a :href="social.referUrl" target="_blank" class="more">{{ $t('label.view_full') }}</a>
                   </div>
+                </div>
+              </div>
+            </div>
+            <div v-else>
+              <div class="panel-body">
+                <h4>{{ $t('label.comm_anno') }}</h4>
+                <div style="height: 82px;">
+                  <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
                 </div>
               </div>
             </div>
