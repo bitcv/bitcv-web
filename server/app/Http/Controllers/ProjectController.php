@@ -184,7 +184,19 @@ class ProjectController extends Controller
             ->limit(5)->orderBy('proj_report.release_time','desc')
             ->select('name', 'logo_url', 'link_url', 'title','content','release_time','banner_url')
             ->limit(4)->get()->toArray();
-        $projData['reportList'] = $projReportList;
+
+
+        foreach ($projReportList as $key => $projReport){
+            $Report[$key]['name'] = $projReport['name'];
+            $Report[$key]['logo_url'] = $projReport['logo_url'];
+            $Report[$key]['link_url'] = $projReport['link_url'];
+            $Report[$key]['title'] = $projReport['title'];
+            $Report[$key]['content'] = $projReport['content'];
+            $Report[$key]['release_time'] = str_replace('-','/',$projReport['release_time']);
+            $Report[$key]['banner_url'] = $projReport['banner_url'];
+        }
+
+        $projData['reportList'] = $Report;
 
         $projDynamicList = Model\CrawlerSocialNews::join('social','crawler_socialnews.social_id','=','social.id')
             ->where([['proj_id', $projId]])
@@ -198,8 +210,9 @@ class ProjectController extends Controller
             $data[$key]['officialName'] = $projdyn['official_name'];
             $data[$key]['postTime'] = $projdyn['post_time'];
             $data[$key]['referUrl'] = $projdyn['refer_url'];
-            $data[$key]['title'] = str_replace('&nbsp;','',strip_tags($projdyn['title']));
+            $data[$key]['title'] = str_replace('&nbsp;','',strip_tags($projdyn['title'],'<br>'));
             $data[$key]['title'] = str_replace('网页链接','',$data[$key]['title']);
+            $data[$key]['title'] = str_replace('O','',$data[$key]['title']);
             $data[$key]['name'] = $projdyn['name'];
             $data[$key]['logo_url'] = $projData['logo_url'];
 
@@ -214,7 +227,15 @@ class ProjectController extends Controller
             ->limit(5)->orderBy('crawler_socialnews.post_time','desc')
             ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.title','crawler_socialnews.refer_url')
             ->get()->toArray();
-        $projData['publicList'] = $projPublicList;
+        
+        foreach ($projPublicList as $key => $PublicList){
+            $Public[$key]['created_at'] = $PublicList['created_at'];
+            $Public[$key]['post_time'] = $PublicList['post_time'];
+            $Public[$key]['title'] = $PublicList['title'];
+            $Public[$key]['refer_url'] = $PublicList['refer_url'];
+        }
+
+        $projData['publicList'] = $Public;
 
         // 获取社交链接信息
         $projSocialList = Model\ProjSocial::join('social', 'proj_social.social_id', '=', 'social.id')

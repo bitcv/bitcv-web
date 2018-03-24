@@ -251,8 +251,8 @@
                   <div class="media-body text-darker">
                     <p class="media-heading">{{ social.officialName }}</p>
                     <p class="small text-dark">{{ social.postTime }} 来自 {{ social.name }}</p>
-                    <!-- <p class="content"><span v-html="social.title"></span></p> -->
-                    <p class="content">{{ social.title }}</p>
+                    <p class="content"><span v-html="social.title"></span></p>
+                    <!-- <p class="content">{{ social.title }}</p> -->
                     <a :href="social.referUrl" target="_blank" class="more">{{ $t('label.view_full') }}</a>
                   </div>
                 </div>
@@ -268,40 +268,21 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 col">
+        <!-- <div class="col-md-4 col">
           <div class="panel-body text-darker score" style="padding-top: 0">
             <h4 style="text-align:center;font-weight:bold;">{{ "币威指数" }}</h4>
-            <!-- <p class="text-center" style="width: 300px;margin-top: 40px;">
-              <span class = "score">{{score.score }}</span><br>
-            </p> -->
             <p class="text-center" style="margin-top: 37px;">
-            <!-- <div class="circle_process">
-              <div class="wrapper right">
-                <div class="circle rightcircle"></div>
-              </div>
-              <div class="wrapper left">
-                <div class="circle leftcircle" id="leftcircle"></div>
-              </div>
-            </div> -->
+              <canvas id="redcircle" width="115" height="115"></canvas>
               <el-progress type="circle" width = "150" stroke-width= "12" :percentage="score.score" ></el-progress>
             </p>
           </div>
-          <div >
+          <div>
             <p class="text-center" style="margin-left:16px; margin-right:15px;">
-              <!-- <span style="font-size: 12px;">综合评价</span> -->
               <img :src="'/static/img/question.png'" style="height:12px;width:12px;vertical-align:middle;" alt="">
               <span style="font-size:12px;color:rgba(155,155,155,1);line-height:16px;text-align:center;margin-top:7px;margin-left:2px;margin-right:15px;">币威指数是根据项目动态更新频率产生的综合评分，我们将逐步完善更多评分选项。</span>
             </p>
           </div>
-        </div>
-        <!-- <div class="creditRating">
-					  <canvas class="arcBar" id="rating" width="300" height="260"></canvas>
-            <div class="creditScore">
-              <p><span class="grade">A</span><span class="status">信用优良</span></p>
-              <p><span class="value">700</span>分</p>
-              <p><img src="../images/loan/arrow.png"/></p>
-            </div>
-				</div> -->
+        </div> -->
       </div>
     </div>
   </div>
@@ -391,7 +372,7 @@ export default {
   },
   mounted() {
     this.viewProjectd();
-    this.start();
+    this.circle(80);
   },
   methods: {
     ...mapActions(["getProDetail", "viewProject", "getScore", "updateFocus"]),
@@ -408,6 +389,63 @@ export default {
 
       item.active = true;
     },
+    /*画曲线*/
+    drawCircle(circleObj) {
+        var ctx = circleObj.ctx;
+        ctx.beginPath();
+        ctx.arc(circleObj.x, circleObj.y, circleObj.radius, circleObj.startAngle, circleObj.endAngle, true); //true表示逆时针绘画
+        //设定曲线粗细度
+        ctx.lineWidth = circleObj.lineWidth;
+        //给曲线着色
+        ctx.strokeStyle = circleObj.color;
+        //连接处样式
+        ctx.lineCap = 'round';
+        //给环着色
+        ctx.stroke();
+        ctx.closePath();
+    },
+    circle(deg) {
+      var canvas = document.getElementById('redcircle');
+      var ctx = canvas.getContext("2d");
+      var width = canvas.width;
+      var height = canvas.height;
+      /*圆环中心文字*/
+      ctx.font = "18px Microsoft YaHei";
+      ctx.fillStyle = '#38dcf3';
+      var ratioStr = deg+'分'; 
+      var text = ctx.measureText(ratioStr);
+      console.log("text.weght",text.width)
+      ctx.fillText(ratioStr, (115 - text.width) / 2,height/2+20.48/4);
+
+      /*底下的灰圆环*/
+      var circleObj = {
+          ctx: ctx,
+          /*圆心*/
+          x: width/2,
+          y: height/2,
+          /*半径*/
+          radius: width/2-20.48/2,
+          /*环的宽度*/
+          lineWidth: 12.48
+      }
+      /*上面的渐变圆环*/
+      circleObj.startAngle = 180*Math.PI/180 ; //startAngle弧度制 从135度开始画
+      /*结束的度数*/
+      circleObj.endAngle = 180*Math.PI/180-Math.PI*2
+      circleObj.color = '#eee';
+      this.drawCircle(circleObj);
+      /*有色的圆环*/
+      /*开始的度数-从上一个结束的位置开始*/
+      circleObj.startAngle = circleObj.endAngle;
+          /*结束的度数*/
+      circleObj.endAngle = circleObj.endAngle-(Math.PI*2*deg/100);
+      var my_gradient=ctx.createLinearGradient(0,0,0,170);
+      my_gradient.addColorStop(0,"#70f2c3");
+      my_gradient.addColorStop(0.5,"#52e6dd");
+      my_gradient.addColorStop(1,"#2cd8fc");
+      circleObj.color = my_gradient
+      this.drawCircle(circleObj);//6ff1c4
+    },
     fetch() {
       this.getProDetail({ projId: this.proId }).then(
         (data = {}) => (this.info = data)
@@ -415,7 +453,6 @@ export default {
       this.getScore({ id: this.proId }).then(
         (data = {}) => (this.score = data)
       );
-      this.circle(80);
     },
     viewProjectd() {
       this.viewProject({ projId: this.proId }).then(
