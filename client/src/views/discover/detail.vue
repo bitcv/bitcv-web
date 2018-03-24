@@ -413,7 +413,6 @@ export default {
       ctx.fillStyle = '#FFD700';
       var ratioStr = deg;
       var str = '综合评分'; 
-
       var text = ctx.measureText(ratioStr);
       var txt = ctxt.measureText(str);
      
@@ -862,7 +861,7 @@ export default {
       color: #a1a1a1;
     }
     .content {
-      width: calc(100% - 150px);
+      width: calc(100% - 120px);
       color: $gray-darker;
       white-space: nowrap;
       text-overflow: ellipsis;
