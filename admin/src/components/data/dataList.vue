@@ -28,9 +28,6 @@
       <el-table-column label="后台项目总数">
         <template slot-scope="scope">{{ scope.row.dataCount }}</template>
       </el-table-column>
-      <el-table-column label="审核通过总数">
-        <template slot-scope="scope">{{ scope.row.projAllPass }}</template>
-      </el-table-column>
       <el-table-column label="动态更新的项目数">
         <template slot-scope="scope">{{ scope.row.dyn }}</template>
       </el-table-column>
@@ -42,6 +39,9 @@
       </el-table-column>
       <el-table-column label="weibo总数">
         <template slot-scope="scope">{{ scope.row.dynWb }}</template>
+      </el-table-column>
+      <el-table-column label="wechat总数">
+        <template slot-scope="scope">{{ scope.row.dynWx }}</template>
       </el-table-column>
       <!-- <el-table-column label="操作">
         <template slot-scope="scope">

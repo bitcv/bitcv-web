@@ -20,7 +20,7 @@ export default {
     return {
       menus: [
         {key: '1', text: '首页', route: {path: '/acting/home'}},
-        {key: '2', text: '代发账户', route: {path: '/acting/account'}},
+        // {key: '2', text: '代发账户', route: {path: '/acting/account'}},
         {key: '3', text: '发放记录', route: {path: '/acting/record'}}
         // {key: '4', text: '帮助说明', route: {path: '/acting/explain'}}
       ]

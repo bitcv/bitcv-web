@@ -184,7 +184,19 @@ class ProjectController extends Controller
             ->limit(5)->orderBy('proj_report.release_time','desc')
             ->select('name', 'logo_url', 'link_url', 'title','content','release_time','banner_url')
             ->limit(4)->get()->toArray();
-        $projData['reportList'] = $projReportList;
+
+
+        foreach ($projReportList as $key => $projReport){
+            $Report[$key]['name'] = $projReport['name'];
+            $Report[$key]['logo_url'] = $projReport['logo_url'];
+            $Report[$key]['link_url'] = $projReport['link_url'];
+            $Report[$key]['title'] = $projReport['title'];
+            $Report[$key]['content'] = $projReport['content'];
+            $Report[$key]['release_time'] = str_replace('-','/',$projReport['release_time']);
+            $Report[$key]['banner_url'] = $projReport['banner_url'];
+        }
+
+        $projData['reportList'] = $Report;
 
         $projDynamicList = Model\CrawlerSocialNews::join('social','crawler_socialnews.social_id','=','social.id')
             ->where([['proj_id', $projId]])
@@ -193,7 +205,21 @@ class ProjectController extends Controller
             ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.refer_url','crawler_socialnews.official_name','crawler_socialnews.title','crawler_socialnews.logo_url','social.font_class','social.name')
             ->get()->toArray();
 
-        $projData['dynamicList'] = $projDynamicList;
+        foreach ($projDynamicList as $key => $projdyn){
+            $data[$key]['fontClass'] = $projdyn['font_class'];
+            $data[$key]['officialName'] = $projdyn['official_name'];
+            $data[$key]['postTime'] = $projdyn['post_time'];
+            $data[$key]['referUrl'] = $projdyn['refer_url'];
+            $data[$key]['title'] = str_replace('&nbsp;','',strip_tags($projdyn['title'],'<br>'));
+            $data[$key]['title'] = str_replace('网页链接','',$data[$key]['title']);
+            $data[$key]['title'] = str_replace('O','',$data[$key]['title']);
+            $data[$key]['name'] = $projdyn['name'];
+            $data[$key]['logo_url'] = $projData['logo_url'];
+
+        }
+
+        $projData['dynamicList'] = $data;
+
 
         $projPublicList = Model\CrawlerSocialNews::join('social','crawler_socialnews.social_id','=','social.id')
             ->where([['proj_id', $projId]])
@@ -201,7 +227,15 @@ class ProjectController extends Controller
             ->limit(5)->orderBy('crawler_socialnews.post_time','desc')
             ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.title','crawler_socialnews.refer_url')
             ->get()->toArray();
-        $projData['publicList'] = $projPublicList;
+
+        foreach ($projPublicList as $key => $PublicList){
+            $Public[$key]['created_at'] = str_replace('-','/',$PublicList['created_at']);
+            $Public[$key]['post_time'] = str_replace('-','/',$PublicList['post_time']);
+            $Public[$key]['title'] = $PublicList['title'];
+            $Public[$key]['refer_url'] = $PublicList['refer_url'];
+        }
+
+        $projData['publicList'] = $Public;
 
         // 获取社交链接信息
         $projSocialList = Model\ProjSocial::join('social', 'proj_social.social_id', '=', 'social.id')
@@ -417,6 +451,79 @@ class ProjectController extends Controller
     public function gerNewsList(){
 
     }
+
+    public function getScore(Request $request){
+        $params = $this->validation($request, [
+            'id' => 'required',
+        ]);
+        extract($params);
+        $socials = array();
+        $num = 0;
+        //facebook
+        if(Model\CrawlerSocialNews::where([['crawler_socialnews.proj_id', $id], ['crawler_socialnews.social_id', 2],])->first()){
+            $num += 1;
+            array_push($socials,2);
+        }
+        //twitter
+        if(Model\CrawlerSocialNews::where([['crawler_socialnews.proj_id', $id], ['crawler_socialnews.social_id', 3],])->first()){
+            $num += 1;
+            array_push($socials,3);
+        }
+        //微信
+        if(Model\CrawlerSocialNews::where([['crawler_socialnews.proj_id', $id], ['crawler_socialnews.social_id', 5],])->first()){
+            $num += 1;
+            array_push($socials, 5);
+        }
+        //微博
+        if(Model\CrawlerSocialNews::where([['crawler_socialnews.proj_id', $id], ['crawler_socialnews.social_id', 6],])->first()){
+            $num += 1;
+            array_push($socials, 6);
+        }
+        $data = array();
+        //print_r(date("Y-m-d",strtotime("-1 day")).' 00:00:00');
+        $date1 = date("Y-m-d",strtotime("-1 day")).' 00:00:00';
+        //print_r($date);
+        $date2 = date("Y-m-d",strtotime("-5 day")).' 00:00:00';
+        foreach ($socials as $social){
+            for($key = 1; $key < 29 ; $key = $key + 7 ){
+                $score = Model\CrawlerSocialNews::where('crawler_socialnews.proj_id', $id)
+                    ->where('crawler_socialnews.social_id','=',$social)
+                    ->whereBetween('crawler_socialnews.updated_at',[date("Y-m-d",strtotime('-'.($key + 5).' day') ),date("Y-m-d",strtotime('-'.($key - 1).' day') )])
+                    ->count();
+                  array_push($data,$score);
+            }
+        }
+        $allscore['score'] = $data;
+        //print_r(count($allscore['score']));
+        if (count($allscore['score']) == 16){
+//          for ($key=0; $key < 4; $key++){
+            $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
+            $fb = $allscore['score'][4]*0.5 +$allscore['score'][5]*0.3+$allscore['score'][6]*0.1+$allscore['score'][7]*0.1;
+            $tw = $allscore['score'][8]*0.5 +$allscore['score'][9]*0.3+$allscore['score'][10]*0.1+$allscore['score'][11]*0.1;
+            $wb = $allscore['score'][12]*0.5 +$allscore['score'][13]*0.3+$allscore['score'][14]*0.1+$allscore['score'][15]*0.1;
+            $average = ($wx + $fb + $tw + $wb) / 4;
+
+        } elseif (count($allscore['score']) == 12){
+            $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
+            $fb = $allscore['score'][4]*0.5 +$allscore['score'][5]*0.3+$allscore['score'][6]*0.1+$allscore['score'][7]*0.1;
+            $tw = $allscore['score'][8]*0.5 +$allscore['score'][9]*0.3+$allscore['score'][10]*0.1+$allscore['score'][11]*0.1;
+            $average = ($wx + $fb + $tw) / 3;
+
+        } elseif (count($allscore['score']) == 8){
+            $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
+            $fb = $allscore['score'][4]*0.5 +$allscore['score'][5]*0.3+$allscore['score'][6]*0.1+$allscore['score'][7]*0.1;
+            $average = ($wx + $fb) / 2;
+
+        } else{
+            $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
+            $average = $wx;
+        }
+        $aver = sprintf("%.2f",$average);
+        return $this->output(['score' => $aver]);
+
+    }
+
+
     
 
 }
