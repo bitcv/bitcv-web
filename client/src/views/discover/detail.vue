@@ -861,7 +861,7 @@ export default {
       color: #a1a1a1;
     }
     .content {
-      width: calc(100% - 100px);
+      width: calc(100% - 110px);
       color: $gray-darker;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -915,6 +915,7 @@ export default {
     -webkit-box-orient: vertical;
     > a.more {
       float: right;
+      margin-right: 16px;
       color: $primary-color;
     }
   }
@@ -923,7 +924,7 @@ export default {
   }
   .more {
     float: right;
-    margin-right: 28px;
+    margin-right: 16px;
     margin-bottom: 16px;
   }
 }
