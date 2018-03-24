@@ -198,7 +198,8 @@ class ProjectController extends Controller
             $data[$key]['officialName'] = $projdyn['official_name'];
             $data[$key]['postTime'] = $projdyn['post_time'];
             $data[$key]['referUrl'] = $projdyn['refer_url'];
-            $data[$key]['title'] = str_replace(array('\'&nbsp;\'','网页链接'),'',strip_tags($projdyn['title'],'<br>'));
+            $data[$key]['title'] = str_replace('&nbsp;','',strip_tags($projdyn['title']));
+            $data[$key]['title'] = str_replace('网页链接','',$data[$key]['title']);
             $data[$key]['name'] = $projdyn['name'];
             $data[$key]['logo_url'] = $projData['logo_url'];
 
