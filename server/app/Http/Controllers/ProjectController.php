@@ -185,6 +185,7 @@ class ProjectController extends Controller
             ->select('name', 'logo_url', 'link_url', 'title','content','release_time','banner_url')
             ->limit(4)->get()->toArray();
 
+        $Report = array();
         if (!empty($projReportList)){
             foreach ($projReportList as $key => $projReport){
                 $Report[$key]['name'] = $projReport['name'];
@@ -196,9 +197,8 @@ class ProjectController extends Controller
                 $Report[$key]['banner_url'] = $projReport['banner_url'];
             }
         }
-
         $projData['reportList'] = $Report;
-
+        
         $projDynamicList = Model\CrawlerSocialNews::join('social','crawler_socialnews.social_id','=','social.id')
             ->where([['proj_id', $projId]])
             ->whereIn('social_id', [2,3,5,6])
@@ -206,6 +206,7 @@ class ProjectController extends Controller
             ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.refer_url','crawler_socialnews.official_name','crawler_socialnews.title','crawler_socialnews.logo_url','social.font_class','social.name')
             ->get()->toArray();
 
+        $data = array();
         if (!empty($projDynamicList)) {
             foreach ($projDynamicList as $key => $projdyn) {
                 $data[$key]['fontClass'] = $projdyn['font_class'];
@@ -219,9 +220,8 @@ class ProjectController extends Controller
                 $data[$key]['logo_url'] = $projData['logo_url'];
 
             }
-            $projData['dynamicList'] = $data;
         }
-
+        $projData['dynamicList'] = $data;
 
 
         $projPublicList = Model\CrawlerSocialNews::join('social','crawler_socialnews.social_id','=','social.id')
@@ -231,6 +231,7 @@ class ProjectController extends Controller
             ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.title','crawler_socialnews.refer_url')
             ->get()->toArray();
 
+        $Public = array();
         if (!empty($projPublicList)){
             foreach ($projPublicList as $key => $PublicList){
                 $Public[$key]['created_at'] = str_replace('-','/',$PublicList['created_at']);
@@ -238,10 +239,9 @@ class ProjectController extends Controller
                 $Public[$key]['title'] = $PublicList['title'];
                 $Public[$key]['refer_url'] = $PublicList['refer_url'];
             }
-            $projData['publicList'] = $Public;
         }
 
-
+        $projData['publicList'] = $Public;
 
         // 获取社交链接信息
         $projSocialList = Model\ProjSocial::join('social', 'proj_social.social_id', '=', 'social.id')
@@ -500,6 +500,7 @@ class ProjectController extends Controller
             }
         }
         $allscore['score'] = $data;
+
         //print_r(count($allscore['score']));
         if (count($allscore['score']) == 16){
 //          for ($key=0; $key < 4; $key++){
@@ -521,9 +522,16 @@ class ProjectController extends Controller
             $average = ($wx + $fb) / 2;
 
         } else{
-            $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
-            $average = $wx;
+
+            if (!empty($allscore) && count($allscore) > 3){
+                $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
+                $average = $wx;
+            }else{
+                $average = 0.0;
+            }
+
         }
+
         $aver = sprintf("%.2f",$average);
         return $this->output(['score' => $aver]);
 
