@@ -1957,7 +1957,7 @@ class AdminController extends Controller
             $newProj = Model\Project::where('project.created_at',date("Y-m-d",strtotime('-'.$key.' day') ))->count();
 
             $projAllPass = Model\Project::where([
-                ['project.auth_time', date("Y-m-d",strtotime('-'.$key.' day'))],
+                ['project.auth_time', '<', date("Y-m-d",strtotime('-'.$key.' day'))],
                 ['project.status', 1],
             ])->count();
 
