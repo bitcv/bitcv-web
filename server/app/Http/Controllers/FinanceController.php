@@ -49,7 +49,7 @@ class FinanceController extends Controller
         $datacount = $query->count();
         foreach ($dataList as $key => $value)
         {
-            $dataList[$key]->timeformat = substr(date('Y-m-d H:i:s',($value->transaction_time) - (8 * 3600) ),5);
+            $dataList[$key]->timeformat = substr(date('Y-m-d H:i:s',($value->transaction_time) + (8 * 3600) ),5);
             $dataList[$key]->walletName = $value->walletname;
             $dataList[$key]->usedname = ($value->used) ? DictUtil::TokenUsed[$value->used] : '';
             $dataList[$key]->typename = ($value->type) ? DictUtil::TokenType[$value->type] : '';
@@ -115,21 +115,33 @@ class FinanceController extends Controller
     public function exportRecords(Request $request)
     {
         $excelfilename = '币财报交易记录';
-        $data = DB::table('finance')->select('*')->limit(10)->get()->toArray();
-        $result = array();
-        foreach ($data as $key => $value)
+        //先导出来全部，后面再根据需求来导出
+        $dataList = DB::table('finance')->select('*')->get()->toArray();
+        $exceldata = array();
+        foreach ($dataList as $key => $value)
         {
-            foreach ($value as $k => $val)
-            {
-                $result[$key][] = $val;
-            }
+            $dataList[$key]->typename = ($value->type) ? DictUtil::TokenType[$value->type] : '';
+            $dataList[$key]->usedname = ($value->used) ? DictUtil::TokenUsed[$value->used] : '';
+            $exceldata[$key][] = $value->id;
+            $exceldata[$key][] = $value->transaction_hash;
+            $exceldata[$key][] = $value->from_addr;
+            $exceldata[$key][] = $value->to_addr;
+            $exceldata[$key][] = substr(date('Y-m-d H:i:s',($value->transaction_time) + (8 * 3600) ),5);
+            $exceldata[$key][] = $value->walletname;
+            $exceldata[$key][] = $value->typename;
+            $exceldata[$key][] = $value->usedname;
+            $exceldata[$key][] = $value->amount;
+            $exceldata[$key][] = $value->cointype;
+            $exceldata[$key][] = (($value->gasprice) / pow(10,18)) * $value->gasused;
+            $exceldata[$key][] = ($value->tokensubject) ? $value->tokensubject : '';
         }
-        Excel::create($excelfilename, function ($excel) use($result) {
-            $excel->sheet('test', function ($sheet) use($result) {
-                $sheet->fromArray($result);
+        $title = ['ID','交易哈希','打出地址','收款地址','交易时间','账户名称','类型','用于','数量','符号','矿工费','项目主体'];
+        array_unshift($exceldata,$title);
+        Excel::create($excelfilename, function ($excel) use($exceldata) {
+            $excel->sheet('test', function ($sheet) use($exceldata) {
+                $sheet->fromArray($exceldata);
             });
         })->export('xls');
-        return $this->output();
     }
     //配置钱包
     public function addWallets (Request $request)

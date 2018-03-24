@@ -1397,8 +1397,8 @@ class AdminController extends Controller
         extract($params);
         $offset = $perpage * ($pageno - 1);
 
-        $projAdvisor = Model\CrawlerSocialNews::from('crawler_socialnews as A')->
-        join('project as B','A.proj_id','=','B.id')
+        $projAdvisor = Model\CrawlerSocialNews::from('crawler_socialnews as A')
+            ->join('project as B','A.proj_id','=','B.id')
             ->join('social as C','A.social_id','=','C.id')
             ->select("A.id as id",'A.updated_at as update_at','B.name_cn as name_cn','A.official_name as official_name','A.title as title','C.font_class as font_class','A.logo_url as logo_url','A.post_time as post_time')
             ->orderBy('A.updated_at','desc');
@@ -1956,7 +1956,10 @@ class AdminController extends Controller
 
             $newProj = Model\Project::where('project.created_at',date("Y-m-d",strtotime('-'.$key.' day') ))->count();
 
-            $projAllPass = Model\Project::where('project.status', 1)->count();
+            $projAllPass = Model\Project::where([
+                ['project.auth_time', '<', date("Y-m-d",strtotime('-'.$key.' day'))],
+                ['project.status', 1],
+            ])->count();
 
             //项目的总数量
             $dataCount = Model\Project::count();
@@ -1990,7 +1993,7 @@ class AdminController extends Controller
 
 
             //有更新的项目数量
-            $dyn = Model\Project::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->count();
+            $dyn = Model\CrawlerSocialNews::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->count();
 
             $data[$key]['post_time'] = date("Y-m-d",strtotime('-'.$key.' day'));
             $data[$key]['projPass'] = $projPass;

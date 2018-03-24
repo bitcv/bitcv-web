@@ -172,6 +172,7 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('cancelOperate','AdminController@cancelOperate');
     Route::any('authOperate','AdminController@authOperate');
     Route::any('getUserSearch','AdminController@getUserSearch');
+    Route::any('getAverageScore','ProjectController@getScore');
     
 
 
