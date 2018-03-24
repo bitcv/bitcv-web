@@ -185,15 +185,16 @@ class ProjectController extends Controller
             ->select('name', 'logo_url', 'link_url', 'title','content','release_time','banner_url')
             ->limit(4)->get()->toArray();
 
-
-        foreach ($projReportList as $key => $projReport){
-            $Report[$key]['name'] = $projReport['name'];
-            $Report[$key]['logo_url'] = $projReport['logo_url'];
-            $Report[$key]['link_url'] = $projReport['link_url'];
-            $Report[$key]['title'] = $projReport['title'];
-            $Report[$key]['content'] = $projReport['content'];
-            $Report[$key]['release_time'] = str_replace('-','/',$projReport['release_time']);
-            $Report[$key]['banner_url'] = $projReport['banner_url'];
+        if (!empty($projReportList)){
+            foreach ($projReportList as $key => $projReport){
+                $Report[$key]['name'] = $projReport['name'];
+                $Report[$key]['logo_url'] = $projReport['logo_url'];
+                $Report[$key]['link_url'] = $projReport['link_url'];
+                $Report[$key]['title'] = $projReport['title'];
+                $Report[$key]['content'] = $projReport['content'];
+                $Report[$key]['release_time'] = str_replace('-','/',$projReport['release_time']);
+                $Report[$key]['banner_url'] = $projReport['banner_url'];
+            }
         }
 
         $projData['reportList'] = $Report;
@@ -205,19 +206,20 @@ class ProjectController extends Controller
             ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.refer_url','crawler_socialnews.official_name','crawler_socialnews.title','crawler_socialnews.logo_url','social.font_class','social.name')
             ->get()->toArray();
 
-        foreach ($projDynamicList as $key => $projdyn){
-            $data[$key]['fontClass'] = $projdyn['font_class'];
-            $data[$key]['officialName'] = $projdyn['official_name'];
-            $data[$key]['postTime'] = $projdyn['post_time'];
-            $data[$key]['referUrl'] = $projdyn['refer_url'];
-            $data[$key]['title'] = str_replace('&nbsp;','',strip_tags($projdyn['title'],'<br>'));
-            $data[$key]['title'] = str_replace('网页链接','',$data[$key]['title']);
-            $data[$key]['title'] = str_replace('O','',$data[$key]['title']);
-            $data[$key]['name'] = $projdyn['name'];
-            $data[$key]['logo_url'] = $projData['logo_url'];
+        if (!empty($projDynamicList)) {
+            foreach ($projDynamicList as $key => $projdyn) {
+                $data[$key]['fontClass'] = $projdyn['font_class'];
+                $data[$key]['officialName'] = $projdyn['official_name'];
+                $data[$key]['postTime'] = $projdyn['post_time'];
+                $data[$key]['referUrl'] = $projdyn['refer_url'];
+                $data[$key]['title'] = str_replace('&nbsp;', '', strip_tags($projdyn['title'], '<br>'));
+                $data[$key]['title'] = str_replace('网页链接', '', $data[$key]['title']);
+                $data[$key]['title'] = str_replace('O', '', $data[$key]['title']);
+                $data[$key]['name'] = $projdyn['name'];
+                $data[$key]['logo_url'] = $projData['logo_url'];
 
+            }
         }
-
         $projData['dynamicList'] = $data;
 
 
@@ -228,11 +230,13 @@ class ProjectController extends Controller
             ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.title','crawler_socialnews.refer_url')
             ->get()->toArray();
 
-        foreach ($projPublicList as $key => $PublicList){
-            $Public[$key]['created_at'] = str_replace('-','/',$PublicList['created_at']);
-            $Public[$key]['post_time'] = str_replace('-','/',$PublicList['post_time']);
-            $Public[$key]['title'] = $PublicList['title'];
-            $Public[$key]['refer_url'] = $PublicList['refer_url'];
+        if (!empty($projPublicList)){
+            foreach ($projPublicList as $key => $PublicList){
+                $Public[$key]['created_at'] = str_replace('-','/',$PublicList['created_at']);
+                $Public[$key]['post_time'] = str_replace('-','/',$PublicList['post_time']);
+                $Public[$key]['title'] = $PublicList['title'];
+                $Public[$key]['refer_url'] = $PublicList['refer_url'];
+            }
         }
 
         $projData['publicList'] = $Public;
