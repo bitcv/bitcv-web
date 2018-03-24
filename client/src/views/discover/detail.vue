@@ -251,7 +251,8 @@
                   <div class="media-body text-darker">
                     <p class="media-heading">{{ social.officialName }}</p>
                     <p class="small text-dark">{{ social.postTime }} 来自 {{ social.name }}</p>
-                    <p class="content"><span v-html="social.title"></span></p>
+                    <!-- <p class="content"><span v-html="social.title"></span></p> -->
+                    <p class="content">{{ social.title }}</p>
                     <a :href="social.referUrl" target="_blank" class="more">{{ $t('label.view_full') }}</a>
                   </div>
                 </div>

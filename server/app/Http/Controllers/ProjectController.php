@@ -193,7 +193,16 @@ class ProjectController extends Controller
             ->select('crawler_socialnews.created_at','crawler_socialnews.post_time','crawler_socialnews.refer_url','crawler_socialnews.official_name','crawler_socialnews.title','crawler_socialnews.logo_url','social.font_class','social.name')
             ->get()->toArray();
 
-        $projData['dynamicList'] = $projDynamicList;
+        foreach ($projDynamicList as $key => $projdyn){
+            $data[$key]['fontClass'] = $projdyn['font_class'];
+            $data[$key]['officialName'] = $projdyn['official_name'];
+            $data[$key]['postTime'] = $projdyn['post_time'];
+            $data[$key]['referUrl'] = $projdyn['refer_url'];
+            $data[$key]['title'] = strip_tags($projdyn['title']);
+        }
+
+        $projData['dynamicList'] = $data;
+
 
         $projPublicList = Model\CrawlerSocialNews::join('social','crawler_socialnews.social_id','=','social.id')
             ->where([['proj_id', $projId]])
