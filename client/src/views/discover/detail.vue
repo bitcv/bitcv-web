@@ -268,12 +268,12 @@
             </div>
           </div>
         </div>
-        <!-- <div class="col-md-4 col">
+        <div class="col-md-4 col">
           <div class="panel-body text-darker score" style="padding-top: 0">
             <h4 style="text-align:center;font-weight:bold;">{{ "币威指数" }}</h4>
-            <p class="text-center" style="margin-top: 37px;">
-              <canvas id="redcircle" width="115" height="115"></canvas>
-              <el-progress type="circle" width = "150" stroke-width= "12" :percentage="score.score" ></el-progress>
+            <p class="text-center" style="margin-top: 37px;width:100%; height:155px;">
+              <canvas id="redcircle" width="135" height="130"></canvas>
+              <!-- <el-progress type="circle" width = "150" stroke-width= "12" :percentage="score.score" ></el-progress> -->
             </p>
           </div>
           <div>
@@ -282,7 +282,7 @@
               <span style="font-size:12px;color:rgba(155,155,155,1);line-height:16px;text-align:center;margin-top:7px;margin-left:2px;margin-right:15px;">币威指数是根据项目动态更新频率产生的综合评分，我们将逐步完善更多评分选项。</span>
             </p>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>
@@ -294,7 +294,6 @@ import { swiper, swiperSlide } from "vue-awesome-swiper";
 import { formatDate } from "@/utils/utils";
 import Share from "@/components/share/Share";
 import html2canvas from "html2canvas";
-
 export default {
   props: {
     projDetail: Object
@@ -307,7 +306,7 @@ export default {
   data() {
     return {
       info: {},
-      score: {},
+      score: "",
       viewNum: {},
       word: "",
       reports: [],
@@ -372,7 +371,7 @@ export default {
   },
   mounted() {
     this.viewProjectd();
-    this.circle(80);
+    this.getAver();
   },
   methods: {
     ...mapActions(["getProDetail", "viewProject", "getScore", "updateFocus"]),
@@ -386,7 +385,6 @@ export default {
       list.map(item => {
         item.active = false;
       });
-
       item.active = true;
     },
     /*画曲线*/
@@ -407,16 +405,22 @@ export default {
     circle(deg) {
       var canvas = document.getElementById('redcircle');
       var ctx = canvas.getContext("2d");
+      var ctxt = canvas.getContext("2d");
       var width = canvas.width;
       var height = canvas.height;
       /*圆环中心文字*/
-      ctx.font = "18px Microsoft YaHei";
-      ctx.fillStyle = '#38dcf3';
-      var ratioStr = deg+'分'; 
-      var text = ctx.measureText(ratioStr);
-      console.log("text.weght",text.width)
-      ctx.fillText(ratioStr, (115 - text.width) / 2,height/2+20.48/4);
+      ctx.font = "28px PingFangSC bold";
+      ctx.fillStyle = '#FFD700';
+      var ratioStr = deg;
+      var str = '综合评分'; 
 
+      var text = ctx.measureText(ratioStr);
+      var txt = ctxt.measureText(str);
+     
+      ctxt.font = "18px PingFangSC";
+      ctxt.fillStyle = '#FFD700';
+      ctx.fillText(ratioStr, (150 - text.width) / 2,height/2 + 12.48/4);
+      ctxt.fillText(str, (180 - txt.width) / 2,height/2 + 92.48/4);
       /*底下的灰圆环*/
       var circleObj = {
           ctx: ctx,
@@ -432,7 +436,7 @@ export default {
       circleObj.startAngle = 180*Math.PI/180 ; //startAngle弧度制 从135度开始画
       /*结束的度数*/
       circleObj.endAngle = 180*Math.PI/180-Math.PI*2
-      circleObj.color = '#eee';
+      circleObj.color = '#FFEFD5';
       this.drawCircle(circleObj);
       /*有色的圆环*/
       /*开始的度数-从上一个结束的位置开始*/
@@ -440,9 +444,9 @@ export default {
           /*结束的度数*/
       circleObj.endAngle = circleObj.endAngle-(Math.PI*2*deg/100);
       var my_gradient=ctx.createLinearGradient(0,0,0,170);
-      my_gradient.addColorStop(0,"#70f2c3");
-      my_gradient.addColorStop(0.5,"#52e6dd");
-      my_gradient.addColorStop(1,"#2cd8fc");
+      my_gradient.addColorStop(0,"#FFEC8B");
+      my_gradient.addColorStop(0.5,"#FFD700");
+      my_gradient.addColorStop(1,"#FFD700");
       circleObj.color = my_gradient
       this.drawCircle(circleObj);//6ff1c4
     },
@@ -450,10 +454,20 @@ export default {
       this.getProDetail({ projId: this.proId }).then(
         (data = {}) => (this.info = data)
       );
-      this.getScore({ id: this.proId }).then(
-        (data = {}) => (this.score = data)
-      );
     },
+    getAver (){
+      this.$http
+        .post("/api/getAverageScore", {
+          id: this.proId
+        })
+        .then(res => {
+          var resData = res.data;
+          if (resData.errcode === 0) {
+            this.score = resData.data.score;
+            this.circle(this.score)
+          }
+        });  
+    },       
     viewProjectd() {
       this.viewProject({ projId: this.proId }).then(
         (data = {}) => (this.viewNum = data)
@@ -467,10 +481,8 @@ export default {
           "focusStatus",
           this.info.focusStatus === 0 ? 1 : 0
         );
-
         // 修改关注数量
         let { focusNum } = this.info;
-
         this.$set(
           this.info,
           "focusNum",
@@ -833,7 +845,7 @@ export default {
     }
     .content {
       margin-right: 120px;
-      width: 586px;
+      width: calc(100% - 80px);
       color: $gray-darker;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -850,7 +862,7 @@ export default {
       color: #a1a1a1;
     }
     .content {
-      width: 560px;
+      width: calc(100% - 150px);
       color: $gray-darker;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -896,7 +908,7 @@ export default {
     line-height: 24px;
     letter-spacing: 1px;
     font-size: 14px;
-    width: 550px;
+    width: calc(100% - 160px);
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
