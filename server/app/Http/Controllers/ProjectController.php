@@ -219,8 +219,9 @@ class ProjectController extends Controller
                 $data[$key]['logo_url'] = $projData['logo_url'];
 
             }
+            $projData['dynamicList'] = $data;
         }
-        $projData['dynamicList'] = $data;
+
 
 
         $projPublicList = Model\CrawlerSocialNews::join('social','crawler_socialnews.social_id','=','social.id')
@@ -237,9 +238,10 @@ class ProjectController extends Controller
                 $Public[$key]['title'] = $PublicList['title'];
                 $Public[$key]['refer_url'] = $PublicList['refer_url'];
             }
+            $projData['publicList'] = $Public;
         }
 
-        $projData['publicList'] = $Public;
+
 
         // 获取社交链接信息
         $projSocialList = Model\ProjSocial::join('social', 'proj_social.social_id', '=', 'social.id')
