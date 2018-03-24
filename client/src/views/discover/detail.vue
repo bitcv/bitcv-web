@@ -268,12 +268,12 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 col">
+        <!-- <div class="col-md-4 col">
           <div class="panel-body text-darker score" style="padding-top: 0">
             <h4 style="text-align:center;font-weight:bold;">{{ "币威指数" }}</h4>
             <p class="text-center" style="margin-top: 37px;width:100%; height:155px;">
               <canvas id="redcircle" width="135" height="130"></canvas>
-              <!-- <el-progress type="circle" width = "150" stroke-width= "12" :percentage="score.score" ></el-progress> -->
+              <el-progress type="circle" width = "150" stroke-width= "12" :percentage="score.score" ></el-progress>
             </p>
           </div>
           <div>
@@ -282,7 +282,7 @@
               <span style="font-size:12px;color:rgba(155,155,155,1);line-height:16px;text-align:center;margin-top:7px;margin-left:2px;margin-right:15px;">币威指数是根据项目动态更新频率产生的综合评分，我们将逐步完善更多评分选项。</span>
             </p>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -419,7 +419,7 @@ export default {
      
       ctxt.font = "18px PingFangSC";
       ctxt.fillStyle = '#FFD700';
-      ctx.fillText(ratioStr, (150 - text.width) / 2,height/2 + 12.48/4);
+      ctx.fillText(ratioStr, (150 - text.width) / 2,height/2 );
       ctxt.fillText(str, (180 - txt.width) / 2,height/2 + 92.48/4);
       /*底下的灰圆环*/
       var circleObj = {
@@ -433,9 +433,9 @@ export default {
           lineWidth: 12.48
       }
       /*上面的渐变圆环*/
-      circleObj.startAngle = 180*Math.PI/180 ; //startAngle弧度制 从135度开始画
+      circleObj.startAngle = 180 *Math.PI/180 ; //startAngle弧度制 从135度开始画
       /*结束的度数*/
-      circleObj.endAngle = 180*Math.PI/180-Math.PI*2
+      circleObj.endAngle = 180 *Math.PI/180-Math.PI*2
       circleObj.color = '#FFEFD5';
       this.drawCircle(circleObj);
       /*有色的圆环*/
