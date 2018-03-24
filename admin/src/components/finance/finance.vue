@@ -37,6 +37,9 @@
             <el-button type="success" @click.prevent="search">搜索</el-button>
           </el-form-item>
         </el-form>
+        <div class="header-btn-area">
+          <a href="/api/exportRecords"><el-button type="warning" style="float: left;margin-bottom:10px;" icon="el-icon-download">导出EXCEL</el-button></a>
+        </div>
         <el-table :data="financeList">
           <el-table-column label="ID">
             <template slot-scope="scope">{{ scope.row.id }}</template>
@@ -240,8 +243,8 @@ export default {
     editShow (row, _index) {
       this.editObj = row
       this.hash = this.financeList[_index].transaction_hash
-      this.tokentypeId = this.editObj.type + ''
-      this.usedId = this.editObj.used + ''
+      this.tokentypeId = this.editObj.type ? this.editObj.type + '' : ''
+      this.usedId = this.editObj.used ? this.editObj.used + '' : ''
       this.tokensub = this.editObj.tokensubject
       this.memo = this.editObj.memo
       this.showDialog = true
