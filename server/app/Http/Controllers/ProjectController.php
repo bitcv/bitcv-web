@@ -199,6 +199,9 @@ class ProjectController extends Controller
             $data[$key]['postTime'] = $projdyn['post_time'];
             $data[$key]['referUrl'] = $projdyn['refer_url'];
             $data[$key]['title'] = strip_tags($projdyn['title']);
+            $data[$key]['name'] = $projdyn['name'];
+            $data[$key]['logo_url'] = $projData['logo_url'];
+
         }
 
         $projData['dynamicList'] = $data;
