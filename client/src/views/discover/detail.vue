@@ -268,12 +268,12 @@
             </div>
           </div>
         </div>
-        <!-- <div class="col-md-4 col">
+        <div class="col-md-4 col">
           <div class="panel-body text-darker score" style="padding-top: 0">
             <h4 style="text-align:center;font-weight:bold;">{{ "币威指数" }}</h4>
             <p class="text-center" style="margin-top: 37px;width:100%; height:155px;">
               <canvas id="redcircle" width="135" height="130"></canvas>
-              <el-progress type="circle" width = "150" stroke-width= "12" :percentage="score.score" ></el-progress>
+              <!-- <el-progress type="circle" width = "150" stroke-width= "12" :percentage="score.score" ></el-progress> -->
             </p>
           </div>
           <div>
@@ -282,7 +282,7 @@
               <span style="font-size:12px;color:rgba(155,155,155,1);line-height:16px;text-align:center;margin-top:7px;margin-left:2px;margin-right:15px;">币威指数是根据项目动态更新频率产生的综合评分，我们将逐步完善更多评分选项。</span>
             </p>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>
@@ -391,7 +391,7 @@ export default {
     drawCircle(circleObj) {
         var ctx = circleObj.ctx;
         ctx.beginPath();
-        ctx.arc(circleObj.x, circleObj.y, circleObj.radius, circleObj.startAngle, circleObj.endAngle, true); //true表示逆时针绘画
+        ctx.arc(circleObj.x, circleObj.y, circleObj.radius, circleObj.startAngle, circleObj.endAngle, false); //true表示逆时针绘画
         //设定曲线粗细度
         ctx.lineWidth = circleObj.lineWidth;
         //给曲线着色
@@ -432,9 +432,9 @@ export default {
           lineWidth: 12.48
       }
       /*上面的渐变圆环*/
-      circleObj.startAngle = 180 *Math.PI/180 ; //startAngle弧度制 从135度开始画
+      circleObj.startAngle = 300 *Math.PI/180 ; //startAngle弧度制 从135度开始画
       /*结束的度数*/
-      circleObj.endAngle = 180 *Math.PI/180-Math.PI*2
+      circleObj.endAngle =250 *Math.PI/180-Math.PI*2
       circleObj.color = '#FFEFD5';
       this.drawCircle(circleObj);
       /*有色的圆环*/
@@ -449,6 +449,7 @@ export default {
       circleObj.color = my_gradient
       this.drawCircle(circleObj);//6ff1c4
     },
+    
     fetch() {
       this.getProDetail({ projId: this.proId }).then(
         (data = {}) => (this.info = data)
