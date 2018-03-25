@@ -527,9 +527,9 @@ class ProjectController extends Controller
 
             if (!empty($allscore) && count($allscore) > 3){
                 $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
-                $average = $wx;
+                $average = $wx + 6.0;
             }else{
-                $average = 0.0;
+                $average = 6.0;
             }
 
         }
