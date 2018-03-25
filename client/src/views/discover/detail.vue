@@ -387,6 +387,73 @@ export default {
       });
       item.active = true;
     },
+    circleProgress(value,average){
+      var canvas = document.getElementById("redcircle");    
+      var context = canvas.getContext('2d');    
+      var _this = $(canvas),
+      value= value,// 当前百分比,数值
+      average = Number(average),// 平均百分比
+      color = "",// 进度条、文字样式
+      maxpercent = 10,//最大百分比，可设置
+      c_width = _this.width(),// canvas，宽度
+      c_height =_this.height();// canvas,高度
+      // 判断设置当前显示颜色
+      if( value== maxpercent ){
+          color="#ff8b13";
+      }else if( value> average ){
+          color="#ff8b13";
+      }else{
+          color="#ff8b13";
+      }    // 清空画布
+      context.clearRect(0, 0, c_width, c_height);    // 画初始圆
+      context.beginPath();    // 将起始点移到canvas中心
+      context.moveTo(c_width/2, c_height/2);    // 绘制一个中心点为（c_width/2, c_height/2），半径为c_height/2，起始点0，终止点为Math.PI * 2的 整圆
+      context.arc(c_width/2, c_height/2, c_height/2, 0, Math.PI * 2, false);
+      context.closePath();
+      context.fillStyle = '#FFE4B5'; //填充颜色
+      context.fill();    // 绘制内圆
+      context.beginPath();
+      context.strokeStyle = color;
+      context.lineCap = 'round';
+      context.closePath();
+      context.fill();
+      context.lineWidth = 10.0;//绘制内圆的线宽度
+ 
+      function draw(cur){
+          // 画内部空白 
+          context.beginPath(); 
+          context.moveTo(24, 24); 
+          context.arc(c_width/2, c_height/2, c_height/2-10, 0, Math.PI * 2, true); 
+          context.closePath(); 
+          context.fillStyle = 'rgba(255,255,255,1)';  // 填充内部颜色
+          context.fill();        // 画内圆
+          context.beginPath();        // 绘制一个中心点为（c_width/2, c_height/2），半径为c_height/2-5不与外圆重叠，
+          // 起始点-(Math.PI/2)，终止点为((Math.PI*2)*cur)-Math.PI/2的 整圆cur为每一次绘制的距离
+          context.arc(c_width/2, c_height/2, c_height/2-5, -(Math.PI / 2), ((Math.PI * 2) * cur ) - Math.PI / 2, false);
+          context.stroke();        //在中间写字 
+          context.font = "16pt PingFangSC";  // 字体大小，样式
+          context.fillStyle = color;  // 颜色
+          context.textAlign = 'center';  // 位置
+          context.textBaseline = 'middle'; 
+          context.moveTo(c_width/2, c_height/2);  // 文字填充位置
+          context.fillText(value, c_width/2, c_height/2-20);
+          context.fillText("综合评分", c_width/2, c_height/2+20);
+      }    
+        // 调用定时器实现动态效果
+        var timer=null,n=0;    
+        function loadCanvas(nowT){
+            timer = setInterval(function(){
+                if(n>nowT){
+                    clearInterval(timer);
+                }else{
+                    draw(n);
+                    n += 0.01;
+                }
+            },15);
+        }
+        loadCanvas(value/10);
+        timer=null;
+    },
     /*画曲线*/
     drawCircle(circleObj) {
         var ctx = circleObj.ctx;
@@ -463,7 +530,8 @@ export default {
           var resData = res.data;
           if (resData.errcode === 0) {
             this.score = resData.data.score;
-            this.circle(this.score)
+            //this.circle(this.score)
+            this.circleProgress(this.score,50)
           }
         });  
     },       
