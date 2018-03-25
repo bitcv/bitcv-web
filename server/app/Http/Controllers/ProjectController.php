@@ -510,18 +510,18 @@ class ProjectController extends Controller
             $fb = $allscore['score'][4]*0.5 +$allscore['score'][5]*0.3+$allscore['score'][6]*0.1+$allscore['score'][7]*0.1;
             $tw = $allscore['score'][8]*0.5 +$allscore['score'][9]*0.3+$allscore['score'][10]*0.1+$allscore['score'][11]*0.1;
             $wb = $allscore['score'][12]*0.5 +$allscore['score'][13]*0.3+$allscore['score'][14]*0.1+$allscore['score'][15]*0.1;
-            $average = ($wx + $fb + $tw + $wb) / 4;
+            $average = ($wx + $fb + $tw + $wb) / 4 + 6.0;
 
         } elseif (count($allscore['score']) == 12){
             $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
             $fb = $allscore['score'][4]*0.5 +$allscore['score'][5]*0.3+$allscore['score'][6]*0.1+$allscore['score'][7]*0.1;
             $tw = $allscore['score'][8]*0.5 +$allscore['score'][9]*0.3+$allscore['score'][10]*0.1+$allscore['score'][11]*0.1;
-            $average = ($wx + $fb + $tw) / 3;
+            $average = ($wx + $fb + $tw) / 3 + 6.0 ;
 
         } elseif (count($allscore['score']) == 8){
             $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
             $fb = $allscore['score'][4]*0.5 +$allscore['score'][5]*0.3+$allscore['score'][6]*0.1+$allscore['score'][7]*0.1;
-            $average = ($wx + $fb) / 2;
+            $average = ($wx + $fb) / 2 + 6.0 ;
 
         } else{
 
