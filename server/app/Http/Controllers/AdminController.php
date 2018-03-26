@@ -1993,10 +1993,13 @@ class AdminController extends Controller
 
 
             //有更新的项目数量
-
-            if ($dynWx > 0 || $dynWb > 0 || $dynFb > 0 || $dynTw > 0){
-                $dyn = $dyn + 1;
+            $projList = Model\Project::get()->toArray();
+            foreach ($projList as $proj){
+                if (Model\CrawlerSocialNews::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->where('proj_id','=',$proj['id'])->first()){
+                    $dyn = $dyn + 1;
+                }
             }
+
 
             //$dyn = Model\CrawlerSocialNews::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->count();
 
