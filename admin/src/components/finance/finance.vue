@@ -158,9 +158,6 @@
             <el-button type="primary" @click="submit">确定</el-button>
           </div>
         </el-dialog>
-        <!--Pagination-->
-        <!-- <el-pagination class="footer-page-box" @size-change="onOrderSizeChange" @current-change="onOrderCurChange" :current-page="orderPageno" :page-sizes="[10, 20, 30, 40]" :page-size="orderPerpage" layout="total, sizes, prev, pager, next, jumper" :total="orderDataCount">
-        </el-pagination> -->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -219,7 +216,14 @@ export default {
     financeData () {
       this.$http.post('/api/getFinanceList', {
         pageno: this.pageno,
-        perpage: this.perpage
+        perpage: this.perpage,
+        jyhash: this.jyhash,
+        faddr: this.faddr,
+        taddr: this.taddr,
+        // symbol: this.symbol,
+        conintype: this.conintype,
+        recordstyp: this.recordstyp,
+        feetype: this.feetype
       }).then((res) => {
         if (res.data.errcode === 0) {
           this.financeList = res.data.data.dataList

@@ -63,7 +63,7 @@ class FinanceController extends Controller
                 $dataList[$key]->tcolor = true;
                 $dataList[$key]->fcolor = false;
             }
-            $dataList[$key]->timeformat = substr(date('Y-m-d H:i:s',($value->transaction_time) + (8 * 3600) ),5);
+            $dataList[$key]->timeformat = substr(date('Y-m-d H:i:s',($value->transaction_time)),5);
             $dataList[$key]->walletName = $value->walletname;
             $dataList[$key]->usedname = ($value->used) ? DictUtil::TokenUsed[$value->used] : '';
             $dataList[$key]->typename = ($value->type) ? DictUtil::TokenType[$value->type] : '';
@@ -308,7 +308,7 @@ class FinanceController extends Controller
                 $dataList[$key]->tcolor = true;
                 $dataList[$key]->fcolor = false;
             }
-            $dataList[$key]->timeformat = substr(date('Y-m-d H:i:s',($value->transaction_time) - (8 * 3600) ),5);
+            $dataList[$key]->timeformat = substr(date('Y-m-d H:i:s',($value->transaction_time)),5);
             $dataList[$key]->walletName = $value->walletname;
             $dataList[$key]->usedname = ($value->used) ? DictUtil::TokenUsed[$value->used] : '';
             $dataList[$key]->typename = ($value->type) ? DictUtil::TokenType[$value->type] : '';
