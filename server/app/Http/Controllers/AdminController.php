@@ -1941,7 +1941,7 @@ class AdminController extends Controller
     //一天抓取的全部动态
     public function getDynamic(Request $request){
 
-
+        $dyn = 0;
         for ($key = 1; $key < 5; $key++ ){
 
             $projPass = Model\Project::where([
@@ -1993,7 +1993,15 @@ class AdminController extends Controller
 
 
             //有更新的项目数量
-            $dyn = Model\CrawlerSocialNews::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->count();
+            $projList = Model\Project::get()->toArray();
+            foreach ($projList as $proj){
+                if (Model\CrawlerSocialNews::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->where('proj_id','=',$proj['id'])->first()){
+                    $dyn = $dyn + 1;
+                }
+            }
+
+
+            //$dyn = Model\CrawlerSocialNews::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->count();
 
             $data[$key]['post_time'] = date("Y-m-d",strtotime('-'.$key.' day'));
             $data[$key]['projPass'] = $projPass;
@@ -2006,6 +2014,7 @@ class AdminController extends Controller
             $data[$key]['dynFb'] = $dynFb;
             $data[$key]['dynWb'] = $dynWb;
             $data[$key]['dynWx'] = $dynWx;
+            $dyn = 0;
         }
 
         return $this->output([
