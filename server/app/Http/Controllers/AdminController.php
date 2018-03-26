@@ -1993,7 +1993,12 @@ class AdminController extends Controller
 
 
             //有更新的项目数量
-            $dyn = Model\CrawlerSocialNews::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->count();
+            $dyn = 0;
+            if ($dynWx > 0 && $dynWb > 0 && $dynFb > 0 && $dynTw > 0){
+                $dyn = $dyn + 1;
+            }
+
+            //$dyn = Model\CrawlerSocialNews::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->count();
 
             $data[$key]['post_time'] = date("Y-m-d",strtotime('-'.$key.' day'));
             $data[$key]['projPass'] = $projPass;
