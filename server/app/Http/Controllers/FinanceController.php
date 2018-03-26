@@ -25,6 +25,8 @@ class FinanceController extends Controller
         $offset = $perpage * ($pageno - 1);
         $query = DB::table('finance');
         $query = $query->select('finance.*');
+//        $query = $query->join('configwalletaddr','finance.walletid','=','configwalletaddr.id');
+//        $query = $query->select('finance.*','configwalletaddr.wname','configwalletaddr.waddress');
         if (array_key_exists('jyhash', $allparams) && $allparams['jyhash']) {
             $query = $query->where('finance.transaction_hash',$allparams['jyhash']);
         }
@@ -41,14 +43,26 @@ class FinanceController extends Controller
             $query = $query->where('finance.used',$allparams['feetype']);
         }
         if (array_key_exists('conintype',$allparams) && $allparams['conintype'] && $allparams['conintype'] !=99) {
-            $query = $query->where('cointype','like',$allparams['conintype']);
+            $query = $query->where('finance.cointype','like',$allparams['conintype']);
         }
-        $dataList = $query->orderBy('transaction_time', 'desc')->offset($offset)
+        $dataList = $query->orderBy('finance.transaction_time', 'desc')->offset($offset)
             ->limit($perpage)
             ->get()->toArray();
         $datacount = $query->count();
         foreach ($dataList as $key => $value)
         {
+            $walletidfrom = DB::table('configwalletaddr')->select('id')->where('waddress',$value->from_addr)->get()->toArray();
+            $walletidto = DB::table('configwalletaddr')->select('id')->where('waddress',$value->to_addr)->get()->toArray();
+            if (!empty($walletidfrom)) {
+                DB::table('finance')->where('from_addr', $value->from_addr)->update(['walletid' => $walletidfrom[0]->id]);
+                $dataList[$key]->fcolor = true;
+                $dataList[$key]->tcolor = false;
+            }
+            if (!empty($walletidto)) {
+                DB::table('finance')->where('to_addr', $value->to_addr)->update(['walletid' => $walletidto[0]->id]);
+                $dataList[$key]->tcolor = true;
+                $dataList[$key]->fcolor = false;
+            }
             $dataList[$key]->timeformat = substr(date('Y-m-d H:i:s',($value->transaction_time) + (8 * 3600) ),5);
             $dataList[$key]->walletName = $value->walletname;
             $dataList[$key]->usedname = ($value->used) ? DictUtil::TokenUsed[$value->used] : '';
@@ -56,6 +70,10 @@ class FinanceController extends Controller
             $dataList[$key]->tokensubjectname = ($value->tokensubject) ? $value->tokensubject : '';
             $dataList[$key]->realamount = $value->amount;
             $dataList[$key]->actualgasprice = (($value->gasprice) / pow(10,18)) * $value->gasused;
+            $name = DB::table('configwalletaddr')->select('wname')->where('id',$value->walletid)->get()->toArray();
+            if (!empty($name)) {
+                $dataList[$key]->Name = $name[0]->wname;
+            }
         }
         return $this->output([
             'dataList' => $dataList,
@@ -278,6 +296,18 @@ class FinanceController extends Controller
         $datacount = $query->count();
         foreach ($dataList as $key => $value)
         {
+            $walletidfrom = DB::table('configwalletaddr')->select('id')->where('waddress',$value->from_addr)->get()->toArray();
+            $walletidto = DB::table('configwalletaddr')->select('id')->where('waddress',$value->to_addr)->get()->toArray();
+            if (!empty($walletidfrom)) {
+                DB::table('finance')->where('from_addr', $value->from_addr)->update(['walletid' => $walletidfrom[0]->id]);
+                $dataList[$key]->fcolor = true;
+                $dataList[$key]->tcolor = false;
+            }
+            if (!empty($walletidto)) {
+                DB::table('finance')->where('to_addr', $value->to_addr)->update(['walletid' => $walletidto[0]->id]);
+                $dataList[$key]->tcolor = true;
+                $dataList[$key]->fcolor = false;
+            }
             $dataList[$key]->timeformat = substr(date('Y-m-d H:i:s',($value->transaction_time) - (8 * 3600) ),5);
             $dataList[$key]->walletName = $value->walletname;
             $dataList[$key]->usedname = ($value->used) ? DictUtil::TokenUsed[$value->used] : '';
@@ -286,6 +316,10 @@ class FinanceController extends Controller
 //            $dataList[$key]->realamount = $value->amount / pow(10,18);
             $dataList[$key]->realamount = $value->amount;
             $dataList[$key]->actualgasprice = (($value->gasprice) / pow(10,18)) * $value->gasused;
+            $name = DB::table('configwalletaddr')->select('wname')->where('id',$value->walletid)->get()->toArray();
+            if (!empty($name)) {
+                $dataList[$key]->Name = $name[0]->wname;
+            }
         }
         return $this->output([
             'dataList' => $dataList,

@@ -50,16 +50,19 @@
             </template>
           </el-table-column>
           <el-table-column label="从">
-            <template slot-scope="scope">{{ getShortStr(scope.row.from_addr,10) }}</template>
+            <template slot-scope="scope"><span :style="scope.row.fcolor ? 'color:#e67e22;' : 'color:' ">{{ getShortStr(scope.row.from_addr,10) }}</span></template>
           </el-table-column>
+<!--          <el-table-column>
+            <template slot-scope="scope">{{ scope.row.fcolor }}</template>
+          </el-table-column>-->
           <el-table-column label="到">
-            <template slot-scope="scope">{{ getShortStr(scope.row.to_addr,10) }}</template>
+            <template slot-scope="scope"><span :style="scope.row.tcolor ? 'color:#5cb85c;' : 'color:' ">{{ getShortStr(scope.row.to_addr,10) }}</span></template>
           </el-table-column>
           <el-table-column label="时间">
             <template slot-scope="scope">{{ scope.row.timeformat }}</template>
           </el-table-column>
           <el-table-column label="地址名称">
-            <template slot-scope="scope">{{ scope.row.walletName }}</template>
+            <template slot-scope="scope">{{ scope.row.Name }}</template>
           </el-table-column>
           <el-table-column label="类型">
             <template slot-scope="scope">{{ scope.row.typename }}</template>
@@ -192,7 +195,9 @@ export default {
       conintype: '',
       recordstyp: '',
       feetype: '',
-      all: '99'
+      all: '99',
+      fcolor: '',
+      tcolor: ''
     }
   },
   mounted () {
