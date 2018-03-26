@@ -1941,7 +1941,7 @@ class AdminController extends Controller
     //一天抓取的全部动态
     public function getDynamic(Request $request){
 
-
+        $dyn = 0;
         for ($key = 1; $key < 5; $key++ ){
 
             $projPass = Model\Project::where([
@@ -1993,8 +1993,8 @@ class AdminController extends Controller
 
 
             //有更新的项目数量
-            $dyn = 0;
-            if ($dynWx > 0 && $dynWb > 0 && $dynFb > 0 && $dynTw > 0){
+
+            if ($dynWx > 0 || $dynWb > 0 || $dynFb > 0 || $dynTw > 0){
                 $dyn = $dyn + 1;
             }
 
@@ -2011,6 +2011,7 @@ class AdminController extends Controller
             $data[$key]['dynFb'] = $dynFb;
             $data[$key]['dynWb'] = $dynWb;
             $data[$key]['dynWx'] = $dynWx;
+            $dyn = 0;
         }
 
         return $this->output([
