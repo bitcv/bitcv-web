@@ -331,4 +331,26 @@ class FinanceController extends Controller
             'recordstype' => DictUtil::TokenType,
         ]);
     }
+
+    // 删除记录
+    public function delRecords(Request $request)
+    {
+        //获取请求参数
+        $params = $this->validation($request, [
+            'fId' => 'required|numeric',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        $fid = $request->all();
+        if (!empty($fid)) {
+            $fid = $fid['fId'];
+            $result = DB::table('finance')->where('id',$fid)->delete();
+            if ($result) {
+                return $this->output();
+            }
+        }
+    }
 }

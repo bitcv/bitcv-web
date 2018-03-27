@@ -85,6 +85,7 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button type="success" size="mini" @click="editShow(scope.row,scope.$index)">标记</el-button>
+              <el-button size="mini" style="margin-left: 0px;margin-top: 5px;" type="danger" @click="showDelRecord(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -264,6 +265,30 @@ export default {
       this.walletname = instituData.wname
       this.walletaddr = instituData.waddress
       this.showDialog = true
+    },
+    showDelRecord (fId) {
+      this.$confirm('删除后无法恢复, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.delRecords(fId)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    delRecords (fId) {
+      this.$http.post('/api/delRecords', {
+        fId: fId
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.$message({ type: 'success', message: '删除成功!' })
+          this.financeData()
+        }
+      })
     },
     submit () {
       if (!this.walletname) {
