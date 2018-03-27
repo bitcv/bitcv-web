@@ -204,14 +204,15 @@
             </div><!-- /#partner -->
           </div>
           <div v-if="activeName == 'dynamic'" class="tab-content">
-            <div id="offical" class="panel-body" v-if="info.reportList && info.reportList.length">
+            <div id="offical" class="panel-body" v-if="showList">
               <h4 class="sub-title">{{ $t('label.media') }}</h4>
               <div class="sub-content">
                 <ul class="list-unstyled media-list">
-                  <li class="clearfix" v-for="(report, index) in info.reportList" :key="index">
+                  <li class="clearfix" v-for="(report, index) in showList" :key="index">
                     <p style="float: right;font-size:12px;color:#A1A1A1;margin-right:28px;">来自 {{ report.name }}</p>
                     <p class="content"><span >{{ report.releaseTime | formatDate }}</span><a :href="report.linkUrl" target="_blank" class="more"><span class= "title" v-html="report.title"></span></a></p>
                   </li>
+                  <div v-if="info.reportList.length > 3"  style="text-align:center;color: #A1A1A1;font-size:12px;" @click="show" class="show-more">{{word}}</div>
                 </ul>
               </div>
             </div>
@@ -310,6 +311,7 @@ export default {
       viewNum: {},
       word: "",
       reports: [],
+      showList: [],
       ctx: "",
       activeName: "info",
       swiperOption: {
@@ -367,11 +369,13 @@ export default {
     }
   },
   created() {
-    this.fetch();
+    //this.fetch();
   },
   mounted() {
     this.viewProjectd();
     this.getAver();
+    this.getProDetail();
+    //this.tips();
   },
   methods: {
     ...mapActions(["getProDetail", "viewProject", "getScore", "updateFocus"]),
@@ -520,6 +524,53 @@ export default {
       this.getProDetail({ projId: this.proId }).then(
         (data = {}) => (this.info = data)
       );
+    },
+    getProDetail (){
+      this.word = '更多'
+      this.$http
+        .post("/api/getProjDetail", {
+          projId: this.proId
+        })
+        .then( res => {
+          var resData = res.data;
+          if (resData.errcode === 0){
+            this.info = resData.data
+            if (this.showAll == false){
+              if (this.info.reportList.length > 3){
+                for (var i=0; i< 3 ;i++){
+                  this.showList.push(this.info.reportList[i])
+                }
+              }else{
+                this.showList = this.info.reportList
+              }
+            }else{
+              for (var i=0; i< 4 ;i++){
+                this.showList.push(this.info.reportList[i])
+              }
+            }
+          }
+        })
+    },
+    show () {
+      this.showAll = true
+      
+      if (this.showList.length == 3){
+        this.showList.push(this.info.reportList[3])
+        this.word = '收起'
+      }else{
+        this.showList = []
+        for (var i=0; i< 3 ;i++){
+          this.showList.push(this.info.reportList[i])
+        }
+        this.word = '更多'
+      }
+    },
+    tips (){
+      if(this.showAll == false){　　　　　　　　　　　//对文字进行处理
+        this.word =  '展开全部'
+      }else{
+        this.word =  '收起'
+      }
     },
     getAver (){
       this.$http

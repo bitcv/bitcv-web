@@ -2000,7 +2000,6 @@ class AdminController extends Controller
                 }
             }
 
-
             //$dyn = Model\CrawlerSocialNews::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->count();
 
             $data[$key]['post_time'] = date("Y-m-d",strtotime('-'.$key.' day'));
