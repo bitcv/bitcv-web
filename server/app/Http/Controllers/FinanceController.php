@@ -31,10 +31,10 @@ class FinanceController extends Controller
             $query = $query->where('finance.transaction_hash',$allparams['jyhash']);
         }
         if (array_key_exists('faddr', $allparams) && $allparams['faddr']) {
-            $query = $query->where('finance.from_addr',$allparams['faddr']);
+            $query = $query->where('finance.from_addr','like','%'.$allparams['faddr'].'%');
         }
         if (array_key_exists('taddr', $allparams) && $allparams['taddr']) {
-            $query = $query->where('finance.to_addr',$allparams['taddr']);
+            $query = $query->where('finance.to_addr','like','%'.$allparams['taddr'].'%');
         }
         if (array_key_exists('recordstyp', $allparams) && $allparams['recordstyp'] && $allparams['recordstyp'] != 99) {
             $query = $query->where('finance.type',$allparams['recordstyp']);
@@ -276,10 +276,10 @@ class FinanceController extends Controller
             $query = $query->where('finance.transaction_hash',$allparams['jyhash']);
         }
         if (array_key_exists('faddr', $allparams) && $allparams['faddr']) {
-            $query = $query->where('finance.from_addr',$allparams['faddr']);
+            $query = $query->where('finance.from_addr','like','%'.$allparams['faddr'].'%');
         }
         if (array_key_exists('taddr', $allparams) && $allparams['taddr']) {
-            $query = $query->where('finance.to_addr',$allparams['taddr']);
+            $query = $query->where('finance.to_addr','like','%'.$allparams['taddr'].'%');
         }
         if (array_key_exists('recordstyp', $allparams) && $allparams['recordstyp'] && $allparams['recordstyp'] != 99) {
             $query = $query->where('finance.type',$allparams['recordstyp']);
