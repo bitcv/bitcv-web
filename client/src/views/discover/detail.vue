@@ -204,7 +204,7 @@
             </div><!-- /#partner -->
           </div>
           <div v-if="activeName == 'dynamic'" class="tab-content">
-            <div id="offical" class="panel-body" v-if="showList">
+            <div id="offical" class="panel-body" v-if="showList && showList.length > 0">
               <h4 class="sub-title">{{ $t('label.media') }}</h4>
               <div class="sub-content">
                 <ul class="list-unstyled media-list">
