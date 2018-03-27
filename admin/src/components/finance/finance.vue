@@ -98,7 +98,7 @@
               {{ editObj.transaction_hash}}
             </el-form-item>
             <el-form-item label="类型 : ">
-              <el-select v-model="tokentypeId" placeholder="请选择">
+              <el-select @change="selectVal" v-model="tokentypeId" placeholder="请选择">
                 <el-option v-for="(op, index) in tokentype" :key="index" :label="op" :value="index">
                 </el-option>
               </el-select>
@@ -195,7 +195,8 @@ export default {
       feetype: '',
       all: '99',
       fcolor: '',
-      tcolor: ''
+      tcolor: '',
+      tempoption: []
     }
   },
   mounted () {
@@ -204,6 +205,18 @@ export default {
     this.getCount()
   },
   methods: {
+    selectVal () {
+      if (this.tokentypeId === '1') {
+        this.tempoption = {'1': '收到投资款', '2': '收回投资币种', '3': '收到余币宝投资', '4': '币种兑换'}
+      } else if (this.tokentypeId === '2') {
+        this.tempoption = {'5': '员工工资', '6': '团队激励', '7': '市场推广费', '8': '币种投资', '9': '币种出售', '10': '币种兑换', '11': '退回投资款', '12': '手续费'}
+      } else if (this.tokentypeId === '3') {
+        this.tempoption = {'13': '账户互转'}
+      } else {
+        this.tempoption = this.options
+      }
+      this.options = this.tempoption
+    },
     updateData () {
       this.$http.post('/api/getWalletList', {
         pageno: this.pageno,
