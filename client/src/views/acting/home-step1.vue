@@ -26,7 +26,7 @@
         <el-button type="warning" plain @click="fetchSample">获取模板</el-button>
       </el-form-item>
       <el-form-item>
-        <el-checkbox style="color:#ccc" v-model="checked" disabled></el-checkbox>
+        <el-checkbox style="color:#ccc" v-model="checked" ></el-checkbox>
         <!-- <el-button style = "text-align:center;color: #A1A1A1;" type="text" @click="open">用户协议</el-button> -->
         <el-button style="color: #ccc;font-size:12px;" type="text" @click="open5">用户协议</el-button>
       </el-form-item>
@@ -131,12 +131,9 @@ export default {
   methods: {
     ...mapActions(['addUserDispenseAsset', 'getTokenInfo', 'getTokenBySymbol']),
     handleBefore (file) {
+      console.log(this.checked)
       if (!this.formData.tokenId) {
         this.$message.warn('请填写合约地址')
-        return false
-      }
-      if (!this.check){
-        alert('您没有同意用户协议')
         return false
       }
     },
