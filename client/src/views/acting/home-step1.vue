@@ -17,18 +17,18 @@
           <i slot="suffix" v-loading="tokenLoad">{{formData.tokenSymbol}}</i>
         </el-input>
       </el-form-item>
+      <el-form-item>
+        <el-checkbox style="color:#ccc" v-model="checked" ></el-checkbox>
+        <!-- <el-button style = "text-align:center;color: #A1A1A1;" type="text" @click="open">用户协议</el-button> -->
+        <el-button style="color: #ccc;font-size:12px;" type="text" @click="open5">用户协议</el-button>
+      </el-form-item>
       <el-form-item label="上传地址">
         <el-tooltip class="item" effect="dark" content="请输入合约地址" :disabled="!uploadDisable" placement="bottom">
           <el-upload class="upload-btn" name="addr" action="/api/parseAddrFile" :before-upload="handleBefore" :on-success="handleSuccess" :on-error="handleError" :data="formData" :disabled="uploadDisable" :show-file-list="false">
-            <el-button slot="trigger" type="warning" class="btn-primary">点击上传</el-button>
+            <el-button slot="trigger" type="warning" :disabled="disableFile" class="btn-primary">点击上传</el-button>
           </el-upload>
         </el-tooltip>
         <el-button type="warning" plain @click="fetchSample">获取模板</el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-checkbox style="color:#ccc" v-model="checked" disabled ></el-checkbox>
-        <!-- <el-button style = "text-align:center;color: #A1A1A1;" type="text" @click="open">用户协议</el-button> -->
-        <el-button style="color: #ccc;font-size:12px;" type="text" @click="open5">用户协议</el-button>
       </el-form-item>
     </el-form>
     <div v-else>
@@ -90,6 +90,7 @@ export default {
         contractAddr: [{validator: addrRule, trigger: 'blur'}]
       },
       isUpload: false,
+      disableFile: false,
       checked: true,
       list: [],
       dataCount: 0,
@@ -126,12 +127,18 @@ export default {
           this.selectLoad = false
         })
       }
+    },
+    'checked' (){
+      if (!this.checked){
+        this.disableFile = true
+      }else{
+        this.disableFile = false
+      }
     }
   },
   methods: {
     ...mapActions(['addUserDispenseAsset', 'getTokenInfo', 'getTokenBySymbol']),
     handleBefore (file) {
-      console.log(this.checked)
       if (!this.formData.tokenId) {
         this.$message.warn('请填写合约地址')
         return false
