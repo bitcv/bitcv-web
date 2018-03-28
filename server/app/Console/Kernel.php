@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
         Commands\UpdateDb::class,
         Commands\AddProfit::class,
         Commands\CrawlRecords::class,
+        Commands\CrawlCoin::class,
     ];
 
     /**
@@ -35,6 +36,8 @@ class Kernel extends ConsoleKernel
         //$schedule->command("crawl:data facebook")->everyMinute()->withoutOverlapping();
         //$schedule->command("crawl:data twitter")->everyMinute()->withoutOverlapping();
         $schedule->command("crawl:data news")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:data ok")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:data otcbtc")->everyMinute()->withoutOverlapping();
 //        $schedule->call(function () {
 //            $this->crawlPrice();
 //        })->everyMinute();
