@@ -25,6 +25,11 @@
         </el-tooltip>
         <el-button type="warning" plain @click="fetchSample">获取模板</el-button>
       </el-form-item>
+      <el-form-item>
+        <el-checkbox style="color:#ccc" checked="true"></el-checkbox>
+        <!-- <el-button style = "text-align:center;color: #A1A1A1;" type="text" @click="open">用户协议</el-button> -->
+        <el-button style="color: #ccc;font-size:14px;" type="text" @click="open5">用户协议</el-button>
+      </el-form-item>
     </el-form>
     <div v-else>
       <h4>上传成功</h4>
@@ -75,6 +80,7 @@ export default {
     }
     return {
       formData: {
+        checked: true,
         isTest: 0,
         tokenType: 0,
         contractAddr: '',
@@ -130,6 +136,11 @@ export default {
         return false
       }
     },
+    open5() {
+        this.$alert('本人同意使用代发宝业务进行数字货币转账，并承诺自行承担因此产生的风险，本人完全理解并同意接受如下条款：<br><br>1、发送方承诺并保证自行上传的发送资料中所有信息的真实性、准确性和合法性，并对此承担责任。<br><br> 2、如发送方上传的发送资料中，因资料错误、不完整，导致发送失败或者错误发送，由发送方承担责任，代发宝运营方无需承担任何责任。 <br><br>3、如因不可抗力导致服务中断（包括但不限于地震、战争、网络中断、网络攻击等），代发宝运营方无需承担任何责任代发宝在此声明，代发宝作为数字资产代发工具，并不实质性介入发送方与接收方的交易过程。代发宝的注册用户应对自己在代发宝充值的资产及一切转账行为承担责任，并承诺不以任何非法目的、不通过任何非法途径使用和推广代发宝。对于注册用户所有违背与代发宝服务相关的法律、法规及其他规范性文件的行为而造成的损失及后果，代发宝均不承担任何责任。', '免责声明', {
+          dangerouslyUseHTMLString: true
+        });
+      },
     handleSuccess (res) {
       if (res.errcode === 0) {
         this.isUpload = true

@@ -533,7 +533,9 @@ class ProjectController extends Controller
             }
 
         }
-
+        if ($average > 9.8){
+            $average = 9.8;
+        }
         $aver = sprintf("%.2f",$average);
         return $this->output(['score' => $aver]);
 
