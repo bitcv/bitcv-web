@@ -26,7 +26,7 @@
         <el-button type="warning" plain @click="fetchSample">获取模板</el-button>
       </el-form-item>
       <el-form-item>
-        <el-checkbox style="color:#ccc" v-model="checked" ></el-checkbox>
+        <el-checkbox style="color:#ccc" v-model="checked" disabled ></el-checkbox>
         <!-- <el-button style = "text-align:center;color: #A1A1A1;" type="text" @click="open">用户协议</el-button> -->
         <el-button style="color: #ccc;font-size:12px;" type="text" @click="open5">用户协议</el-button>
       </el-form-item>
