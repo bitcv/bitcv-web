@@ -26,9 +26,9 @@
         <el-button type="warning" plain @click="fetchSample">获取模板</el-button>
       </el-form-item>
       <el-form-item>
-        <el-checkbox style="color:#ccc" checked="true"></el-checkbox>
+        <el-checkbox style="color:#ccc" v-model="checked" disabled></el-checkbox>
         <!-- <el-button style = "text-align:center;color: #A1A1A1;" type="text" @click="open">用户协议</el-button> -->
-        <el-button style="color: #ccc;font-size:14px;" type="text" @click="open5">用户协议</el-button>
+        <el-button style="color: #ccc;font-size:12px;" type="text" @click="open5">用户协议</el-button>
       </el-form-item>
     </el-form>
     <div v-else>
@@ -80,7 +80,6 @@ export default {
     }
     return {
       formData: {
-        checked: true,
         isTest: 0,
         tokenType: 0,
         contractAddr: '',
@@ -91,6 +90,7 @@ export default {
         contractAddr: [{validator: addrRule, trigger: 'blur'}]
       },
       isUpload: false,
+      checked: true,
       list: [],
       dataCount: 0,
       uniqueCount: 0,
@@ -133,6 +133,10 @@ export default {
     handleBefore (file) {
       if (!this.formData.tokenId) {
         this.$message.warn('请填写合约地址')
+        return false
+      }
+      if (!this.check){
+        alert('您没有同意用户协议')
         return false
       }
     },
