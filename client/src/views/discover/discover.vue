@@ -122,7 +122,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="panel panel-custom text-darker" style="min-height:200px;">
+        <div class="panel panel-custom text-darker" style="min-height:200px;" v-loading="loading">
           <div class="panel-heading">
             <h4 v-if="language === 'cn'" class="panel-title">关注 TOP10</h4>
             <h4 v-else class="panel-title">TOP10 Followings</h4>
@@ -134,7 +134,7 @@
             </router-link>
           </div>
         </div>
-        <div class="panel panel-custom text-darker" style="min-height:200px;">
+        <div class="panel panel-custom text-darker" style="min-height:200px;" v-loading="loading">
           <div class="panel-heading">
             <h4 v-if="language === 'cn'" class="panel-title">浏览 TOP10</h4>
             <h4 v-else class="panel-title">TOP10 Browsings</h4>
