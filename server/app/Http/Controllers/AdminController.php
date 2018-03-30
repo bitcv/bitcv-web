@@ -1954,7 +1954,7 @@ class AdminController extends Controller
                 ['project.edited', 1],
             ])->count();
 
-            $newProj = Model\Project::where('project.created_at',date("Y-m-d",strtotime('-'.$key.' day') ))->count();
+            $newProj = Model\Project::whereDate('project.created_at','=',date("Y-m-d",strtotime('-'.$key.' day') ))->count();
 
             $projAllPass = Model\Project::where([
                 ['project.auth_time', '<', date("Y-m-d",strtotime('-'.$key.' day'))],
@@ -1962,7 +1962,7 @@ class AdminController extends Controller
             ])->count();
 
             //项目的总数量
-            $dataCount = Model\Project::count();
+            $dataCount = Model\Project::whereDate('project.created_at','<',date("Y-m-d",strtotime('-'.$key.' day') ))->count();
             //print_r(substr('2018-02-05 18:14:02','0','10'));die;
 //            $dynTw = Model\CrawlerSocialNews::where([
 //                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime('-'.$key.' day') )],
