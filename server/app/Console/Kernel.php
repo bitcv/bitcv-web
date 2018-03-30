@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
         //$schedule->command("crawl:data weibo")->everyMinute()->withoutOverlapping();
         //$schedule->command("crawl:data facebook")->everyMinute()->withoutOverlapping();
         //$schedule->command("crawl:data twitter")->everyMinute()->withoutOverlapping();
-        $schedule->command("crawl:data news")->everyMinute()->withoutOverlapping();
+        //$schedule->command("crawl:data news")->everyMinute()->withoutOverlapping();
         $schedule->command("crawl:data ok")->everyMinute()->withoutOverlapping();
         $schedule->command("crawl:data otcbtc")->everyMinute()->withoutOverlapping();
 //        $schedule->call(function () {
@@ -45,7 +45,7 @@ class Kernel extends ConsoleKernel
         $schedule->command("crawl:data weibo")->daily()->withoutOverlapping();
         $schedule->command("crawl:data facebook")->daily()->withoutOverlapping();
         $schedule->command("crawl:data twitter")->daily()->withoutOverlapping();
-        $schedule->command("crawl:crawlRecords")->everyMinute()->withoutOverlapping();
+        $schedule->command("crawl:crawlRecords")->hourly()->withoutOverlapping();
     }
 
     /**

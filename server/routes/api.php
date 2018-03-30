@@ -140,6 +140,7 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('getWalletList','FinanceController@getWalletList');
     Route::any('delWalletAddr', 'FinanceController@delWalletAddr');
     Route::any('searchFinanceList', 'FinanceController@searchFinanceList');
+    Route::any('delRecords', 'FinanceController@delRecords');
 
 });
 
