@@ -274,7 +274,6 @@
             <h4 style="text-align:center;font-weight:bold;">{{ "币威指数" }}</h4>
             <p class="text-center" style="margin-top: 37px;width:100%; height:155px;">
               <canvas id="redcircle" width="135" height="130"></canvas>
-              <!-- <el-progress type="circle" width = "150" stroke-width= "12" :percentage="score.score" ></el-progress> -->
             </p>
           </div>
           <div>
@@ -284,6 +283,25 @@
             </p>
           </div>
         </div>
+        <!-- <div class="btn-panel">
+          <h3 class="center-title panel-title">认领该公司</h3>
+          <img src="/static/img/头像扫描@2x.png" alt="">
+        </div> -->
+        <!-- <div v-if="projDetail.companyTel || projDetail.companyEmail || projDetail.companyAddr" class="contact-panel">
+          <h3 class="center-title panel-title">公司联系信息</h3>
+          <div v-if="projDetail.companyTel" class="info-row">
+            <img src="/static/img/tel@2x.png" alt="">
+            <span class="text">{{ projDetail.companyTel }}</span>
+          </div>
+          <div v-if="projDetail.companyEmail" class="info-row">
+            <img src="/static/img/email@2x.png" alt="">
+            <span class="text">{{ projDetail.companyEmail }}</span>
+          </div>
+          <div v-if="projDetail.companyAddr" class="info-row">
+            <img src="/static/img/addr@2x.png" alt="">
+            <span class="text">{{ projDetail.companyAddr }}</span>
+          </div>
+        </div> -->
       </div>
     </div>
   </div>

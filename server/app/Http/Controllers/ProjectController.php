@@ -541,6 +541,27 @@ class ProjectController extends Controller
 
     }
 
+    //申请项目
+    public function claimProj(Request $request){
+        $uid = \App\Utils\Auth::$uid;
+        $adminproj = Model\Admin::where('id', $uid)->first();
+        if ($adminproj) {
+            return $this->error(100, '每人只能创建并管理一个项目');
+        }
+        $params = $this->validation($request, [
+            'proj_id' => 'required|string',
+        ]);
+
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Admin::insert(['id'=>$uid, 'proj_id'=>$proj_id]);
+
+        return $this->output(['projId' => $proj_id]);
+    }
+
 
     
 

@@ -625,14 +625,22 @@ class AdminController extends Controller
         if ($adminproj) {
             return $this->error(100, '每人只能创建并管理一个项目');
         }
-        $data = $this->validation($request, [
-            'name_cn' => 'required|string',
-            'name_en' => 'required|string',
+        $params = $this->validation($request, [
+            'nameCn' => 'required|string',
+            'nameEn' => 'required|string',
         ]);
-        if (Model\Project::where('name_cn', $data['name_cn'])->first()) {
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        if (Model\Project::where('name_cn', $nameCn)->first()) {
             return $this->error(100);
         } else {
-            $proj = Model\Project::create($data);
+            $proj = Model\Project::create([
+                'name_cn' => strtoupper($nameCn),
+                'name_en' => $nameEn,
+            ]);
             Model\Admin::insert(['id'=>$uid, 'proj_id'=>$proj->id]);
             return $this->output(['projId' => $proj->id]);
         }
