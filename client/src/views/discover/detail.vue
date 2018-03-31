@@ -204,14 +204,15 @@
             </div><!-- /#partner -->
           </div>
           <div v-if="activeName == 'dynamic'" class="tab-content">
-            <div id="offical" class="panel-body" v-if="info.reportList && info.reportList.length">
+            <div id="offical" class="panel-body" v-if="showList && showList.length > 0">
               <h4 class="sub-title">{{ $t('label.media') }}</h4>
               <div class="sub-content">
                 <ul class="list-unstyled media-list">
-                  <li class="clearfix" v-for="(report, index) in info.reportList" :key="index">
+                  <li class="clearfix" v-for="(report, index) in showList" :key="index">
                     <p style="float: right;font-size:12px;color:#A1A1A1;margin-right:28px;">来自 {{ report.name }}</p>
                     <p class="content"><span >{{ report.releaseTime | formatDate }}</span><a :href="report.linkUrl" target="_blank" class="more"><span class= "title" v-html="report.title"></span></a></p>
                   </li>
+                  <div v-if="info.reportList.length > 3"  style="text-align:center;color: #A1A1A1;font-size:12px;" @click="show" class="show-more">{{word}}</div>
                 </ul>
               </div>
             </div>
@@ -268,12 +269,11 @@
             </div>
           </div>
         </div>
-        <!-- <div class="col-md-4 col">
+        <div class="col-md-4 col">
           <div class="panel-body text-darker score" style="padding-top: 0">
             <h4 style="text-align:center;font-weight:bold;">{{ "币威指数" }}</h4>
             <p class="text-center" style="margin-top: 37px;width:100%; height:155px;">
               <canvas id="redcircle" width="135" height="130"></canvas>
-              <el-progress type="circle" width = "150" stroke-width= "12" :percentage="score.score" ></el-progress>
             </p>
           </div>
           <div>
@@ -281,6 +281,25 @@
               <img :src="'/static/img/question.png'" style="height:12px;width:12px;vertical-align:middle;" alt="">
               <span style="font-size:12px;color:rgba(155,155,155,1);line-height:16px;text-align:center;margin-top:7px;margin-left:2px;margin-right:15px;">币威指数是根据项目动态更新频率产生的综合评分，我们将逐步完善更多评分选项。</span>
             </p>
+          </div>
+        </div>
+        <!-- <div class="btn-panel">
+          <h3 class="center-title panel-title">认领该公司</h3>
+          <img src="/static/img/头像扫描@2x.png" alt="">
+        </div> -->
+        <!-- <div v-if="projDetail.companyTel || projDetail.companyEmail || projDetail.companyAddr" class="contact-panel">
+          <h3 class="center-title panel-title">公司联系信息</h3>
+          <div v-if="projDetail.companyTel" class="info-row">
+            <img src="/static/img/tel@2x.png" alt="">
+            <span class="text">{{ projDetail.companyTel }}</span>
+          </div>
+          <div v-if="projDetail.companyEmail" class="info-row">
+            <img src="/static/img/email@2x.png" alt="">
+            <span class="text">{{ projDetail.companyEmail }}</span>
+          </div>
+          <div v-if="projDetail.companyAddr" class="info-row">
+            <img src="/static/img/addr@2x.png" alt="">
+            <span class="text">{{ projDetail.companyAddr }}</span>
           </div>
         </div> -->
       </div>
@@ -310,6 +329,7 @@ export default {
       viewNum: {},
       word: "",
       reports: [],
+      showList: [],
       ctx: "",
       activeName: "info",
       swiperOption: {
@@ -367,11 +387,13 @@ export default {
     }
   },
   created() {
-    this.fetch();
+    //this.fetch();
   },
   mounted() {
     this.viewProjectd();
     this.getAver();
+    this.getProDetail();
+    //this.tips();
   },
   methods: {
     ...mapActions(["getProDetail", "viewProject", "getScore", "updateFocus"]),
@@ -387,11 +409,78 @@ export default {
       });
       item.active = true;
     },
+    circleProgress(value,average){
+      var canvas = document.getElementById("redcircle");    
+      var context = canvas.getContext('2d');    
+      var _this = $(canvas),
+      value= value,// 当前百分比,数值
+      average = Number(average),// 平均百分比
+      color = "",// 进度条、文字样式
+      maxpercent = 10,//最大百分比，可设置
+      c_width = _this.width(),// canvas，宽度
+      c_height =_this.height();// canvas,高度
+      // 判断设置当前显示颜色
+      if( value== maxpercent ){
+          color="#ff8b13";
+      }else if( value> average ){
+          color="#ff8b13";
+      }else{
+          color="#ff8b13";
+      }    // 清空画布
+      context.clearRect(0, 0, c_width, c_height);    // 画初始圆
+      context.beginPath();    // 将起始点移到canvas中心
+      context.moveTo(c_width/2, c_height/2);    // 绘制一个中心点为（c_width/2, c_height/2），半径为c_height/2，起始点0，终止点为Math.PI * 2的 整圆
+      context.arc(c_width/2, c_height/2, c_height/2, 0, Math.PI * 2, false);
+      context.closePath();
+      context.fillStyle = '#FFE4B5'; //填充颜色
+      context.fill();    // 绘制内圆
+      context.beginPath();
+      context.strokeStyle = color;
+      context.lineCap = 'round';
+      context.closePath();
+      context.fill();
+      context.lineWidth = 10.0;//绘制内圆的线宽度
+ 
+      function draw(cur){
+          // 画内部空白 
+          context.beginPath(); 
+          context.moveTo(24, 24); 
+          context.arc(c_width/2, c_height/2, c_height/2-10, 0, Math.PI * 2, true); 
+          context.closePath(); 
+          context.fillStyle = 'rgba(255,255,255,1)';  // 填充内部颜色
+          context.fill();        // 画内圆
+          context.beginPath();        // 绘制一个中心点为（c_width/2, c_height/2），半径为c_height/2-5不与外圆重叠，
+          // 起始点-(Math.PI/2)，终止点为((Math.PI*2)*cur)-Math.PI/2的 整圆cur为每一次绘制的距离
+          context.arc(c_width/2, c_height/2, c_height/2-5, -(Math.PI / 2), ((Math.PI * 2) * cur ) - Math.PI / 2, false);
+          context.stroke();        //在中间写字 
+          context.font = "16pt PingFangSC";  // 字体大小，样式
+          context.fillStyle = color;  // 颜色
+          context.textAlign = 'center';  // 位置
+          context.textBaseline = 'middle'; 
+          context.moveTo(c_width/2, c_height/2);  // 文字填充位置
+          context.fillText(value, c_width/2, c_height/2-20);
+          context.fillText("综合评分", c_width/2, c_height/2+20);
+      }    
+        // 调用定时器实现动态效果
+        var timer=null,n=0;    
+        function loadCanvas(nowT){
+            timer = setInterval(function(){
+                if(n>nowT){
+                    clearInterval(timer);
+                }else{
+                    draw(n);
+                    n += 0.01;
+                }
+            },15);
+        }
+        loadCanvas(value/10);
+        timer=null;
+    },
     /*画曲线*/
     drawCircle(circleObj) {
         var ctx = circleObj.ctx;
         ctx.beginPath();
-        ctx.arc(circleObj.x, circleObj.y, circleObj.radius, circleObj.startAngle, circleObj.endAngle, true); //true表示逆时针绘画
+        ctx.arc(circleObj.x, circleObj.y, circleObj.radius, circleObj.startAngle, circleObj.endAngle, false); //true表示逆时针绘画
         //设定曲线粗细度
         ctx.lineWidth = circleObj.lineWidth;
         //给曲线着色
@@ -432,9 +521,9 @@ export default {
           lineWidth: 12.48
       }
       /*上面的渐变圆环*/
-      circleObj.startAngle = 180 *Math.PI/180 ; //startAngle弧度制 从135度开始画
+      circleObj.startAngle = 300 *Math.PI/180 ; //startAngle弧度制 从135度开始画
       /*结束的度数*/
-      circleObj.endAngle = 180 *Math.PI/180-Math.PI*2
+      circleObj.endAngle =250 *Math.PI/180-Math.PI*2
       circleObj.color = '#FFEFD5';
       this.drawCircle(circleObj);
       /*有色的圆环*/
@@ -449,10 +538,58 @@ export default {
       circleObj.color = my_gradient
       this.drawCircle(circleObj);//6ff1c4
     },
+    
     fetch() {
       this.getProDetail({ projId: this.proId }).then(
         (data = {}) => (this.info = data)
       );
+    },
+    getProDetail (){
+      this.word = '更多'
+      this.$http
+        .post("/api/getProjDetail", {
+          projId: this.proId
+        })
+        .then( res => {
+          var resData = res.data;
+          if (resData.errcode === 0){
+            this.info = resData.data
+            if (this.showAll == false){
+              if (this.info.reportList.length > 3){
+                for (var i=0; i< 3 ;i++){
+                  this.showList.push(this.info.reportList[i])
+                }
+              }else{
+                this.showList = this.info.reportList
+              }
+            }else{
+              for (var i=0; i< 4 ;i++){
+                this.showList.push(this.info.reportList[i])
+              }
+            }
+          }
+        })
+    },
+    show () {
+      this.showAll = true
+      
+      if (this.showList.length == 3){
+        this.showList.push(this.info.reportList[3])
+        this.word = '收起'
+      }else{
+        this.showList = []
+        for (var i=0; i< 3 ;i++){
+          this.showList.push(this.info.reportList[i])
+        }
+        this.word = '更多'
+      }
+    },
+    tips (){
+      if(this.showAll == false){　　　　　　　　　　　//对文字进行处理
+        this.word =  '展开全部'
+      }else{
+        this.word =  '收起'
+      }
     },
     getAver (){
       this.$http
@@ -463,7 +600,8 @@ export default {
           var resData = res.data;
           if (resData.errcode === 0) {
             this.score = resData.data.score;
-            this.circle(this.score)
+            //this.circle(this.score)
+            this.circleProgress(this.score,50)
           }
         });  
     },       

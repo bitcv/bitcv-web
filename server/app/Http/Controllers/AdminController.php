@@ -625,14 +625,22 @@ class AdminController extends Controller
         if ($adminproj) {
             return $this->error(100, '每人只能创建并管理一个项目');
         }
-        $data = $this->validation($request, [
-            'name_cn' => 'required|string',
-            'name_en' => 'required|string',
+        $params = $this->validation($request, [
+            'nameCn' => 'required|string',
+            'nameEn' => 'required|string',
         ]);
-        if (Model\Project::where('name_cn', $data['name_cn'])->first()) {
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        if (Model\Project::where('name_cn', $nameCn)->first()) {
             return $this->error(100);
         } else {
-            $proj = Model\Project::create($data);
+            $proj = Model\Project::create([
+                'name_cn' => strtoupper($nameCn),
+                'name_en' => $nameEn,
+            ]);
             Model\Admin::insert(['id'=>$uid, 'proj_id'=>$proj->id]);
             return $this->output(['projId' => $proj->id]);
         }
@@ -1941,7 +1949,7 @@ class AdminController extends Controller
     //一天抓取的全部动态
     public function getDynamic(Request $request){
 
-
+        $dyn = 0;
         for ($key = 1; $key < 5; $key++ ){
 
             $projPass = Model\Project::where([
@@ -1954,7 +1962,7 @@ class AdminController extends Controller
                 ['project.edited', 1],
             ])->count();
 
-            $newProj = Model\Project::where('project.created_at',date("Y-m-d",strtotime('-'.$key.' day') ))->count();
+            $newProj = Model\Project::whereDate('project.created_at','=',date("Y-m-d",strtotime('-'.$key.' day') ))->count();
 
             $projAllPass = Model\Project::where([
                 ['project.auth_time', '<', date("Y-m-d",strtotime('-'.$key.' day'))],
@@ -1962,7 +1970,7 @@ class AdminController extends Controller
             ])->count();
 
             //项目的总数量
-            $dataCount = Model\Project::count();
+            $dataCount = Model\Project::whereDate('project.created_at','<',date("Y-m-d",strtotime('-'.$key.' day') ))->count();
             //print_r(substr('2018-02-05 18:14:02','0','10'));die;
 //            $dynTw = Model\CrawlerSocialNews::where([
 //                ['crawler_socialnews.updated_at', date("Y-m-d",strtotime('-'.$key.' day') )],
@@ -1993,7 +2001,14 @@ class AdminController extends Controller
 
 
             //有更新的项目数量
-            $dyn = Model\CrawlerSocialNews::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->count();
+            $projList = Model\Project::get()->toArray();
+            foreach ($projList as $proj){
+                if (Model\CrawlerSocialNews::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->where('proj_id','=',$proj['id'])->first()){
+                    $dyn = $dyn + 1;
+                }
+            }
+
+            //$dyn = Model\CrawlerSocialNews::whereDate('updated_at', date("Y-m-d",strtotime('-'.$key.' day')))->count();
 
             $data[$key]['post_time'] = date("Y-m-d",strtotime('-'.$key.' day'));
             $data[$key]['projPass'] = $projPass;
@@ -2006,6 +2021,7 @@ class AdminController extends Controller
             $data[$key]['dynFb'] = $dynFb;
             $data[$key]['dynWb'] = $dynWb;
             $data[$key]['dynWx'] = $dynWx;
+            $dyn = 0;
         }
 
         return $this->output([

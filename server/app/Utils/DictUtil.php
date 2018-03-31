@@ -96,7 +96,11 @@ class DictUtil
         'CPU' => 'CPU',
         'TAC' => 'TAC',
         'EOS' => 'EOS',
-        'ERR' => 'ERR',
+        'BAI' => 'BAI',
+        'INSUR' => 'INSUR',
+        'LXT' => 'LXT',
+        'ICST' => 'ICST',
+        'PXC' => 'PXC'
     ];
 
     //类型

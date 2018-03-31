@@ -13,7 +13,7 @@
           </div>
         </div>
         <h4 class="section-title">{{ $t('label.find_project') }}</h4>
-        <div class="figure-group">
+        <div class="figure-group" v-loading="loading">
           <div class="row">
             <div class="col-md-2 col-xs-4" v-for="item in disList" :key="item.id">
               <router-link class="figure" :to="`/discover/detail/${item.id}`">
@@ -24,7 +24,7 @@
           </div>
         </div>
         <h4 class="section-title">{{ $t('label.pro_train') }}</h4>
-        <div style="background-color: #fff;">
+        <div style="background-color: #fff;" v-loading="loading">
           <table class="table">
             <thead>
               <tr class="text-dark">
@@ -66,7 +66,7 @@
           <div class="panel-heading">
             <h4 class="panel-title">{{ $t('label.re_project') }}</h4>
           </div>
-          <div class="panel-body">
+          <div class="panel-body" v-loading="loading">
             <p class="recommend" v-for="item in recommend" :key="item.id">
               <router-link :to="`/discover/detail/${item.id}`">
                 <img :src="item.logoUrl" class="img-rounded" width="32">

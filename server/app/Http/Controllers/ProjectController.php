@@ -486,55 +486,86 @@ class ProjectController extends Controller
             array_push($socials, 6);
         }
         $data = array();
-        //print_r(date("Y-m-d",strtotime("-1 day")).' 00:00:00');
         $date1 = date("Y-m-d",strtotime("-1 day")).' 00:00:00';
-        //print_r($date);
         $date2 = date("Y-m-d",strtotime("-5 day")).' 00:00:00';
+
         foreach ($socials as $social){
+
             for($key = 1; $key < 29 ; $key = $key + 7 ){
                 $score = Model\CrawlerSocialNews::where('crawler_socialnews.proj_id', $id)
                     ->where('crawler_socialnews.social_id','=',$social)
-                    ->whereBetween('crawler_socialnews.updated_at',[date("Y-m-d",strtotime('-'.($key + 5).' day') ),date("Y-m-d",strtotime('-'.($key - 1).' day') )])
+                    ->whereBetween('crawler_socialnews.updated_at',[date("Y-m-d 00:00:00",strtotime('-'.($key + 6).' day') ),date("Y-m-d 00:00:00",strtotime('-'.($key).' day') )])
                     ->count();
-                  array_push($data,$score);
+                //print_r($score);
+                array_push($data,$score);
             }
         }
-        $allscore['score'] = $data;
 
-        //print_r(count($allscore['score']));
+        $allscore['score'] = $data;
         if (count($allscore['score']) == 16){
 //          for ($key=0; $key < 4; $key++){
             $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
             $fb = $allscore['score'][4]*0.5 +$allscore['score'][5]*0.3+$allscore['score'][6]*0.1+$allscore['score'][7]*0.1;
             $tw = $allscore['score'][8]*0.5 +$allscore['score'][9]*0.3+$allscore['score'][10]*0.1+$allscore['score'][11]*0.1;
             $wb = $allscore['score'][12]*0.5 +$allscore['score'][13]*0.3+$allscore['score'][14]*0.1+$allscore['score'][15]*0.1;
-            $average = ($wx + $fb + $tw + $wb) / 4;
+            $average = ($wx + $fb + $tw + $wb) / 4 + 6.0;
 
         } elseif (count($allscore['score']) == 12){
             $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
             $fb = $allscore['score'][4]*0.5 +$allscore['score'][5]*0.3+$allscore['score'][6]*0.1+$allscore['score'][7]*0.1;
             $tw = $allscore['score'][8]*0.5 +$allscore['score'][9]*0.3+$allscore['score'][10]*0.1+$allscore['score'][11]*0.1;
-            $average = ($wx + $fb + $tw) / 3;
+            print_r($wx);
+            print_r($fb);
+            print_r($tw);
+            $average = ($wx + $fb + $tw) / 3 + 6.0 ;
 
         } elseif (count($allscore['score']) == 8){
             $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
             $fb = $allscore['score'][4]*0.5 +$allscore['score'][5]*0.3+$allscore['score'][6]*0.1+$allscore['score'][7]*0.1;
-            $average = ($wx + $fb) / 2;
+            $average = ($wx + $fb) / 2 + 6.0 ;
 
         } else{
 
-            if (!empty($allscore) && count($allscore) > 3){
+            if (!empty($allscore['score']) && count($allscore['score']) > 3){
                 $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
-                $average = $wx;
+                $average = $wx + 6.0;
             }else{
-                $average = 0.0;
+                $average = 6.0;
             }
 
         }
-
+        if ($average > 9.8){
+            $average = 9.6;
+        }
         $aver = sprintf("%.2f",$average);
-        return $this->output(['score' => $aver]);
+        return $this->output([
+            'score' => $aver,
+            'detail' => $data,
+            'socials' => $socials,
+            'count' => count($allscore['score']),
+        ]);
 
+    }
+
+    //申请项目
+    public function claimProj(Request $request){
+        $uid = \App\Utils\Auth::$uid;
+        $adminproj = Model\Admin::where('id', $uid)->first();
+        if ($adminproj) {
+            return $this->error(100, '每人只能创建并管理一个项目');
+        }
+        $params = $this->validation($request, [
+            'proj_id' => 'required|string',
+        ]);
+
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        Model\Admin::insert(['id'=>$uid, 'proj_id'=>$proj_id]);
+
+        return $this->output(['projId' => $proj_id]);
     }
 
 
