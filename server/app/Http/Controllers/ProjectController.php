@@ -486,19 +486,12 @@ class ProjectController extends Controller
             array_push($socials, 6);
         }
         $data = array();
-        //print_r(date("Y-m-d",strtotime("-1 day")).' 00:00:00');
         $date1 = date("Y-m-d",strtotime("-1 day")).' 00:00:00';
-        //print_r($date);
         $date2 = date("Y-m-d",strtotime("-5 day")).' 00:00:00';
 
         foreach ($socials as $social){
-            // 2 3 5
 
             for($key = 1; $key < 29 ; $key = $key + 7 ){
-                //print_r(date("Y-m-d 00:00:00",strtotime('-'.($key + 6).' day') ));
-                //print_r(date("Y-m-d 00:00:00",strtotime('-'.($key).' day') ));
-                //print_r("\n");
-
                 $score = Model\CrawlerSocialNews::where('crawler_socialnews.proj_id', $id)
                     ->where('crawler_socialnews.social_id','=',$social)
                     ->whereBetween('crawler_socialnews.updated_at',[date("Y-m-d 00:00:00",strtotime('-'.($key + 6).' day') ),date("Y-m-d 00:00:00",strtotime('-'.($key).' day') )])
@@ -508,10 +501,7 @@ class ProjectController extends Controller
             }
         }
 
-        //print_r($data);
         $allscore['score'] = $data;
-        //print_r(count($allscore['score']));
-        //print_r(count($allscore['score']));
         if (count($allscore['score']) == 16){
 //          for ($key=0; $key < 4; $key++){
             $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
