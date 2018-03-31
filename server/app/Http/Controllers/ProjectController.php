@@ -541,6 +541,8 @@ class ProjectController extends Controller
         return $this->output([
             'score' => $aver,
             'detail' => $data,
+            'socials' => $socials,
+            'count' => count($allscore),
         ]);
 
     }
