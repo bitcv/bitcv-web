@@ -27,23 +27,23 @@ class AuthUser {
             array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'url' => '/admin/mediareport', 'text' => '项目动态'),
         )),
 
-        array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'text' => '社群配置' ,'child' => array(
+        array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'url' => '/admin/social', 'text' => '社群配置' ,'child' => array(
             array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'url' => '/admin/social', 'text' => '社群配置'),
         )),
 
-        array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'text' => '媒体配置' ,'child' => array(
+        array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'url' => '/admin/media', 'text' => '媒体配置' ,'child' => array(
             array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'url' => '/admin/media', 'text' => '媒体配置'),
             array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'url' => '/admin/data', 'text' => '内容运营'),
             array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'url' => '/admin/exchange', 'text' => '交易所管理'),
         )),
 
-        array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'text' => '机构管理' ,'child' => array(
+        array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'url' => '/admin/institution', 'text' => '机构管理' ,'child' => array(
             array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'url' => '/admin/institution', 'text' => '机构管理'),
             array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'url' => '/admin/perlist', 'text' => '成员配置'),
             array ('icon' => 'el-icon-menu', 'p' => self:: R_MEDIA, 'url' => '/admin/token', 'text' => '通证配置'),
         )),
 
-        array ('icon' => 'el-icon-menu', 'p' => self:: R_FINANCE, 'text' => '币财报' ,'child' => array(
+        array ('icon' => 'el-icon-menu', 'p' => self:: R_FINANCE, 'url' => '/admin/finance', 'text' => '币财报' ,'child' => array(
             array ('icon' => 'el-icon-menu', 'p' => self:: R_FINANCE, 'url' => '/admin/finance', 'text' => '币财报'),
             array ('icon' => 'el-icon-menu', 'p' => self:: R_FINANCE, 'url' => '/admin/depositBox', 'text' => '余币宝'),
         )),
@@ -55,7 +55,7 @@ class AuthUser {
             array ('icon' => 'el-icon-menu', 'p' => self:: R_PERSONNEL, 'url' => '/admin/vcode', 'text' => '验证码'),
         )),
 
-        array ('icon' => 'el-icon-menu', 'p' => self:: R_PERSONNEL, 'text' => '权限管理', 'child' => array(
+        array ('icon' => 'el-icon-menu', 'p' => self:: R_PERSONNEL, 'url' => '/admin/permission', 'text' => '权限管理', 'child' => array(
             array ('icon' => 'el-icon-menu', 'p' => self:: R_PERSONNEL, 'url' => '/admin/permission', 'text' => '权限管理'),
         )),
 

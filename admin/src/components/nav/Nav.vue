@@ -201,6 +201,9 @@ export default {
   width: 100%;
   height: 100%;
   background: rgb(84, 92, 100);
+  .el-collapse {
+      border-top: 0px;
+  }
     .el-menu {
     height: 100%;
     border-right: none;
@@ -214,9 +217,6 @@ export default {
 
 </style>
 <style type="text/css" lang="scss">
-  .el-collapse {
-      border-top: 0px;
-  }
   .zhedie {
     .el-collapse-item__header {
       padding-left: 10px;
