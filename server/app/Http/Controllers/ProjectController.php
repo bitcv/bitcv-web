@@ -538,7 +538,10 @@ class ProjectController extends Controller
             $average = 9.8;
         }
         $aver = sprintf("%.2f",$average);
-        return $this->output(['score' => $aver]);
+        return $this->output([
+            'score' => $aver,
+            'detail' => $data,
+        ]);
 
     }
 
