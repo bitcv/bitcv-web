@@ -181,6 +181,8 @@ Route::group(['middleware' => 'checkLogin'], function() {
     Route::any('authOperate','AdminController@authOperate');
     Route::any('getUserSearch','AdminController@getUserSearch');
     Route::any('getAverageScore','ProjectController@getScore');
+
+    Route::any('claimProj','ProjectController@claimProj');
     
 
 
