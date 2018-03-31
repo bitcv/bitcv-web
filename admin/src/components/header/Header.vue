@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import {mapMutations} from 'vuex'
 export default {
   data () {
     return {
@@ -23,13 +24,22 @@ export default {
     this.mobile = localStorage.getItem('mobile')
   },
   methods: {
-    signout () {
+    /* signout () {
       this.$http.post('/api/signout', {}).then((res) => {
         if (res.data.errcode === 0) {
           localStorage.removeItem('userId')
           localStorage.removeItem('mobile')
           localStorage.removeItem('avatarUrl')
           window.location.href = '/'
+        }
+      })
+    } */
+    ...mapMutations(['cleanUserInfo']),
+    signout () {
+      this.$http.post('/api/doSignout', {}).then((res) => {
+        if (res.data.errcode === 0) {
+          this.cleanUserInfo()
+          this.$router.push('/admin/signin')
         }
       })
     }
