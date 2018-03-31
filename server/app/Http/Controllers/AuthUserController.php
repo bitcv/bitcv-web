@@ -14,7 +14,7 @@ class AuthUserController extends Controller
         //获取请求参数
         $params = $this->validation($request, [
             'uname' => 'required',
-            'umobile' => 'required|numeric',
+//            'umobile' => 'required|numeric',
             'uemail' => 'required',
         ]);
 
@@ -32,7 +32,9 @@ class AuthUserController extends Controller
         $data['mobile'] = trim($allparams['umobile']);
         $data['is_active'] = (int) $allparams['uactive'];
         $data['gender'] = (int) $allparams['gender'];
-        $data['passwd'] = Service::getPwd($allparams['passwd']);
+        if ($allparams['passwd']) {
+            $data['passwd'] = Service::getPwd($allparams['passwd']);
+        }
         if (array_key_exists('uid', $allparams) && $allparams['uid']) {
             $result = DB::table('authuser')->where('uid',$request->all()['uid'])->update($data);
             if ($result !== false) {
@@ -168,6 +170,7 @@ class AuthUserController extends Controller
     public function doSignout (Request $request)
     {
         \App\Utils\AuthUser::setLogout();
+        $request->session()->flush();
         return $this->output();
     }
 

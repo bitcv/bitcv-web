@@ -153,7 +153,7 @@ export default {
         return alert('请输入用户名')
       }
       var mobileReg = new RegExp(/^\d{7,11}$/)
-      if (!mobileReg.test(this.usermobile)) {
+      if (this.usermobile && !mobileReg.test(this.usermobile)) {
         return alert('请填写正确的手机号')
       }
       var emailReg = RegExp('^([a-zA-Z0-9]+[_|\\_|\\.]?)*[a-zA-Z0-9_]+@([a-zA-Z0-9\\-]+[_|\\_|\\.]?)+[a-zA-Z0-9]+\\.[a-zA-Z]{2,4}$')
