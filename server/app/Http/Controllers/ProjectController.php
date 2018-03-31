@@ -490,17 +490,27 @@ class ProjectController extends Controller
         $date1 = date("Y-m-d",strtotime("-1 day")).' 00:00:00';
         //print_r($date);
         $date2 = date("Y-m-d",strtotime("-5 day")).' 00:00:00';
+
         foreach ($socials as $social){
+            // 2 3 5
+
             for($key = 1; $key < 29 ; $key = $key + 7 ){
+                //print_r(date("Y-m-d 00:00:00",strtotime('-'.($key + 6).' day') ));
+                //print_r(date("Y-m-d 00:00:00",strtotime('-'.($key).' day') ));
+                //print_r("\n");
+
                 $score = Model\CrawlerSocialNews::where('crawler_socialnews.proj_id', $id)
                     ->where('crawler_socialnews.social_id','=',$social)
-                    ->whereBetween('crawler_socialnews.updated_at',[date("Y-m-d",strtotime('-'.($key + 5).' day') ),date("Y-m-d",strtotime('-'.($key - 1).' day') )])
+                    ->whereBetween('crawler_socialnews.updated_at',[date("Y-m-d 00:00:00",strtotime('-'.($key + 6).' day') ),date("Y-m-d 00:00:00",strtotime('-'.($key).' day') )])
                     ->count();
-                  array_push($data,$score);
+                //print_r($score);
+                array_push($data,$score);
             }
         }
-        $allscore['score'] = $data;
 
+        //print_r($data);
+        $allscore['score'] = $data;
+        //print_r(count($allscore['score']));
         //print_r(count($allscore['score']));
         if (count($allscore['score']) == 16){
 //          for ($key=0; $key < 4; $key++){
@@ -514,6 +524,9 @@ class ProjectController extends Controller
             $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
             $fb = $allscore['score'][4]*0.5 +$allscore['score'][5]*0.3+$allscore['score'][6]*0.1+$allscore['score'][7]*0.1;
             $tw = $allscore['score'][8]*0.5 +$allscore['score'][9]*0.3+$allscore['score'][10]*0.1+$allscore['score'][11]*0.1;
+            print_r($wx);
+            print_r($fb);
+            print_r($tw);
             $average = ($wx + $fb + $tw) / 3 + 6.0 ;
 
         } elseif (count($allscore['score']) == 8){
