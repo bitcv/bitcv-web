@@ -46,6 +46,7 @@ class AuthUser {
         array ('icon' => 'el-icon-menu', 'p' => self:: R_FINANCE, 'url' => '/admin/finance', 'text' => '币财报' ,'child' => array(
             array ('icon' => 'el-icon-menu', 'p' => self:: R_FINANCE, 'url' => '/admin/finance', 'text' => '币财报'),
             array ('icon' => 'el-icon-menu', 'p' => self:: R_FINANCE, 'url' => '/admin/depositBox', 'text' => '余币宝'),
+//            array ('icon' => 'el-icon-menu', 'p' => self:: R_FINANCE, 'url' => '/admin/daifabao', 'text' => '代发宝'),
         )),
 
         array ('icon' => 'el-icon-menu', 'p' => self:: R_PERSONNEL, 'url' => '/admin/user', 'text' => '用户管理', 'child' => array(

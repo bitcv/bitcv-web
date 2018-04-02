@@ -24,6 +24,7 @@ import Permission from '@/components/permission/permission'
 import ProjData from '@/components/projdata/projdata'
 import Finance from '@/components/finance/finance'
 import Authuser from '@/components/authuser/authuser'
+import DaiFaBao from '@/components/daifabao/daifabao'
 
 Vue.use(Router)
 
@@ -116,6 +117,12 @@ export default new Router({
         requireAuth: true
       },
       component: Finance
+    }, {
+      path: '/admin/daifabao',
+      meta: {
+        requireAuth: true
+      },
+      component: DaiFaBao
     }, {
       path: '/admin/authuser',
       meta: {
