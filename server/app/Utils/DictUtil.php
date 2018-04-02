@@ -107,7 +107,8 @@ class DictUtil
         'INSUR' => 'INSUR',
         'LXT' => 'LXT',
         'ICST' => 'ICST',
-        'PXC' => 'PXC'
+        'PXC' => 'PXC',
+        'AAC' => 'AAC'
     ];
 
     //类型
