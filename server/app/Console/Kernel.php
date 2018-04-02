@@ -44,7 +44,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('add:profit')->dailyAt('00:00');
         $schedule->command("crawl:data weibo")->daily()->withoutOverlapping();
         $schedule->command("crawl:data facebook")->daily()->withoutOverlapping();
-        $schedule->command("crawl:data twitter")->daily()->withoutOverlapping();
+        $schedule->command("crawl:data twitter")->everyMinute()->withoutOverlapping();
         $schedule->command("crawl:crawlRecords")->hourly()->withoutOverlapping();
     }
 
