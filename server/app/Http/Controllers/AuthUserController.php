@@ -117,8 +117,11 @@ class AuthUserController extends Controller
         $hash = $user->passwd;
         if(!Service::checkPwd($params['passwd'],$hash)) {
             print_r($params['passwd']);
+            echo '<br>';
             print_r(env('PASS_SALT'));
+            echo '<br>';
             print_r($params['passwd'].env('PASS_SALT'));
+            echo "<br>";
             print_r($hash);
             return $this->error(202);
         }
