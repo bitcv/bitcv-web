@@ -12,9 +12,6 @@
           <el-form-item label="收款地址:">
             <el-input v-model="taddr" placeholder="请输入收款地址"></el-input>
           </el-form-item>
-          <!-- <el-form-item label="代币符号">
-            <el-input v-model="symbol" placeholder="请输入代币符号"></el-input>
-          </el-form-item> -->
           <el-form-item label="类型:">
             <el-select v-model="recordstyp" placeholder="请选择类型">
               <el-option v-model="all" label="全部">全部</el-option>
@@ -50,13 +47,20 @@
             </template>
           </el-table-column>
           <el-table-column label="从">
-            <template slot-scope="scope"><span :style="scope.row.fcolor ? 'color:#e67e22;' : 'color:' ">{{ getShortStr(scope.row.from_addr,10) }}</span></template>
+            <template slot-scope="scope">
+              <el-popover ref="popover1" placement="top-start" width="100" trigger="hover">
+                <vue-qr :text="scope.row.from_addr" :margin="10" class="qrcode"></vue-qr>
+              </el-popover>
+              <a :href="'https://etherscan.io/address/' + scope.row.from_addr" target="_blank"><span :style="scope.row.fcolor ? 'color:#e67e22;' : 'color:' " v-popover:popover1>{{ getShortStr(scope.row.from_addr,10) }}</span></a>
+            </template>
           </el-table-column>
-<!--          <el-table-column>
-            <template slot-scope="scope">{{ scope.row.fcolor }}</template>
-          </el-table-column>-->
           <el-table-column label="到">
-            <template slot-scope="scope"><span :style="scope.row.tcolor ? 'color:#5cb85c;' : 'color:' ">{{ getShortStr(scope.row.to_addr,10) }}</span></template>
+            <template slot-scope="scope">
+              <el-popover ref="popover2" placement="top-start" width="100" trigger="hover">
+                <vue-qr :text="scope.row.to_addr" :margin="10" class="qrcode"></vue-qr>
+              </el-popover>
+              <a :href="'https://etherscan.io/address/' + scope.row.to_addr" target="_blank"><span :style="scope.row.tcolor ? 'color:#5cb85c;' : 'color:' " v-popover:popover2>{{ getShortStr(scope.row.to_addr,10) }}</span></a>
+            </template>
           </el-table-column>
           <el-table-column label="时间">
             <template slot-scope="scope">{{ scope.row.timeformat }}</template>
@@ -164,7 +168,11 @@
   </div>
 </template>
 <script>
+import VueQr from 'vue-qr'
 export default {
+  components: {
+    VueQr
+  },
   data () {
     return {
       walletList: [],
@@ -207,11 +215,11 @@ export default {
   methods: {
     selectVal () {
       if (this.tokentypeId === '1') {
-        this.tempoption = {'1': '收到投资款', '2': '收回投资币种', '3': '收到余币宝投资', '4': '币种兑换'}
+        this.tempoption = {'1': '收到投资款', '2': '收回投资币种', '3': '收到余币宝投资', '4': '币种兑换', '5': '退回顾问费', '6': '退回产品测试费', '7': '退回推广费', '8': '发行BCV'}
       } else if (this.tokentypeId === '2') {
-        this.tempoption = {'5': '员工工资', '6': '团队激励', '7': '市场推广费', '8': '币种投资', '9': '币种出售', '10': '币种兑换', '11': '退回投资款', '12': '手续费'}
+        this.tempoption = {'9': '员工工资', '10': '团队激励', '11': '市场推广费', '12': '币种投资', '13': '币种出售', '14': '币种兑换', '15': '退回投资款', '16': '手续费', '17': '顾问费', '18': '产品测试费', '19': '支付投资人BCV'}
       } else if (this.tokentypeId === '3') {
-        this.tempoption = {'13': '账户互转'}
+        this.tempoption = {'20': '账户互转'}
       } else {
         this.tempoption = this.options
       }
@@ -391,6 +399,9 @@ export default {
       this.financeData()
     },
     search () {
+      if (this.pageno > 1) {
+        this.pageno = 1
+      }
       this.$http.post('/api/searchFinanceList', {
         pageno: this.pageno,
         perpage: this.perpage,
@@ -415,5 +426,10 @@ export default {
 }
 
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+    .qrcode, .qrcode img{
+      width: 140px;
+      height: 130px;
+      margin: 0 auto;
+    }
 </style>

@@ -89,7 +89,7 @@ Route::group(['middleware' => 'checkLogin'], function() {
 });
 
 //超级管理员接口
-Route::group(['middleware' => 'checkAdmin'], function () {
+//Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('addProject', 'AdminController@addProject');
     Route::any('authProject', 'AdminController@authProject');
     Route::any('clearProjAuth', 'AdminController@clearProjAuth');
@@ -142,7 +142,14 @@ Route::group(['middleware' => 'checkAdmin'], function () {
     Route::any('searchFinanceList', 'FinanceController@searchFinanceList');
     Route::any('delRecords', 'FinanceController@delRecords');
 
-});
+    //用户管理
+    Route::any('addAuthUser', 'AuthUserController@addAuthUser');
+    Route::any('getAuthUserList', 'AuthUserController@getAuthUserList');
+    Route::any('deleteAuthUser', 'AuthUserController@deleteAuthUser');
+    Route::any('getSimpleAuthUser', 'AuthUserController@getSimpleAuthUser');
+    Route::any('updateAuthUser', 'AuthUserController@updateAuthUser');
+
+//});
 
     Route::any('eachDynamic','AdminController@eachDynamic');
     Route::any('getDynamic','AdminController@getDynamic');
@@ -234,4 +241,13 @@ Route::group(['middleware' => 'checkProj'], function () {
 
 
 });
+
+
+
+//后台登录
+Route::any('doSignin', 'AuthUserController@doSignin');
+Route::any('getAuthUser', 'AuthUserController@getAuthUser');
+Route::any('doSignout', 'AuthUserController@doSignout');
+
+//
 

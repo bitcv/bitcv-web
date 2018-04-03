@@ -486,22 +486,22 @@ class ProjectController extends Controller
             array_push($socials, 6);
         }
         $data = array();
-        //print_r(date("Y-m-d",strtotime("-1 day")).' 00:00:00');
         $date1 = date("Y-m-d",strtotime("-1 day")).' 00:00:00';
-        //print_r($date);
         $date2 = date("Y-m-d",strtotime("-5 day")).' 00:00:00';
+
         foreach ($socials as $social){
+
             for($key = 1; $key < 29 ; $key = $key + 7 ){
                 $score = Model\CrawlerSocialNews::where('crawler_socialnews.proj_id', $id)
                     ->where('crawler_socialnews.social_id','=',$social)
-                    ->whereBetween('crawler_socialnews.updated_at',[date("Y-m-d",strtotime('-'.($key + 5).' day') ),date("Y-m-d",strtotime('-'.($key - 1).' day') )])
+                    ->whereBetween('crawler_socialnews.updated_at',[date("Y-m-d 00:00:00",strtotime('-'.($key + 6).' day') ),date("Y-m-d 00:00:00",strtotime('-'.($key).' day') )])
                     ->count();
-                  array_push($data,$score);
+                //print_r($score);
+                array_push($data,$score);
             }
         }
-        $allscore['score'] = $data;
 
-        //print_r(count($allscore['score']));
+        $allscore['score'] = $data;
         if (count($allscore['score']) == 16){
 //          for ($key=0; $key < 4; $key++){
             $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
@@ -514,6 +514,9 @@ class ProjectController extends Controller
             $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
             $fb = $allscore['score'][4]*0.5 +$allscore['score'][5]*0.3+$allscore['score'][6]*0.1+$allscore['score'][7]*0.1;
             $tw = $allscore['score'][8]*0.5 +$allscore['score'][9]*0.3+$allscore['score'][10]*0.1+$allscore['score'][11]*0.1;
+            print_r($wx);
+            print_r($fb);
+            print_r($tw);
             $average = ($wx + $fb + $tw) / 3 + 6.0 ;
 
         } elseif (count($allscore['score']) == 8){
@@ -523,7 +526,7 @@ class ProjectController extends Controller
 
         } else{
 
-            if (!empty($allscore) && count($allscore) > 3){
+            if (!empty($allscore['score']) && count($allscore['score']) > 3){
                 $wx = $allscore['score'][0]*0.5 +$allscore['score'][1]*0.3+$allscore['score'][2]*0.1+$allscore['score'][3]*0.1;
                 $average = $wx + 6.0;
             }else{
@@ -532,10 +535,15 @@ class ProjectController extends Controller
 
         }
         if ($average > 9.8){
-            $average = 9.8;
+            $average = 9.6;
         }
         $aver = sprintf("%.2f",$average);
-        return $this->output(['score' => $aver]);
+        return $this->output([
+            'score' => $aver,
+            'detail' => $data,
+            'socials' => $socials,
+            'count' => count($allscore['score']),
+        ]);
 
     }
 

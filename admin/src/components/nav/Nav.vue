@@ -1,15 +1,19 @@
 <template>
   <div class="nav container">
-    <el-menu default-active="0" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-      <el-menu-item v-for="(item, index) in itemList" :index="index + ''" :key="index">
-        <router-link :to="item.url" class="router">
-          <div>
-            <i :class="item.icon"></i>
-            <span slot="title">{{ item.text }}</span>
-          </div>
-        </router-link>
-      </el-menu-item>
-    </el-menu>
+    <el-collapse v-model="activeName" accordion>
+      <el-collapse-item class="zhedie" v-for="(item, index) in itemList" :index="index + ''" :key="index" :title="item.text" :name="index === 0 ? '1' : index + 1 ">
+        <el-menu default-active="0" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+          <el-menu-item v-for="(item, index) in item.child" :index="index + ''" :key="index">
+            <router-link :to="item.url" class="router">
+              <div>
+                <i :class="item.icon"></i>
+                <span slot="title">{{ item.text }}</span>
+              </div>
+            </router-link>
+          </el-menu-item>
+        </el-menu>
+      </el-collapse-item>
+    </el-collapse>
   </div>
 </template>
 
@@ -17,14 +21,16 @@
 export default {
   data () {
     return {
-      itemList: []
+      itemList: [],
+      activeName: '1'
     }
   },
   mounted () {
-    this.updateData()
+    // this.updateData()
+    this.authUserData()
   },
   methods: {
-    updateData () {
+    /* updateData () {
       this.$http.post('/api/getUser', {}).then((res) => {
         var resData = res.data
         if (resData.errcode === 0) {
@@ -88,6 +94,10 @@ export default {
               icon: 'el-icon-menu',
               url: '/admin/user',
               text: '用户管理'
+            }, {
+              icon: 'el-icon-menu',
+              url: '/admin/authuser',
+              text: '后台用户'
             }, {
               icon: 'el-icon-menu',
               url: '/admin/editor',
@@ -169,6 +179,18 @@ export default {
           this.$router.push('/signin')
         }
       })
+    } */
+    // 自己的后台
+    authUserData () {
+      this.$http.post('/api/getAuthUser', {}).then((res) => {
+        var resData = res.data
+        if (resData.errcode === 0) {
+          this.$router.push(resData.data.menu[0].url)
+          this.itemList = resData.data.menu
+        } else {
+          this.$router.push('/signin')
+        }
+      })
     }
   }
 }
@@ -178,7 +200,11 @@ export default {
 .container {
   width: 100%;
   height: 100%;
-  .el-menu {
+  background: rgb(84, 92, 100);
+  .el-collapse {
+      border-top: 0px;
+  }
+    .el-menu {
     height: 100%;
     border-right: none;
     .router {
@@ -188,4 +214,21 @@ export default {
     }
   }
 }
+
+</style>
+<style type="text/css" lang="scss">
+  .zhedie {
+    .el-collapse-item__header {
+      padding-left: 10px;
+      color: #fff;
+      background: rgb(84, 92, 100);
+      border: 0px;
+    }
+    .el-collapse-item__content {
+      padding-bottom: 0px;
+    }
+    // .el-collapse-item__wrap {
+    //   border-bottom: 0px;
+    // }
+  }
 </style>

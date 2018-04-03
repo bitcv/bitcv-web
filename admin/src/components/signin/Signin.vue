@@ -2,10 +2,10 @@
   <div class="signin">
     <el-form class="signin-form">
       <el-form-item>
-        <el-input v-model="inputAccount" placeholder="请输入管理员账号"></el-input>
+        <el-input v-model="inputAccount" placeholder="请输入公司邮箱账号"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-input v-model="inputPasswd" type="password" placeholder="请输入管理员密码"></el-input>
+        <el-input v-model="inputPasswd" type="password" placeholder="请输入密码"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="signin" type="primary" class="signin-btn">登录</el-button>
@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     ...mapMutations(['updateUserInfo']),
-    signin () {
+    /* signin () {
       this.$http.post('/api/signin', {
         mobile: this.inputAccount,
         passwd: this.inputPasswd
@@ -34,6 +34,26 @@ export default {
         if (res.data.errcode === 0) {
           this.updateUserInfo(res.data.data)
           this.$router.replace('/')
+        } else {
+          alert(res.data.errmsg)
+        }
+      })
+    } */
+    // 新 官网后台跟项目方后台分开
+    signin () {
+      if (!this.inputAccount) {
+        return alert('请输入公司邮箱账号')
+      }
+      if (!this.inputPasswd) {
+        return alert('请输入密码')
+      }
+      this.$http.post('/api/doSignin', {
+        email: this.inputAccount,
+        passwd: this.inputPasswd
+      }).then((res) => {
+        if (res.data.errcode === 0) {
+          this.updateUserInfo(res.data.data.userinfo)
+          this.$router.push('/admin/project')
         } else {
           alert(res.data.errmsg)
         }
