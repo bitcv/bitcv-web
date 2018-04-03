@@ -116,9 +116,9 @@ class AuthUserController extends Controller
         $user = $user[0];
         $hash = $user->passwd;
 
-        if(!Service::checkPwd($params['passwd'],$hash)) {
+        /*if(!Service::checkPwd($params['passwd'],$hash)) {
             return $this->error(202);
-        }
+        }*/
         $tempuser = array();
         foreach ($user as $key => $item) {
             $tempuser[$key] = $item;
