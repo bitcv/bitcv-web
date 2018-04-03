@@ -116,6 +116,10 @@ class AuthUserController extends Controller
         $user = $user[0];
         $hash = $user->passwd;
         if(!Service::checkPwd($params['passwd'],$hash)) {
+            print_r(env('SMS_ID'));
+            echo '<br>';
+            print_r(env('QCLOUDSMS_SDKAPPID'));
+            echo '<br>';
             print_r($params['passwd']);
             echo '<br>';
             print_r(env('PASS_SALT'));
