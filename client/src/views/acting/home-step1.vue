@@ -125,6 +125,9 @@ export default {
           this.formData.tokenSymbol = data.tokenSymbol
           this.uploadDisable = false
           this.selectLoad = false
+        }).catch(() => {
+          this.uploadDisable = false
+          this.selectLoad = false
         })
       }
     },
@@ -173,6 +176,9 @@ export default {
       }).then((data = {}) => {
         this.formData.tokenId = data.tokenId
         this.formData.tokenSymbol = data.tokenSymbol
+        this.uploadDisable = false
+        this.tokenLoad = false
+      }).catch(() => {
         this.uploadDisable = false
         this.tokenLoad = false
       })

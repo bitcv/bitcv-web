@@ -22,4 +22,37 @@ class BaseUtil
         curl_close($curlObj);
         return $result;
     }
+
+    public static function bigDiv($number, $decimal) {
+        $number = strtolower($number);
+        if (strpos($number, 'e') !== false) {
+            // 解析科学计数法
+            $numArr = explode('e', $number);
+            $number = $numArr[0];
+            $decimal = $decimal - $numArr[1];
+        }
+        if (strpos($number, '.') !== false) {
+            // 如果$number是小数，则变为整数处理
+            $decimal += @strlen(@explode('.', $number)[1]);
+            $number = str_replace('.', '', $number);
+        }
+        if ($decimal > 0) {
+            $number = str_pad('', $decimal, '0') . $number;
+            $integerPart = substr($number, 0, $decimal * -1);
+            $decimalPart = substr($number, $decimal * -1);
+            $retStr = $integerPart . '.' . $decimalPart;
+            // 去掉左边多余的0
+            $retStr = ltrim($retStr, '0');
+            if (strpos($retStr, '.') === 0) {
+                $retStr = '0' . $retStr;
+            }
+            // 去掉右边多余的0
+            $retStr = rtrim(rtrim($retStr, '0'), '.');
+        } else {
+            $retStr = $number . str_pad('', $decimal * -1, '0');
+            $retStr = ltrim($retStr, '0');
+        }
+
+        return $retStr;
+    }
 }

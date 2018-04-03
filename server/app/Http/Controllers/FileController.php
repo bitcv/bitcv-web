@@ -59,7 +59,7 @@ class FileController extends Controller
         foreach ($dataList as $index => $data) {
             if ($isTest == 1 && $index == 2) break; // 测试状态下只发送前两条
             $status = 0;
-            if (!preg_match('/^0x[0-9a-fA-F]{40}$/i', $data['address'])) {
+            if (!preg_match('/^0x[0-9a-fA-F]{40}$/i', trim($data['address']))) {
                 $status = 1;
             }
             if ($data['amount'] <= 0) {

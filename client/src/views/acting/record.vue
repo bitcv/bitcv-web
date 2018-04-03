@@ -19,7 +19,7 @@
           <!--<span v-if="scope.row.process">-->
             <!--{{scope.row.time}}-->
           <!--</span>-->
-          <el-progress :percentage="scope.row.process * 100"></el-progress>
+          <el-progress :percentage="Math.floor(scope.row.process * 1000) / 10"></el-progress>
         </template>
       </el-table-column>
       <el-table-column prop="createdAt" label="创建时间" width="170"></el-table-column>

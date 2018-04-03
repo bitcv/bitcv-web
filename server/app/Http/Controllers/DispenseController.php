@@ -7,6 +7,7 @@ use App\Models as Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cookie;
 use App\Utils\BaseUtil;
+use App\Utils\EtherscanUtil;
 use App\Utils\DictUtil;
 use App\Utils\Auth;
 
@@ -191,7 +192,8 @@ class DispenseController extends Controller
             ->first();
         if ($walletData != null) {
             // 更新用户资产信息
-            $this->updateDispenseBalance($userId);
+            $this->checkUserDeposit($userId);
+            //$this->updateDispenseBalance($userId);
         }
 
         // 获取数据库中用户资产
@@ -209,21 +211,29 @@ class DispenseController extends Controller
     public function confirmDispense (Request $request) {
 
         // 获取请求参数
-        //$params = $this->validation($request, [
-            //'perpage' => 'required|numeric',
-            //'pageno' => 'required|numeric',
-        //]);
-        //if ($params === false) {
-            //return $this->error(100);
-        //}
-        //extract($params);
+        $params = $this->validation($request, [
+            'feeSymbol' => 'required|string',
+        ]);
+        if ($params === false) {
+            return $this->error(100);
+        }
+        extract($params);
+
+        // 暂时只支持ETH和BCV作为手续费
+        if ($feeSymbol == 'ETH') {
+            $feePrice = 0.002;
+        } else if ($feeSymbol == 'BCV') {
+            $feePrice = 30;
+        } else {
+            return false;
+        }
 
         $userId = Auth::getUserId();
         if (!$userId) {
             return $this->error(207);
         }
 
-        // 获取session中代发列表
+        // 获取session中代发列列表
         session_start();
         $dispenseData = isset($_SESSION['dispenseData']) ? $_SESSION['dispenseData'] : null;
         if (!$dispenseData) {
@@ -234,41 +244,42 @@ class DispenseController extends Controller
 
         // 统计所需的手续费和代币数
         $totalAmount = 0;
-        $totalEth = 0;
+        $feeAmount = 0;
         foreach ($dispenseList as $index => $data) {
             if ($data['status'] === 0) {
                 $totalAmount += $data['amount'] * pow(10, 5);
-                $totalEth += 0.0016;
+                $feeAmount += $feePrice * 10000;
             } else {
                 unset($dispenseList[$index]);
             }
         }
+        $feeAmount /= 10000;
         $totalAmount /= pow(10, 5);
 
         // 更新用户余额表
         $this->updateDispenseBalance($userId);
 
         // 确认用户手续费是否充足
-        $tokenData = Model\Token::where('symbol', 'ETH')->first();
-        $ethTokenId = $tokenData->id;
-        $dispenseAssetData = Model\UserDispenseAsset::where([['user_id', $userId], ['token_id', $ethTokenId]])
+        $tokenData = Model\Token::where('symbol', $feeSymbol)->first();
+        $feeTokenId = $tokenData->id;
+        $dispenseAssetData = Model\UserDispenseAsset::where([['user_id', $userId], ['token_id', $feeTokenId]])
             ->first();
-        $ethBalance = $dispenseAssetData->amount;
-        if ($ethBalance < $totalEth) {
+        $feeBalance = $dispenseAssetData->amount;
+        if ($feeBalance < $feeAmount) {
             return $this->error(502);
         }
 
         // 确认用户代发币是否充足
-        if ($tokenId == $ethTokenId) {
-            // 如果代发的是以太坊
-            if ($ethBalance < $totalEth + $totalAmount) {
+        if ($tokenId == $feeTokenId) {
+            // 如果代发币和手续费相同
+            if ($feeBalance < $feeAmount + $totalAmount) {
                 return $this->error(502);
             }
         } else {
             $dispenseAssetData = Model\UserDispenseAsset::where([['user_id', $userId], ['token_id', $tokenId]])
                 ->first();
-            $ethBalance = $dispenseAssetData->amount;
-            if ($ethBalance < $totalEth) {
+            $tokenBalance = $dispenseAssetData->amount;
+            if ($tokenBalance < $totalAmount) {
                 return $this->error(502);
             }
         }
@@ -327,9 +338,13 @@ class DispenseController extends Controller
         $resJson = BaseUtil::curlPost(env('TX_API_URL') . '/api/addDispense', [
             'walletId' => $walletId,
             'tokenSymbol' => $tokenSymbol,
+            'tokenProtocol' => $tokenProtocol,
             'contractAddr' => $contractAddr,
             'decimal' => $decimal,
             'dispenseList' => $dispenseList,
+            'feeSymbol' => $feeSymbol,
+            'feeAmount' => $feeAmount,
+            'totalAmount' => $totalAmount,
         ]);
         
         $resArr = json_decode($resJson, true);
@@ -418,6 +433,55 @@ class DispenseController extends Controller
         $resData = $resArr['data'];
 
         return $this->output($resData);
+    }
+
+    private function checkUserDeposit ($userId) {
+
+        // 获取用户钱包地址
+        $walletList = Model\UserDispenseWallet::where('user_id', $userId)
+            ->get()->toArray();
+        $walletDict = [];
+        foreach ($walletList as $wallet) {
+            $walletDict[$wallet['token_protocol']] = $wallet['addr'];
+        }
+
+        // 获取用户代发资产种类
+        $assetList = Model\UserDispenseAsset::from('user_dispense_asset as A')
+            ->join('token as B', 'A.token_id', '=', 'B.id')
+            ->select('B.symbol', 'B.contract_addr', 'B.protocol', 'B.decimal', 'A.id', 'A.token_id')
+            ->where('user_id', $userId)
+            ->get();
+
+        // 查询用户转账记录
+        foreach ($assetList as $assetObj) {
+            $tokenId = $assetObj->token_id;
+            $walletAddr = $walletDict[$assetObj->protocol];
+            // 获取最近的充值时间
+            $latestTime = Model\DispenseFinance::where([
+                ['type', 1],
+                ['user_id', $userId],
+                ['token_id', $tokenId],
+            ])->max('tx_time');
+            var_dump($tokenId, $walletAddr, $latestTime);
+            $txList = EtherscanUtil::getDepositList($tokenId, $walletAddr, $latestTime);
+            if (!is_array($txList)) {
+                echo 'txList:';
+                var_dump($txList);
+                continue;
+            }
+            foreach ($txList as $tx) {
+                Model\DispenseFinance::create([
+                    'type' => 1,
+                    'user_id' => $userId,
+                    'token_id' => $tokenId,
+                    'from_addr' => $tx['fromAddr'],
+                    'to_addr' => $tx['toAddr'],
+                    'tx_hash' => $tx['txHash'],
+                    'tx_amount' => $tx['txAmount'],
+                    'tx_time' => $tx['txTime'],
+                ]);
+            }
+        }
     }
 
     private function updateDispenseBalance ($userId) {

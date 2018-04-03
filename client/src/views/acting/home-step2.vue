@@ -18,7 +18,7 @@
                 <h6>手续费</h6>
                 <p>
                   <img :src="ethData.logoUrl" alt="logo">
-                  <b>{{(orderData.totalCount + 1) * 0.0016}}</b>
+                  <b>{{orderData.totalCount * 0.002}}</b>
                   <small>ETH</small>
                 </p>
               </el-col>
@@ -46,7 +46,7 @@
                     枚
                   </small>
                   <br>
-                  <i v-if="ethData.amount < (orderData.totalCount + 1) * 0.0016">余额不足，请先充值</i>
+                  <i v-if="ethData.amount < orderData.totalCount * 0.002">余额不足，请先充值</i>
                 </p>
               </el-col>
             </el-row>
@@ -149,7 +149,8 @@ export default {
       walletAddr: '',
       balanceLoad: false,
       rechareLoad: false,
-      loading: false
+      loading: false,
+      feeSymbol: 'ETH'
     }
   },
   mounted () {
@@ -172,7 +173,6 @@ export default {
     },
     ethData () {
       let ethData = {}
-      console.log('ethdata')
       this.assetList.forEach(item => {
         if (item.symbol === 'ETH') {
           ethData = item
@@ -186,7 +186,7 @@ export default {
       return diffAmount > 0 ? diffAmount : 0
     },
     needEthAmount () {
-      let diffAmount = ((this.orderData.totalCount + 1) * 0.0016 * Math.pow(10, 18) - this.ethData.amount * Math.pow(10, 18)) / Math.pow(10, 18)
+      let diffAmount = (this.orderData.totalCount * 0.002 * Math.pow(10, 18) - this.ethData.amount * Math.pow(10, 18)) / Math.pow(10, 18)
       return diffAmount > 0 ? diffAmount : 0
     }
   },
@@ -198,6 +198,8 @@ export default {
         tokenProtocol: this.tokenProtocol
       }).then((data = {}) => {
         this.assetList = data.dataList
+        this.balanceLoad = false
+      }).catch(() => {
         this.balanceLoad = false
       })
     },
@@ -212,15 +214,21 @@ export default {
         this.walletAddr = data.walletAddr
         this.isRecharge = true
         this.rechargeLoad = false
+      }).catch(() => {
+        this.rechargeLoad = false
       })
     },
     handleConfirm () {
       this.loading = true
-      this.confirmDispense({}).then((data = {}) => {
+      this.confirmDispense({
+        feeSymbol: this.feeSymbol
+      }).then((data = {}) => {
         this.loading = false
         this.$emit('finished', {
           taskId: data.taskId
         })
+      }).catch(() => {
+        this.loading = false
       })
     },
     handleCopy () {
