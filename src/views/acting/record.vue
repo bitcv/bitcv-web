@@ -3,7 +3,7 @@
     <h5 class="title">
       发放记录
     </h5>
-    <el-table :data="dataList" style="width: 100%">
+    <el-table :data="dataList" style="width: 100%" @row-click="openDetails">
       <el-table-column type="index" label="序号"></el-table-column>
       <el-table-column prop="symbol" label="币种"></el-table-column>
       <el-table-column prop="totalAmount" label="数量"></el-table-column>
@@ -19,7 +19,7 @@
           <!--<span v-if="scope.row.process">-->
             <!--{{scope.row.time}}-->
           <!--</span>-->
-          <el-progress :percentage="Math.floor(scope.row.process * 1000) / 10"></el-progress>
+          <el-progress :percentage="parseInt(scope.row.process * 100)"></el-progress>
         </template>
       </el-table-column>
       <el-table-column prop="createdAt" label="创建时间" width="170"></el-table-column>
@@ -81,6 +81,9 @@ export default {
         this.dataList = data.dataList
         this.tableLoad = false
       })
+    },
+    openDetails(row, column) {
+      this.$router.push('/acting/record/detail/' + row.taskId )
     }
   }
 }
