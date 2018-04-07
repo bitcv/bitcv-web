@@ -26,41 +26,84 @@
         <h5 class="title">
           资产余额<i class="el-icon-refresh" @click="handleRefresh"></i>
         </h5>
-        <el-row>
+        <!-- <el-row>
           <el-col :span="12" v-for="(asset, index) in assetList" :key="index">
             <span>{{asset.amount}}</span>
             <small>{{asset.symbol}}</small>
-          </el-col>
+          </el-col> -->
           <!--<el-col :span="12">-->
             <!--<span>{{ethData.amount}}</span>-->
             <!--<small>EHT</small>-->
           <!--</el-col>-->
-        </el-row>
+        <!-- </el-row> -->
+        <el-table :data="assetList" style="width:100%">
+          <el-table-column prop="symbol" label="币种"></el-table-column>
+          <el-table-column prop="amount" label="账户余额"></el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button type="warning" size="small" style="color:#fff;"  @click="recharge(scope.row.id)">充值</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-dialog title="充值地址" :visible.sync="showDialog" center>
+          <div>
+            <div style="text-align: center;">
+              <vue-qr :text="walletAddr" :margin="10" size=86 class="qrcode"></vue-qr>
+            <div style="margin-top:39px;">
+              <span style="font-size:18px;color:rgba(0,0,0,1);"> {{ walletAddr }}</span>
+              <!-- <h2 v-model="walletAddr" readonly ref="copyInput"></h2> -->
+              <!-- <i class="el-icon-document" @click="handleCopy"></i> -->
+            </div>
+            </div>
+            <div style="margin-top:29px;">
+              <p style="color:rgb(253, 152, 1);text-align: center;font-size: 12px;">温馨提示</p>
+              <p style="text-align: center;font-size: 12px;margin-top:8px;color: #FFB3B3B3;">请勿向上述地址充值任何非BCV资产，否则资产将不可找回。您充值至上述地址后，需要整个网络节点的确认，1次网络确认后到账，6次网络确认后可提币。最小充值金额：0.003BCV，小于最小金额的充值将不会上账。</p>
+            </div>
+            <div style="text-align: center">
+              <el-button type="warning" style="width:362px;" @click="handleCopy">复制地址</el-button>
+            </div>
+          </div>
+          <!-- <el-form label-width="80px">
+            <el-form-item label="充值地址">
+              <el-input v-model="walletAddr"></el-input>
+            </el-form-item>
+            <el-form-item label="温馨提示">
+              <el-input v-model="inputFontClass"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button>复制地址</el-button>
+            </el-form-item>
+          </el-form> -->
+          <!-- <div slot="footer">
+            <el-button @click="showDialog = false">取消</el-button>
+            <el-button type="primary" @click="submit">确定</el-button>
+          </div> -->
+        </el-dialog>
       </div>
 
-      <!--<div>-->
-        <!--<h5 class="title">-->
-          <!--充值记录<i class="el-icon-refresh" @click="handleRefresh"></i>-->
-        <!--</h5>-->
-        <!--<ul class="filter">-->
-          <!--<li v-for="item  in option.list" :key="item.value" :class="{active: option.value === item.value}" @click="handleCLick(item.value)">-->
-              <!--{{item.name}}-->
-          <!--</li>-->
-        <!--</ul>-->
-        <!--<el-table :data="list" style="width: 100%">-->
-          <!--<el-table-column prop="id" label="序号" width="100"></el-table-column>-->
-          <!--<el-table-column prop="address" label="地址"></el-table-column>-->
-          <!--<el-table-column prop="number" label="数量" width="180"></el-table-column>-->
-          <!--<el-table-column prop="status" label="状态" width="180">-->
-            <!--<template slot-scope="scope">-->
-              <!--<span :class="scope.row.status === 1 ? 'text-success' : ''">-->
-                <!--{{['验证中', '已完成'][scope.row.status]}}-->
-              <!--</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
-          <!--<el-table-column prop="time" label="时间"></el-table-column>-->
-        <!--</el-table>-->
-      <!--</div>-->
+      <div>
+        <h5 class="title">
+          资产记录<i class="el-icon-refresh" @click="handleRefresh"></i>
+        </h5>
+        <ul class="filter">
+          <li v-for="item  in option.list" :key="item.value" :class="{active: option.value === item.value}" @click="handleCLick(item.value)">
+              {{item.name}}
+          </li>
+        </ul>
+        <el-table :data="list" style="width: 100%">
+          <el-table-column prop="id" label="序号" width="100"></el-table-column>
+          <el-table-column prop="address" label="地址"></el-table-column>
+          <el-table-column prop="number" label="数量" width="180"></el-table-column>
+          <el-table-column prop="status" label="状态" width="180">
+            <template slot-scope="scope">
+              <span :class="scope.row.status === 1 ? 'text-success' : ''">
+                {{['验证中', '已完成'][scope.row.status]}}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="time" label="时间"></el-table-column>
+        </el-table>
+      </div>
     </div>
   </div>
 </template>
@@ -108,6 +151,7 @@ export default {
       },
       tokenProtocol: 1,
       assetList: [],
+      showDialog: false,
       walletAddr: '',
       loading: false,
       balanceLoad: false
@@ -161,6 +205,9 @@ export default {
         this.assetList = data.dataList
         this.balanceLoad = false
       })
+    },
+    recharge (index) {
+      this.showDialog = true
     },
     getWallet () {
       this.loading = true
@@ -244,10 +291,10 @@ export default {
     .el-row{
       padding: 30px;
     }
-    span{
-      font-size: 28px;
-      color: $primary-color;
-    }
+    // span{
+    //   font-size: 28px;
+    //   color: $primary-color;
+    // }
   }
   .recharge-footer{
     text-align: right;

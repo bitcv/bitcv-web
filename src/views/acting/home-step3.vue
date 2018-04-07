@@ -30,8 +30,7 @@
     <footer>
       <el-row>
         <el-col :span="16">
-          <!--<el-progress :percentage="process * 100"></el-progress>-->
-          <el-progress :percentage="Math.floor(process * 1000) / 10"></el-progress>
+          <el-progress :percentage="process * 100"></el-progress>
         </el-col>
         <el-col v-if="isFinished" :span="8" class="text-warning">下载完成报告</el-col>
       </el-row>
@@ -96,7 +95,7 @@ export default {
         this.tableLoad = false
         this.dataList = data.dataList
         this.dataCount = data.dataCount
-        this.process = data.process
+        this.process = Math.ceil(data.process)
         this.totalAmount = data.totalAmount
         this.contractAddr = data.contractAddr
         this.tokenSymbol = data.tokenSymbol
@@ -104,7 +103,11 @@ export default {
     },
     maskStr (str, number) {
       return maskStr(str, number)
+    },
+    getResult(num, n){
+      return num.toFixed(n)
     }
+
   }
 }
 </script>

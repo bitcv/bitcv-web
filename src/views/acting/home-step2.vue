@@ -18,7 +18,7 @@
                 <h6>手续费</h6>
                 <p>
                   <img :src="ethData.logoUrl" alt="logo">
-                  <b>{{orderData.totalCount * 0.002}}</b>
+                  <b>{{(orderData.totalCount + 1) * 0.0016}}</b>
                   <small>ETH</small>
                 </p>
               </el-col>
@@ -46,15 +46,15 @@
                     枚
                   </small>
                   <br>
-                  <i v-if="ethData.amount < orderData.totalCount * 0.002">余额不足，请先充值</i>
+                  <i v-if="ethData.amount < (orderData.totalCount + 1) * 0.0016">余额不足，请先充值</i>
                 </p>
               </el-col>
             </el-row>
           </div>
         </div>
         <footer class="confirm-footer">
-          <el-button type="warning" plain @click="handleRecharge">去充值</el-button>
-          <el-button type="warning" class="btn-primary" @click="handleConfirm">确认发放</el-button>
+          <el-button type="warning" :disabled="!(ethData.amount < (orderData.totalCount + 1))" @click="handleRecharge">去充值</el-button>
+          <el-button type="warning" :disabled="ethData.amount < (orderData.totalCount + 1) * 0.0016"  @click="handleConfirm">确认发放</el-button>
         </footer>
       </div>
     </div>
@@ -68,9 +68,8 @@
               <el-input v-model="walletAddr" readonly ref="copyInput"></el-input>
               <i class="el-icon-document" @click="handleCopy"></i>
             </div>
-            <p>
-            提示：<span>单笔充值不得低于0.003{{tokenData.symbol}}</span>，
-              我们不会处理少于该金额的充值要求。
+            <p style="width:497px;">
+            温馨提示：请勿向上述地址充值任何非BCV资产，否则资产将不可找回。您充值至上述地址后，需要整个网络节点的确认，1次网络确认后到账，6次网络确认后可提币。<span>单笔充值不得低于0.003{{tokenData.symbol}}</span>，我们不会处理少于该金额的充值要求。
             </p>
           </el-col>
           <el-col :span="6" class="right">
@@ -85,25 +84,27 @@
           资产余额<i class="el-icon-refresh" @click="handleRefresh"></i>
         </h5>
         <el-row>
-          <el-col :span="12">
-            <span>{{tokenData.amount}}</span>
-            <small>{{tokenData.symbol}}</small>
+          <el-col :span="8">
+            <span>{{tokenData.symbol}}</span>
           </el-col>
-          <el-col :span="12">
-            <span>{{ethData.amount}}</span>
-            <small>{{ethData.symbol}}</small>
+          <el-col :span="8">
+            <span>{{tokenData.amount}}</span>
+          </el-col>
+          <el-col :span="8">
+            <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">还需充值</span>
+            <span>{{needTokenAmount}}</span>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
-            <span style="display:block;font-size:20px">还需充值</span>
-            <span>{{needTokenAmount}}</span>
-            <small>{{tokenData.symbol}}</small>
+          <el-col :span="8">
+            <span>{{ethData.symbol}}</span>
           </el-col>
-          <el-col :span="12">
-            <span style="display:block;font-size:20px">还需充值</span>
-            <span>{{needEthAmount}}</span>
-            <small>{{ethData.symbol}}</small>
+          <el-col :span="8">
+            <span>{{ethData.amount}}</span>
+          </el-col>
+          <el-col :span="8">
+            <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">还需充值</span>
+            <span style="font-weight:bold">{{needEthAmount}}</span>
           </el-col>
         </el-row>
       </div>
@@ -149,8 +150,7 @@ export default {
       walletAddr: '',
       balanceLoad: false,
       rechareLoad: false,
-      loading: false,
-      feeSymbol: 'ETH'
+      loading: false
     }
   },
   mounted () {
@@ -173,6 +173,7 @@ export default {
     },
     ethData () {
       let ethData = {}
+      console.log('ethdata')
       this.assetList.forEach(item => {
         if (item.symbol === 'ETH') {
           ethData = item
@@ -186,7 +187,7 @@ export default {
       return diffAmount > 0 ? diffAmount : 0
     },
     needEthAmount () {
-      let diffAmount = (this.orderData.totalCount * 0.002 * Math.pow(10, 18) - this.ethData.amount * Math.pow(10, 18)) / Math.pow(10, 18)
+      let diffAmount = ((this.orderData.totalCount + 1) * 0.0016 * Math.pow(10, 18) - this.ethData.amount * Math.pow(10, 18)) / Math.pow(10, 18)
       return diffAmount > 0 ? diffAmount : 0
     }
   },
@@ -198,8 +199,6 @@ export default {
         tokenProtocol: this.tokenProtocol
       }).then((data = {}) => {
         this.assetList = data.dataList
-        this.balanceLoad = false
-      }).catch(() => {
         this.balanceLoad = false
       })
     },
@@ -214,21 +213,15 @@ export default {
         this.walletAddr = data.walletAddr
         this.isRecharge = true
         this.rechargeLoad = false
-      }).catch(() => {
-        this.rechargeLoad = false
       })
     },
     handleConfirm () {
       this.loading = true
-      this.confirmDispense({
-        feeSymbol: this.feeSymbol
-      }).then((data = {}) => {
+      this.confirmDispense({}).then((data = {}) => {
         this.loading = false
         this.$emit('finished', {
           taskId: data.taskId
         })
-      }).catch(() => {
-        this.loading = false
       })
     },
     handleCopy () {
@@ -395,8 +388,8 @@ export default {
       }
     }
     span{
-      font-size: 28px;
-      color: $primary-color;
+      font-size: 18px;
+      color: rgba(51,51,51,1);
     }
   }
   .recharge-footer{
