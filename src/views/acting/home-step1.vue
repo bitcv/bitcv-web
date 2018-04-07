@@ -184,14 +184,10 @@ export default {
       })
     },
     confirm () {
-      this.addUserDispenseAsset({
-        tokenId: this.formData.tokenId
-      }).then(() => {
-        this.$emit('finished', {
-          tokenId: this.formData.tokenId,
-          totalAmount: this.totalAmount,
-          totalCount: this.dataCount - this.wrongCount
-        })
+      this.$emit('finished', {
+        tokenId: this.formData.tokenId,
+        totalAmount: this.totalAmount,
+        totalCount: this.dataCount - this.wrongCount
       })
     }
   }
