@@ -1,26 +1,29 @@
 <template>
   <div class="account">
     <div>
-      <div class="recharge-top" v-loading="loading">
+      <!-- <div id="share-box" v-show="showShare" class="share-container" @click="showShare = false">
+        <recharge id="shareCard" :proj-detail="list"></recharge>
+      </div> -->
+      <!-- <div class="recharge-top" v-loading="loading">
         <el-row>
           <el-col :span="18" class="left">
             <h5>充值地址</h5>
             <div>
-              <!-- <span>{{recData.address}}</span> -->
+              <span>{{recData.address}}</span>
               <el-input v-model="walletAddr" readonly ref="copyInput"></el-input>
               <i class="el-icon-document" @click="handleCopy"></i>
             </div>
-            <!--<p>-->
-            <!--提示：<span>单笔充值不得低于0.003{{tokenData.symbol}}</span>，-->
-            <!--我们不会处理少于该金额的{{tokenData.symbol}}充值要求。-->
-            <!--</p>-->
+            <p>
+            提示：<span>单笔充值不得低于0.003{{tokenData.symbol}}</span>，
+            我们不会处理少于该金额的{{tokenData.symbol}}充值要求。
+            </p>
           </el-col>
           <el-col :span="6" class="right">
             <vue-qr :text="walletAddr" :margin="10" class="qrcode"></vue-qr>
             <p>或扫二维码立即充值</p>
           </el-col>
         </el-row>
-      </div>
+      </div> -->
 
       <div class="recharge-bottom" v-loading="balanceLoad">
         <h5 class="title">
@@ -45,22 +48,20 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-dialog title="充值地址" :visible.sync="showDialog" center>
+        <el-dialog title="充值地址" width="500px" :visible.sync="showDialog"  center>
           <div>
             <div style="text-align: center;">
-              <vue-qr :text="walletAddr" :margin="10" size=86 class="qrcode"></vue-qr>
-            <div style="margin-top:39px;">
-              <span style="font-size:18px;color:rgba(0,0,0,1);"> {{ walletAddr }}</span>
-              <!-- <h2 v-model="walletAddr" readonly ref="copyInput"></h2> -->
-              <!-- <i class="el-icon-document" @click="handleCopy"></i> -->
-            </div>
+              <vue-qr :text="walletAddr" :margin="10" size=126 class="qrcode"></vue-qr>
+              <div style="margin-top:30px;">
+                <span class="addressText" style="font-size:18px;color:rgba(0,0,0,1);" data-clipboard-text="walletAddr"> {{ walletAddr }}</span>
+              </div>
             </div>
             <div style="margin-top:29px;">
               <p style="color:rgb(253, 152, 1);text-align: center;font-size: 12px;">温馨提示</p>
-              <p style="text-align: center;font-size: 12px;margin-top:8px;color: #FFB3B3B3;">请勿向上述地址充值任何非BCV资产，否则资产将不可找回。您充值至上述地址后，需要整个网络节点的确认，1次网络确认后到账，6次网络确认后可提币。最小充值金额：0.003BCV，小于最小金额的充值将不会上账。</p>
+              <p style="text-align: center;font-size: 10px;margin-top:8px;color: rgba(179,179,179,1);">请勿向上述地址充值任何非BCV资产，否则资产将不可找回。您充值至上述地址后，需要整个网络节点的确认，1次网络确认后到账，6次网络确认后可提币。最小充值金额：0.003BCV，小于最小金额的充值将不会上账。</p>
             </div>
             <div style="text-align: center">
-              <el-button type="warning" style="width:362px;" @click="handleCopy">复制地址</el-button>
+              <el-button type="warning" v-clipboard:copy = "walletAddr" v-clipboard:success="onCopy" v-clipboard:error = "onError" style="width:350px;">复制地址</el-button>
             </div>
           </div>
           <!-- <el-form label-width="80px">
@@ -83,13 +84,13 @@
 
       <div>
         <h5 class="title">
-          资产记录<i class="el-icon-refresh" @click="handleRefresh"></i>
+          充值记录<i class="el-icon-refresh" @click="handleRefresh"></i>
         </h5>
-        <ul class="filter">
+        <!-- <ul class="filter">
           <li v-for="item  in option.list" :key="item.value" :class="{active: option.value === item.value}" @click="handleCLick(item.value)">
               {{item.name}}
           </li>
-        </ul>
+        </ul> -->
         <el-table :data="list" style="width: 100%">
           <el-table-column prop="id" label="序号" width="100"></el-table-column>
           <el-table-column prop="address" label="地址"></el-table-column>
@@ -112,9 +113,12 @@
 import {mapState, mapActions} from 'vuex'
 import VueQr from 'vue-qr'
 import bus from '@/utils/bus'
+import Share from "@/components/share/Share";
+import html2canvas from "html2canvas";
 export default {
   components: {
-    VueQr
+    VueQr,
+    Share
   },
   data () {
     return {
@@ -154,7 +158,9 @@ export default {
       showDialog: false,
       walletAddr: '',
       loading: false,
-      balanceLoad: false
+      balanceLoad: false,
+      showShare: false,
+      shareUrl: ""
     }
   },
   computed: {
@@ -191,6 +197,7 @@ export default {
     console.log('mounted')
     this.fetchBalance()
     this.getWallet()
+    // document.getElementById('addressText').value = this.walletAddr
   },
   destroy () {
     console.log('destroy')
@@ -219,10 +226,18 @@ export default {
       })
     },
     handleCopy () {
-      let eInput = this.$refs.copyInput.$el.firstElementChild
+      //let eInput = this.$refs.copyInput.$el.firstElementChild
+      let eInput = document.getElementById("addressText");
+      console.log(eInput)
       eInput.select()
       document.execCommand('Copy')
       this.$message.success('复制成功!')
+    },
+    onCopy (e) {
+      this.$message.success('复制成功!')
+    },
+    onError (e) {
+      this.$message.success('复制失败!')
     },
     handleRefresh () {
       this.fetchBalance()
@@ -286,7 +301,7 @@ export default {
     }
   }
   .recharge-bottom{
-    border-top: 1px solid #eee;
+    //border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
     .el-row{
       padding: 30px;
@@ -350,6 +365,39 @@ export default {
         padding: 10px 0;
       }
     }
+  }
+}
+.share-box {
+  height: 46px;
+  display: flex;
+  position: absolute;
+  right: 40px;
+  bottom: 0;
+  align-items: center;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  cursor: pointer;
+  img {
+    width: 23px;
+    height: 23px;
+    margin: 0 5px;
+  }
+}
+.share-container {
+  width: 400px;
+  position: fixed;
+  z-index: 10;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & > img {
+    width: 100%;
   }
 }
 </style>

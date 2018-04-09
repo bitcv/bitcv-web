@@ -18,7 +18,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 import common from './common'
 // 多语言
 import VueI18n from 'vue-i18n'
+import VueClipboard from 'vue-clipboard2'
 
+Vue.use(VueClipboard)
 Vue.use(VueI18n)
 const messages = {
   // 简体中文
@@ -369,6 +371,7 @@ axios.interceptors.response.use(
 
 // accounting
 Vue.prototype.accounting = accounting
+
 // 千位分隔符
 Vue.filter('currency', (val, symbol = '', precision = 2, thousand = ',', decimal = '.', format = '%s%v') => {
   let n = val - 0
