@@ -84,13 +84,13 @@
 
       <div>
         <h5 class="title">
-          资产记录<i class="el-icon-refresh" @click="handleRefresh"></i>
+          充值记录<i class="el-icon-refresh" @click="handleRefresh"></i>
         </h5>
-        <ul class="filter">
+        <!-- <ul class="filter">
           <li v-for="item  in option.list" :key="item.value" :class="{active: option.value === item.value}" @click="handleCLick(item.value)">
               {{item.name}}
           </li>
-        </ul>
+        </ul> -->
         <el-table :data="list" style="width: 100%">
           <el-table-column prop="id" label="序号" width="100"></el-table-column>
           <el-table-column prop="address" label="地址"></el-table-column>
