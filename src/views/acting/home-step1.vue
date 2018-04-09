@@ -13,17 +13,15 @@
         </el-select>
       </el-form-item>
       <el-form-item class="inline-item input-item" prop="contractAddr" v-if="formData.tokenType === 0">
-        <el-button style="color: #ccc;font-size:12px;margin-left:326px;" type="text" @click="findAddress">怎么查找合约地址？</el-button>
+        <!-- <el-button style="color: #ccc;font-size:12px;margin-left:326px;" type="text" @click="findAddress">怎么查找合约地址？</el-button> -->
+        <el-tooltip placement="top" effect="light" width="200">
+          <div slot="content">1:访问以太网址<br/><a href="https://etherscan.io/tokens" target="_blank">https://etherscan.io/tokens</a><br/><br/>2:输入token名称查找<br><img src="/static/img/search.png" style="width:166px;height:22px;" alt=""></div>
+            <span style="color: #ccc;font-size:12px;margin-left:326px;">如何找到合约地址？</span>
+        </el-tooltip>
         <el-input v-if="tokenType === 0" class="step1-input" placeholder="请输入合约地址" @blur="getToken" v-model="formData.contractAddr">
           <span style="margin-right:10px;" slot="suffix" v-loading="tokenLoad">{{formData.tokenSymbol}}</span>
         </el-input>
       </el-form-item>
-      <!-- <el-form-item class="inline-item">
-        <el-tooltip placement="right" effect="light">
-          <div slot="content">1:访问以太网址<br/>https://etherscan.io/tokens<br>2:输入token名称查找<br>Search for any ERC20</div>
-          <el-button>合约地址</el-button>
-        </el-tooltip>
-      </el-form-item> -->
       <el-form-item>
         <el-checkbox style="color:#ccc" v-model="checked" ></el-checkbox>
         <!-- <el-button style = "text-align:center;color: #A1A1A1;" type="text" @click="open">用户协议</el-button> -->
@@ -164,7 +162,7 @@ export default {
       });
     },
     findAddress() {
-      this.$alert('1:访问以太网址<br/><a href="https://etherscan.io/tokens">https://etherscan.io/tokens</a><br><br>2:输入token名称查找<br><input width="128px" disabled="disabled" placeholder="Search for any ERC20 Token Name/Address"><button>Find</button>', '', {
+      this.$alert('1:访问以太网址<br/><a href="https://etherscan.io/tokens" target="_blank">https://etherscan.io/tokens</a><br><br>2:输入token名称查找<br><input disabled="disabled" placeholder="Search for any ERC20 Token Name/Address"><button disabled="disabled" style="background-color:#95a5a6">Find</button>', '', {
         dangerouslyUseHTMLString: true
       });
     },

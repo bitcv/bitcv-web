@@ -90,9 +90,13 @@
           <el-col :span="8">
             <span>{{tokenData.amount}}</span>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" v-if="needTokenAmount > 0">
             <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">还需充值</span>
             <span>{{needTokenAmount}}</span>
+          </el-col>
+          <el-col :span="8" v-else>
+            <img src="/static/img/完成充值@2x.png" style="width:16px;height:16px;" alt="">
+            <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">无需充值</span>
           </el-col>
         </el-row>
         <el-row>
@@ -102,9 +106,12 @@
           <el-col :span="8">
             <span>{{ethData.amount}}</span>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" v-if="needEthAmount > 0">
             <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">还需充值</span>
             <span style="font-weight:bold">{{needEthAmount}}</span>
+          </el-col>
+          <el-col :span="8" v-else>
+            <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">完成充值</span>
           </el-col>
         </el-row>
       </div>
@@ -388,7 +395,7 @@ export default {
       }
     }
     span{
-      font-size: 18px;
+      font-size: 16px;
       color: rgba(51,51,51,1);
     }
   }
