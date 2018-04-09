@@ -149,6 +149,11 @@ export const getTokenBySymbol = (store, params) => {
   return post('/api/getTokenBySymbol', params)
 }
 
+// 获取费用信息
+export const getDispenseFee = (store, params) => {
+  return post('/api/getDispenseFee', params)
+}
+
 // 确定代发
 export const confirmDispense = (store, params) => {
   return post('/api/confirmDispense', params)

@@ -16,10 +16,14 @@
               </el-col>
               <el-col :span="12">
                 <h6>手续费</h6>
-                <p>
-                  <img :src="ethData.logoUrl" alt="logo">
-                  <b>{{(orderData.totalCount + 1) * 0.0016}}</b>
-                  <small>ETH</small>
+                <p v-loading="feeLoad">
+                  <img :src="feeTokenData.logoUrl" alt="logo">
+                  <b>{{orderData.totalCount * feeTokenData.price}}</b>
+                  <small>
+                    <el-radio-group v-model="curFeeIndex">
+                      <el-radio :label="index" v-for="(feeToken, index) in feeTokenList">{{feeToken.symbol}}</el-radio>
+                    </el-radio-group>
+                  </small>
                 </p>
               </el-col>
             </el-row>
@@ -53,7 +57,7 @@
           </div>
         </div>
         <footer class="confirm-footer">
-          <el-button type="warning" :disabled="!(ethData.amount < (orderData.totalCount + 1))" @click="handleRecharge">去充值</el-button>
+          <el-button type="warning" :disabled="!(ethData.amount < (orderData.totalCount + 1))" @click="toDeposit">去充值</el-button>
           <el-button type="warning" :disabled="ethData.amount < (orderData.totalCount + 1) * 0.0016"  @click="handleConfirm">确认发放</el-button>
         </footer>
       </div>
@@ -129,47 +133,33 @@ export default {
   data () {
     return {
       isRecharge: false, // 是否确认充值
-      info: {
-        total: 30000,
-        cost: 1699999,
-        type: 0,
-        itype: 1,
-        BCVnumber: 5000,
-        ETHnumber: 6000
-      },
-      recData: { // 充值数据
-        address: '0xsajaiaksoalksidujh8093jd84kd9s0a9djhvu87'
-      },
-      assets: { // 资产余额
-        BVC: 2000,
-        EHT: 378,
-        BTC: 288
-      },
       tokenProtocol: 1,
       assetList: [],
+      feeTokenList: [],
+      curFeeIndex: 0,
       walletAddr: '',
       balanceLoad: false,
       rechareLoad: false,
+      feeLoad: false,
       loading: false
     }
   },
   mounted () {
     this.fetchBalance()
-  },
-  updated () {
-    console.log('update')
-    // this.fetchBalance()
+    this.getFeeList()
   },
   computed: {
     tokenData () {
       let tokenData = {}
-      console.log('tokendata')
       this.assetList.forEach(item => {
         if (parseInt(item.tokenId) === parseInt(this.orderData.tokenId)) {
           tokenData = item
         }
       }, this)
       return tokenData
+    },
+    feeTokenData () {
+      return this.feeTokenList[this.curFeeIndex]
     },
     ethData () {
       let ethData = {}
@@ -192,20 +182,28 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getDispenseBalance', 'getDispenseWallet', 'confirmDispense']),
+    ...mapActions(['getDispenseBalance', 'getDispenseWallet', 'confirmDispense', 'getDispenseFee']),
     fetchBalance () {
       this.balanceLoad = true
-      this.getDispenseBalance({
-        tokenProtocol: this.tokenProtocol
-      }).then((data = {}) => {
-        this.assetList = data.dataList
+      this.getDispenseBalance().then(res => {
+        this.assetList = res.dataList
+        this.balanceLoad = false
+      }).catch(() => {
         this.balanceLoad = false
       })
     },
-    handleChange (val) {
-      this.info.itype = val === 0 ? 1 : 0
+    getFeeList () {
+      this.feeLoad = true
+      this.getDispenseFee({
+        discountCode: ''
+      }).then(data => {
+        this.feeTokenList = data
+        this.feeLoad = false
+      }).catch(() => {
+        this.feeLoad = false
+      })
     },
-    handleRecharge () {
+    toDeposit () {
       this.rechargeLoad = true
       this.getDispenseWallet({
         tokenProtocol: this.tokenProtocol
@@ -217,7 +215,9 @@ export default {
     },
     handleConfirm () {
       this.loading = true
-      this.confirmDispense({}).then((data = {}) => {
+      this.confirmDispense({
+        feeSymbol: this.feeTokenInfo.symbol
+      }).then(data => {
         this.loading = false
         this.$emit('finished', {
           taskId: data.taskId
