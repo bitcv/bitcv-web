@@ -94,7 +94,8 @@ export default {
         tokenType: 0,
         contractAddr: '',
         tokenId: 0,
-        tokenSymbol: ''
+        tokenSymbol: '',
+        logoUrl: ''
       },
       formRule: {
         contractAddr: [{validator: addrRule, trigger: 'blur'}]
@@ -190,6 +191,7 @@ export default {
       }).then((data = {}) => {
         this.formData.tokenId = data.tokenId
         this.formData.tokenSymbol = data.tokenSymbol
+        this.formData.logoUrl = data.logoUrl
         this.uploadDisable = false
         this.tokenLoad = false
       })
@@ -197,6 +199,8 @@ export default {
     confirm () {
       this.$emit('finished', {
         tokenId: this.formData.tokenId,
+        tokenSymbol: this.formData.tokenSymbol,
+        logoUrl: this.formData.logoUrl,
         totalAmount: this.totalAmount,
         totalCount: this.dataCount - this.wrongCount
       })

@@ -159,6 +159,11 @@ export const confirmDispense = (store, params) => {
   return post('/api/confirmDispense', params)
 }
 
+// 确定代发交易记录
+export const getDispenseFinance = (store, params) => {
+  return post('/api/getDispenseFinance', params)
+}
+
 // 获取代发状态
 export const getDispenseList = (store, params) => {
   return post('/api/getDispenseList', params)

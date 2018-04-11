@@ -29,6 +29,8 @@ export default {
       active: 0,
       orderData: {
         tokenId: 0,
+        tokenSymbol: '',
+        logoUrl: '',
         totalAmount: 0,
         totalCount: 0
       },
@@ -43,6 +45,8 @@ export default {
   methods: {
     finishStep1 (data) {
       this.orderData.tokenId = data.tokenId
+      this.orderData.tokenSymbol = data.tokenSymbol
+      this.orderData.logoUrl = data.logoUrl
       this.orderData.totalAmount = data.totalAmount
       this.orderData.totalCount = data.totalCount
       this.active = 1

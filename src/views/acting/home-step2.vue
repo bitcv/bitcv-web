@@ -38,27 +38,27 @@
                   <span>{{tokenData.amount}}</span>
                   <small>枚</small>
                   <br>
-                  <i v-if="tokenData.amount < orderData.totalAmount">余额不足，请先充值</i>
+                  <i v-if="tokenNeeded > 0">余额不足，请先充值</i>
                 </p>
               </el-col>
-              <el-col :span="12">
-                <h6>可用ETH余额</h6>
+              <el-col :span="12" v-if="!sameToken">
+                <h6>可用{{feeTokenData.symbol}}余额</h6>
                 <p>
-                  <img :src="ethData.logoUrl" alt="logo">
-                  <span>{{ethData.amount}}</span>
+                  <img :src="feeTokenData.logoUrl" alt="logo">
+                  <span>{{feeTokenData.amount}}</span>
                   <small>
                     枚
                   </small>
                   <br>
-                  <i v-if="ethData.amount < (orderData.totalCount + 1) * 0.0016">余额不足，请先充值</i>
+                  <i v-if="feeNeeded > 0">余额不足，请先充值</i>
                 </p>
               </el-col>
             </el-row>
           </div>
         </div>
         <footer class="confirm-footer">
-          <el-button type="warning" :disabled="!(ethData.amount < (orderData.totalCount + 1))" @click="toDeposit">去充值</el-button>
-          <el-button type="warning" :disabled="ethData.amount < (orderData.totalCount + 1) * 0.0016"  @click="handleConfirm">确认发放</el-button>
+          <el-button type="warning" :disabled="false && tokenNeeded === 0 && feeNeeded === 0" @click="toDeposit">去充值</el-button>
+          <el-button type="warning" :disabled="tokenNeeded > 0 || feeNeeded > 0"  @click="handleConfirm">确认发放</el-button>
         </footer>
       </div>
     </div>
@@ -94,28 +94,29 @@
           <el-col :span="8">
             <span>{{tokenData.amount}}</span>
           </el-col>
-          <el-col :span="8" v-if="needTokenAmount > 0">
+          <el-col :span="8" v-if="tokenNeeded > 0">
             <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">还需充值</span>
-            <span>{{needTokenAmount}}</span>
+            <span>{{tokenNeeded}}</span>
           </el-col>
           <el-col :span="8" v-else>
             <img src="/static/img/完成充值@2x.png" style="width:16px;height:16px;" alt="">
-            <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">无需充值</span>
+            <span style="display:inline;font-size:12px;color:#67C23A;">充值完成</span>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="!sameToken">
           <el-col :span="8">
-            <span>{{ethData.symbol}}</span>
+            <span>{{feeTokenData.symbol}}</span>
           </el-col>
           <el-col :span="8">
-            <span>{{ethData.amount}}</span>
+            <span>{{feeTokenData.amount}}</span>
           </el-col>
-          <el-col :span="8" v-if="needEthAmount > 0">
+          <el-col :span="8" v-if="feeNeeded > 0">
             <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">还需充值</span>
-            <span style="font-weight:bold">{{needEthAmount}}</span>
+            <span style="font-weight:bold">{{feeNeeded}}</span>
           </el-col>
           <el-col :span="8" v-else>
-            <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">完成充值</span>
+            <img src="/static/img/完成充值@2x.png" style="width:16px;height:16px;" alt="">
+            <span style="display:inline;font-size:12px;color:#67C23A;">充值完成</span>
           </el-col>
         </el-row>
       </div>
@@ -156,35 +157,50 @@ export default {
     this.getFeeList()
   },
   computed: {
+    sameToken () {
+      return this.tokenData.tokenId === this.feeTokenData.tokenId
+    },
     tokenData () {
-      let tokenData = {}
+      console.log('orderData')
+      console.log(this.orderData)
+      let tokenData = {
+        tokenId: this.orderData.tokenId,
+        symbol: this.orderData.tokenSymbol,
+        logoUrl: this.orderData.logoUrl,
+        amount: 0
+      }
       this.assetList.forEach(item => {
-        if (parseInt(item.tokenId) === parseInt(this.orderData.tokenId)) {
-          tokenData = item
+        if (item.tokenId === this.orderData.tokenId) {
+          tokenData.amount = item.amount
         }
       }, this)
+      console.log('tokenData')
+      console.log(tokenData)
       return tokenData
     },
     feeTokenData () {
-      return this.feeTokenList[this.curFeeIndex]
-    },
-    ethData () {
-      let ethData = {}
-      console.log('ethdata')
+      let tokenData = this.feeTokenList[this.curFeeIndex] || {}
+      tokenData.amount = 0
       this.assetList.forEach(item => {
-        if (item.symbol === 'ETH') {
-          ethData = item
+        if (item.tokenId === tokenData.tokenId) {
+          tokenData.amount = item.amount
         }
       })
-      console.log(ethData)
-      return ethData
+      console.log('feeTokenData')
+      console.log(tokenData)
+      return tokenData
     },
-    needTokenAmount () {
-      let diffAmount = this.orderData.totalAmount - this.tokenData.amount
+    feeNeeded () {
+      let diffAmount = this.orderData.totalCount * this.feeTokenData.price - this.feeTokenData.amount
       return diffAmount > 0 ? diffAmount : 0
     },
-    needEthAmount () {
-      let diffAmount = ((this.orderData.totalCount + 1) * 0.0016 * Math.pow(10, 18) - this.ethData.amount * Math.pow(10, 18)) / Math.pow(10, 18)
+    tokenNeeded () {
+      let diffAmount = 0
+      if (this.sameToken) {
+        diffAmount = this.orderData.totalAmount - this.tokenData.amount - this.feeTokenData.amount
+      } else {
+        diffAmount = this.orderData.totalAmount - this.tokenData.amount
+      }
       return diffAmount > 0 ? diffAmount : 0
     }
   },
@@ -223,12 +239,14 @@ export default {
     handleConfirm () {
       this.loading = true
       this.confirmDispense({
-        feeSymbol: this.feeTokenInfo.symbol
+        feeSymbol: this.feeTokenData.symbol
       }).then(data => {
         this.loading = false
         this.$emit('finished', {
           taskId: data.taskId
         })
+      }).catch(() => {
+        this.loading = false
       })
     },
     handleCopy () {
