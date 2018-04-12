@@ -125,19 +125,17 @@
   color: $primary-color;
 }
 .el-radio__input.is-checked .el-radio__inner{
-  border-color: $primary-color;
-  background-color: $primary-color;
+  border-color: $primary-color !important;
+  background-color: $primary-color !important;
 }
-
-
 /* step   style */
 .el-step__title{
   font-size: 14px;
   font-weight: 500;
 }
 .el-step__head.is-finish, .el-step__title.is-finish{
-  color: $primary-color;
-  border-color: $primary-color;
+  color: $primary-color !important;
+  border-color: $primary-color !important;
   .el-step__icon.is-text{
     background: $third-color;
   }
@@ -153,6 +151,15 @@
     // background: $third-color;
     background: #fff;
   }
+}
+.el-tooltip__popper.is-light{
+  border-color: $primary-color !important;
+  border: 1px solid $primary-color !important;
+}
+.el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+  color: $primary-color !important;
+  border-color: $primary-color !important;
+  background-color: $primary-color !important;
 }
 .el-step__title.is-process{
   // color: $primary-color;

@@ -33,11 +33,11 @@ export default {
     activeIndex () {
       const reg = new RegExp(this.path.split(/\//).pop())
       let item = this.menus.find(item => reg.test(item.route.path))
-
       if (item) {
+        console.log(item.key)
         return item.key
       }
-      return '1'
+      return '3'
     }
   }
 }
