@@ -103,6 +103,9 @@ export default {
       color: $primary-color;
     }
   }
+  tbody {
+    cursor: pointer;
+  }
   .footer{
     background: #fdf6ec;
     margin-top: 30px;
