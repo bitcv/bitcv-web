@@ -122,7 +122,7 @@
 
 /* radio */
 .el-radio__input.is-checked+.el-radio__label{
-  color: $primary-color;
+  color: $primary-color !important;
 }
 .el-radio__input.is-checked .el-radio__inner{
   border-color: $primary-color !important;
@@ -137,7 +137,7 @@
   color: $primary-color !important;
   border-color: $primary-color !important;
   .el-step__icon.is-text{
-    background: $third-color;
+    background: $third-color !important;
   }
 }
 .el-step__icon.is-text{
