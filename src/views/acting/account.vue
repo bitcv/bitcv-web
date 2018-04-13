@@ -22,13 +22,9 @@
                 <span class="addressText" style="font-size:18px;color:rgba(0,0,0,1);" data-clipboard-text="walletAddr"> {{ walletAddr }}</span>
               </div>
             </div>
-            <div style="margin-top:29px;" v-if="recSymbol == 'BCV' ">
+            <div style="margin-top:29px;">
               <p style="color:rgb(253, 152, 1);text-align: center;font-size: 12px;">温馨提示</p>
-              <p style="text-align: center;font-size: 10px;margin-top:8px;color: rgba(179,179,179,1);">请勿向上述地址充值任何非 BCV 资产，否则资产将不可找回。您充值至上述地址后，需要整个网络节点的确认，1 次网络确认后到账，6 次网络确认后可提币。最小充值金额：0.003 BCV，小于最小金额的充值将不会上账。</p>
-            </div>
-            <div style="margin-top:29px;" v-if="recSymbol == 'ETH' ">
-              <p style="color:rgb(253, 152, 1);text-align: center;font-size: 12px;">温馨提示</p>
-              <p style="text-align: center;font-size: 10px;margin-top:8px;color: rgba(179,179,179,1);">请勿向上述地址充值任何非 ETH 资产，否则资产将不可找回。您充值至上述地址后，需要整个网络节点的确认，1 次网络确认后到账，6 次网络确认后可提币。最小充值金额：0.0001 ETH，小于最小金额的充值将不会上账。</p>
+              <p style="text-align: center;font-size: 10px;margin-top:8px;color: rgba(179,179,179,1);">请勿向上述地址充值任何非 {{recSymbol}} 资产，否则资产将不可找回。您充值至上述地址后，需要整个网络节点的确认，1 次网络确认后到账。最小充值金额：0.001 {{recSymbol}}，小于最小金额的充值将不会上账。</p>
             </div>
             <div style="text-align: center">
               <el-button type="warning" v-clipboard:copy = "walletAddr" v-clipboard:success="onCopy" v-clipboard:error = "onError" style="width:350px;">复制地址</el-button>
