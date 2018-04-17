@@ -45,27 +45,27 @@
             </div>
             <div class="col-xs-6 col-md-4">
               <ul class="list-unstyled text-dark">
-                <li>
-                  <p>
-                    <span v-if="language === 'cn'" class="fixed-label">{{ ['关注', '取消关注'][info.focusStatus] }}&nbsp;&nbsp;</span>
-                    <span v-else class="fixed-label">{{ ['Follow', 'Unfollow'][info.focusStatus] }}&nbsp;&nbsp;</span>
-                    <a href="javascript:;" :style="info.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" @click="handleFocus">
-                      <span class="icon-bcv" :class="{'icon-heart': info.focusStatus == 0, 'icon-heart-fill': info.focusStatus == 1}"></span>
-                    </a>
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    <span class="fixed-label">{{ $t('label.share') }}：</span>
-                    <a href="javascript:;" @click="openShare"><span class="icon-bcv icon-share"></span></a>
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    <span class="fixed-label">{{ $t('label.focus') }}：</span>
-                    <span class="text-black fnum">{{ info.focusNum }}</span>
-                  </p>
-                </li>
+                <!--<li>-->
+                  <!--<p>-->
+                    <!--<span v-if="language === 'cn'" class="fixed-label">{{ ['关注', '取消关注'][info.focusStatus] }}&nbsp;&nbsp;</span>-->
+                    <!--<span v-else class="fixed-label">{{ ['Follow', 'Unfollow'][info.focusStatus] }}&nbsp;&nbsp;</span>-->
+                    <!--<a href="javascript:;" :style="info.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" @click="handleFocus">-->
+                      <!--<span class="icon-bcv" :class="{'icon-heart': info.focusStatus == 0, 'icon-heart-fill': info.focusStatus == 1}"></span>-->
+                    <!--</a>-->
+                  <!--</p>-->
+                <!--</li>-->
+                <!--<li>-->
+                  <!--<p>-->
+                    <!--<span class="fixed-label">{{ $t('label.share') }}：</span>-->
+                    <!--<a href="javascript:;" @click="openShare"><span class="icon-bcv icon-share"></span></a>-->
+                  <!--</p>-->
+                <!--</li>-->
+                <!--<li>-->
+                  <!--<p>-->
+                    <!--<span class="fixed-label">{{ $t('label.focus') }}：</span>-->
+                    <!--<span class="text-black fnum">{{ info.focusNum }}</span>-->
+                  <!--</p>-->
+                <!--</li>-->
                 <li>
                   <p>
                     <span class="fixed-label">{{ $t('label.view') }}：</span>
