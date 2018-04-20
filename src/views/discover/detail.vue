@@ -208,42 +208,42 @@
             </div>
 
             <!-- 媒体报道 -->
-            <div id="media" class="panel-body" v-if="showList && showList.length > 0">
-              <h4 class="sub-title">{{ $t('label.media') }}</h4>
-              <div class="sub-content">
-                <ul class="list-unstyled media-list">
-                  <li class="clearfix" v-for="(report, index) in showList" :key="index">
-                    <p style="float: right;font-size:12px;color:#A1A1A1;margin-right:28px;">来自 {{ report.name }}</p>
-                    <p class="content"><span >{{ report.releaseTime | formatDate }}</span><a :href="report.linkUrl" target="_blank" class="more"><span class= "title" v-html="report.title"></span></a></p>
-                  </li>
-                  <div v-if="info.reportList.length > 3"  style="text-align:center;color: #A1A1A1;font-size:12px;" @click="show" class="show-more">{{word}}</div>
-                </ul>
-              </div>
-            </div>
-            <div v-else id="media" class="panel-body">
-              <h4>{{ $t('label.media') }}</h4>
-              <div style="height: 82px;">
-                <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
-              </div>
-            </div>
+            <!--<div id="media" class="panel-body" v-if="showList && showList.length > 0">-->
+              <!--<h4 class="sub-title">{{ $t('label.media') }}</h4>-->
+              <!--<div class="sub-content">-->
+                <!--<ul class="list-unstyled media-list">-->
+                  <!--<li class="clearfix" v-for="(report, index) in showList" :key="index">-->
+                    <!--<p style="float: right;font-size:12px;color:#A1A1A1;margin-right:28px;">来自 {{ report.name }}</p>-->
+                    <!--<p class="content"><span >{{ report.releaseTime | formatDate }}</span><a :href="report.linkUrl" target="_blank" class="more"><span class= "title" v-html="report.title"></span></a></p>-->
+                  <!--</li>-->
+                  <!--<div v-if="info.reportList.length > 3"  style="text-align:center;color: #A1A1A1;font-size:12px;" @click="show" class="show-more">{{word}}</div>-->
+                <!--</ul>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div v-else id="media" class="panel-body">-->
+              <!--<h4>{{ $t('label.media') }}</h4>-->
+              <!--<div style="height: 82px;">-->
+                <!--<p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>-->
+              <!--</div>-->
+            <!--</div>-->
             
             <!-- 官方公告 -->
-            <div id="offical" class="panel-body" v-if="info.publicList && info.publicList.length">
-              <h4 class="sub-title">{{ $t('label.anno') }}</h4>
-              <div class="sub-content">
-                <ul class="list-unstyled notice-list">
-                  <li class="clearfix" v-for="(notice, index) in info.publicList" :key="index">
-                    <p class="content"><span class="date">{{ notice.postTime | formatDate }}</span><a :href="notice.referUrl" target="_blank" class="more"><span style="margin-left:36px;" v-html="notice.title"></span></a></p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div v-else id="offical" class="panel-body">
-              <h4>{{ $t('label.anno') }}</h4>
-              <div style="height: 82px;">
-                <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
-              </div>
-            </div>
+            <!--<div id="offical" class="panel-body" v-if="info.publicList && info.publicList.length">-->
+              <!--<h4 class="sub-title">{{ $t('label.anno') }}</h4>-->
+              <!--<div class="sub-content">-->
+                <!--<ul class="list-unstyled notice-list">-->
+                  <!--<li class="clearfix" v-for="(notice, index) in info.publicList" :key="index">-->
+                    <!--<p class="content"><span class="date">{{ notice.postTime | formatDate }}</span><a :href="notice.referUrl" target="_blank" class="more"><span style="margin-left:36px;" v-html="notice.title"></span></a></p>-->
+                  <!--</li>-->
+                <!--</ul>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div v-else id="offical" class="panel-body">-->
+              <!--<h4>{{ $t('label.anno') }}</h4>-->
+              <!--<div style="height: 82px;">-->
+                <!--<p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>-->
+              <!--</div>-->
+            <!--</div>-->
 
             <!-- 社区发布 -->
             <div id="community" class="panel-body" v-if="info.dynamicList && info.dynamicList.length">
@@ -345,8 +345,6 @@ export default {
         { text: "团队信息", target: "#team", active: false },
         { text: "项目发展", target: "#develop", active: false },
         { text: "合作伙伴", target: "#partner", active: false },
-        { text: "媒体报道", target: "#media", active: false },
-        { text: "官方发布", target: "#offical", active: false },
         { text: "社区发布", target: "#community", active: false }
       ],
       e_infoList: [
@@ -354,8 +352,6 @@ export default {
         { text: "Team Information", target: "#team", active: false },
         { text: "Project Development", target: "#develop", active: false },
         { text: "Cooperative Partner", target: "#partner", active: false },
-        { text: "Media Coverage", target: "#media", active: true },
-        { text: "Official Announcement", target: "#offical", active: false },
         { text: "Community Release", target: "#community", active: false }
       ]
     };
