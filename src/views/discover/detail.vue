@@ -45,27 +45,27 @@
             </div>
             <div class="col-xs-6 col-md-4">
               <ul class="list-unstyled text-dark">
-                <li>
-                  <p>
-                    <span v-if="language === 'cn'" class="fixed-label">{{ ['关注', '取消关注'][info.focusStatus] }}&nbsp;&nbsp;</span>
-                    <span v-else class="fixed-label">{{ ['Follow', 'Unfollow'][info.focusStatus] }}&nbsp;&nbsp;</span>
-                    <a href="javascript:;" :style="info.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" @click="handleFocus">
-                      <span class="icon-bcv" :class="{'icon-heart': info.focusStatus == 0, 'icon-heart-fill': info.focusStatus == 1}"></span>
-                    </a>
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    <span class="fixed-label">{{ $t('label.share') }}：</span>
-                    <a href="javascript:;" @click="openShare"><span class="icon-bcv icon-share"></span></a>
-                  </p>
-                </li>
-                <li>
-                  <p>
-                    <span class="fixed-label">{{ $t('label.focus') }}：</span>
-                    <span class="text-black fnum">{{ info.focusNum }}</span>
-                  </p>
-                </li>
+                <!--<li>-->
+                  <!--<p>-->
+                    <!--<span v-if="language === 'cn'" class="fixed-label">{{ ['关注', '取消关注'][info.focusStatus] }}&nbsp;&nbsp;</span>-->
+                    <!--<span v-else class="fixed-label">{{ ['Follow', 'Unfollow'][info.focusStatus] }}&nbsp;&nbsp;</span>-->
+                    <!--<a href="javascript:;" :style="info.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" @click="handleFocus">-->
+                      <!--<span class="icon-bcv" :class="{'icon-heart': info.focusStatus == 0, 'icon-heart-fill': info.focusStatus == 1}"></span>-->
+                    <!--</a>-->
+                  <!--</p>-->
+                <!--</li>-->
+                <!--<li>-->
+                  <!--<p>-->
+                    <!--<span class="fixed-label">{{ $t('label.share') }}：</span>-->
+                    <!--<a href="javascript:;" @click="openShare"><span class="icon-bcv icon-share"></span></a>-->
+                  <!--</p>-->
+                <!--</li>-->
+                <!--<li>-->
+                  <!--<p>-->
+                    <!--<span class="fixed-label">{{ $t('label.focus') }}：</span>-->
+                    <!--<span class="text-black fnum">{{ info.focusNum }}</span>-->
+                  <!--</p>-->
+                <!--</li>-->
                 <li>
                   <p>
                     <span class="fixed-label">{{ $t('label.view') }}：</span>
@@ -80,11 +80,8 @@
     </div>
     <div class="tab-bar">
       <div class="row">
-        <div class="col-md-6">
-          <a href="javascript:;" class="tab-item" :class="{active: activeName == 'info'}" @click="activeName = 'info'">{{ $t('label.project_info') }}</a>
-          <a href="javascript:;" class="tab-item" :class="{active: activeName == 'dynamic'}" @click="activeName = 'dynamic'">{{ $t('label.project_dy') }}</a>
-        </div>
-        <div class="col-md-6 text-right hidden-xs hidden-sm">
+        <!-- 社区链接 -->
+        <div class="col-md-12 text-right hidden-xs hidden-sm">
           <ul class="list-inline text-darker">
             <li class="text-dark">{{ $t('label.social') }}</li>
             <li v-for="(item, index) in info.socialList" :key="index">
@@ -96,34 +93,25 @@
         </div>
       </div>
     </div>
+
     <div class="component-wrapper">
       <div class="row">
-        <div class="col-md-8">
-          <ul v-if="activeName == 'info' && language === 'cn'" class="nav nav-tabs">
+        <div class="col-md-8 hidden-xs hidden-sm">
+          <ul v-if="language === 'cn'" class="nav nav-tabs">
             <li v-for="(item, index) in infoList" :class="{active: item.active}" :key="index">
               <a :href="item.target" @click="onTabItemClick(infoList, item)">{{ item.text }}</a>
             </li>
           </ul>
-          <ul v-else-if="activeName == 'info' && language === 'en'" class="nav nav-tabs">
+          <ul v-else-if="language === 'en'" class="nav nav-tabs">
             <li v-for="(item, index) in e_infoList" :class="{active: item.active}" :key="index">
               <a :href="item.target" @click="onTabItemClick(e_infoList, item)">{{ item.text }}</a>
-            </li>
-          </ul>
-          <ul v-if="activeName == 'dynamic' && language === 'cn'" class="nav nav-tabs">
-            <li v-for="(item, index) in dynamicList" :class="{active: item.active}" :key="index">
-              <a :href="item.target" @click="onTabItemClick(dynamicList, item)">{{ item.text }}</a>
-            </li>
-          </ul>
-          <ul v-if="activeName == 'dynamic' && language === 'en'" class="nav nav-tabs">
-            <li v-for="(item, index) in e_dynamicList" :class="{active: item.active}" :key="index">
-              <a :href="item.target" @click="onTabItemClick(e_dynamicList, item)">{{ item.text }}</a>
             </li>
           </ul>
         </div>
       </div>
       <div class="row outer">
         <div class="col-md-8 col">
-          <div v-if="activeName == 'info'" class="tab-content">
+          <div class="tab-content">
             <div id="info" class="panel-body">
               <h4 class="sub-title">{{ $t('label.project_intr') }}</h4>
               <div class="sub-content">
@@ -174,6 +162,8 @@
                 </div>
               </div>
             </div><!-- /#team -->
+
+            <!-- 项目发展 -->
             <div id="develop" class="panel-body" v-if="info.eventList && info.eventList.length">
               <h4 class="sub-title">{{ $t('label.project_dev') }}</h4>
               <div class="sub-content">
@@ -189,7 +179,15 @@
                   </div>
                 </div>
               </div>
-            </div><!-- /#develop -->
+            </div>
+            <div v-else id="develop" class="panel-body">
+              <h4>{{ $t('label.project_dev') }}</h4>
+              <div style="height: 82px;">
+                <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
+              </div>
+            </div>
+
+            <!-- 合作伙伴 -->
             <div id="partner" class="panel-body" v-if="info.partnerList && info.partnerList.length">
               <h4 class="sub-title">{{ $t('label.brother') }}</h4>
               <div class="sub-content">
@@ -201,47 +199,53 @@
                   </div>
                 </div>
               </div>
-            </div><!-- /#partner -->
-          </div>
-          <div v-if="activeName == 'dynamic'" class="tab-content">
-            <div id="offical" class="panel-body" v-if="showList && showList.length > 0">
-              <h4 class="sub-title">{{ $t('label.media') }}</h4>
-              <div class="sub-content">
-                <ul class="list-unstyled media-list">
-                  <li class="clearfix" v-for="(report, index) in showList" :key="index">
-                    <p style="float: right;font-size:12px;color:#A1A1A1;margin-right:28px;">来自 {{ report.name }}</p>
-                    <p class="content"><span >{{ report.releaseTime | formatDate }}</span><a :href="report.linkUrl" target="_blank" class="more"><span class= "title" v-html="report.title"></span></a></p>
-                  </li>
-                  <div v-if="info.reportList.length > 3"  style="text-align:center;color: #A1A1A1;font-size:12px;" @click="show" class="show-more">{{word}}</div>
-                </ul>
+            </div>
+            <div v-else id="partner" class="panel-body">
+              <h4>{{ $t('label.brother') }}</h4>
+              <div style="height: 82px;">
+                <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
               </div>
             </div>
-            <div v-else>
-              <div class="panel-body">
-                <h4>{{ $t('label.media') }}</h4>
-                <div style="height: 82px;">
-                  <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
-                </div>
-              </div>
-            </div>
-            <div id="offical" class="panel-body" v-if="info.publicList && info.publicList.length">
-              <h4 class="sub-title">{{ $t('label.anno') }}</h4>
-              <div class="sub-content">
-                <ul class="list-unstyled notice-list">
-                  <li class="clearfix" v-for="(notice, index) in info.publicList" :key="index">
-                    <p class="content"><span class="date">{{ notice.postTime | formatDate }}</span><a :href="notice.referUrl" target="_blank" class="more"><span style="margin-left:36px;" v-html="notice.title"></span></a></p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div v-else>
-              <div class="panel-body">
-                <h4>{{ $t('label.anno') }}</h4>
-                <div style="height: 82px;">
-                  <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
-                </div>
-              </div>
-            </div>
+
+            <!-- 媒体报道 -->
+            <!--<div id="media" class="panel-body" v-if="showList && showList.length > 0">-->
+              <!--<h4 class="sub-title">{{ $t('label.media') }}</h4>-->
+              <!--<div class="sub-content">-->
+                <!--<ul class="list-unstyled media-list">-->
+                  <!--<li class="clearfix" v-for="(report, index) in showList" :key="index">-->
+                    <!--<p style="float: right;font-size:12px;color:#A1A1A1;margin-right:28px;">来自 {{ report.name }}</p>-->
+                    <!--<p class="content"><span >{{ report.releaseTime | formatDate }}</span><a :href="report.linkUrl" target="_blank" class="more"><span class= "title" v-html="report.title"></span></a></p>-->
+                  <!--</li>-->
+                  <!--<div v-if="info.reportList.length > 3"  style="text-align:center;color: #A1A1A1;font-size:12px;" @click="show" class="show-more">{{word}}</div>-->
+                <!--</ul>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div v-else id="media" class="panel-body">-->
+              <!--<h4>{{ $t('label.media') }}</h4>-->
+              <!--<div style="height: 82px;">-->
+                <!--<p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>-->
+              <!--</div>-->
+            <!--</div>-->
+            
+            <!-- 官方公告 -->
+            <!--<div id="offical" class="panel-body" v-if="info.publicList && info.publicList.length">-->
+              <!--<h4 class="sub-title">{{ $t('label.anno') }}</h4>-->
+              <!--<div class="sub-content">-->
+                <!--<ul class="list-unstyled notice-list">-->
+                  <!--<li class="clearfix" v-for="(notice, index) in info.publicList" :key="index">-->
+                    <!--<p class="content"><span class="date">{{ notice.postTime | formatDate }}</span><a :href="notice.referUrl" target="_blank" class="more"><span style="margin-left:36px;" v-html="notice.title"></span></a></p>-->
+                  <!--</li>-->
+                <!--</ul>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div v-else id="offical" class="panel-body">-->
+              <!--<h4>{{ $t('label.anno') }}</h4>-->
+              <!--<div style="height: 82px;">-->
+                <!--<p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>-->
+              <!--</div>-->
+            <!--</div>-->
+
+            <!-- 社区发布 -->
             <div id="community" class="panel-body" v-if="info.dynamicList && info.dynamicList.length">
               <h4 class="sub-title">{{ $t('label.comm_anno') }}</h4>
               <div class="sub-content community">
@@ -259,14 +263,13 @@
                 </div>
               </div>
             </div>
-            <div v-else>
-              <div class="panel-body">
-                <h4>{{ $t('label.comm_anno') }}</h4>
-                <div style="height: 82px;">
-                  <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
-                </div>
+            <div v-else id="community" class="panel-body">
+              <h4>{{ $t('label.comm_anno') }}</h4>
+              <div style="height: 82px;">
+                <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
               </div>
             </div>
+
           </div>
         </div>
         <!-- <div class="col-md-4 col">
@@ -331,7 +334,6 @@ export default {
       reports: [],
       showList: [],
       ctx: "",
-      activeName: "info",
       swiperOption: {
         autoplay: true
       },
@@ -342,22 +344,14 @@ export default {
         { text: "项目信息", target: "#info", active: true },
         { text: "团队信息", target: "#team", active: false },
         { text: "项目发展", target: "#develop", active: false },
-        { text: "合作伙伴", target: "#partner", active: false }
+        { text: "合作伙伴", target: "#partner", active: false },
+        { text: "社区发布", target: "#community", active: false }
       ],
       e_infoList: [
         { text: "Project Information", target: "#info", active: true },
         { text: "Team Information", target: "#team", active: false },
         { text: "Project Development", target: "#develop", active: false },
-        { text: "Cooperative Partner", target: "#partner", active: false }
-      ],
-      dynamicList: [
-        { text: "媒体报道", target: "#media", active: true },
-        { text: "官方发布", target: "#offical", active: false },
-        { text: "社区发布", target: "#community", active: false }
-      ],
-      e_dynamicList: [
-        { text: "Media Coverage", target: "#media", active: true },
-        { text: "Official Announcement", target: "#offical", active: false },
+        { text: "Cooperative Partner", target: "#partner", active: false },
         { text: "Community Release", target: "#community", active: false }
       ]
     };
@@ -410,7 +404,8 @@ export default {
       item.active = true;
     },
     circleProgress(value,average){
-      var canvas = document.getElementById("redcircle");    
+      var canvas = document.getElementById("redcircle");  
+      if (!canvas) return
       var context = canvas.getContext('2d');    
       var _this = $(canvas),
       value= value,// 当前百分比,数值

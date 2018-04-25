@@ -94,14 +94,14 @@
             <tbody>
               <tr v-for="item in list" :key="item.id">
                 <td class="text-center" v-if="language === 'cn'">
-                  <a href="javascript:;" :style="item.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" :title="['关注', '取消关注'][item.focusStatus]" @click="handleFav(item)">
-                    <i class="icon-bcv" :class="{'icon-heart': item.focusStatus == 0, 'icon-heart-fill': item.focusStatus == 1}"></i>
-                  </a>
+                  <!--<a href="javascript:;" :style="item.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" :title="['关注', '取消关注'][item.focusStatus]" @click="handleFav(item)">-->
+                    <!--<i class="icon-bcv" :class="{'icon-heart': item.focusStatus == 0, 'icon-heart-fill': item.focusStatus == 1}"></i>-->
+                  <!--</a>-->
                 </td>
                 <td class="text-center" v-else>
-                  <a href="javascript:;" :style="item.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" :title="['follow', 'unfollow'][item.focusStatus]" @click="handleFav(item)">
-                    <i class="icon-bcv" :class="{'icon-heart': item.focusStatus == 0, 'icon-heart-fill': item.focusStatus == 1}"></i>
-                  </a>
+                  <!--<a href="javascript:;" :style="item.focusStatus ? 'color:#f10808;': 'color:#999'" class="text-dark" :title="['follow', 'unfollow'][item.focusStatus]" @click="handleFav(item)">-->
+                    <!--<i class="icon-bcv" :class="{'icon-heart': item.focusStatus == 0, 'icon-heart-fill': item.focusStatus == 1}"></i>-->
+                  <!--</a>-->
                 </td>
                 <td>
                   <router-link :to="`/discover/detail/${item.id}`">
