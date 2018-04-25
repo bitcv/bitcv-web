@@ -104,7 +104,7 @@ export default {
     this.fetchFinance()
   },
   methods: {
-    ...mapActions(['getDispenseBalance', 'getDispenseWallet', 'getDispenseFinance']),
+    ...mapActions(['getDispenseBalance', 'getDispenseFinance']),
     fetchBalance () {
       this.balanceLoad = true
       this.getDispenseBalance({
@@ -132,15 +132,6 @@ export default {
       //console.log(data)
       this.recSymbol = index
       
-    },
-    getWallet () {
-      this.loading = true
-      this.getDispenseWallet({
-        tokenProtocol: this.tokenProtocol
-      }).then((data = {}) => {
-        this.loading = false
-        this.walletAddr = data.walletAddr
-      })
     },
     onCopy (e) {
       this.$message.success('复制成功!')

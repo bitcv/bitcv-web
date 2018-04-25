@@ -158,7 +158,10 @@ export default {
   },
   computed: {
     sameToken () {
-      return this.tokenData.tokenId === this.feeTokenData.tokenId
+      var isSame =  parseInt(this.tokenData.tokenId) === parseInt(this.feeTokenData.tokenId)
+      console.log('sameToken')
+      console.log(isSame)
+      return isSame
     },
     tokenData () {
       console.log('orderData')
@@ -192,15 +195,19 @@ export default {
     },
     feeNeeded () {
       let diffAmount = this.orderData.totalCount * this.feeTokenData.price - this.feeTokenData.amount
+      console.log('feeNeeded')
+      console.log(diffAmount)
       return diffAmount > 0 ? diffAmount : 0
     },
     tokenNeeded () {
       let diffAmount = 0
       if (this.sameToken) {
-        diffAmount = this.orderData.totalAmount + this.feeTokenData.amount - this.tokenData.amount
+        diffAmount = this.orderData.totalAmount + this.orderData.totalCount * this.feeTokenData.price - this.tokenData.amount
       } else {
         diffAmount = this.orderData.totalAmount - this.tokenData.amount
       }
+      console.log('tokenNeeded')
+      console.log(diffAmount)
       return diffAmount > 0 ? diffAmount : 0
     }
   },
@@ -227,13 +234,15 @@ export default {
       })
     },
     toDeposit () {
-      this.rechargeLoad = true
+      this.loading = true
       this.getDispenseWallet({
         tokenProtocol: this.tokenProtocol
       }).then((data = {}) => {
         this.walletAddr = data.walletAddr
         this.isRecharge = true
-        this.rechargeLoad = false
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     },
     handleConfirm () {

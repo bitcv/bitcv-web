@@ -37,7 +37,7 @@
         </a>
         <ul v-if="hasToken" class="dropdown-menu">
 
-          <li><router-link to="/wallet" @click.native="dimissMenu">{{ $t('label.assets') }}</router-link></li>
+          <!--<li><router-link to="/wallet" @click.native="dimissMenu">{{ $t('label.assets') }}</router-link></li>-->
           <li><router-link to="/candyRoom/candyMyData" @click.native="dimissMenu">{{ $t('label.order') }}</router-link></li>
           <li><a href="javascript:;" @click="$emit('signout')">{{ $t('label.logout') }}</a></li>
 

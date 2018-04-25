@@ -103,6 +103,8 @@ export default {
         this.totalAmount = data.totalAmount
         this.contractAddr = data.contractAddr
         this.tokenSymbol = data.tokenSymbol
+      }).catch(() => {
+        this.tableLoad = false
       })
     },
     maskStr (str, number) {

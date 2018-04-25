@@ -124,6 +124,10 @@ export default {
           return alert('Please fill in the correct phone number')
         }
       }
+      var nation = this.selected
+      if (nation.substr(0, 1) === '+') {
+        nation = nation.substr(1)
+      }
       this.disableSms = true
       this.timerId = setInterval(() => {
         if (this.countDown <= 1) {
@@ -136,6 +140,7 @@ export default {
         }
       }, 1000)
       this.$http.post('/api/getVcode', {
+        nation: nation,
         mobile: this.mobile
       }).then(function (res) {
         var resData = res.data
