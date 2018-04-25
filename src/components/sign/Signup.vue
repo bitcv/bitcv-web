@@ -49,8 +49,19 @@ export default {
       },
       e_nations: {
         '+65': 'Singapore (+65)', '+1': 'United States/Canada (+1)', '+61': 'Australia (+61)', '+81': 'Japan (+81)', '+82': 'Korea, South (+82)', '+86': 'China (+86)', '+852': 'Hong Kong (+852)', '+856': 'Laos (+856)', '+886': 'Taiwan (+886)', '+93': 'Afghanistan (+93)', '+355': 'Albania (+355)', '+213': 'Algeria (+213)', '+684': 'American Samoa (+684)', '+376': 'Andorra (+376)', '+244': 'Angola (+244)', '+1264': 'Anguilla (+1264)', '+672': 'Antarctica (+672)', '+1268': 'Antigua and Barbuda (+1268)', '+54': 'Argentina (+54)', '+374': 'Armenia (+374)', '+297': 'Aruba (+297)', '+43': 'Austria (+43)', '+994': 'Azerbaijan (+994)', '+973': 'Bahrain (+973)', '+880': 'Bangladesh (+880)', '+1246': 'Barbados (+1246)', '+375': 'Belarus (+375)', '+32': 'Belgium (+32)', '+501': 'Belize (+501)', '+229': 'Benin (+229)', '+1441': 'Bermuda (+1441)', '+975': 'Bhutan (+975)', '+591': 'Bolivia (+591)', '+387': 'Bosnia and Herzegovina (+387)', '+267': 'Botswana (+267)', '+55': 'Brazil (+55)', '+1284': 'British Virgin Islands (+1284)', '+673': 'Brunei Darussalam (+673)', '+359': 'Bulgaria (+359)', '+226': 'Burkina Faso (+226)', '+95': 'Burma (+95)', '+257': 'Burundi (+257)', '+855': 'Cambodia (+855)', '+237': 'Cameroon (+237)', '+238': 'Cape Verde (+238)', '+1345': 'Cayman Islands(+1345)', '+236': 'Central African Republic (+236)', '+235': 'Chad (+235)', '+56': 'Chile (+56)', '+57': 'Colombia (+57)', '+269': 'Comoros (+269)', '+243': 'Congo, Democratic Republic of the (+243)', '+242': 'Congo, Republic of the (+242)', '+682': 'Cook Islands (+682)', '+506': 'Costa Rica (+506)', '+225': 'Cote d\'Ivoire (+225)', '+385': 'Croatia (+385)', '+53': 'Cuba (+53)', '+357': 'Cyprus (+357)', '+420': 'Czech Republic (+420)', '+45': 'Denmark (+45)', '+253': 'Djibouti (+253)', '+1767': 'Dominica (+1767)', '+1809': 'Dominican Republic (+1809)', '+593': 'Ecuador (+593)', '+20': 'Egypt (+20)', '+503': 'El Salvador (+503)', '+240': 'Equatorial Guinea(+240)', '+291': 'Eritrea (+291)', '+251': 'Ethiopia (+251)', '+500': 'Falkland Islands  (Islas Malvinas) (+500)', '+298': 'Faroe Islands (+298)', '+679': 'Fiji (+679)', '+358': 'Finland (+358)', '+33': 'France (+33)', '+594': 'French Guiana (+594)', '+689': 'French Polynesia (+689)', '+241': 'Gabon (+241)', '+995': 'Georgia (+995)', '+49': 'Germany (+49)', '+233': 'Ghana (+233)', '+350': 'Gibraltar (+350)', '+30': 'Greece (+30)', '+299': 'Greenland (+299)', '+1473': 'Grenada (+1473)', '+509': 'Guadeloupe (+590)', '+1671': 'Guam (+1671)', '+502': 'Guatemala (+502)', '+1481': 'Guernsey (+1481)', '+224': 'Guinea (+224)', '+245': 'Guinea-Bissau (+245)', '+592': 'Guyana (+592)', '+379': 'Holy See (+379)', '+504': 'Honduras (+504)', '+36': 'Hungary (+36)', '+354': 'Iceland (+354)', '+91': 'India (+91)', '+62': 'Indonesia (+62)', '+98': 'Iran (+98)', '+964': 'Iraq (+964)', '+353': 'Ireland (+353)', '+972': 'Israel (+972)', '+39': 'Italy (+39)', '+1876': 'Jamaica (+1876)', '+962': 'Jordan (+962)', '+73': 'Kazakhstan (+73)', '+254': 'Kenya (+254)', '+686': 'Kiribati (+686)', '+850': 'Korea, North (+850)', '+965': 'Kuwait (+965)', '+996': 'Kyrgyzstan (+996)', '+371': 'Latvia (+371)', '+961': 'Lebanon (+961)', '+266': 'Lesotho (+266)', '+231': 'Liberia (+231)', '+218': 'Libya (+218)', '+423': 'Liechtenstein (+423)', '+370': 'Lithuania (+370)', '+352': 'Luxembourg (+352)', '+853': 'Macao (+853)', '+389': 'Macedonia, The Former Yugoslav Republic of (+389)', '+261': 'Madagascar (+261)', '+265': 'Malawi (+265)', '+60': 'Malaysia (+60)', '+960': 'Maldives (+960)', '+223': 'Mali (+223)', '+356': 'Malta (+356)', '+692': 'Marshall Islands (+692)', '+596': 'Martinique (+596)', '+222': 'Mauritania (+222)', '+230': 'Mauritius (+230)', '+52': 'Mexico (+52)', '+691': 'Micronesia, Federated States of (+691)', '+373': 'Moldova (+373)', '+377': 'Monaco (+377)', '+976': 'Mongolia (+976)', '+1664': 'Montserrat (+1664)', '+212': 'Morocco(+212)', '+258': 'Mozambique (+258)', '+264': 'Namibia (+264)', '+674': 'Nauru (+674)', '+977': 'Nepal (+977)', '+31': 'Netherlands (+31)', '+599': 'Netherlands Antilles (+599)', '+687': 'New Caledonia (+687)', '+64': 'New Zealand (+64)', '+505': 'Nicaragua (+505)', '+227': 'Niger (+227)', '+234': 'Nigeria (+234)', '+683': 'Niue (+683)', '+6723': 'Norfolk Island (+6723)', '+47': 'Norway (+47)', '+968': 'Oman (+968)', '+92': 'Pakistan (+92)', '+680': 'Palau (+680)', '+507': 'Panama (+507)', '+675': 'Papua New Guinea (+675)', '+595': 'Paraguay (+595)', '+51': 'Peru (+51)', '+63': 'Philippines (+63)', '+48': 'Poland (+48)', '+351': 'Portugal (+351)', '+974': 'Qatar (+974)', '+262': 'Reunion (+262)', '+40': 'Romani (+40)', '+7': 'Russia (+7)', '+250': 'Rwanda (+250)', '+290': 'Saint Helena (+290)', '+1869': 'Saint Kitts and Nevis (+1869)', '+1758': 'Saint Lucia (+1758)', '+508': 'Saint Pierre and Miquelon (+508)', '+1784': 'Saint Vincent and the Grenadines (+1784)', '+685': 'Samoa (+685)', '+378': 'San Marino (+378)', '+239': 'Sao Tome and Principe(+239)', '+966': 'Saudi Arabia (+966)', '+221': 'Senegal (+221)', '+381': 'Serbia and Montenegro (+381)', '+248': 'Seychelles (+248)', '+232': 'Sierra Leone (+232)', '+421': 'Slovakia (+421)', '+386': 'Slovenia (+386)', '+677': 'Solomon Islands (+677)', '+252': 'Somalia (+252)', '+27': 'South Africa (+27)', '+34': 'Spain (+34)', '+94': 'Sri Lanka (+94)', '+247': 'Sudan (+249)', '+597': 'Suriname (+597)', '+268': 'Swaziland (+268)', '+46': 'Sweden (+46)', '+41': 'Switzerland (+41)', '+963': 'Syria (+963)', '+992': 'Tajikistan (+992)', '+255': 'Tanzania (+255)', '+66': 'Thailand (+66)', '+1242': 'The Bahamas (+1242)', '+220': 'The Gambia (+220)', '+228': 'Togo (+228)', '+690': 'Tokelau (+690)', '+676': 'Tonga (+676)', '+1868': 'Trinidad and Tobago (+1868)', '+216': 'Tunisia (+216)', '+90': 'Turkey (+90)', '+993': 'Turkmenistan (+993)', '+1649': 'Turks and Caicos Islands (+1649)', '+688': 'Tuvalu (+688)', '+256': 'Uganda (+256)', '+380': 'Ukraine (+380)', '+971': 'United Arab Emirates (+971)', '+44': 'United Kingdom (+44)', '+598': 'Uruguay (+598)', '+998': 'Uzbekistan (+998)', '+678': 'Vanuatu (+678)', '+58': 'Venezuela (+58)', '+84': 'Vietnam (+84)', '+1340': 'Virgin Islands（+1340）', '+681': 'Wallis and Futuna (+681)', '+967': 'Yemen (+967)', '+260': 'Zambia (+260)', '+263': 'Zimbabwe (+263)'
-      }
+      },
+      captcha: null, //待初始化的图形验证码插件
+      ticket: null, // 图形验证码票据
+      randstr: null // 图形验证码随机字符串
     }
+  },
+  mounted () {
+    // 初始化图形验证码
+    this.captcha = new TencentCaptcha('2040862605', res => {
+      this.ticket = res.ticket
+      this.randstr = res.randstr
+      this.getVcode()
+    })
   },
   methods: {
     signup () {
@@ -128,27 +139,40 @@ export default {
       if (nation.substr(0, 1) === '+') {
         nation = nation.substr(1)
       }
-      this.disableSms = true
-      this.timerId = setInterval(() => {
-        if (this.countDown <= 1) {
-          clearInterval(this.timerId)
-          this.disableSms = false
-          this.timerId = ''
-          this.countDown = 60
-        } else {
-          this.countDown--
-        }
-      }, 1000)
+
+      // 加入图形验证码校验
+      if (!this.ticket) {
+        return this.captcha.show()
+      }
+
       this.$http.post('/api/getVcode', {
         nation: nation,
-        mobile: this.mobile
-      }).then(function (res) {
+        mobile: this.mobile,
+        ticket: this.ticket,
+        randstr: this.randstr,
+        type: 'reg'
+      }).then(res => {
         var resData = res.data
         if (resData.errcode === 0) {
+          this.disableSms = true
+          this.timerId = setInterval(() => {
+            if (this.countDown <= 1) {
+              clearInterval(this.timerId)
+              this.disableSms = false
+              this.timerId = ''
+              this.countDown = 60
+            } else {
+              this.countDown--
+            }
+          }, 1000)
         } else {
+          this.ticket = null
+          this.randstr = null
           alert(resData.errmsg)
         }
-      }).catch(function (err) {
+      }).catch(err => {
+        this.ticket = null
+        this.randstr = null
         console.log(err)
       })
     },

@@ -47,6 +47,29 @@ export default {
       return this.$i18n.locale
     }
   },
+  mounted () {
+    // 初始化图形验证码
+    this.captcha = new TencentCaptcha('2040862605', res => {
+      // 人机校验完毕，请求后端校验
+      this.$http.post('/api/passHunmanVerifyTest', {
+        mobile: this.mobile,
+        ticket: res.ticket,
+        randstr: res.randstr
+      })
+        .then(res => {
+          var resData = res.data
+          if (resData.errcode === 0) {
+            // 校验成功，重试登录
+            this.signin()
+          } else {
+            return Promise.reject(res.data.errmsg)
+          }
+        })
+        .catch(error => {
+          alert(error.toString())
+        })
+    })
+  },
   methods: {
     ...mapMutations(['updateUserInfo']),
     signin () {
@@ -65,25 +88,31 @@ export default {
           return alert('Account or password is wrong')
         }
       }
+
       var that = this
       this.$http.post('/api/signin', {
         mobile: this.mobile,
         passwd: this.passwd
-      }).then(function (res) {
-        var resData = res.data
-        if (resData.errcode === 0) {
-          // localStorage.setItem('userId', resData.data.userId)
-          // localStorage.setItem('mobile', resData.data.mobile)
-          // localStorage.setItem('avatarUrl', resData.data.avatarUrl)
-          // that.$root.eventHub.$emit('checkLoginStatus')
-          that.updateUserInfo(resData.data)
-          that.$router.push('/')
-        } else {
-          alert(resData.errmsg)
-        }
-      }).catch(function (err) {
-        console.log(err)
       })
+        .then(res => {
+          var resData = res.data
+          if (resData.errcode === 0) {
+            // localStorage.setItem('userId', resData.data.userId)
+            // localStorage.setItem('mobile', resData.data.mobile)
+            // localStorage.setItem('avatarUrl', resData.data.avatarUrl)
+            // that.$root.eventHub.$emit('checkLoginStatus')
+            that.updateUserInfo(resData.data)
+            that.$router.push('/')
+          } else if (resData.errcode === 218) {
+            // 218 登录失败次数过多，请先输入验证码
+            this.captcha.show()
+          } else {
+            return Promise.reject(res.data.errmsg)
+          }
+        })
+        .catch(error => {
+          alert(error.toString())
+        })
     }
   }
 }
