@@ -161,6 +161,8 @@ export default {
               this.disableSms = false
               this.timerId = ''
               this.countDown = 60
+              this.ticket = null
+              this.randstr = null
             } else {
               this.countDown--
             }
