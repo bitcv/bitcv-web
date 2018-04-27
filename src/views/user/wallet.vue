@@ -104,11 +104,12 @@ export default {
       })
     },
     checkAuth (tokenSymbol) {
-      if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST' || tokenSymbol === 'ETH' || tokenSymbol === 'BTC' || tokenSymbol === 'DOGE' || tokenSymbol === 'NEO' || tokenSymbol === 'KCASH') {
-        return true
-      } else {
-        return false
-      }
+      return false;
+      // if (tokenSymbol === 'BCV' || tokenSymbol === 'EOS' || tokenSymbol === 'PXC' || tokenSymbol === 'ICST' || tokenSymbol === 'ETH' || tokenSymbol === 'BTC' || tokenSymbol === 'DOGE' || tokenSymbol === 'NEO' || tokenSymbol === 'KCASH') {
+        // return true
+      // } else {
+        // return false
+      // }
     },
     onPageClick (pageno) {
       this.pageno = pageno
