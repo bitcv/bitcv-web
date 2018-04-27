@@ -32,7 +32,7 @@
               <td><span class="text-gray small">{{item.buyTime}}</span></td>
               <td>
                 <span v-if="item.status === 1">等待中</span>
-                <button v-else-if="item.status === 2" class="btn btn-warning">提取</button>
+                <button v-else-if="item.status === 2" class="btn btn-warning" @click="toWithdraw(item)">提取</button>
                 <span v-else-if="item.status === 3">已提取</span>
               </td>
             </tr>
@@ -149,6 +149,31 @@ export default {
     onPageClick (page) {
       this.currentPage = page
       this.fetch()
+    },
+    toWithdraw (item) {
+      console.log(item)
+      if (item.userAddr) {
+        this.$confirm('您的余币宝本金和利息将返还至' + item.userAddr + ', 请核对地址信息，由于地址信息错误造成的损失，本平台概不负责，确认提取余币宝?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.post('/api/depositWithdraw', {
+            userDepositBoxId: item.id,
+            toAddr: item.userAddr
+          }).then(res => {
+            if (res.data.errcode === 0) {
+              this.$message({
+                type: 'success',
+                message: '提交成功!'
+              })
+              this.fetch()
+            } else {
+              alert(res.data.errmsg)
+            }
+          })
+        })
+      }
     }
   }
 }
