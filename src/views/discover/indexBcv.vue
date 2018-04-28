@@ -45,7 +45,7 @@
             <h2 class="title">{{ $t('label.bci30_ctn') }}</h2>
 
             <ul class="token-list clearfix">
-              <li v-for='item in bci30_ctn' :key='item' class="token-item">{{ item }}</li>
+              <li v-for='item in bci30_ctn' :key='item' class="token-item" @click="redirect(item)">{{ item }}</li>
             </ul>
           </div>
 
@@ -53,7 +53,7 @@
             <h2 class="title">{{ $t('label.bci150_ctn') }}</h2>
 
             <ul class="token-list clearfix">
-              <li v-for='item in bci150_ctn' :key='item' class="token-item">{{ item }}</li>
+              <li v-for='item in bci150_ctn' :key='item' class="token-item" @click="redirect(item)">{{ item }}</li>
             </ul>
           </div>
 
@@ -107,8 +107,19 @@ export default {
   },
   methods: {
     ...mapActions([
-      'getIndexBcv'
+      'getIndexBcv', 'toProject'
     ]),
+    redirect (symbol) {
+      console.log('click')
+      this.toProject({
+        symbol: symbol
+      }).then((data) => {
+        let projId = data.projId
+        if (projId) {
+          this.$router.push('/discover/detail/' + projId)
+        }
+      })
+    },
     refreshIndexBcv () {
       // 获取币威指数
       this.getIndexBcv()
@@ -230,6 +241,7 @@ export default {
   .token-list {
     margin-top: 20px;
     .token-item {
+      cursor: pointer;
       box-sizing: border-box;
       margin: 4px 8px;
       float: left;

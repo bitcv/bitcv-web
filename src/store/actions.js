@@ -178,3 +178,6 @@ export const getUserTaskList = (store, params) => {
 export const getIndexBcv = (store, params) => {
   return post('/api/getIndexBcv', params)
 }
+export const toProject = (store, params) => {
+  return post('/api/toProject', params)
+}
