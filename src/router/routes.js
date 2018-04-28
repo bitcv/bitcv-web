@@ -27,6 +27,13 @@ export default [{
     title: '项目详情--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
+  // 币威指数
+  path: '/discover/indexBcv',
+  component: getViews('discover/indexBcv'),
+  meta: {
+    title: '币威指数--BitCV-区块链数字资产管理服务引擎'
+  }
+}, {
   // 钱包
   path: '/wallet',
   component: getViews('user/wallet'),

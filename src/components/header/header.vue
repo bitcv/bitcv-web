@@ -3,27 +3,6 @@
     <div class="container">
       <div @click="toggleLang" class="switchlang" style="float: right;line-height: 50px;padding-left: 10px;"><span :class="{ activeaa : language === 'cn' }">CN</span>／<span :class="{ activeaa : language === 'en' }">EN</span></div>
       <!--<a href="javascrpt:''" @click="toggleLang" style="position:absolute;right:280px;top:15px;color:#FFF">{{ $t('label.lang') }}</a>-->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" :class="{collapsed: !showSide}" @click="navbarToggle">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-
-        <router-link to="/" class="navbar-brand">
-          <img src="/static/img/brand.png" alt="BitCV" height="30" class="hidden-xs hidden-sm">
-          <img src="/static/img/brand-mobile.png" alt="BitCV" height="30" class="hidden-md hidden-lg">
-        </router-link>
-      </div>
-
-      <div v-if="!hasToken" class="navbar-right hidden-sm hidden-xs" style="margin-right:0;">
-        <router-link class="btn navbar-btn btn-default btn-outline" to="/signup">{{ $t('label.registered') }}</router-link>
-
-        <span>&nbsp;&nbsp;</span>
-        <router-link class="btn navbar-btn btn-default btn-outline" to="/signin">{{ $t('label.login') }}</router-link>
-      </div>
 
       <div class="dropdown navbar-right" :class="{open: showDropdown}" @mouseenter="onMouseenter" @mouseleave="onMouseleave" style="margin-right:0">
         <a
@@ -46,6 +25,28 @@
           <li><router-link to="/signin" @click.native="dimissMenu">{{ $t('label.login') }}</router-link></li>
           <li><router-link to="/signup" @click.native="dimissMenu">{{ $t('label.registered') }}</router-link></li>
         </ul>
+      </div>
+
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" :class="{collapsed: !showSide}" @click="navbarToggle">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <router-link to="/" class="navbar-brand">
+          <img src="/static/img/brand.png" alt="BitCV" height="30" class="hidden-xs hidden-sm">
+          <img src="/static/img/brand-mobile.png" alt="BitCV" height="30" class="hidden-md hidden-lg">
+        </router-link>
+      </div>
+
+      <div v-if="!hasToken" class="navbar-right hidden-sm hidden-xs" style="margin-right:0;">
+        <router-link class="btn navbar-btn btn-default btn-outline" to="/signup">{{ $t('label.registered') }}</router-link>
+
+        <span>&nbsp;&nbsp;</span>
+        <router-link class="btn navbar-btn btn-default btn-outline" to="/signin">{{ $t('label.login') }}</router-link>
       </div>
 
       <div class="collapse navbar-collapse" :class="{'in': showSide}">
@@ -238,11 +239,6 @@ export default {
       transform: translateX(-50%);
     }
   }
-  .navbar-inverse .dropdown {
-    position: absolute;
-    top: 0;
-    right: 15px;
-  }
   .navbar-inverse .dropdown-toggle {
     float: right;
   }
@@ -335,7 +331,7 @@ export default {
 }
 @media (min-width: 992px) {
   .navbar-inverse .navbar-nav {
-    margin-left: 25%;
+    margin-left: 4%;
   }
 }
 </style>

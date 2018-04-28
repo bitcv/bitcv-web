@@ -171,7 +171,14 @@ const messages = {
       confirm_recharge: '请确认充值数量',
       coin_address: '请输入相应币种的钱包地址',
       ybbhuibao: '余币宝回报',
-      nopeople: '暂时没人发起余币宝计划'
+      nopeople: '暂时没人发起余币宝计划',
+      bci: '币威指数',
+      last_update_time: '上次更新时间',
+      bci_more: '指数介绍',
+      bci_intro: '指数介绍',
+      bci30_ctn: '币威30指数（BCI30）成分币列表',
+      bci150_ctn: '币威150指数（BCI150）成分币列表',
+      bciReserve: '币威指数备选币列表'
     }
   },
   // 英文
@@ -181,6 +188,7 @@ const messages = {
       home: 'Home',
       discover: 'Explore',
       ybb: 'EncryptoMore',
+      dfb: 'AutoTransfer',
       login: 'Login',
       registered: 'Register',
       section_title: 'More Token, More Fortune',
@@ -321,7 +329,14 @@ const messages = {
       confirm_recharge: 'Please confirm the amount of recharge',
       coin_address: 'Please enter the wallet address for the currency',
       ybbhuibao: 'EncryptoMore Return',
-      nopeople: 'No one has initiated encryptoMore plan yet'
+      nopeople: 'No one has initiated encryptoMore plan yet',
+      bci: 'BCI Index',
+      last_update_time: 'Last Update',
+      bci_more: 'more',
+      bci_intro: 'Introduction',
+      bci30_ctn: 'BCI 30 Component',
+      bci150_ctn: 'BCI 150 Component',
+      bciReserve: 'Reserve List'
     }
   }
 }

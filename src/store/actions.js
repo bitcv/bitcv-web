@@ -64,7 +64,7 @@ export const updateFocus = (store, params) => {
   return post('/api/toggleFocus', params)
 }
 
-//获取BV指数
+// 获取BV指数
 export const getScore = (store, params) => {
   return post('/api/getAverageScore', params)
 }
@@ -172,4 +172,9 @@ export const getDispenseList = (store, params) => {
 // 获取用户任务列表
 export const getUserTaskList = (store, params) => {
   return post('/api/getUserTaskList', params)
+}
+
+// 获取币威指数
+export const getIndexBcv = (store, params) => {
+  return post('/api/getIndexBcv', params)
 }
