@@ -176,8 +176,8 @@ const messages = {
       last_update_time: '上次更新时间',
       bci_more: '指数介绍',
       bci_intro: '指数介绍',
-      bci30_ctn: '币威30指数（BCI30）成分币列表',
-      bci150_ctn: '币威150指数（BCI150）成分币列表',
+      bci30_ctn: '币威30指数（BCI 30）成分币列表',
+      bci150_ctn: '币威150指数（BCI 150）成分币列表',
       bciReserve: '币威指数备选币列表'
     }
   },
