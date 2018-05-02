@@ -253,6 +253,12 @@ export default {
       border: solid 1px #ddd;
       border-radius: 14px;
       background-color: #f5f5f5;
+      transition: all .2s;
+      &:hover {
+        color: #fff;
+        background-color: #fdb76e;
+        border-color: #fdb76e;
+      }
     }
   }
 }
