@@ -28,6 +28,9 @@
         <b>{{bitcv.lockTime}}<span> {{ $t('label.day') }}</span></b>
         <p>{{ $t('label.lock') }}</p>
       </div>
+      <div class="extra-text" v-if="bitcv.tokenSymbol == 'HT'">
+        <p>本余币宝由 HT 生态基金官方认可，币威社区联同玄绝禅院、布谷社区联合发布。</p>
+      </div>
     </div>
 
     <!-- 内容 -->
@@ -108,6 +111,12 @@ export default {
     background: #fcf7f1;
     padding: 30px 0 25px 0;
     box-sizing: border-box;
+    position: relative;
+    .extra-text {
+      position: absolute;
+      bottom: -5px;
+      left: 38px;
+    }
     .col-md-3{
       padding-top: 10px;
       &:nth-child(1){
