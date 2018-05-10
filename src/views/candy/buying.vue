@@ -38,11 +38,12 @@
           <input type="number" class="form-control" id="number" :placeholder="$t('label.p_in')" min="1" v-model="form.number">
           <span v-if="numberError">{{ $t('label.bigger') }}</span>
         </div>
+        <div class="col-md-2 decimal">.{{form.decimal}}</div>
         <div class="col-md-2">——></div>
         <div class="form-group col-md-4">
            <label for="report">{{ $t('label.ybbhuibao') }}</label>
           <!-- <input type="number" class="form-control" id="report" placeholder="请输入" min="1" v-model="form.report"> -->
-          <input type="number" class="form-control" id="report" :placeholder="$t('label.p_in')" min="1" readonly :value="getInterest(form.number, bitcv.interestRate, bitcv.lockTime)">
+          <input type="number" class="form-control" id="report" :placeholder="$t('label.p_in')" min="1" readonly :value="getInterest(parseInt(form.number) + parseFloat('0.'+form.decimal), bitcv.interestRate, bitcv.lockTime)">
         </div>
         <div class="col-md-10 buying-form-submit">
           <button class="btn btn-warning" @click="handleSubmit">{{ $t('label.order_now') }}</button>
@@ -58,13 +59,15 @@ export default {
     return {
       bitcv: {},
       form: {
-        number: ''
+        number: '',
+        decimal: ''
       },
       numberError: ''
     }
   },
   created () {
     this.fetch()
+    this.form.decimal = Math.floor(Math.random() * 10000)
   },
   methods: {
     fetch () {
@@ -73,11 +76,12 @@ export default {
     },
     handleSubmit () {
       this.numberError = ''
-      if (this.form.number < parseInt(this.bitcv.minAmount)) {
+      var number = parseInt(this.form.number) + parseFloat('0.' + this.form.decimal)
+      if (number < parseInt(this.bitcv.minAmount)) {
         this.numberError = 'has-error'
       } else {
-        this.bitcv.number = this.form.number
-        this.bitcv.report = this.getInterest(this.form.number, this.bitcv.interestRate, this.bitcv.lockTime)
+        this.bitcv.number = number
+        this.bitcv.report = this.getInterest(number, this.bitcv.interestRate, this.bitcv.lockTime)
         this.$router.push({
           path: '/candyRoom/candyOrder',
           query: this.bitcv
@@ -142,6 +146,11 @@ export default {
     padding: 40px 48px;
     .col-md-4, .col-md-10{
       padding: 0;
+    }
+    .decimal {
+      text-align: left !important;
+      position: relative;
+      top: 20px;
     }
     .col-md-2{
       text-align: center;
