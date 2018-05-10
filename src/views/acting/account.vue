@@ -10,7 +10,7 @@
           <el-table-column prop="amount" label="账户余额"></el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="warning" size="small" style="color:#fff;"  @click="recharge(scope.row.symbol)">充值</el-button>
+              <el-button type="warning" size="small" style="color:#fff;"  @click="recharge(scope.row.walletAddr)">充值</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -100,7 +100,6 @@ export default {
   },
   mounted () {
     this.fetchBalance()
-    this.getWallet()
     this.fetchFinance()
   },
   methods: {
@@ -126,11 +125,12 @@ export default {
       })
     },
     recharge (index) {
+      this.walletAddr = index
       this.showDialog = true
       //console.log(index)
       //var data = this.assetList[index]
       //console.log(data)
-      this.recSymbol = index
+      //this.recSymbol = index
       
     },
     onCopy (e) {
