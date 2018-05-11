@@ -49,7 +49,7 @@
                   </span>
                 </span>
               </td>
-              <td>{{convertDate(item.orderTime)}}</td>
+              <td>{{item.orderTime}}</td>
               <td>{{item.orderAmount}}</td>
               <td>{{item.lockTime}} {{ $t('label.day') }}</td>
               <td>{{(item.interestRate * item.orderAmount * item.lockTime / 365).toFixed(3)}} {{ $t('label.coin_amount') }}</td>
@@ -103,7 +103,7 @@
               <div class="xs-detail" v-if="item.isDetail">
                 <p>
                   <span>{{ $t('label.order_time') }}：</span>
-                  {{ convertDate(item.orderTime) }} {{ $t('label.day') }}
+                  {{ item.orderTime }} {{ $t('label.day') }}
                 </p>
                 <p>
                   <span>{{ $t('label.lock') }}：</span>
