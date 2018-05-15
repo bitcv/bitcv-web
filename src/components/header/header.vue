@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-inverse navbar-static-top">
     <div class="container">
-      <div @click="toggleLang" class="switchlang" style="float: right;line-height: 50px;padding-left: 10px;"><span :class="{ activeaa : language === 'cn' }">CN</span>／<span :class="{ activeaa : language === 'en' }">EN</span></div>
+      <div class="switchlang" style="float: right;line-height: 50px;padding-left: 10px;"><span :class="{ activeaa : language === 'cn' }" @click="changeLan('cn')">CN</span>・<span :class="{ activeaa : language === 'en' }" @click="changeLan('en')">EN</span>・<span :class="{ activeaa : language === 'jp' }" @click="changeLan('jp')">JP</span></div>
       <!--<a href="javascrpt:''" @click="toggleLang" style="position:absolute;right:280px;top:15px;color:#FFF">{{ $t('label.lang') }}</a>-->
 
       <div class="dropdown navbar-right" :class="{open: showDropdown}" @mouseenter="onMouseenter" @mouseleave="onMouseleave" style="margin-right:0">
@@ -159,6 +159,9 @@ export default {
       if (this.showDropdown) {
         this.showDropdown = false
       }
+    },
+    changeLan (params) {
+      this.$i18n.locale = params
     }
   },
   mounted () {

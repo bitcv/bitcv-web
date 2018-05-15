@@ -44,7 +44,7 @@
             </dl>
           </div>
 
-          <div class="panel-body filter-list" v-else>
+          <div class="panel-body filter-list" v-else-if="language === 'en'">
             <dl class="dl-horizontal">
               <dt>{{ enregion.label }}</dt>
               <dd>
@@ -79,6 +79,43 @@
               </dd>
             </dl>
           </div>
+
+          <div class="panel-body filter-list" v-else>
+            <dl class="dl-horizontal">
+              <dt>{{ jpregion.label }}</dt>
+              <dd>
+                <a href="javascript:;"
+                   v-for="item in jpregion.optionList"
+                   :key="item.value"
+                   :class="{active: region.default == item.value}"
+                   @click="onFilterClick(region, item.value)"
+                >{{ item.label }}</a>
+              </dd>
+            </dl>
+            <dl class="dl-horizontal">
+              <dt>{{ jpbuzType.label }}</dt>
+              <dd>
+                <a href="javascript:;"
+                   v-for="item in jpbuzType.optionList"
+                   :key="item.value"
+                   :class="{active: buzType.default == item.value}"
+                   @click="onFilterClick(buzType, item.value)"
+                >{{ item.label }}</a>
+              </dd>
+            </dl>
+            <dl class="dl-horizontal">
+              <dt>{{ jpstage.label }}</dt>
+              <dd>
+                <a href="javascript:;"
+                   v-for="item in jpstage.optionList"
+                   :key="item.value"
+                   :class="{active: stage.default == item.value}"
+                   @click="onFilterClick(stage, item.value)"
+                >{{ item.label }}</a>
+              </dd>
+            </dl>
+          </div>
+
         </div>
         <div style="background-color: #fff;" v-loading="loading">
           <table class="table">
@@ -125,7 +162,8 @@
         <div class="panel panel-custom text-darker" style="min-height:200px;" v-loading="loading">
           <div class="panel-heading">
             <h4 v-if="language === 'cn'" class="panel-title">关注 TOP10</h4>
-            <h4 v-else class="panel-title">TOP10 Followings</h4>
+            <h4 v-else-if="language === 'en'" class="panel-title">TOP10 Followings</h4>
+            <h4 v-else class="panel-title">TOP10注目</h4>
           </div>
           <div class="list-group list-counter">
             <router-link class="list-group-item" v-for="item in focusList" :to="`/discover/detail/${item.projId}`" :key="item.projId">
@@ -137,7 +175,8 @@
         <div class="panel panel-custom text-darker" style="min-height:200px;" v-loading="loading">
           <div class="panel-heading">
             <h4 v-if="language === 'cn'" class="panel-title">浏览 TOP10</h4>
-            <h4 v-else class="panel-title">TOP10 Browsings</h4>
+            <h4 v-else-if="language === 'en'" class="panel-title">TOP10 Browsings</h4>
+            <h4 v-else class="panel-title">TOP10一覧</h4>
           </div>
           <div class="list-group list-counter">
             <router-link class="list-group-item" v-for="item in viewList" :to="`/discover/detail/${item.projId}`" :key="item.projId">
@@ -176,7 +215,10 @@ export default {
       currentPage: 1,
       enbuzType: {},
       enregion: {},
-      enstage: {}
+      enstage: {},
+      jpbuzType: {},
+      jpregion: {},
+      jpstage: {}
     }
   },
   computed: {
@@ -230,6 +272,18 @@ export default {
         this.enregion = enregion
         this.enstage = enstage
       })
+    this.getJpFilterParams()
+      .then((data = {}) => {
+          const {
+            jpstage = {},
+            jpregion = {},
+            jpbuzType = {}
+          } = data
+
+          this.jpbuzType = jpbuzType
+          this.jpregion = jpregion
+          this.jpstage = jpstage
+      })
     // 关注top10
     this.getTop10({type: 'focus', count: 10})
       .then((data = []) => (this.focusList = data))
@@ -249,7 +303,8 @@ export default {
       'getProList',
       'updateFocus',
       'getFilterParams',
-      'getEnFilterParams'
+      'getEnFilterParams',
+      'getJpFilterParams'
     ]),
     // 翻页
     onPageClick (page) {

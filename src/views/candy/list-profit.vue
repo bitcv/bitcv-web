@@ -1,11 +1,11 @@
 <template>
   <div v-loading="loading">
     <div class="nav">
-      <router-link :to="{path: '/candyRoom/candyList'}">余币宝</router-link> >
-      <router-link :to="'/'">收益明细</router-link>
+      <router-link :to="{path: '/candyRoom/candyList'}">{{ $t('label.ybb') }}</router-link> >
+      <router-link :to="'/'">{{ $t('label.profit_detail') }}</router-link>
     </div>
     <div class="panel panel-custom list-plan">
-      <h3>收益明细</h3>
+      <h3>{{ $t('label.profit_detail') }}</h3>
       <div class="list-box" v-if="list.length">
         <ul>
           <li v-for="item in list" :key="item.id">
@@ -25,7 +25,7 @@
       </div>
       <div v-else class="nodat">
         <!--<img src="/static/img/nodata.png" alt="无数据">-->
-        暂无收益
+        {{ $t('label.no_profit') }}
       </div>
     </div>
     <div class="text-right">

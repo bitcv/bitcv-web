@@ -33,11 +33,25 @@
               <p class="intro">币威150指数是市值最高，流动性最好的 180 只货币的后 150 只币，这些币的币值占数字货币市场总市值的 6% 到 8%，显示应用币等小币的整体行情。</p>
               <p class="intro">币威指数在币威官网 http://bitcv.com/ 发布，每五分钟更新一次，每过一个月调整一次成分币以及成分币的自由流通量，以流通市值和流动性为调整标准，同时筛除稳定币成分，定位于交易性成分指数。在成分币调整时采用缓冲区技术，保证成分币的稳定性。</p>
             </div>
-            <div v-else class="intro-wrap">
+            <div v-else-if="language == 'en'" class="intro-wrap">
               <p class="intro">The Bit Capital Index 30 and the Bit Capital Index 150 (known as the BCI) are a set of indexes released by Bit Capital Vendor in April 2018 to reflect the overall picture of the cryptocurrency exchange market. The BCV group uses an objective and scientific method to calculate BCI. After eliminating stable currencies, we select the cryptocurrency with the largest market cap and the best liquidity in qualified exchanges and uses the calculation method of the market-valued weighted index to show the changes of the overall market value. We do not artificially specify the weights of any cryptocurrency so that the BCI can truly reflect the market condition.</p>
               <p class="intro">The constituents of BCI 30 are 30 cryptocurrencies with the highest listing value and the best liquidity in the digital currency market. Their market value accounts for about 90% of the total market value. It contains widely recognized public chain tokens or tokens of technological innovation projects. Contained the 30 most popular cryptocurrency, BCI 30 can reflect the overall income situation of investors and investors' market expectations.</p>
               <p class="intro">The constituents of BCI 150 are 150 lowest-listing-value cryptocurrencies in 180 cryptocurrencies with highest market value and the best liquidity. The listing value of these cryptocurrencies accounts for 6% to 8% of the total market value, showing the overall performance of small market cap cryptocurrencies.</p>
               <p class="intro">The Bit Capital Indexes are published on the website http://bitcv.com/ and are updated every five minutes. The free circulation of constituent cryptocurrencies and constituent currency list will be adjusted every month. Also, a Buffer operation is used to adjust the component currency to ensure the stability of the index.</p>
+            </div>
+            <div v-else class="intro-wrap">
+              <p class="intro">
+                BCI30とBCI150（BCI指数：Bit Capital Index）とは、Bit Capital Vendorが2018年4月にリリースした仮想通貨の市場状況を反映する指数です。BCI指数は客観的で科学的な算定方法を使っています。安定した通貨を取り除き、取引所で時価・流通性の高い通貨を選定し、時価総額加重平均方式で算出しています。人為的通貨のウェイトを調整しないため、市場状況をリアルタイムで反映できます。具体的には、
+              </p>
+              <p class="intro">
+                BCI30とは、仮想通貨マーケットで時価総額90％の上位30種を指しています。一方、
+              </p>
+              <p class="intro">
+                BCI150とは時価・流通性上位30位〜180位の通貨を指しており、時価総額の6％を占めています。
+              </p>
+              <p class="intro">
+                BCI指数はBCVのホームページ http://bitcv.com/ でリアルタイムで更新されています（更新間隔：5分）。また、月一回通貨構成リストが調整されています（時価と流通性を基準）
+              </p>
             </div>
           </div>
 

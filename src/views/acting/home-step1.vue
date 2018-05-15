@@ -3,12 +3,12 @@
     <el-form v-if="!isUpload" :model="formData" :rules="formRule" ref="form" label-width="100px" class="form">
       <el-form-item>
         <el-radio-group v-model="formData.isTest">
-          <el-radio :label="0">正式发放</el-radio>
-          <el-radio :label="1">测试发放<small style="color: #ccc;">（测试时仅向前两个地址发放代币）</small></el-radio>
+          <el-radio :label="0">{{ $t('label.fafang') }}</el-radio>
+          <el-radio :label="1">{{ $t('label.ce_fafang') }}<small style="color: #ccc;">（{{ $t('label.ce_content') }}）</small></el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item class="inline-item select-item" label="发放类别">
-        <el-select v-model="formData.tokenType" placeholder="请选择" v-loading="selectLoad">
+      <el-form-item class="inline-item select-item" :label="$t('label.fa_leibie')">
+        <el-select v-model="formData.tokenType" :placeholder="$t('label.please_c')" v-loading="selectLoad">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
@@ -16,24 +16,24 @@
         <!-- <el-button style="color: #ccc;font-size:12px;margin-left:326px;" type="text" @click="findAddress">怎么查找合约地址？</el-button> -->
         <el-tooltip placement="top" effect="light" width="200">
           <div slot="content">1:访问以太网址<br/><a href="https://etherscan.io/tokens" target="_blank">https://etherscan.io/tokens</a><br/><br/>2:输入token名称查找<br><img src="/static/img/search.png" style="width:166px;height:22px;" alt=""></div>
-            <span style="color: #ccc;font-size:12px;margin-left:326px;">如何找到合约地址？</span>
+            <span style="color: #ccc;font-size:12px;margin-left:285px;">{{ $t('label.find_addr') }}</span>
         </el-tooltip>
-        <el-input v-if="tokenType === 0" class="step1-input" placeholder="请输入合约地址" @blur="getToken" v-model="formData.contractAddr">
+        <el-input v-if="tokenType === 0" class="step1-input" :placeholder="$t('label.he_addr')" @blur="getToken" v-model="formData.contractAddr">
           <span style="margin-right:10px;" slot="suffix" v-loading="tokenLoad">{{formData.tokenSymbol}}</span>
         </el-input>
       </el-form-item>
       <el-form-item>
         <el-checkbox style="color:#ccc" v-model="checked" ></el-checkbox>
         <!-- <el-button style = "text-align:center;color: #A1A1A1;" type="text" @click="open">用户协议</el-button> -->
-        <el-button style="color: #ccc;font-size:12px;" type="text" @click="open5">用户协议</el-button>
+        <el-button style="color: #ccc;font-size:12px;" type="text" @click="open5">{{ $t('label.user_shuoming') }}</el-button>
       </el-form-item>
-      <el-form-item label="获取模版">
-        <el-button type="warning" plain @click="fetchSample">点击下载</el-button>
+      <el-form-item :label="$t('label.acct_blade')">
+        <el-button type="warning" plain @click="fetchSample">{{ $t('label.click_down') }}</el-button>
       </el-form-item>
-      <el-form-item label="上传地址">
-        <el-tooltip class="item" effect="dark" content="请输入合约地址" :disabled="!uploadDisable" placement="bottom">
+      <el-form-item :label="$t('label.up_addr')">
+        <el-tooltip class="item" effect="dark" :content="$t('label.he_addr')" :disabled="!uploadDisable" placement="bottom">
           <el-upload class="upload-btn" name="addr" action="/api/parseAddrFile" :before-upload="handleBefore" :on-success="handleSuccess" :on-error="handleError" :data="formData" :disabled="uploadDisable" :show-file-list="false">
-            <el-button slot="trigger" type="warning" :disabled="disableFile" class="btn-primary">点击上传</el-button>
+            <el-button slot="trigger" type="warning" :disabled="disableFile" class="btn-primary">{{ $t('label.click_up') }}</el-button>
           </el-upload>
         </el-tooltip>   
       </el-form-item>
@@ -43,8 +43,8 @@
       <el-table :data="list" height="400" style="width: 100%">
         <el-table-column type="index"></el-table-column>
         <el-table-column  width="400" label="地址"><template slot-scope="scope">{{ scope.row.address }}</template></el-table-column>
-        <el-table-column label="数量"><template slot-scope="scope">{{ scope.row.amount }}</template></el-table-column>
-        <el-table-column label="状态"><template slot-scope="scope">{{ [ '上传成功', '地址错误', '数量错误','地址或数量错误'][scope.row.status] }}</template></el-table-column>
+        <el-table-column :label="$t('label.coin_num')"><template slot-scope="scope">{{ scope.row.amount }}</template></el-table-column>
+        <el-table-column :label="$t('label.coin_status')"><template slot-scope="scope">{{ [ '上传成功', '地址错误', '数量错误','地址或数量错误'][scope.row.status] }}</template></el-table-column>
         <!-- <el-table-column prop="address" width="400" label="地址"></el-table-column>
         <el-table-column prop="amount" label="数量"></el-table-column>
         <el-table-column label="状态">{{}}</el-table-column> -->
@@ -119,6 +119,11 @@ export default {
         value: 1,
         label: 'ETH'
       }]
+    }
+  },
+  computed: {
+    language () {
+      return this.$i18n.locale
     }
   },
   watch: {

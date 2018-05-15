@@ -1,20 +1,26 @@
 <template>
   <div class="record" v-loading="tableLoad">
     <h5 class="title">
-      发放记录
+      {{ $t('label.fa_record') }}
     </h5>
     <el-table :data="dataList" style="width: 100%" @row-click="openDetails">
-      <el-table-column type="index" label="序号"></el-table-column>
-      <el-table-column prop="symbol" label="币种"></el-table-column>
-      <el-table-column prop="totalAmount" label="数量"></el-table-column>
-      <el-table-column prop="status" label="状态">
+      <el-table-column type="index" :label="$t('label.assest_num')"></el-table-column>
+      <el-table-column prop="symbol" :label="$t('label.coin_type')"></el-table-column>
+      <el-table-column prop="totalAmount" :label="$t('label.coin_num')"></el-table-column>
+      <el-table-column prop="status" :label="$t('label.coin_status')">
         <template slot-scope="scope">
-          <span :class="scope.row.status === 1 ? 'text-success' : ''">
+          <span v-if="language === 'cn'" :class="scope.row.status === 1 ? 'text-success' : ''">
             {{['', '发放中', '已完成'][scope.row.status]}}
+          </span>
+          <span v-else-if="language === 'en'" :class="scope.row.status === 1 ? 'text-success' : ''">
+            {{['', 'Issuing', 'Completed'][scope.row.status]}}
+          </span>
+          <span v-else :class="scope.row.status === 1 ? 'text-success' : ''">
+            {{['', '発行', '完了しました'][scope.row.status]}}
           </span>
         </template>
       </el-table-column>
-      <el-table-column prop="process" label="进度">
+      <el-table-column prop="process" :label="$t('label.process')">
         <template slot-scope="scope">
           <!--<span v-if="scope.row.process">-->
             <!--{{scope.row.time}}-->
@@ -22,7 +28,7 @@
           <el-progress :percentage="parseInt(scope.row.process * 100)"></el-progress>
         </template>
       </el-table-column>
-      <el-table-column prop="createdAt" label="创建时间" width="170"></el-table-column>
+      <el-table-column prop="createdAt" :label="$t('label.create_time')" width="170"></el-table-column>
       <el-table-column label="">
         <template slot-scope="scope">
           <router-link :to="{path: '/acting/record/detail/' + scope.row.taskId}">
@@ -68,7 +74,10 @@ export default {
   computed: {
     ...mapState({
       path: state => state.route.path
-    })
+    }),
+    language () {
+      return this.$i18n.locale
+    }
   },
   mounted () {
     this.fetch()

@@ -1,9 +1,19 @@
 <template>
   <div class="acting-home">
-    <el-steps :active="active" align-center>
+    <el-steps v-if="language === 'cn'" :active="active" align-center>
       <el-step title="上传"></el-step>
       <el-step title="确认"></el-step>
       <el-step title="发放"></el-step>
+    </el-steps>
+    <el-steps v-else-if="language === 'en'" :active="active" align-center>
+      <el-step title="Upload"></el-step>
+      <el-step title="Confirm"></el-step>
+      <el-step title="Issue"></el-step>
+    </el-steps>
+    <el-steps v-else :active="active" align-center>
+      <el-step title="アップロード"></el-step>
+      <el-step title="確認"></el-step>
+      <el-step title="支払い"></el-step>
     </el-steps>
 
     <step1 v-if="active === 0" @finished="finishStep1"></step1>
@@ -40,7 +50,10 @@ export default {
   computed: {
     ...mapState({
       path: state => state.route.path
-    })
+    }),
+    language () {
+      return this.$i18n.locale
+    }
   },
   methods: {
     finishStep1 (data) {

@@ -41,6 +41,7 @@
           <input type="text" class="form-control" id="address" :placeholder="$t('label.input_address')" v-model="form.address">
           <span v-if="addressError && language === 'cn'">{{errorTip}}</span>
           <span v-else-if="addressError && language === 'en'">{{e_errorTip}}</span>
+          <span v-else-if="addressError && language === 'jp'">{{j_errorTip}}</span>
         </div>
         <div class="col-md-10 buying-address-form-submit">
           <button class="btn btn-warning" @click="handleSubmit">{{ $t('label.submit_ord') }}</button>
@@ -62,7 +63,8 @@ export default {
       },
       addressError: '',
       errorTip: '请输入正确的支付钱包地址',
-      e_errorTip: 'Please enter the correct payment wallet address'
+      e_errorTip: 'Please enter the correct payment wallet address',
+      j_errorTip: '正しい支払い方法の住所を入力してください'
     }
   },
   created () {

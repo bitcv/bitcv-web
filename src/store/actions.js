@@ -49,6 +49,11 @@ export const getEnFilterParams = (store, params) => {
   return post('/api/getEnProjTagList', params)
 }
 
+// 获取日语筛选条件
+export const getJpFilterParams = (store, params) => {
+  return post('/api/getJpProjTagList', params)
+}
+
 // 获取TOP10
 export const getTop10 = (store, params) => {
   return post('/api/getProjTopList', params)

@@ -1,7 +1,7 @@
 <template>
   <div class="record-detail" v-loading="tableLoad">
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/acting/record' }">发放记录</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/acting/record' }">{{ $t('label.fa_record') }}</el-breadcrumb-item>
       <el-breadcrumb-item>发放详情</el-breadcrumb-item>
     </el-breadcrumb>
     <el-table :data="dataList" style="width: 100%">
@@ -14,7 +14,7 @@
           </a>
         </template>
       </el-table-column>
-      <el-table-column prop="amount" label="数量"></el-table-column>
+      <el-table-column prop="amount" :label="$t('label.coin_num')"></el-table-column>
       <el-table-column prop="txHash" label="交易哈希">
         <template slot-scope="scope">
           <a :href="'https://etherscan.io/tx/' + scope.row.txHash" target="_blank">
@@ -23,7 +23,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="txTime" label="交易时间" width="170"></el-table-column>
-      <el-table-column prop="status" label="状态">
+      <el-table-column prop="status" :label="$t('label.coin_status')">
         <template slot-scope="scope">
           <span :class="scope.row.status === 4 ? 'text-success' : ''">
             {{['', '待发送', '待发送', '发送中', '已完成'][scope.row.status]}}
