@@ -158,7 +158,7 @@ export default {
   },
   computed: {
     sameToken () {
-      var isSame =  parseInt(this.tokenData.tokenId) === parseInt(this.feeTokenData.tokenId)
+      var isSame = parseInt(this.tokenData.tokenId) === parseInt(this.feeTokenData.tokenId)
       console.log('sameToken')
       console.log(isSame)
       return isSame
