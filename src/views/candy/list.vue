@@ -434,7 +434,7 @@ export default {
 
     > .dl-horizontal {
       > dt {
-        width: 80px;
+        width: 120px;
         float: left;
         text-align: left;
         font-weight: normal;
