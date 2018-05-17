@@ -107,6 +107,11 @@
               <a :href="item.target" @click="onTabItemClick(e_infoList, item)">{{ item.text }}</a>
             </li>
           </ul>
+          <ul v-else class="nav nav-tabs">
+            <li v-for="(item, index) in j_infoList" :class="{active: item.active}" :key="index">
+              <a :href="item.target" @click="onTabItemClick(j_infoList, item)">{{ item.text }}</a>
+            </li>
+          </ul>
         </div>
       </div>
       <div class="row outer">
@@ -183,7 +188,7 @@
             <div v-else id="develop" class="panel-body">
               <h4>{{ $t('label.project_dev') }}</h4>
               <div style="height: 82px;">
-                <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
+                <p style="text-align: center;margin-top: 42px; color: #A1A1A1">{{ $t('label.no_message') }}</p>
               </div>
             </div>
 
@@ -203,7 +208,7 @@
             <div v-else id="partner" class="panel-body">
               <h4>{{ $t('label.brother') }}</h4>
               <div style="height: 82px;">
-                <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
+                <p style="text-align: center;margin-top: 42px; color: #A1A1A1">{{ $t('label.no_message') }}</p>
               </div>
             </div>
 
@@ -266,7 +271,7 @@
             <div v-else id="community" class="panel-body">
               <h4>{{ $t('label.comm_anno') }}</h4>
               <div style="height: 82px;">
-                <p style="text-align: center;margin-top: 42px; color: #A1A1A1">暂无信息</p>
+                <p style="text-align: center;margin-top: 42px; color: #A1A1A1">{{ $t('label.no_message') }}</p>
               </div>
             </div>
 
@@ -353,6 +358,13 @@ export default {
         { text: "Project Development", target: "#develop", active: false },
         { text: "Cooperative Partner", target: "#partner", active: false },
         { text: "Community Release", target: "#community", active: false }
+      ],
+      j_infoList: [
+        { text: "プロジェクトインフォ", target: "#info", active: true },
+        { text: "チーム情報", target: "#team", active: false },
+        { text: "プロジェクトロードマップ", target: "#develop", active: false },
+        { text: "協力パートナー", target: "#partner", active: false },
+        { text: "コミュニティお知らせ", target: "#community", active: false }
       ]
     };
   },

@@ -1,13 +1,13 @@
 <template>
   <div class="step2" v-loading="loading">
     <div v-if="!isRecharge" v-loading="balanceLoad" class="confirm">
-      <h5>确认发放</h5>
+      <h5>{{ $t('label.confirm_fa') }}</h5>
       <div class="confirm-box">
         <div class="confirm-content">
           <div class="confirm-top">
             <el-row>
               <el-col :span="12">
-                <h6>发币总量</h6>
+                <h6>{{ $t('label.fa_total') }}</h6>
                 <p>
                   <img :src="tokenData.logoUrl" alt="logo">
                   <b>{{orderData.totalAmount}}</b>
@@ -15,7 +15,7 @@
                 </p>
               </el-col>
               <el-col :span="12">
-                <h6>手续费</h6>
+                <h6>{{ $t('label.shou_fee') }}</h6>
                 <p v-loading="feeLoad">
                   <img :src="feeTokenData.logoUrl" alt="logo">
                   <b>{{orderData.totalCount * feeTokenData.price}}</b>
@@ -32,33 +32,33 @@
           <div class="confirm-bottom">
             <el-row>
               <el-col :span="12">
-                <h6>可用{{tokenData.symbol}}余额</h6>
+                <h6>{{ $t('label.can') }}{{tokenData.symbol}}{{ $t('label.yue') }}</h6>
                 <p>
                   <img :src="tokenData.logoUrl" alt="logo">
                   <span>{{tokenData.amount}}</span>
-                  <small>枚</small>
+                  <small>{{ $t('label.coin_amount') }}</small>
                   <br>
-                  <i v-if="tokenNeeded > 0">余额不足，请先充值</i>
+                  <i v-if="tokenNeeded > 0">{{ $t('label.no_yue') }}</i>
                 </p>
               </el-col>
               <el-col :span="12" v-if="!sameToken">
-                <h6>可用{{feeTokenData.symbol}}余额</h6>
+                <h6>{{ $t('label.can') }}{{feeTokenData.symbol}}{{ $t('label.yue') }}</h6>
                 <p>
                   <img :src="feeTokenData.logoUrl" alt="logo">
                   <span>{{feeTokenData.amount}}</span>
                   <small>
-                    枚
+                    {{ $t('label.coin_amount') }}
                   </small>
                   <br>
-                  <i v-if="feeNeeded > 0">余额不足，请先充值</i>
+                  <i v-if="feeNeeded > 0">{{ $t('label.no_yue') }}</i>
                 </p>
               </el-col>
             </el-row>
           </div>
         </div>
         <footer class="confirm-footer">
-          <el-button type="warning" :disabled="false && tokenNeeded === 0 && feeNeeded === 0" @click="toDeposit">去充值</el-button>
-          <el-button type="warning" :disabled="tokenNeeded > 0 || feeNeeded > 0"  @click="handleConfirm">确认发放</el-button>
+          <el-button type="warning" :disabled="false && tokenNeeded === 0 && feeNeeded === 0" @click="toDeposit">{{ $t('label.qu_charge') }}</el-button>
+          <el-button type="warning" :disabled="tokenNeeded > 0 || feeNeeded > 0"  @click="handleConfirm">{{ $t('label.confirm_fa') }}</el-button>
         </footer>
       </div>
     </div>
@@ -67,25 +67,31 @@
       <div class="recharge-top" v-loading="rechareLoad">
         <el-row>
           <el-col :span="18" class="left">
-            <h5>充值地址</h5>
+            <h5>{{ $t('label.chong_addr') }}</h5>
             <div>
               <el-input v-model="walletAddr" readonly ref="copyInput"></el-input>
               <i class="el-icon-document" @click="handleCopy"></i>
             </div>
-            <p style="width:497px;">
+            <p v-if="language === 'cn'" style="width:497px;">
             温馨提示：请勿向上述地址充值任何非ETH或ERC20资产，否则资产将不可找回。您充值至上述地址后，需要整个网络节点的确认，1次网络确认后到账。<span>单笔充值不得低于0.001</span>，我们不会处理少于该金额的充值要求。
+            </p>
+            <p v-else-if="language === 'en'" style="width:497px;">
+            Tips: Do not recharge any non-ETH or ERC20 assets to the above address, otherwise the assets will not be recovered. After you recharge to the above address, you need to wait for confirmation of network nodes. <span>A single charge cannot be less than 0.001ETH,</span>，and we will not process acharge request that is less than that amount.
+            </p>
+            <p v-else style="width:497px;">
+            注意：ETH、ERC20以外のアセットをチャージしないでください。ETH、ERC20以外のアセットである場合、一度チャージしてしまうと、返金できません。また、このコントラクトアドレスへのチャージを完了させるには、ネットワーク接続点の確認が必要です。確認されてからチャージ完了になります。<span>チャージ額は0.001以上でお願いします。</span>，0.001以下のチャージはお受け取りできません。
             </p>
           </el-col>
           <el-col :span="6" class="right">
             <vue-qr :text="walletAddr" :margin="10" class="qrcode"></vue-qr>
-            <p>或扫二维码立即充值</p>
+            <p>{{ $t('label.scan_qr') }}</p>
           </el-col>
         </el-row>
       </div>
 
       <div class="recharge-bottom" v-loading="balanceLoad">
         <h5>
-          资产余额<i class="el-icon-refresh" @click="handleRefresh"></i>
+          {{ $t('label.assest_ye') }}<i class="el-icon-refresh" @click="handleRefresh"></i>
         </h5>
         <el-row>
           <el-col :span="8">
@@ -95,12 +101,12 @@
             <span>{{tokenData.amount}}</span>
           </el-col>
           <el-col :span="8" v-if="tokenNeeded > 0">
-            <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">还需充值</span>
+            <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">{{ $t('label.hai_recharge') }}</span>
             <span>{{tokenNeeded}}</span>
           </el-col>
           <el-col :span="8" v-else>
             <img src="/static/img/完成充值@2x.png" style="width:16px;height:16px;" alt="">
-            <span style="display:inline;font-size:12px;color:#67C23A;">充值完成</span>
+            <span style="display:inline;font-size:12px;color:#67C23A;">{{ $t('label.charge_ok') }}</span>
           </el-col>
         </el-row>
         <el-row v-if="!sameToken">
@@ -111,18 +117,18 @@
             <span>{{feeTokenData.amount}}</span>
           </el-col>
           <el-col :span="8" v-if="feeNeeded > 0">
-            <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">还需充值</span>
+            <span style="display:inline;font-size:12px;color:rgba(255,1,1,1);">{{ $t('label.hai_recharge') }}</span>
             <span style="font-weight:bold">{{feeNeeded}}</span>
           </el-col>
           <el-col :span="8" v-else>
             <img src="/static/img/完成充值@2x.png" style="width:16px;height:16px;" alt="">
-            <span style="display:inline;font-size:12px;color:#67C23A;">充值完成</span>
+            <span style="display:inline;font-size:12px;color:#67C23A;">{{ $t('label.charge_ok') }}</span>
           </el-col>
         </el-row>
       </div>
 
       <footer class="recharge-footer">
-        <el-button type="warning" class="btn-primary" @click="handleFinished">充值完成</el-button>
+        <el-button type="warning" class="btn-primary" @click="handleFinished">{{ $t('label.charge_ok') }}</el-button>
       </footer>
     </div>
   </div>
@@ -209,6 +215,9 @@ export default {
       console.log('tokenNeeded')
       console.log(diffAmount)
       return diffAmount > 0 ? diffAmount : 0
+    },
+    language () {
+      return this.$i18n.locale
     }
   },
   methods: {
@@ -262,7 +271,13 @@ export default {
       let eInput = this.$refs.copyInput.$el.firstElementChild
       eInput.select()
       document.execCommand('Copy')
-      this.$message.success('复制成功!')
+      if (this.$i18n.locale === 'cn') {
+        this.$message.success('复制成功!')
+      } else if (this.$i18n.locale === 'en') {
+        this.$message.success('Successfully Copied!')
+      } else {
+        this.$message.success('コピーが成功しました!')
+      }
     },
     handleRefresh () {
       this.fetchBalance()

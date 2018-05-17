@@ -1,24 +1,32 @@
 <template>
   <div class="step3" v-loading="tableLoad">
-    <h5>{{isFinished ? '发放完成' : '发放中'}}<i class="el-icon-refresh" @click="fetch"></i></h5>
+    <h5 v-if="language === 'cn'">{{isFinished ? '发放完成' : '发放中'}}<i class="el-icon-refresh" @click="fetch"></i></h5>
+    <h5 v-else-if="language === 'en'">{{isFinished ? 'Release Completed' : 'Issuing'}}<i class="el-icon-refresh" @click="fetch"></i></h5>
+    <h5 v-else>{{isFinished ? '完了' : '送信中'}}<i class="el-icon-refresh" @click="fetch"></i></h5>
     <el-table :data="dataList" style="width: 100%">
-      <el-table-column type="index" label="序号" width="100"></el-table-column>
-      <el-table-column prop="toAddr" label="地址">
+      <el-table-column type="index" :label="$t('label.assest_num')" width="100"></el-table-column>
+      <el-table-column prop="toAddr" :label="$t('label.addre')">
         <template slot-scope="scope">
           <a :href="'https://etherscan.io/token/' + contractAddr + '?a=' + scope.row.toAddr" target="_blank">
             {{maskStr(scope.row.toAddr, 5)}}
           </a>
         </template>
       </el-table-column>
-      <el-table-column prop="amount" label="数量" width="180"></el-table-column>
-      <el-table-column prop="status" label="状态" width="180">
+      <el-table-column prop="amount" :label="$t('label.coin_num')" width="180"></el-table-column>
+      <el-table-column prop="status" :label="$t('label.coin_status')" width="180">
         <template slot-scope="scope">
-          <span :class="scope.row.status === 4 ? 'text-success' : ''">
+          <span v-if="language === 'cn'" :class="scope.row.status === 4 ? 'text-success' : ''">
             {{['', '待发送', '待发送', '转账中', '已完成'][scope.row.status]}}
+          </span>
+          <span v-else-if="language === 'en'" :class="scope.row.status === 4 ? 'text-success' : ''">
+            {{['', 'To be sent', 'To be sent', 'Transfering', 'Completed'][scope.row.status]}}
+          </span>
+          <span v-else :class="scope.row.status === 4 ? 'text-success' : ''">
+            {{['', '送信する', '送信する', '転送', '完了'][scope.row.status]}}
           </span>
         </template>
       </el-table-column>
-      <el-table-column prop="txHash" label="交易哈希">
+      <el-table-column prop="txHash" :label="$t('label.hash')">
         <template slot-scope="scope">
           <a :href="'https://etherscan.io/tx/' + scope.row.txHash" target="_blank">
             {{maskStr(scope.row.txHash, 5)}}
@@ -32,7 +40,7 @@
         <el-col :span="16">
           <el-progress :percentage="process * 100"></el-progress>
         </el-col>
-        <el-col v-if="isFinished" :span="8" class="text-warning">下载完成报告</el-col>
+        <el-col v-if="isFinished" :span="8" class="text-warning">{{ $t('label.down_report') }}</el-col>
       </el-row>
     </footer>
   </div>
@@ -84,7 +92,10 @@ export default {
   computed: {
     ...mapState({
       path: state => state.route.path
-    })
+    }),
+    language() {
+      return this.$i18n.locale;
+    }
   },
   methods: {
     ...mapActions(['getDispenseList']),

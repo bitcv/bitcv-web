@@ -14,8 +14,8 @@
               <th>{{ $t('label.candy_project') }}</th>
               <th>{{ $t('label.return') }}({{ $t('label.coin_amount') }})</th>
               <th>{{ $t('label.buy_q') }}({{ $t('label.coin_amount') }})</th>
-              <th>剩余期限/{{ $t('label.lock') }}</th>
-              <th>购买时间</th>
+              <th>{{ $t('label.sheng_qi') }}/{{ $t('label.lock') }}</th>
+              <th>{{ $t('label.buy_time') }}</th>
               <th style="width:100px;">&nbsp;</th>
             </tr>
           </thead>
@@ -31,9 +31,9 @@
               <td>{{item.remainTime}}{{ $t('label.day') }} / <span class="text-gray">{{item.lockTime}}{{ $t('label.day') }}</span></td>
               <td><span class="text-gray small">{{item.buyTime}}</span></td>
               <td>
-                <span v-if="item.status === 1">等待中</span>
+                <span v-if="item.status === 1">{{ $t('label.waitting') }}</span>
                 <button v-else-if="item.status === 2" class="btn btn-warning" @click="toWithdraw(item)">{{ $t('label.common_t') }}</button>
-                <span v-else-if="item.status === 3">已提取</span>
+                <span v-else-if="item.status === 3">{{ $t('label.yi_tiqu') }}</span>
               </td>
             </tr>
           </tbody>
@@ -67,7 +67,7 @@
                   {{ getInterest(10000, item.interestRate, item.lockTime) }}
                 </p>
                 <p>
-                  <span>剩余期限：</span>
+                  <span>{{ $t('label.sheng_qi') }}：</span>
                   {{ item.remainderTime }}
                 </p>
                 <p>
@@ -75,7 +75,7 @@
                   {{ item.lockTime }}个月前
                 </p>
                 <p>
-                  <span>购买时间：</span>
+                  <span>{{ $t('label.buy_time') }}：</span>
                   {{ item.buyTime }}个月
                 </p>
               </div>
