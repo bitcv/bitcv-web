@@ -4,7 +4,7 @@
       <div class="panel-body filter-list">
         <div><h3 style="margin:20px 0 30px;">{{ $t('label.my_list') }}</h3></div>
         <dl class="dl-horizontal">
-          <dt>{{ $t('label.order_status') }}</dt>
+          <dt style="width:150px;">{{ $t('label.order_status') }}</dt>
           <dd v-if="language === 'cn'">
             <a href="javascript:;"
               v-for="item in lockTime.items"

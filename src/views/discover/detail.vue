@@ -39,9 +39,9 @@
           </div>
           <div class="col-md-6 md-mg-t">
             <div class="col-xs-6 col-md-8">
-              <p><a :href="info.homeUrl" class="btn btn-default btn-outline btn-sm" target="_blank" style="width:105px;">{{ $t('label.project_home') }}</a></p>
+              <p><a :href="info.homeUrl" class="btn btn-default btn-outline btn-sm" target="_blank" style="width:160px;">{{ $t('label.project_home') }}</a></p>
               <div style="height: 20px;"></div>
-              <p><a :href="info.whitePaperUrl" class="btn btn-default btn-outline btn-sm" target="_blank" style="width:105px;">{{ $t('label.white_paper') }}</a></p>
+              <p><a :href="info.whitePaperUrl" class="btn btn-default btn-outline btn-sm" target="_blank" style="width:160px;">{{ $t('label.white_paper') }}</a></p>
             </div>
             <div class="col-xs-6 col-md-4">
               <ul class="list-unstyled text-dark">
