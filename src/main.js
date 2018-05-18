@@ -673,6 +673,18 @@ Vue.config.productionTip = false
 
 sync(store, router)
 
+axios.interceptors.request.use(
+  config => {
+    // 给所有请求添加语言字段
+    if (config.headers) {
+      config.headers.lang = i18n.locale
+    } else {
+      config.headers.lang = 'cn'
+    }
+    return config;
+  }
+);
+
 axios.interceptors.response.use(
   response => {
     if (response.data['errcode'] === 302) {
