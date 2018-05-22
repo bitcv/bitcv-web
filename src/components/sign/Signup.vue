@@ -1,7 +1,7 @@
 <template>
   <div class="container signup-container">
     <div class="signup">
-      <h2 class="panel-title center-title" style="text-align: center;font-size: 23px;margin-bottom: 50px;">{{ $t('label.welcome') }} BCV</h2>
+      <h2 class="panel-title center-title" style="text-align: center;font-size: 23px;margin-bottom: 50px;">{{ $t('label.welcome') }} </h2>
         <!--<span class="prompt">链币会员可直接使用会员名登录</span>-->
         <form>
           <template>
