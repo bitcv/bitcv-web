@@ -3,18 +3,18 @@
     <div>
       <div class="recharge-bottom" v-loading="balanceLoad">
         <h5 class="title">
-          资产余额<i class="el-icon-refresh" @click="handleRefresh"></i>
+          {{ $t('label.assest_ye') }}<i class="el-icon-refresh" @click="handleRefresh"></i>
         </h5>
         <el-table :data="assetList" style="width:100%">
-          <el-table-column prop="symbol" label="币种"></el-table-column>
-          <el-table-column prop="amount" label="账户余额"></el-table-column>
-          <el-table-column label="操作">
+          <el-table-column prop="symbol" :label="$t('label.coin_type')"></el-table-column>
+          <el-table-column prop="amount" :label="$t('label.account_money')"></el-table-column>
+          <el-table-column :label="$t('label.operation')">
             <template slot-scope="scope">
-              <el-button type="warning" size="small" style="color:#fff;"  @click="recharge(scope.row.walletAddr)">充值</el-button>
+              <el-button type="warning" size="small" style="color:#fff;"  @click="recharge(scope.row.walletAddr)">{{ $t('label.chongzhi') }}</el-button>
             </template>
           </el-table-column>
         </el-table>
-        <el-dialog title="充值地址" width="500px" :visible.sync="showDialog"  center>
+        <el-dialog :title="$t('label.chong_addr')" width="500px" :visible.sync="showDialog"  center>
           <div>
             <div style="text-align: center;">
               <vue-qr :text="walletAddr" :margin="10" size=126 class="qrcode"></vue-qr>
@@ -23,11 +23,11 @@
               </div>
             </div>
             <div style="margin-top:29px;">
-              <p style="color:rgb(253, 152, 1);text-align: center;font-size: 12px;">温馨提示</p>
+              <p style="color:rgb(253, 152, 1);text-align: center;font-size: 12px;">{{ $t('label.warm_notice') }}</p>
               <p style="text-align: center;font-size: 10px;margin-top:8px;color: rgba(179,179,179,1);">请勿向上述地址充值任何非 {{recSymbol}} 资产，否则资产将不可找回。您充值至上述地址后，需要整个网络节点的确认，1 次网络确认后到账。最小充值金额：0.001 {{recSymbol}}，小于最小金额的充值将不会上账。</p>
             </div>
             <div style="text-align: center">
-              <el-button type="warning" v-clipboard:copy = "walletAddr" v-clipboard:success="onCopy" v-clipboard:error = "onError" style="width:350px;">复制地址</el-button>
+              <el-button type="warning" v-clipboard:copy = "walletAddr" v-clipboard:success="onCopy" v-clipboard:error = "onError" style="width:350px;">{{ $t('label.copy_addr') }}</el-button>
             </div>
           </div>
         </el-dialog>
@@ -35,21 +35,27 @@
 
       <div>
         <h5 class="title">
-          充值记录<i class="el-icon-refresh" @click="fetchFinance"></i>
+          {{ $t('label.chong_record') }}<i class="el-icon-refresh" @click="fetchFinance"></i>
         </h5>
         <el-table :data="recordList" style="width: 100%" v-loading="recordLoad">
-          <el-table-column type="index" label="序号" width="100"></el-table-column>
-          <el-table-column prop="tokenSymbol" label="币种" width="100"></el-table-column>
+          <el-table-column type="index" :label="$t('label.assest_num')" width="100"></el-table-column>
+          <el-table-column prop="tokenSymbol" :label="$t('label.coin_type')" width="100"></el-table-column>
           <!--<el-table-column prop="fromAddr" label="地址"></el-table-column>-->
-          <el-table-column prop="amount" label="数量" width="180"></el-table-column>
-          <el-table-column prop="status" label="状态" width="180">
+          <el-table-column prop="amount" :label="$t('label.coin_num')" width="180"></el-table-column>
+          <el-table-column prop="status" :label="$t('label.coin_status')" width="180">
             <template slot-scope="scope">
-              <span :class="scope.row.status === 1 ? 'text-success' : ''">
+              <span v-if="language === 'cn'" :class="scope.row.status === 1 ? 'text-success' : ''">
                 {{['验证中', '已完成'][scope.row.status]}}
+              </span>
+              <span v-else-if="language === 'en'" :class="scope.row.status === 1 ? 'text-success' : ''">
+                {{['Verifying', 'Completed'][scope.row.status]}}
+              </span>
+              <span v-else :class="scope.row.status === 1 ? 'text-success' : ''">
+                {{['検証中', 'チャージ完了'][scope.row.status]}}
               </span>
             </template>
           </el-table-column>
-          <el-table-column prop="txTime" label="时间"></el-table-column>
+          <el-table-column prop="txTime" :label="$t('label.time')"></el-table-column>
         </el-table>
       </div>
     </div>

@@ -77,15 +77,19 @@ export default {
       if (!mobileReg.test(this.mobile)) {
         if (this.language === 'cn') {
           return alert('请填写正确的手机号')
-        } else {
+        } else if (this.language === 'en') {
           return alert('Please fill in the correct phone number')
+        } else {
+          return alert('正しい電話番号を入力してください')
         }
       }
       if (this.passwd.length < 6) {
         if (this.language === 'cn') {
           return alert('账号或密码错误')
-        } else {
+        } else if (this.language === 'en') {
           return alert('Account or password is wrong')
+        } else {
+          return alert('ユーザー名あるいはパスワードが正しくありません')
         }
       }
 

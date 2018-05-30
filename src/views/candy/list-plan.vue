@@ -1,21 +1,21 @@
 <template>
   <div v-loading="loading">
     <div class="nav">
-      <router-link :to="{path: '/candyRoom/candyList'}">余币宝</router-link> >
-      <router-link :to="'/'">已购余币宝计划</router-link>
+      <router-link :to="{path: '/candyRoom/candyList'}">{{ $t('label.ybb') }}</router-link> >
+      <router-link :to="'/'">{{ $t('label.puchase_ybb') }}</router-link>
     </div>
     <div class="panel panel-custom list-plan">
-      <h3>已购余币宝计划</h3>
+      <h3>{{ $t('label.puchase_ybb') }}</h3>
       <div class="table-responsive" v-if="list.length">
         <table class="table hidden-xs">
           <thead>
             <tr class="text-dark">
-              <th>序号</th>
-              <th>项目</th>
-              <th>回报(枚)</th>
-              <th>购买数量(枚)</th>
-              <th>剩余期限/锁仓期</th>
-              <th>购买时间</th>
+              <th>{{ $t('label.assest_num') }}</th>
+              <th>{{ $t('label.candy_project') }}</th>
+              <th>{{ $t('label.return') }}({{ $t('label.coin_amount') }})</th>
+              <th>{{ $t('label.buy_q') }}({{ $t('label.coin_amount') }})</th>
+              <th>{{ $t('label.sheng_qi') }}/{{ $t('label.lock') }}</th>
+              <th>{{ $t('label.buy_time') }}</th>
               <th style="width:100px;">&nbsp;</th>
             </tr>
           </thead>
@@ -28,12 +28,12 @@
               </td>
               <td><span class="text-danger">{{ getInterest(10000, item.interestRate, item.lockTime) }}</span></td>
               <td>{{item.amount}}</td>
-              <td>{{item.remainTime}}天 / <span class="text-gray">{{item.lockTime}}天</span></td>
+              <td>{{item.remainTime}}{{ $t('label.day') }} / <span class="text-gray">{{item.lockTime}}{{ $t('label.day') }}</span></td>
               <td><span class="text-gray small">{{item.buyTime}}</span></td>
               <td>
-                <span v-if="item.status === 1">等待中</span>
-                <button v-else-if="item.status === 2" class="btn btn-warning" @click="toWithdraw(item)">提取</button>
-                <span v-else-if="item.status === 3">已提取</span>
+                <span v-if="item.status === 1">{{ $t('label.waitting') }}</span>
+                <button v-else-if="item.status === 2" class="btn btn-warning" @click="toWithdraw(item)">{{ $t('label.common_t') }}</button>
+                <span v-else-if="item.status === 3">{{ $t('label.yi_tiqu') }}</span>
               </td>
             </tr>
           </tbody>
@@ -41,8 +41,8 @@
         <!-- 小屏幕时显示的模拟table -->
         <div class="visible-xs xs-box">
           <div class="xs-header text-gray">
-            <span>项目</span>
-            <span>购买数量</span>
+            <span>{{ $t('label.candy_project') }}</span>
+            <span>{{ $t('label.buy_q') }}</span>
             <span>&nbsp;</span>
           </div>
           <div class="xs-body">
@@ -54,28 +54,28 @@
                 </span>
                 <span>{{ item.number }}</span>
                 <span>
-                  <button class="btn btn-warning">提取</button>
+                  <button class="btn btn-warning">{{ $t('label.common_t') }}</button>
                 </span>
               </div>
               <div class="xs-detail" v-if="item.isDetail">
                 <p>
-                  <span>序号: </span>
+                  <span>{{ $t('label.assest_num') }}: </span>
                   {{ item.id }}
                 </p>
                 <p>
-                  <span>回报(枚): </span>
+                  <span>{{ $t('label.return') }}({{ $t('label.coin_amount') }}): </span>
                   {{ getInterest(10000, item.interestRate, item.lockTime) }}
                 </p>
                 <p>
-                  <span>剩余期限：</span>
+                  <span>{{ $t('label.sheng_qi') }}：</span>
                   {{ item.remainderTime }}
                 </p>
                 <p>
-                  <span>锁仓期：</span>
+                  <span>{{ $t('label.lock') }}：</span>
                   {{ item.lockTime }}个月前
                 </p>
                 <p>
-                  <span>购买时间：</span>
+                  <span>{{ $t('label.buy_time') }}：</span>
                   {{ item.buyTime }}个月
                 </p>
               </div>
@@ -85,7 +85,7 @@
       </div>
       <div v-else class="nodat">
         <!--<img src="/static/img/nodata.png" alt="无数据">-->
-        您未购买余币宝计划
+        {{ $t('label.no_ybb') }}
       </div>
     </div>
     <div class="text-right">

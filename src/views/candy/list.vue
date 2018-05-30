@@ -3,7 +3,7 @@
     <div class="assets-panel">
       <div class="assets-box">
         <div class="assets-nav">
-          <router-link :to="{path: '/candyRoom/candyMyData'}">我的余币宝订单 >></router-link>
+          <router-link :to="{path: '/candyRoom/candyMyData'}">{{ $t('label.my_list') }} >></router-link>
         </div>
         <div class="assets-top">
           <div class="assets-top-left">
@@ -14,14 +14,14 @@
           <div class="assets-top-center">
             <div class="assets-title">
               <router-link :to="{path: '/candyRoom/candyListAssets'}">
-                我的资产 >
+                {{ $t('label.assets') }} >
               </router-link>
             </div>
             <div class="assets-total">
               ${{asset.totalAsset|currency}}
             </div>
           </div>
-          <router-link :to="{path: '/candyRoom/candyListPlan'}" class="assets-top-right">提取 ></router-link>
+          <router-link :to="{path: '/candyRoom/candyListPlan'}" class="assets-top-right">{{ $t('label.common_t') }} ></router-link>
         </div>
         <div class="assets-profit">
           <el-row>
@@ -31,7 +31,7 @@
                 ≈
                 </div>
                 <div class="assets-profit-right">
-                  <h6>昨日收益</h6>
+                  <h6>{{ $t('label.z_s') }}</h6>
                   <p>${{asset.lastDayProfit|currency}}</p>
                 </div>
               </div>
@@ -46,7 +46,7 @@
                 </div>
                 <div class="assets-profit-right">
                   <h6>
-                    <router-link :to="{path: '/candyRoom/candyListProfit'}">累计收益 ></router-link>
+                    <router-link :to="{path: '/candyRoom/candyListProfit'}">{{ $t('label.l_s') }} ></router-link>
                   </h6>
                   <p>${{asset.totalProfit|currency}}</p>
                 </div>
@@ -69,9 +69,17 @@
              @click="onFilterClick(item.value)"
              >{{ item.label }}</a>
           </dd>
-          <dd v-else>
+          <dd v-else-if="language === 'en'">
           <a href="javascript:;"
              v-for="item in lockTime.e_items"
+             :key="item.value"
+             :class="{active: lockTime.value == item.value}"
+             @click="onFilterClick(item.value)"
+             >{{ item.label }}</a>
+          </dd>
+          <dd v-else>
+          <a href="javascript:;"
+             v-for="item in lockTime.j_items"
              :key="item.value"
              :class="{active: lockTime.value == item.value}"
              @click="onFilterClick(item.value)"
@@ -104,7 +112,7 @@
               <td>{{ item.minAmount }} {{ $t('label.coin_amount') }}</td>
               <td><span class="text-primary">{{ item.remainAmount }} {{ $t('label.coin_amount') }}</span></td>
               <td>
-                <button class="btn btn-primary btn-sm btn-nocorner" :disabled = "item.remainAmount < item.minAmount" @click="toNext(item)">{{item.remainAmount >= item.minAmount ? $t('label.buy') : '已 售 罄'}}</button>
+                <button class="btn btn-primary btn-sm btn-nocorner" :disabled = "item.remainAmount < item.minAmount" @click="toNext(item)">{{item.remainAmount >= item.minAmount ? $t('label.buy') : $t('label.sold_out')}}</button>
                 <!--<router-link class="btn btn-primary btn-sm btn-nocorner" disabled :to="{path: '/candyRoom/candyBuy', query: item}">{{  $t('label.buy')}}</router-link>-->
               </td>
             </tr>
@@ -183,6 +191,13 @@ export default {
           {label: '90 day', value: 90},
           {label: '180 day', value: 180},
           {label: '1 year', value: 365}
+        ],
+        j_items: [
+          {label: '全部', value: 0},
+          {label: '30日', value: 30},
+          {label: '90日', value: 90},
+          {label: '180日', value: 180},
+          {label: '1 年', value: 365}
         ]
       },
       total: 0,
@@ -419,7 +434,7 @@ export default {
 
     > .dl-horizontal {
       > dt {
-        width: 80px;
+        width: 120px;
         float: left;
         text-align: left;
         font-weight: normal;

@@ -3,7 +3,8 @@
     <!-- 币威 -->
     <div class="bitcv">
       <h4 v-if="language === 'cn'">{{isFinish ? '确认订单' : '订单详情'}}</h4>
-      <h4 v-else>{{isFinish ? 'Confirm Order' : 'Order Detail'}}</h4>
+      <h4 v-else-if="language === 'en'">{{isFinish ? 'Confirm Order' : 'Order Detail'}}</h4>
+      <h4 v-else>{{isFinish ? '注文を確認する' : '注文の詳細'}}</h4>
       <div class="row">
         <div class="col-md-9">
           <div>

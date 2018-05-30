@@ -7,7 +7,8 @@ export const maskStr = (str, num, separator = '...') => {
 export const getFundStage = (v, lang) => {
   var dist = {
     cn: ['保密', '未融资', '融资中', '已融资'],
-    en: ['Undisclosed', 'Unfunded', 'Financing', 'Financed']
+    en: ['Undisclosed', 'Unfunded', 'Financing', 'Financed'],
+    jp: ['非公開', '融資前', '融資中', 'ローンチ']
   }
   return dist[lang][v]
 }
@@ -16,7 +17,8 @@ export const getFundStage = (v, lang) => {
 export const getBuzType = (v, lang) => {
   var dist = {
     cn: ['金融', '数字货币', '娱乐', '供应链管理', '法律服务', '医疗', '能源服务', '公益', '物联网', '农业', '社交'] || '其他',
-    en: ['Financial', 'Digital currency', 'Entertainment', 'Supply Chain Management', 'Legal service', 'Medical', 'Energy service', 'Public welfare', 'Internet of Things', 'Agriculture', 'Social'] || 'Other'
+    en: ['Financial', 'Digital currency', 'Entertainment', 'Supply Chain Management', 'Legal service', 'Medical', 'Energy service', 'Public welfare', 'Internet of Things', 'Agriculture', 'Social'] || 'Other',
+    jp: ['金融', 'デジタルアセット', 'エンターテイメント', 'ブロックチェン管理', '法律サービス', '医療', 'エネルギーサービス', '公益', 'モノのインターネット', '農業', '社交'] || 'そのた'
   }
   return dist[lang][v]
 }
