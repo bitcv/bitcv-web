@@ -112,7 +112,8 @@
               <td>{{ item.minAmount }} {{ $t('label.coin_amount') }}</td>
               <td><span class="text-primary">{{ item.remainAmount }} {{ $t('label.coin_amount') }}</span></td>
               <td>
-                <button class="btn btn-primary btn-sm btn-nocorner" :disabled = "item.remainAmount < item.minAmount" @click="toNext(item)">{{item.remainAmount >= item.minAmount ? $t('label.buy') : $t('label.sold_out')}}</button>
+                <!--<button class="btn btn-primary btn-sm btn-nocorner" :disabled = "item.remainAmount < item.minAmount" @click="toNext(item)">{{item.remainAmount >= item.minAmount ? $t('label.buy') : $t('label.sold_out')}}</button>-->
+                <button class="btn btn-primary btn-sm btn-nocorner" :disabled = "true" @click="toNext(item)">{{item.remainAmount >= item.minAmount ? '已暂停' : $t('label.sold_out')}}</button>
                 <!--<router-link class="btn btn-primary btn-sm btn-nocorner" disabled :to="{path: '/candyRoom/candyBuy', query: item}">{{  $t('label.buy')}}</router-link>-->
               </td>
             </tr>
@@ -134,7 +135,8 @@
                 </span>
                 <span>{{ getInterest(10000, item.interestRate, item.lockTime) }} {{ $t('label.coin_amount') }}</span>
                 <span>
-                  <router-link class="btn btn-primary btn-sm btn-nocorner" :to="{path: '/candyRoom/candyBuy', query: item}">{{ $t('label.buy') }}</router-link>
+                  <!--<router-link class="btn btn-primary btn-sm btn-nocorner" :to="{path: '/candyRoom/candyBuy', query: item}">{{ $t('label.buy') }}</router-link>-->
+                  <button class="btn btn-primary btn-sm btn-nocorner" :disabled = "true" @click="toNext(item)">{{item.remainAmount >= item.minAmount ? '已暂停' : $t('label.sold_out')}}</button>
                 </span>
               </div>
               <div class="xs-detail" v-if="item.isDetail">
