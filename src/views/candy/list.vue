@@ -273,6 +273,7 @@ export default {
       this.fetch()
     },
     toNext (item) {
+      return false
       console.log('tonext')
       this.$router.push({path: '/candyRoom/candyBuy', query: item})
     }
