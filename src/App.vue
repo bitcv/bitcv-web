@@ -45,7 +45,11 @@ export default {
   methods: {
     ...mapMutations(['cleanUserInfo']),
     signout () {
-      this.cleanUserInfo()
+      this.$http.post('/api/signout', []).then((res) => {
+        if (res.data.errcode === 0) {
+          this.cleanUserInfo()
+        }
+      })
       // this.$router.push('/')
     }
   }
