@@ -22,6 +22,16 @@ import VueClipboard from 'vue-clipboard2'
 
 Vue.use(VueClipboard)
 Vue.use(VueI18n)
+
+// 检测设备环境 ios Android pc
+if (navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Adr') > -1) {
+  store.commit('setDevice', 'android')
+} else if (navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
+  store.commit('setDevice', 'ios')
+} else {
+  store.commit('setDevice', 'pc')
+}
+
 const messages = {
   // 简体中文
   cn: {

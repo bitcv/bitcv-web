@@ -1,3 +1,8 @@
+// 设置网页启动的设备环境 ios/android/pc
+export const setDevice = (state, payload) => {
+  state.device = payload
+}
+
 export const updateUserInfo = (state, payload) => {
   let userInfo = localStorage.getItem('userInfo')
 

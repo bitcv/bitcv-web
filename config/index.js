@@ -14,15 +14,19 @@ module.exports = {
       '/api': {
         // target: 'http://www.kingco.com'
         //target: 'http://192.168.31.252:8888'
-        // target: 'https://www.bticv.com'
-         target: 'http://0.0.0.0:8888'
+        target: 'https://www.bitcv.com',
+        // target: 'http://192.168.199.208', // 斗焕
+        // target: 'http://192.168.199.247:8888', // 大庆
+        // target: 'http://0.0.0.0:8888'
+        changeOrigin: true
       },
       '/storage': {
 
         // target: 'http://www.kingco.com'
         //target: 'http://192.168.31.252:8888'
-        // target: 'https://www.bticv.com'
-         target: 'http://0.0.0.0:8888'
+        target: 'https://www.bitcv.com',
+        // target: 'http://0.0.0.0:8888'
+        changeOrigin: true
       }
     },
 
@@ -60,11 +64,11 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../../server/resources/views/index.blade.php'),
+    index: path.resolve(__dirname, '../../bitcv-server/resources/views/index.blade.php'),
     //index: path.resolve(__dirname, '../../bitcv-server/resources/views/index.blade.php'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../../server/public'),
+    assetsRoot: path.resolve(__dirname, '../../bitcv-server/public'),
     //assetsRoot: path.resolve(__dirname, '../../bitcv-server/public'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',

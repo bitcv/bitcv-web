@@ -9,6 +9,8 @@ export default new Vuex.Store({
   actions,
   mutations,
   state: {
+    // 使用的设备
+    device: 'pc',
     // 保存用户登录状态
     userInfo: null
   }

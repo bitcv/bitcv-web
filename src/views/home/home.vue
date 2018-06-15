@@ -2,12 +2,12 @@
   <div class="container">
     <div class="row">
       <div class="col-md-8">
-        <h4 class="section-title">{{ $t('label.section_title') }}</h4>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">
+        <div class="hearder-banner">
+          <a href="https://bitcv.app/" target="_blank"><img src="/static/img/banner_downapp.png" alt=""></a>
+        </div>
+
         <div class="row">
+          <h4 class="section-title">{{ $t('label.section_title') }}</h4>
           <div class="col-md-10 col-md-offset-1">
             <search-bar v-model="keywords" @submit="handleFilter"></search-bar>
           </div>
@@ -412,6 +412,13 @@ export default {
       background-image: url('./arrow_right.png');
       background-size: 100% 100%;
     }
+  }
+}
+
+.hearder-banner {
+  margin-bottom: 50px;
+  img {
+    width: 100%;
   }
 }
 </style>
