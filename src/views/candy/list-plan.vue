@@ -153,25 +153,14 @@ export default {
     toWithdraw (item) {
       console.log(item)
       if (item.userAddr) {
-        this.$confirm('您的余币宝本金和利息将返还至' + item.userAddr + ', 请核对地址信息，由于地址信息错误造成的损失，本平台概不负责，确认提取余币宝?', '提示', {
-          confirmButtonText: '确定',
+        // this.$confirm('您的余币宝本金和利息将返还至' + item.userAddr + ', 请核对地址信息，由于地址信息错误造成的损失，本平台概不负责，确认提取余币宝?', '提示', {
+        this.$confirm('网站暂停提取功能，下载币威钱包即刻提取，下载地址：https://bitcv.app', '提示', {
+          confirmButtonText: '前往提取',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.post('/api/depositWithdraw', {
-            userDepositBoxId: item.id,
-            toAddr: item.userAddr
-          }).then(res => {
-            if (res.data.errcode === 0) {
-              this.$message({
-                type: 'success',
-                message: '提交成功!'
-              })
-              this.fetch()
-            } else {
-              alert(res.data.errmsg)
-            }
-          })
+          console.log('toapp')
+          window.open('https://bitcv.app')
         })
       }
     }
