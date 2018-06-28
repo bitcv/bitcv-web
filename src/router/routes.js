@@ -225,12 +225,6 @@ export default [{
     title: '找回密码--BitCV-区块链数字资产管理服务引擎'
   }
 }, {
-  path: '/resetpwd/:mobile',
-  component: getComponent('sign/ResetPwd'),
-  meta: {
-    title: '重置密码--BitCV-区块链数字资产管理服务引擎'
-  }
-}, {
   // 404
   path: '*',
   redirect: '/'

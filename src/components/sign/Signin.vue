@@ -33,6 +33,7 @@
 
 <script>
 import {mapMutations} from 'vuex'
+import utilsEncrypted from '@/utils/utilsEncrypted'
 
 export default {
   data () {
@@ -49,6 +50,7 @@ export default {
   },
   mounted () {
     // 初始化图形验证码
+    /* global TencentCaptcha */
     this.captcha = new TencentCaptcha('2040862605', res => {
       // 人机校验完毕，请求后端校验
       this.$http.post('/api/passHunmanVerifyTest', {
@@ -96,7 +98,7 @@ export default {
       var that = this
       this.$http.post('/api/signin', {
         mobile: this.mobile,
-        passwd: this.passwd
+        passwd: utilsEncrypted(this.passwd)
       })
         .then(res => {
           var resData = res.data

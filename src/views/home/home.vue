@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="hearder-banner">
-          <a href="https://bitcv.app/" target="_blank"><img src="/static/img/banner_downapp.png" alt=""></a>
+          <a href="https://bitcv.app/?from=bitcvCom" target="_blank"><img src="/static/img/banner_downapp.png" alt=""></a>
         </div>
 
         <div class="row">

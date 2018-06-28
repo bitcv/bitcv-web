@@ -186,3 +186,8 @@ export const getIndexBcv = (store, params) => {
 export const toProject = (store, params) => {
   return post('/api/toProject', params)
 }
+
+// 获取币威指数成分币列表
+export const getIndexCoins = (store, params) => {
+  return post('/api/getIndexCoins', params)
+}

@@ -102,9 +102,9 @@ export default {
       }, // 币威指数
       refreshTimer: null,
       loading: false,
-      bci30_ctn: ['BTC', 'ETH', 'EOS', 'LTC', 'TRX', 'BCH', 'XRP', 'ETC', 'BNB', 'NEO', 'QTUM', 'ONT', 'DASH', 'ICX', 'IOST', 'MITH', 'XVG', 'STORM', 'XMR', 'ELF', 'ADA', 'OCN', 'BCC', 'ZEC', 'WAN', 'VEN', 'HSR', 'BTM', 'ABT', 'NCASH'],
-      bci150_ctn: ['XLM', 'OMG', 'NANO', 'ELA', 'ZIL', 'XEM', 'EKT', 'QLC', 'GTO', 'LSK', 'MTL', 'CMT', 'NEBL', 'AION', 'GVT', 'TRUE', 'NULS', 'NAS', 'SNT', 'ITC', 'MCO', 'LINK', 'THETA', 'MDS', 'POA', 'ZRX', 'SWFTC', 'ENJ', 'BTG', 'MTN', 'SNC', 'DTA', 'RDN', 'RCN', 'ENG', 'RUFF', 'WPR', 'GNT', 'INS', 'KNC', 'STORJ', 'MANA', 'SALT', 'POWR', 'DNT', 'DSH', 'SYS', 'GXS', 'WAVES', 'EDO', 'HPB', 'LET', 'VIB', 'TNT', 'CND', 'QSP', 'SMT', 'ACT', 'SUB', 'BLZ', 'CVC', 'STRAT', 'BCPT', 'SOC', 'GAS', 'BAT', 'GNX', 'GTC', 'REQ', 'AST', 'NKC', 'WTC', 'PAY', 'QUN', 'ADX', 'AIDOC', 'TNB', 'TRIG', 'MTX', 'AUTO', 'CPC', 'BBN', 'LRC', 'BIX', 'BCD', 'APPC', 'BCN', 'LUN', 'POE', 'QASH', 'OST', 'EVX', 'VIBE', 'EKO', 'PRA', 'STK', 'DBC', 'YEE', 'DOGE', 'DAT', 'R', 'XDN', 'RPX', 'WAX', 'SAN', 'BOT', 'UTK', 'LEND', 'SRN', 'ZLA', 'GBC', 'DADI', 'C20', 'DPY', 'BTX', 'ICN', 'ORME', 'STEEM', 'SPF', 'CAT', 'GRS', 'BNT', 'INT', 'NXT', 'WABI', 'SNGLS', 'BKX', 'FUN', 'MOD', 'FCT', 'AE', 'MAID', 'PPT', 'FUEL', 'AMB', 'ETP', 'DLT', 'ARN', 'KICK', 'XAS', 'SC', 'MDA', 'PIVX', 'FSN', 'BANCA', 'VIA', 'CDT', 'PUT', 'XZC', 'RNT'],
-      bciReserve: ['PST', 'SXUT', 'ARDR', 'MTH', 'OAX', 'ARK', 'REBL', 'BRD', 'FAIR', 'SNM', 'DGB', 'RLC', 'INK', 'ACE', 'KMD', 'HMC', 'NAV', 'WINGS', 'REP', 'CAN']
+      bci30_ctn: [], // BCI 30 成分币列表
+      bci150_ctn: [], // BCI 150 成分币列表
+      bciReserve: [] // 备选币列表
     }
   },
   computed: {
@@ -115,16 +115,23 @@ export default {
   created () {
     this.refreshIndexBcv()
     this.refreshTimer = setInterval(this.refreshIndexBcv, 300000)
+
+    // 更新成分币列表
+    this.getIndexCoins()
+      .then((data = {}) => {
+        this.bci30_ctn = data.bcv30
+        this.bci150_ctn = data.bcv150
+        this.bciReserve = data.remain
+      })
   },
   beforeDestroy () {
     clearInterval(this.refreshTimer)
   },
   methods: {
     ...mapActions([
-      'getIndexBcv', 'toProject'
+      'getIndexBcv', 'toProject', 'getIndexCoins'
     ]),
     redirect (symbol) {
-      console.log('click')
       this.toProject({
         symbol: symbol
       }).then((data) => {
@@ -240,7 +247,7 @@ export default {
       }
     }
   }
-  
+
   .intro-wrap {
     margin-top: 22px;
     .intro {
