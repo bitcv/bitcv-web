@@ -159,8 +159,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          console.log('toapp')
-          window.open('https://bitcv.app')
+          window.open('https://www.bitcv.app/?from=bitcvCom')
         })
       }
     }

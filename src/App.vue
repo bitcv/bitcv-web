@@ -7,7 +7,7 @@
     <v-footer v-if="visible"></v-footer>
 
     <div v-if="device != 'pc' && downloadBarStatus" class="download" @click='downloadApp'>
-      <img src="/static/img/download_bar2.png" alt="">
+      <img src="/static/img/download_bar3.png" alt="">
       <span class="download-close" @click.stop='downloadBarStatus = false'></span>
     </div>
   </div>
@@ -64,7 +64,7 @@ export default {
       // this.$router.push('/')
     },
     downloadApp () {
-      window.location.href = 'https://bitcv.app/?from=bitcvCom'
+      window.location.href = 'https://www.bitcv.app/?from=bitcvCom'
     }
   }
 }
