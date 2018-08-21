@@ -153,7 +153,7 @@ export default {
         mobile: this.mobile,
         ticket: this.ticket,
         randstr: this.randstr,
-        type: 'reg'
+        type: 'webReg'
       }).then(res => {
         var resData = res.data
         if (resData.errcode === 0) {
