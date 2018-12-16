@@ -55,6 +55,7 @@
           <router-link tag="li" active-class="active" to="/discover" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.discover')}}</a></router-link>
           <router-link tag="li" active-class="active" to="/candyRoom" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.ybb')}}</a></router-link>
           <router-link tag="li" active-class="active" to="/acting" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.dfb')}}</a></router-link>
+          <li><a href="https://testnet.bitcv.com/" target="_blank">{{$t('label.block_explorer')}}</a></li>
         </ul>
       </div>
     </div>

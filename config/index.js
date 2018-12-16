@@ -65,7 +65,7 @@ module.exports = {
   build: {
     // Template for index.html
     index: path.resolve(__dirname, '../../bitcv-server/resources/views/index.blade.php'),
-    //index: path.resolve(__dirname, '../../bitcv-server/resources/views/index.blade.php'),
+    // index: path.resolve(__dirname, '../../bitcv-server/resources/views/index.blade.php'),
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../../bitcv-server/public'),
