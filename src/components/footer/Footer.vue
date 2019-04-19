@@ -8,6 +8,9 @@
         <a :href="social.url" target="_blank" v-for="(social, index) in socialList" :key="index">
           <i class="icon-bcv" :class="social.fontClass"></i>
         </a>
+        <a href="https://medium.com/@bitcv" target="_blank">
+          <img class="icon-bcv icon-medium" src="/static/img/logo_medium.svg" alt="">
+        </a>
       </div>
       <div class="bottom">
         <span>Copyright © 2018-2019 BitCV. All Rights Reserved</span>
@@ -72,6 +75,11 @@ export default {
         }
         &:last-child {
           margin: 0;
+        }
+        .icon-medium {
+          margin-top: 4px;
+          width: 26px;
+          height: 26px;
         }
       }
     }
