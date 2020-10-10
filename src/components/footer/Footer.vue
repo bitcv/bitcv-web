@@ -13,7 +13,7 @@
         </a>
       </div>
       <div class="bottom">
-        <span>Copyright © 2018-2019 BitCV. All Rights Reserved</span>
+        <span>Copyright © 2018-2020 BitCV. All Rights Reserved</span>
       </div>
     </div>
   </div>
