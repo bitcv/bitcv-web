@@ -56,7 +56,7 @@
           <router-link tag="li" active-class="active" to="/candyRoom" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.ybb')}}</a></router-link>
           <router-link tag="li" active-class="active" to="/acting" @click.native="dimissMenu"><a href="javascript:;">{{$t('label.dfb')}}</a></router-link>
           <li><a href="https://main.bitcv.net/" target="_blank">{{$t('label.block_explorer')}}</a></li>
-          <li><a href="https://bitcv.app" target="_blank">{{$t('label.block_explorer')}}</a></li>
+          <li><a href="https://bitcv.app" target="_blank">{{$t('label.bcv_wallet')}}</a></li>
         </ul>
       </div>
     </div>
